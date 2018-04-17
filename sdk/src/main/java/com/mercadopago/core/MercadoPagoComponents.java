@@ -416,6 +416,7 @@ public class MercadoPagoComponents {
                     activity.getApplicationContext().getResources().getString(R.string.mpsdk_review_summary_products));
                 TermsAndConditionsModel termsAndConditionsModel =
                     new TermsAndConditionsModel(site.getId(), termsAndConditionsEnabled);
+
                 PaymentModel paymentModel = new PaymentModel(paymentMethod, token, issuer, hasExtraPaymentMethods);
                 SummaryModel summaryModel = new SummaryModel(amount, paymentMethod, site, payerCost, discount, title);
                 ItemsModel itemsModel = new ItemsModel(site.getCurrencyId(), items);

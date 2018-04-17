@@ -63,6 +63,10 @@ public class PaymentModel implements Parcelable {
         }
     };
 
+    public boolean hasMoreThanOnePaymentMethod() {
+        return moreThanOnePaymentMethod;
+    }
+
     public String getPaymentType() {
         return paymentType;
     }

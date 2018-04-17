@@ -39,7 +39,7 @@ public class PaymentMethodComponent extends CompactComponent<PaymentModel, Payme
 
         ViewGroup paymentMethodView = (ViewGroup) resolveComponent().render(parent);
 
-        if (props.moreThanOnePaymentMethod) {
+        if (shouldShowPaymentMethodButton()) {
             String changeLabel = parent.getContext().getString(R.string.mpsdk_change_payment);
             ButtonLink buttonLink = new ButtonLink(new Button.Props(changeLabel, null), new Button.Actions() {
                 @Override
@@ -53,5 +53,10 @@ public class PaymentMethodComponent extends CompactComponent<PaymentModel, Payme
         }
 
         return paymentMethodView;
+    }
+
+    @VisibleForTesting
+    boolean shouldShowPaymentMethodButton() {
+        return props.hasMoreThanOnePaymentMethod() || PaymentTypes.isCardPaymentMethod(props.getPaymentType());
     }
 }
