@@ -7,6 +7,7 @@ import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.mvp.MvpView;
+import com.mercadopago.plugins.model.BusinessPaymentModel;
 
 public interface CheckoutView extends MvpView {
 
@@ -57,4 +58,6 @@ public interface CheckoutView extends MvpView {
     boolean isActive();
 
     void fetchImageFromUrl(String url);
+
+    void showBusinessResult(BusinessPaymentModel model);
 }

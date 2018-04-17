@@ -6,14 +6,8 @@ import com.mercadopago.components.Mutator;
 import com.mercadopago.components.MutatorPropsListener;
 import com.mercadopago.model.Instruction;
 import com.mercadopago.model.PaymentResult;
-import com.mercadopago.paymentresult.formatter.BodyAmountFormatter;
-import com.mercadopago.paymentresult.formatter.HeaderTitleFormatter;
 import com.mercadopago.paymentresult.props.HeaderProps;
 import com.mercadopago.paymentresult.props.PaymentResultProps;
-
-/**
- * Created by vaserber on 10/20/17.
- */
 
 public class PaymentResultPropsMutator implements Mutator, PaymentResultPropsView {
 
@@ -27,31 +21,27 @@ public class PaymentResultPropsMutator implements Mutator, PaymentResultPropsVie
         propsListener = listener;
     }
 
-    //headerAmountFormatter can be null
     @Override
-    public void setPropPaymentResult(@NonNull final PaymentResult paymentResult,
-                                     final HeaderTitleFormatter headerAmountFormatter,
-                                     final BodyAmountFormatter bodyAmountFormatter,
+    public void setPropPaymentResult(@NonNull final String currencyId,
+                                     @NonNull final PaymentResult paymentResult,
                                      final boolean showLoading) {
+
         props = props.toBuilder()
                 .setPaymentResult(paymentResult)
+                .setCurrencyId(currencyId)
                 .setHeaderMode(HeaderProps.HEADER_MODE_WRAP)
-                .setHeaderAmountFormatter(headerAmountFormatter)
-                .setBodyAmountFormatter(bodyAmountFormatter)
                 .setLoading(showLoading)
                 .build();
     }
 
     @Override
     public void setPropInstruction(@NonNull final Instruction instruction,
-                                   @NonNull final HeaderTitleFormatter amountFormat,
-                                   final boolean showLoading,
-                                   @NonNull final String processingMode) {
+                                   @NonNull final String processingModeString,
+                                   final boolean showLoading) {
         props = props.toBuilder()
                 .setInstruction(instruction)
-                .setHeaderAmountFormatter(amountFormat)
                 .setLoading(showLoading)
-                .setProcessingMode(processingMode)
+                .setProcessingMode(processingModeString)
                 .build();
     }
 

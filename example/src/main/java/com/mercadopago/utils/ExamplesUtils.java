@@ -11,8 +11,8 @@ import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoCheckout.Builder;
 import com.mercadopago.example.R;
 import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.model.Payment;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Payment;
 import com.mercadopago.plugins.DataInitializationTask;
 import com.mercadopago.plugins.MainPaymentProcessor;
 import com.mercadopago.plugins.components.SampleCustomComponent;
@@ -74,22 +74,6 @@ public class ExamplesUtils {
     public static final Integer DUMMY_ITEM_QUANTITY = 1;
     public static final BigDecimal DUMMY_ITEM_UNIT_PRICE = new BigDecimal("1000");
 
-
-
-    public static PaymentMethod getDummyPaymentMethod() {
-        PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setId("visa");
-        paymentMethod.setName("Visa");
-        paymentMethod.setPaymentTypeId("credit_card");
-        return paymentMethod;
-    }
-
-    public static Issuer getDummyIssuer() {
-        Issuer issuer = new Issuer();
-        issuer.setId(338L);
-        return issuer;
-    }
-
     */
 
     public static void resolveCheckoutResult(final Activity context, final int requestCode, final int resultCode,
@@ -138,6 +122,8 @@ public class ExamplesUtils {
         options.add(new Pair<>("Business - Secondary And Help - Approved", startCompleteApprovedBusiness(activity)));
         options.add(new Pair<>("Business - Primary And Help - Pending", startCompletePendingBusiness(activity)));
         options.add(new Pair<>("Business - No help - Pending", startPendingBusinessNoHelp(activity)));
+        options.add(new Pair<>("Business - Complete w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethod(activity)));
+        options.add(new Pair<>("Business - NoHelp w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethodNoHelp(activity)));
 
         return options;
     }
@@ -146,12 +132,37 @@ public class ExamplesUtils {
         BusinessPayment payment =
                 new BusinessPayment.Builder(BusinessPayment.Status.REJECTED, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
+                        .setReceiptId("#123455")
+                        .setPaymentMethodVisibility(true)
                         .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                         .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
                         .build();
 
         return customBusinessPayment(activity, payment);
     }
+
+    private static Builder startCompleteApprovedBusinessWithPaymentMethod(Activity activity) {
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+                .setHelp("Help description!")
+                .setReceiptId("#123455")
+                .setStatementDescription("PEDRO")
+                .setPaymentMethodVisibility(true)
+                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+                .build();
+
+        return customBusinessPayment(activity, payment);
+    }
+
+    private static Builder startCompleteApprovedBusinessWithPaymentMethodNoHelp(Activity activity) {
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+                .setReceiptId("#123455")
+                .setPaymentMethodVisibility(true)
+                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+                .build();
+
+        return customBusinessPayment(activity, payment);
+    }
+
 
     private static Builder startCompleteApprovedBusiness(Activity activity) {
         BusinessPayment payment =
@@ -176,6 +187,7 @@ public class ExamplesUtils {
     private static Builder startPendingBusinessNoHelp(Activity activity) {
         BusinessPayment payment =
                 new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
+                        .setReceiptId("#123455")
                         .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                         .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
                         .build();
@@ -215,17 +227,13 @@ public class ExamplesUtils {
 
     public static Builder createBaseWithDecimals(final Activity activity) {
         final Map<String, Object> defaultData = new HashMap<>();
+        defaultData.put("amount", 120f);
 
         return new Builder()
                 .setActivity(activity)
                 .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
                 .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID_WITH_DECIMALS))
-                .setDataInitializationTask(new DataInitializationTask(defaultData) {
-                    @Override
-                    public void onLoadData(@NonNull final Map<String, Object> data) {
-                        data.put("user", "Nico");
-                    }
-                });
+                .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
     public static Builder createBaseWithNoDecimals(final Activity activity) {
@@ -235,12 +243,7 @@ public class ExamplesUtils {
                 .setActivity(activity)
                 .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
                 .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID_WITH_NO_DECIMALS))
-                .setDataInitializationTask(new DataInitializationTask(defaultData) {
-                    @Override
-                    public void onLoadData(@NonNull final Map<String, Object> data) {
-                        data.put("user", "Nico");
-                    }
-                });
+                .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
     @NonNull

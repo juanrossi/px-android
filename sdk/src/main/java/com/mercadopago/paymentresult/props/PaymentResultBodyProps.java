@@ -5,11 +5,8 @@ import android.support.annotation.NonNull;
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.model.Instruction;
 import com.mercadopago.model.PaymentData;
-import com.mercadopago.paymentresult.formatter.BodyAmountFormatter;
 
-/**
- * Created by vaserber on 10/23/17.
- */
+import java.math.BigDecimal;
 
 public class PaymentResultBodyProps {
 
@@ -20,7 +17,8 @@ public class PaymentResultBodyProps {
     public final String processingMode;
     public final String disclaimer;
     public final Long paymentId;
-    public final BodyAmountFormatter bodyAmountFormatter;
+    public final String currencyId;
+    public final BigDecimal amount;
 
     public PaymentResultBodyProps(@NonNull final Builder builder) {
         status = builder.status;
@@ -30,19 +28,20 @@ public class PaymentResultBodyProps {
         disclaimer = builder.disclaimer;
         processingMode = builder.processingMode;
         paymentId = builder.paymentId;
-        bodyAmountFormatter = builder.bodyAmountFormatter;
+        currencyId = builder.currencyId;
+        amount = builder.amount;
     }
 
     public Builder toBuilder() {
         return new Builder()
                 .setStatus(status)
+                .setCurrencyId(currencyId)
                 .setStatusDetail(statusDetail)
                 .setInstruction(instruction)
                 .setPaymentData(paymentData)
                 .setDisclaimer(disclaimer)
                 .setProcessingMode(processingMode)
-                .setPaymentId(paymentId)
-                .setBodyAmountFormatter(bodyAmountFormatter);
+                .setPaymentId(paymentId);
     }
 
     public boolean isReceiptEnabled() {
@@ -59,7 +58,8 @@ public class PaymentResultBodyProps {
         public String disclaimer;
         public String processingMode;
         public Long paymentId;
-        public BodyAmountFormatter bodyAmountFormatter;
+        public String currencyId;
+        public BigDecimal amount;
 
         public Builder setStatus(@NonNull final String status) {
             this.status = status;
@@ -96,9 +96,13 @@ public class PaymentResultBodyProps {
             return this;
         }
 
-        public Builder setBodyAmountFormatter(BodyAmountFormatter bodyAmountFormatter) {
-            this.bodyAmountFormatter = bodyAmountFormatter;
+        public Builder setCurrencyId(final String currencyId) {
+            this.currencyId = currencyId;
             return this;
+        }
+
+        public void setAmount(final BigDecimal amount) {
+            this.amount = amount;
         }
 
         public PaymentResultBodyProps build() {

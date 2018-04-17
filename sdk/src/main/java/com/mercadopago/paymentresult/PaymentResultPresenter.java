@@ -18,8 +18,6 @@ import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.paymentresult.formatter.BodyAmountFormatter;
-import com.mercadopago.paymentresult.formatter.HeaderTitleFormatter;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.review_and_confirm.components.actions.ChangePaymentMethodAction;
 import com.mercadopago.tracking.model.ScreenViewEvent;
@@ -77,19 +75,11 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
 
     protected void onValidStart() {
         initializeTracking();
-        HeaderTitleFormatter headerAmountFormatter = null;
-        BodyAmountFormatter bodyAmountFormatter = null;
-
-        if (isCallForAuthorize()) {
-            headerAmountFormatter = new HeaderTitleFormatter(site.getCurrencyId(), amount, paymentResult.getPaymentData().getPaymentMethod().getName());
-        } else {
-            bodyAmountFormatter = new BodyAmountFormatter(site.getCurrencyId(), amount);
-        }
         boolean showLoading = false;
         if (hasToAskForInstructions()) {
             showLoading = true;
         }
-        getView().setPropPaymentResult(paymentResult, headerAmountFormatter, bodyAmountFormatter, showLoading);
+        getView().setPropPaymentResult(site.getCurrencyId(), paymentResult, showLoading);
         checkGetInstructions();
     }
 
@@ -115,11 +105,11 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
         String screenId = "";
         if (isApproved()) {
             screenId = TrackingUtil.SCREEN_ID_PAYMENT_RESULT_APPROVED;
-        } else if (isRejected()) {
+        } else if (paymentResult.isRejected()) {
             screenId = TrackingUtil.SCREEN_ID_PAYMENT_RESULT_REJECTED;
-        } else if (isInstructions()) {
+        } else if (paymentResult.isInstructions()) {
             screenId = TrackingUtil.SCREEN_ID_PAYMENT_RESULT_INSTRUCTIONS;
-        } else if (isPending()) {
+        } else if (paymentResult.isPending()) {
             screenId = TrackingUtil.SCREEN_ID_PAYMENT_RESULT_PENDING;
         }
         return screenId;
@@ -129,13 +119,13 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
         String screenName = "";
         if (isApproved()) {
             screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_APPROVED;
-        } else if (isCallForAuthorize()) {
+        } else if (paymentResult.isCallForAuthorize()) {
             screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_CALL_FOR_AUTH;
-        } else if (isRejected()) {
+        } else if (paymentResult.isRejected()) {
             screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_REJECTED;
-        } else if (isInstructions()) {
+        } else if (paymentResult.isInstructions()) {
             screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_INSTRUCTIONS;
-        } else if (isPending()) {
+        } else if (paymentResult.isPending()) {
             screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_PENDING;
         }
         return screenName;
@@ -143,26 +133,6 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
 
     private boolean isApproved() {
         return paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_APPROVED);
-    }
-
-    private boolean isRejected() {
-        return paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_REJECTED);
-    }
-
-    private boolean isCallForAuthorize() {
-        return paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_REJECTED) &&
-                paymentResult.getPaymentStatusDetail().equals(Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE);
-    }
-
-    private boolean isInstructions() {
-        return (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_PENDING) ||
-                paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_IN_PROCESS)) &&
-                paymentResult.getPaymentStatusDetail().equals(Payment.StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT);
-    }
-
-    private boolean isPending() {
-        return paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_PENDING) ||
-                paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_IN_PROCESS);
     }
 
     private boolean isPaymentResultValid() {
@@ -270,7 +240,7 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
         if (instruction == null) {
             navigator.showError(new MercadoPagoError(getResourcesProvider().getStandardErrorMessage(), false), ApiUtil.RequestOrigin.GET_INSTRUCTIONS);
         } else {
-            getView().setPropInstruction(instruction, new HeaderTitleFormatter(site.getCurrencyId(), amount, null), false, servicePreference.getProcessingModeString());
+            getView().setPropInstruction(instruction, servicePreference.getProcessingModeString(), false);
             getView().notifyPropsChanged();
         }
     }

@@ -11,10 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
         android:paddingEnd="@dimen/mpsdk_xxxl_margin"
         android:paddingStart="@dimen/mpsdk_xxxl_margin"
         android:paddingTop="@dimen/mpsdk_s_margin"
+        android:gravity="center"
         android:paddingBottom="@dimen/mpsdk_s_margin">
 
         <com.mercadopago.customviews.MPTextView

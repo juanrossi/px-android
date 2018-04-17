@@ -47,10 +47,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by mreverter on 1/17/17.
- */
-
 public class MercadoPagoComponents {
 
     private MercadoPagoComponents() {

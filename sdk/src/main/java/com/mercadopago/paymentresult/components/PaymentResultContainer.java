@@ -8,19 +8,15 @@ import com.mercadopago.components.Component;
 import com.mercadopago.components.LoadingComponent;
 import com.mercadopago.components.RendererFactory;
 import com.mercadopago.constants.PaymentMethods;
-import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentResult;
-import com.mercadopago.paymentresult.PaymentMethodProvider;
+import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.paymentresult.PaymentResultProvider;
+import com.mercadopago.paymentresult.formatter.HeaderTitleFormatter;
 import com.mercadopago.paymentresult.model.Badge;
 import com.mercadopago.paymentresult.props.HeaderProps;
 import com.mercadopago.paymentresult.props.PaymentResultBodyProps;
 import com.mercadopago.paymentresult.props.PaymentResultProps;
-
-/**
- * Created by vaserber on 10/20/17.
- */
 
 public class PaymentResultContainer extends Component<PaymentResultProps, Void> {
 
@@ -52,14 +48,11 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
     public static final int WARNING_BADGE_IMAGE = R.drawable.mpsdk_badge_warning;
 
     public PaymentResultProvider paymentResultProvider;
-    public PaymentMethodProvider paymentMethodProvider;
 
     public PaymentResultContainer(@NonNull final ActionDispatcher dispatcher,
-                                  @NonNull final PaymentResultProvider paymentResultProvider,
-                                  @NonNull final PaymentMethodProvider paymentMethodProvider) {
+                                  @NonNull final PaymentResultProvider paymentResultProvider) {
         super(new PaymentResultProps.Builder().build(), dispatcher);
         this.paymentResultProvider = paymentResultProvider;
-        this.paymentMethodProvider = paymentMethodProvider;
     }
 
     public boolean isLoading() {
@@ -81,7 +74,6 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
                 .setBadgeImage(getBadgeImage(props))
                 .setTitle(getTitle(props))
                 .setLabel(getLabel(props))
-                .setAmountFormat(props.headerAmountFormatter)
                 .build();
 
         return new Header(headerProps, getDispatcher());
@@ -113,14 +105,14 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
             final PaymentResultBodyProps bodyProps = new PaymentResultBodyProps.Builder()
                     .setStatus(props.paymentResult.getPaymentStatus())
                     .setStatusDetail(props.paymentResult.getPaymentStatusDetail())
-                    .setInstruction(props.instruction)
                     .setPaymentData(props.paymentResult.getPaymentData())
                     .setDisclaimer(props.paymentResult.getStatementDescription())
-                    .setProcessingMode(props.processingMode)
                     .setPaymentId(props.paymentResult.getPaymentId())
-                    .setBodyAmountFormatter(props.bodyAmountFormatter)
+                    .setInstruction(props.instruction)
+                    .setCurrencyId(props.currencyId)
+                    .setProcessingMode(props.processingMode)
                     .build();
-            body = new Body(bodyProps, getDispatcher(), paymentResultProvider, paymentMethodProvider);
+            body = new Body(bodyProps, getDispatcher(), paymentResultProvider);
         }
         return body;
     }
@@ -343,13 +335,12 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
                         statusDetail.equals(Payment.StatusDetail.STATUS_DETAIL_REJECTED_HIGH_RISK));
     }
 
-    private String getTitle(@NonNull final PaymentResultProps props) {
-
+    private CharSequence getTitle(@NonNull final PaymentResultProps props) {
         if (props.hasCustomizedTitle()) {
             return props.getPreferenceTitle();
         } else if (props.hasInstructions()) {
             return props.getInstructionsTitle();
-        } else if (props.paymentResult == null) {
+        } else if (props.paymentResult == null) { // TODO REMOVE THIS, is only used in mocks
             return paymentResultProvider.getEmptyText();
         } else if (isPaymentMethodOff(props.paymentResult)) {
             return paymentResultProvider.getEmptyText();
@@ -385,14 +376,23 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
                 } else if (statusDetail.equals(Payment.StatusDetail.STATUS_DETAIL_REJECTED_REJECTED_BY_BANK)
                         || statusDetail.equals(Payment.StatusDetail.STATUS_DETAIL_REJECTED_REJECTED_INSUFFICIENT_DATA)) {
                     return paymentResultProvider.getRejectedInsufficientDataTitle();
-                } else if (statusDetail.equals(Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE)) {
-                    return paymentResultProvider.getRejectedCallForAuthorizeTitle();
+                } else if (props.paymentResult.isCallForAuthorize()) {
+                    return getCallForAuthFormattedTitle(props);
                 } else {
                     return paymentResultProvider.getRejectedBadFilledOther();
                 }
             }
         }
+
         return paymentResultProvider.getEmptyText();
+    }
+
+    private CharSequence getCallForAuthFormattedTitle(final @NonNull PaymentResultProps props) {
+        String rejectedCallForAuthorizeTitle = paymentResultProvider.getRejectedCallForAuthorizeTitle();
+        HeaderTitleFormatter headerTitleFormatter = new HeaderTitleFormatter(props.currencyId,
+                props.paymentResult.getPaymentData().getTransactionAmount(),
+                props.paymentResult.getPaymentData().getPaymentMethod().getName());
+        return headerTitleFormatter.formatTextWithAmount(rejectedCallForAuthorizeTitle);
     }
 
     private String getLabel(@NonNull final PaymentResultProps props) {

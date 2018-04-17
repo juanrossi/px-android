@@ -1,25 +1,23 @@
-package com.mercadopago.paymentresult.components;
+package com.mercadopago.components;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercadopago.R;
-import com.mercadopago.components.Renderer;
 import com.mercadopago.customviews.MPTextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-/**
- * Created by vaserber on 04/12/2017.
- */
-
 public class ReceiptRenderer extends Renderer<Receipt> {
 
     @Override
-    public View render(final Receipt component, final Context context, final ViewGroup parent) {
+    public View render(@NonNull final Receipt component, @NonNull final Context context, final ViewGroup parent) {
         final View receiptView = inflate(R.layout.mpsdk_payment_receipt_component, parent);
         final MPTextView descriptionTextView = receiptView.findViewById(R.id.mpsdkReceiptDescription);
         final MPTextView dateTextView = receiptView.findViewById(R.id.mpsdkReceiptDate);
@@ -37,8 +35,16 @@ public class ReceiptRenderer extends Renderer<Receipt> {
                 .append(divider).append(" ").append(year);
 
         setText(dateTextView, builder.toString());
-        setText(descriptionTextView, component.getDescription());
+        setText(descriptionTextView, getReceiptDescription(context, component.props.receiptId));
 
         return receiptView;
+    }
+
+    @VisibleForTesting
+    String getReceiptDescription(@NonNull final Context context, @Nullable final String receiptId) {
+        if (receiptId != null) {
+            return context.getString(R.string.mpsdk_receipt, String.valueOf(receiptId));
+        }
+        return "";
     }
 }
