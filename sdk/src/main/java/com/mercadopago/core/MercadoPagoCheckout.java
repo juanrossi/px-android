@@ -62,6 +62,7 @@ public class MercadoPagoCheckout {
 
     private MercadoPagoCheckout(Builder builder) {
         activity = builder.activity;
+        context = builder.context;
         publicKey = builder.publicKey;
         paymentData = builder.paymentData;
         checkoutPreference = builder.checkoutPreference;
@@ -143,7 +144,7 @@ public class MercadoPagoCheckout {
 
     private Boolean hasPaymentResultDiscount() {
         return paymentResult != null && paymentResult.getPaymentData() != null &&
-            paymentResult.getPaymentData().getDiscount() != null;
+                paymentResult.getPaymentData().getDiscount() != null;
     }
 
     private Boolean hasDiscount() {
@@ -157,12 +158,26 @@ public class MercadoPagoCheckout {
 
     private void startCheckoutActivity(Integer resultCode) {
         validate(resultCode);
+        startIntent(getIntent(resultCode));
+    }
+
+    private void startIntent(final Intent checkoutIntent) {
+        if (context != null) {
+            context.startActivity(checkoutIntent);
+        } else {
+            activity.startActivityForResult(checkoutIntent, MercadoPagoCheckout.CHECKOUT_REQUEST_CODE);
+        }
+    }
+
+    @NonNull
+    private Intent getIntent(final Integer resultCode) {
         Intent checkoutIntent;
         if (context != null) {
             checkoutIntent = new Intent(context, CheckoutActivity.class);
         } else {
             checkoutIntent = new Intent(activity, CheckoutActivity.class);
         }
+
         checkoutIntent.putExtra("merchantPublicKey", publicKey);
         checkoutIntent.putExtra("paymentData", JsonUtil.getInstance().toJson(paymentData));
         checkoutIntent.putExtra("checkoutPreference", JsonUtil.getInstance().toJson(checkoutPreference));
@@ -173,12 +188,7 @@ public class MercadoPagoCheckout {
         checkoutIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
         checkoutIntent.putExtra("binaryMode", binaryMode);
         checkoutIntent.putExtra("resultCode", resultCode);
-
-        if (context != null) {
-            context.startActivity(checkoutIntent);
-        } else {
-            activity.startActivityForResult(checkoutIntent, MercadoPagoCheckout.CHECKOUT_REQUEST_CODE);
-        }
+        return checkoutIntent;
     }
 
     public static class Builder {
@@ -200,9 +210,15 @@ public class MercadoPagoCheckout {
         private String lightFontPath;
         private String monoFontPath;
         private ReviewAndConfirmPreferences reviewAndConfirmPreferences;
+        private Context context;
 
         public Builder setActivity(Activity activity) {
             this.activity = activity;
+            return this;
+        }
+
+        public Builder setContext(Context context) {
+            this.context = context;
             return this;
         }
 

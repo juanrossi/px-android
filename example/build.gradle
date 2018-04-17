@@ -10,6 +10,8 @@ android {
         targetSdkVersion api_level as int
         versionCode 1
         versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     dexOptions {
@@ -62,4 +64,6 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_cannary"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leak_cannary"
+    androidTestImplementation project(':testcheckout')
+    androidTestImplementation project(':testlib')
 }
