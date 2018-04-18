@@ -110,6 +110,7 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
                     .setPaymentId(props.paymentResult.getPaymentId())
                     .setInstruction(props.instruction)
                     .setCurrencyId(props.currencyId)
+                    .setAmount(props.paymentResult.getPaymentData().getTransactionAmount())
                     .setProcessingMode(props.processingMode)
                     .build();
             body = new Body(bodyProps, getDispatcher(), paymentResultProvider);
