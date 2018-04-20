@@ -10,7 +10,7 @@ if (project.rootProject.file('local.properties').exists()) {
 ext {
     versionToDeploy = version_to_deploy as String
     artifactLib = 'tracking'
-    libraryName = 'mercadopago-sdk_android_services'
+    libraryName = 'mercadopago-sdk_tracking'
     libraryDescription = 'MercadoPago Tracking Android Lib'
     siteUrl = 'https://github.com/mercadopago/px-android_tracking'
     gitUrl = 'https://github.com/mercadopago/px-android_tracking.git'
