@@ -26,7 +26,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -51,7 +51,7 @@ public class ExampleTest {
     public void withValidVisaCreditCardFlowIsOk() {
         CheckoutTestFlow checkoutTestFlow = CheckoutTestFlow.createFlow();
         Card card = new Visa(FakeCard.CardState.APRO, Country.ARGENTINA);
-        CongratsPage congratsPage = checkoutTestFlow.runCreditCardPaymentFlowNoInstallments(card);
-        assertTrue(congratsPage instanceof  CongratsPage);
+        CongratsPage congratsPage = checkoutTestFlow.runCreditCardPaymentFlowInstallmentsFirstOption(card);
+        assertNotNull(congratsPage);
     }
 }

@@ -16,7 +16,6 @@ public class NamePage extends PageObject {
         Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButtonText);
         onView(cardCardholderNameEditTextMatcher).perform(typeText(cardHolderName));
         onView(cardNextButtonTextMatcher).perform(click());
-
         return new ExpiryDatePage();
     }
 }

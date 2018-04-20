@@ -4,10 +4,14 @@ package com.mercadopago.testcheckout.input;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FakeCard extends Card {
+public class FakeCard extends Card {
 
-    public FakeCard(CardState cardState, String cardNumber) {
+    public FakeCard(final CardState cardState, final String cardNumber) {
         super("123", cardState.toString(), cardNumber, "11234567", "1121");
+    }
+
+    public FakeCard(final String escNumber, final CardState cardState, final String cardNumber) {
+        super(escNumber, cardState.toString(), cardNumber, "11234567", "1121");
     }
 
     public enum CardState {

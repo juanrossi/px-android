@@ -4,6 +4,7 @@ package com.mercadopago.testcheckout.pages;
 import android.view.View;
 
 import com.mercadopago.R;
+import com.mercadopago.core.MercadoPagoCheckout;
 
 import org.hamcrest.Matcher;
 
@@ -21,5 +22,9 @@ public class CreditCardPage extends PageObject {
         onView(cardNumberEditTextMatcher).perform(typeText(cardNumber));
         onView(cardNextButtonTextMatcher).perform(click());
         return new NamePage();
+    }
+
+    public void start(final MercadoPagoCheckout.Builder builder) {
+        builder.startForPayment();
     }
 }

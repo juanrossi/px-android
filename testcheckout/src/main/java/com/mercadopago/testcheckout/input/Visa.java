@@ -8,38 +8,26 @@ public class Visa extends FakeCard {
     }
 
     private static String getNumber(Country country) {
-        String cardNumber = null;
 
         switch (country) {
             case ARGENTINA:
-                cardNumber = "4509953566233704";
-                break;
+                return "4509953566233704";
             case BRASIL:
-                cardNumber = "4235647728025682";
-                break;
+                return "4235647728025682";
             case CHILE:
-                cardNumber = "4168818844447115";
-                break;
+                return "4168818844447115";
             case COLOMBIA:
-                cardNumber = "4013540682746260";
-                break;
+                return "4013540682746260";
             case MEXICO:
-                cardNumber = "4075595716483764";
-                break;
+                return "4075595716483764";
             case PERU:
-                cardNumber = "4009175332806176";
-                break;
+                return "4009175332806176";
             case URUGUAY:
-                cardNumber = "4014682387532428";
-                break;
+                return "4014682387532428";
             case VENEZUELA:
-                cardNumber = "4966382331109310";
-                break;
+                return "4966382331109310";
             default:
-                cardNumber = null;
-                break;
+                return null;
         }
-
-        return cardNumber;
     }
 }
