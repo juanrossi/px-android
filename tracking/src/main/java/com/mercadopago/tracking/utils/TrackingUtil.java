@@ -20,6 +20,7 @@ public class TrackingUtil {
     public static final String SCREEN_ID_PAYMENT_RESULT_PENDING = "/congrats/in_process";
     public static final String SCREEN_ID_PAYMENT_RESULT_REJECTED = "/congrats/rejected";
     public static final String SCREEN_ID_PAYMENT_RESULT_INSTRUCTIONS = "/congrats/instructions";
+    public static final String SCREEN_ID_PAYMENT_RESULT_BUSINESS = "/congrats/business";
     public static final String SCREEN_ID_BANK_DEALS = "/bank_deals";
     public static final String SCREEN_ID_CARD_FORM = "/card/";
     public static final String SCREEN_ID_ERROR = "/failure";
@@ -35,9 +36,7 @@ public class TrackingUtil {
     public static final String SCREEN_NAME_PAYMENT_VAULT_BANK_TRANSFER = "PAYMENT_METHOD_SEARCH";
     public static final String SCREEN_NAME_PAYMENT_VAULT_CARDS = "PAYMENT_METHOD_SEARCH";
     public static final String SCREEN_NAME_REVIEW_AND_CONFIRM = "REVIEW_AND_CONFIRM";
-    public static final String SCREEN_NAME_PAYMENT_RESULT_APPROVED = "RESULT";
-    public static final String SCREEN_NAME_PAYMENT_RESULT_PENDING = "RESULT";
-    public static final String SCREEN_NAME_PAYMENT_RESULT_REJECTED = "RESULT";
+    public static final String SCREEN_NAME_PAYMENT_RESULT = "RESULT";
     public static final String SCREEN_NAME_PAYMENT_RESULT_CALL_FOR_AUTH = "CALL_FOR_AUTHORIZE";
     public static final String SCREEN_NAME_PAYMENT_RESULT_INSTRUCTIONS = "INSTRUCTIONS";
     public static final String SCREEN_NAME_BANK_DEALS = "BANK_DEALS";

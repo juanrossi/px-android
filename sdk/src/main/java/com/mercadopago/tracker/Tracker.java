@@ -48,6 +48,14 @@ public class Tracker {
 
     }
 
+
+    public static void trackScreen(final String screenId,
+                                   final String screenName,
+                                   final String merchantPublicKey,
+                                   final Context context) {
+        trackScreen(screenId, screenName, context, merchantPublicKey, new ArrayList<Pair<String, String>>());
+    }
+
     public static void trackScreen(final String screenId,
                                    final String screenName,
                                    final Context context,

@@ -147,7 +147,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showBusinessResult(final BusinessPaymentModel model) {
         overrideTransitionIn();
-        BusinessPaymentResultActivity.start(this, model, BUSINESS_REQUEST_CODE);
+        BusinessPaymentResultActivity.start(this, model, mMerchantPublicKey, BUSINESS_REQUEST_CODE);
     }
 
     @Override

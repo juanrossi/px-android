@@ -117,16 +117,12 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
 
     private String getScreenName() {
         String screenName = "";
-        if (isApproved()) {
-            screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_APPROVED;
+        if (paymentResult.isRejected() || paymentResult.isPending() || isApproved()) {
+            screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT;
         } else if (paymentResult.isCallForAuthorize()) {
             screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_CALL_FOR_AUTH;
-        } else if (paymentResult.isRejected()) {
-            screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_REJECTED;
         } else if (paymentResult.isInstructions()) {
             screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_INSTRUCTIONS;
-        } else if (paymentResult.isPending()) {
-            screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_PENDING;
         }
         return screenName;
     }

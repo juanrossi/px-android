@@ -11,16 +11,23 @@ import com.mercadopago.components.ComponentManager;
 import com.mercadopago.plugins.components.BusinessPaymentContainer;
 import com.mercadopago.plugins.model.BusinessPaymentModel;
 import com.mercadopago.plugins.model.ExitAction;
+import com.mercadopago.tracker.Tracker;
+
+import static com.mercadopago.tracking.utils.TrackingUtil.SCREEN_ID_PAYMENT_RESULT_BUSINESS;
+import static com.mercadopago.tracking.utils.TrackingUtil.SCREEN_NAME_PAYMENT_RESULT;
 
 public class BusinessPaymentResultActivity extends AppCompatActivity implements ActionDispatcher {
 
     private static final String EXTRA_BUSINESS_PAYMENT_MODEL = "extra_business_payment_model";
+    private static final String EXTRA_MERCHANT_PUBLIC_KEY = "extra_merchant_public_key";
 
     public static void start(final AppCompatActivity activity,
                              final BusinessPaymentModel model,
+                             final String merchantPublicKey,
                              int requestCode) {
         Intent intent = new Intent(activity, BusinessPaymentResultActivity.class);
         intent.putExtra(EXTRA_BUSINESS_PAYMENT_MODEL, model);
+        intent.putExtra(EXTRA_MERCHANT_PUBLIC_KEY, merchantPublicKey);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -28,11 +35,20 @@ public class BusinessPaymentResultActivity extends AppCompatActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BusinessPaymentModel model = parseBusinessPaymentModel();
+        String merchantPublicKey = parseMerchantPublicKey();
         if (model != null) {
             initializeView(model);
         } else {
             throw new IllegalStateException("BusinessPayment can't be loaded");
         }
+        Tracker.trackScreen(SCREEN_ID_PAYMENT_RESULT_BUSINESS, SCREEN_NAME_PAYMENT_RESULT, merchantPublicKey, getApplicationContext());
+    }
+
+    @Nullable
+    private String parseMerchantPublicKey() {
+        return getIntent().getExtras() != null ? getIntent()
+                .getExtras()
+                .getString(EXTRA_MERCHANT_PUBLIC_KEY) : null;
     }
 
     @Nullable

@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+
 import com.mercadopago.MercadoPagoBaseActivity;
 import com.mercadopago.R;
 import com.mercadopago.components.Action;
@@ -155,7 +156,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
             paymentModel = extras.getParcelable(EXTRA_PAYMENT_MODEL);
             summaryModel = extras.getParcelable(EXTRA_SUMMARY_MODEL);
             itemsModel = extras.getParcelable(EXTRA_ITEMS);
-            Tracker.trackReviewAndConfirmScreen(this, getIntent().getStringExtra(EXTRA_PUBLIC_KEY), paymentModel);
+            Tracker.trackReviewAndConfirmScreen(getApplicationContext(), getIntent().getStringExtra(EXTRA_PUBLIC_KEY), paymentModel);
         }
 
         ReviewAndConfirmPreferences reviewAndConfirmPreferences = CheckoutStore.getInstance().getReviewAndConfirmPreferences();
@@ -171,7 +172,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         if (extras != null) {
             PaymentModel paymentModel = extras.getParcelable(EXTRA_PAYMENT_MODEL);
             SummaryModel summaryModel = extras.getParcelable(EXTRA_SUMMARY_MODEL);
-            Tracker.trackCheckoutConfirm(this, getIntent().getStringExtra(EXTRA_PUBLIC_KEY), paymentModel, summaryModel);
+            Tracker.trackCheckoutConfirm(getApplicationContext(), getIntent().getStringExtra(EXTRA_PUBLIC_KEY), paymentModel, summaryModel);
         }
 
         setResult(RESULT_OK);

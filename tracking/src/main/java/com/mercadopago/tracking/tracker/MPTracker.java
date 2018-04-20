@@ -302,9 +302,7 @@ public class MPTracker {
     }
 
     private boolean isResultScreen(String name) {
-        return TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_APPROVED.equals(name)
-                || TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_PENDING.equals(name)
-                || TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_REJECTED.equals(name)
+        return TrackingUtil.SCREEN_NAME_PAYMENT_RESULT.equals(name)
                 || TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_INSTRUCTIONS.equals(name);
     }
 
