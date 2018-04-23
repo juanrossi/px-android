@@ -2,6 +2,7 @@ package com.mercadopago.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import java.math.BigDecimal;
@@ -20,7 +21,9 @@ public class PaymentMethod implements Parcelable {
     private List<Setting> settings;
     private List<String> additionalInfoNeeded;
     private List<FinancialInstitution> financialInstitutions;
+    @Nullable
     private BigDecimal minAllowedAmount;
+    @Nullable
     private BigDecimal maxAllowedAmount;
 
     /**
@@ -124,19 +127,21 @@ public class PaymentMethod implements Parcelable {
         this.deferredCapture = deferredCapture;
     }
 
+    @Nullable
     public BigDecimal getMinAllowedAmount() {
         return minAllowedAmount;
     }
 
-    public void setMinAllowedAmount(BigDecimal minAllowedAmount) {
+    public void setMinAllowedAmount(@Nullable BigDecimal minAllowedAmount) {
         this.minAllowedAmount = minAllowedAmount;
     }
 
+    @Nullable
     public BigDecimal getMaxAllowedAmount() {
         return maxAllowedAmount;
     }
 
-    public void setMaxAllowedAmount(BigDecimal maxAllowedAmount) {
+    public void setMaxAllowedAmount(@Nullable BigDecimal maxAllowedAmount) {
         this.maxAllowedAmount = maxAllowedAmount;
     }
 
@@ -204,8 +209,10 @@ public class PaymentMethod implements Parcelable {
         }
         merchantAccountId = in.readString();
         financialInstitutions = in.createTypedArrayList(FinancialInstitution.CREATOR);
-        minAllowedAmount = new BigDecimal(in.readString());
-        maxAllowedAmount = new BigDecimal(in.readString());
+        String minString = in.readString();
+        minAllowedAmount = minString != null ? new BigDecimal(minString) : null;
+        String maxString = in.readString();
+        maxAllowedAmount = maxString != null ? new BigDecimal(maxString) : null;
     }
 
     public static final Creator<PaymentMethod> CREATOR = new Creator<PaymentMethod>() {
@@ -248,7 +255,7 @@ public class PaymentMethod implements Parcelable {
         }
         dest.writeString(merchantAccountId);
         dest.writeTypedList(financialInstitutions);
-        dest.writeString(minAllowedAmount.toString());
-        dest.writeString(maxAllowedAmount.toString());
+        dest.writeString(minAllowedAmount != null ? minAllowedAmount.toString() : null);
+        dest.writeString(maxAllowedAmount != null ? maxAllowedAmount.toString() : null);
     }
 }
