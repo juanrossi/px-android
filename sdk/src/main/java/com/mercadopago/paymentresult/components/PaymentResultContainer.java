@@ -8,6 +8,7 @@ import com.mercadopago.components.Component;
 import com.mercadopago.components.LoadingComponent;
 import com.mercadopago.components.RendererFactory;
 import com.mercadopago.constants.PaymentMethods;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.PaymentTypes;
@@ -17,6 +18,7 @@ import com.mercadopago.paymentresult.model.Badge;
 import com.mercadopago.paymentresult.props.HeaderProps;
 import com.mercadopago.paymentresult.props.PaymentResultBodyProps;
 import com.mercadopago.paymentresult.props.PaymentResultProps;
+import com.mercadopago.preferences.PaymentResultScreenPreference;
 
 public class PaymentResultContainer extends Component<PaymentResultProps, Void> {
 
@@ -137,9 +139,7 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
     }
 
     private int getBackground(@NonNull final PaymentResult paymentResult) {
-        if (paymentResult == null) {
-            return DEFAULT_BACKGROUND_COLOR;
-        } else if (isGreenBackground(paymentResult)) {
+        if (isGreenBackground(paymentResult)) {
             return GREEN_BACKGROUND_COLOR;
         } else if (isRedBackground(paymentResult)) {
             return RED_BACKGROUND_COLOR;
@@ -151,9 +151,7 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
     }
 
     private int getStatusBarColor(@NonNull final PaymentResult paymentResult) {
-        if (paymentResult == null) {
-            return DEFAULT_STATUS_BAR_COLOR;
-        } else if (isGreenBackground(paymentResult)) {
+        if (isGreenBackground(paymentResult)) {
             return GREEN_STATUS_BAR_COLOR;
         } else if (isRedBackground(paymentResult)) {
             return RED_STATUS_BAR_COLOR;
@@ -204,11 +202,23 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
 
     }
 
+    private String getIconUrl(@NonNull final PaymentResultProps props) {
+        PaymentResultScreenPreference paymentResultScreenPreference =
+                CheckoutStore.getInstance().getPaymentResultScreenPreference();
+        String paymentStatus = props.paymentResult.getPaymentStatus();
+        String paymentStatusDetail = props.paymentResult.getPaymentStatusDetail();
+        return paymentResultScreenPreference.getPreferenceUrlIcon(paymentStatus, paymentStatusDetail);
+    }
+
     private int getIconImage(@NonNull final PaymentResultProps props) {
-        if (props.hasCustomizedImageIcon()) {
-            return props.getPreferenceIcon();
-        } else if (props.paymentResult == null) {
-            return DEFAULT_ICON_IMAGE;
+        PaymentResultScreenPreference paymentResultScreenPreference =
+                CheckoutStore.getInstance().getPaymentResultScreenPreference();
+
+        String paymentStatus = props.paymentResult.getPaymentStatus();
+        String paymentStatusDetail = props.paymentResult.getPaymentStatusDetail();
+
+        if (paymentResultScreenPreference.hasCustomizedImageIcon(paymentStatus, paymentStatusDetail)) {
+            return paymentResultScreenPreference.getPreferenceIcon(paymentStatus, paymentStatusDetail);
         } else if (isItemIconImage(props.paymentResult)) {
             return ITEM_ICON_IMAGE;
         } else if (isCardIconImage(props.paymentResult)) {
@@ -218,13 +228,6 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
         } else {
             return DEFAULT_ICON_IMAGE;
         }
-    }
-
-    private String getIconUrl(@NonNull final PaymentResultProps props) {
-        if (props.hasCustomizedUrlIcon()) {
-            return props.getPreferenceUrlIcon();
-        }
-        return null;
     }
 
     private boolean isItemIconImage(@NonNull final PaymentResult paymentResult) {

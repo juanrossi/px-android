@@ -22,6 +22,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
     private final ExitAction exitActionSecondary;
     private final String statementDescription;
     private final String receiptId;
+    private final String imageUrl;
 
     private BusinessPayment(Builder builder) {
         help = builder.help;
@@ -33,6 +34,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         exitActionSecondary = builder.buttonSecondary;
         statementDescription = builder.statementDescription;
         receiptId = builder.receiptId;
+        imageUrl = builder.imageUrl;
     }
 
     protected BusinessPayment(Parcel in) {
@@ -45,6 +47,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         help = in.readString();
         statementDescription = in.readString();
         receiptId = in.readString();
+        imageUrl = in.readString();
     }
 
     public static final Creator<BusinessPayment> CREATOR = new Creator<BusinessPayment>() {
@@ -80,6 +83,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         dest.writeString(help);
         dest.writeString(statementDescription);
         dest.writeString(receiptId);
+        dest.writeString(imageUrl);
     }
 
     public boolean hasReceipt() {
@@ -126,6 +130,10 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         return receiptId;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public enum Status {
         APPROVED("APPROVED", R.color.mpsdk_green_payment_result_background, R.drawable.mpsdk_badge_check, 0),
         REJECTED("REJECTED", R.color.mpsdk_red_payment_result_background, R.drawable.mpsdk_badge_error, R.string.mpsdk_rejection_label),
@@ -167,6 +175,8 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         @NonNull
         private final String title;
 
+        private String imageUrl;
+
         // Optional values
         private boolean shouldShowPaymentMethod;
         private String statementDescription;
@@ -175,9 +185,9 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         private String help;
         private String receiptId;
 
-        public Builder(@NonNull Status status,
-                       @DrawableRes int iconId,
-                       @NonNull String title) {
+        public Builder(@NonNull final Status status,
+                       @DrawableRes final int iconId,
+                       @NonNull final String title) {
             this.title = title;
             this.status = status;
             this.iconId = iconId;
@@ -186,6 +196,14 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
             buttonSecondary = null;
             help = null;
             receiptId = null;
+            imageUrl = null;
+        }
+
+        public Builder(@NonNull final Status status,
+                       @NonNull final String imageUrl,
+                       @NonNull final String title) {
+            this(status, R.drawable.mpsdk_icon_default, title);
+            this.imageUrl = imageUrl;
         }
 
         public BusinessPayment build() {

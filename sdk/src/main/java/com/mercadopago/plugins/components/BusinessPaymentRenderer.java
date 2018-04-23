@@ -30,7 +30,7 @@ public class BusinessPaymentRenderer extends Renderer<BusinessPaymentContainer> 
                           @Nullable final ViewGroup parent) {
 
         final LinearLayout mainContentContainer = CompactComponent.createLinearContainer(context);
-        LinearLayout headerContainer = CompactComponent.createLinearContainer(context);
+        final LinearLayout headerContainer = CompactComponent.createLinearContainer(context);
         final ScrollView scrollView = CompactComponent.createScrollContainer(context);
         scrollView.addView(mainContentContainer);
         mainContentContainer.addView(headerContainer);

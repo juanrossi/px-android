@@ -311,6 +311,10 @@ public class Payment {
                 || paymentTypeId.equals(PaymentTypes.PREPAID_CARD);
     }
 
+    public static boolean isPendingStatus(final String status, final String statusDetail) {
+        return StatusCodes.STATUS_PENDING.equals(status) &&
+                StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT.equals(statusDetail);
+    }
 
     public static class StatusCodes {
         public static final String STATUS_APPROVED = "approved";

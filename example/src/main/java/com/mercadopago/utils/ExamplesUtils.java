@@ -142,7 +142,7 @@ public class ExamplesUtils {
     }
 
     private static Builder startCompleteApprovedBusinessWithPaymentMethod(Activity activity) {
-        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", "Title")
                 .setHelp("Help description!")
                 .setReceiptId("#123455")
                 .setStatementDescription("PEDRO")

@@ -35,10 +35,19 @@ public class HeaderProps {
 
     public static HeaderProps from(@NonNull BusinessPayment businessPayment, @NonNull Context context) {
         BusinessPayment.Status status = businessPayment.getStatus();
-        return new HeaderProps.Builder()
+        Builder builder = new Builder();
+
+        if (businessPayment.getIcon() != 0) {
+            builder.setIconImage(businessPayment.getIcon());
+        }
+
+        builder.setIconUrl(businessPayment.getImageUrl());
+
+        return builder
                 .setHeight(HEADER_MODE_WRAP)
                 .setBackground(status.resColor)
                 .setStatusBarColor(status.resColor)
+
                 .setIconImage(businessPayment.getIcon())
                 .setBadgeImage(status.badge)
                 .setTitle(businessPayment.getTitle())

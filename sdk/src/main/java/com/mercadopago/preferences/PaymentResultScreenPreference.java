@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.mercadopago.callbacks.CallbackHolder;
 import com.mercadopago.callbacks.PaymentResultCallback;
 import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.model.Payment;
 import com.mercadopago.paymentresult.model.Badge;
 
 import java.util.HashMap;
@@ -107,6 +108,39 @@ public class PaymentResultScreenPreference {
         enableApprovedPaymentMethodInfo = builder.enableApprovedPaymentMethodInfo;
         enableRejectedLabelText = builder.enableRejectedLabelText;
         approvedCustomComponents = builder.approvedCustomComponents;
+    }
+
+    public boolean hasCustomizedImageIcon(final String status, final String statusDetail) {
+        if (Payment.StatusCodes.STATUS_APPROVED.equals(status)) {
+            return getApprovedIcon() != null;
+        } else if (Payment.isPendingStatus(status, statusDetail)) {
+            return getPendingIcon() != null;
+        } else if (Payment.StatusCodes.STATUS_REJECTED.equals(status)) {
+            return getRejectedIcon() != null;
+        }
+        return false;
+    }
+
+    public String getPreferenceUrlIcon(final String status, final String statusDetail) {
+        if (Payment.StatusCodes.STATUS_APPROVED.equals(status)) {
+            return getApprovedUrlIcon();
+        } else if (Payment.isPendingStatus(status, statusDetail)) {
+            return getPendingUrlIcon();
+        } else if (Payment.StatusCodes.STATUS_REJECTED.equals(status)) {
+            return getRejectedUrlIcon();
+        }
+        return null;
+    }
+
+    public int getPreferenceIcon(final String status, final String statusDetail) {
+        if (Payment.StatusCodes.STATUS_APPROVED.equals(status)) {
+            return getApprovedIcon();
+        } else if (Payment.isPendingStatus(status, statusDetail)) {
+            return getPendingIcon();
+        } else if (Payment.StatusCodes.STATUS_REJECTED.equals(status)) {
+            return getRejectedIcon();
+        }
+        return 0;
     }
 
     public boolean hasApprovedTopCustomComponent() {

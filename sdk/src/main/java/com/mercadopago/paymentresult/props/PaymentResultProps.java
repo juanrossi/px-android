@@ -8,7 +8,6 @@ import com.mercadopago.model.Instruction;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
-import com.mercadopago.util.TextUtils;
 
 public class PaymentResultProps {
 
@@ -129,7 +128,7 @@ public class PaymentResultProps {
 
     public boolean hasCustomizedBadge() {
         PaymentResultScreenPreference preferences = CheckoutStore.getInstance().getPaymentResultScreenPreference();
-        if (preferences != null && isApprovedBadgeValidState()) {
+        if (preferences != null && isStatusApproved()) {
             return preferences.getApprovedBadge() != null && !preferences.getApprovedBadge().isEmpty();
         }
         return false;
@@ -137,83 +136,10 @@ public class PaymentResultProps {
 
     public String getPreferenceBadge() {
         PaymentResultScreenPreference preferences = CheckoutStore.getInstance().getPaymentResultScreenPreference();
-        if (preferences != null && isApprovedBadgeValidState()) {
+        if (preferences != null && isStatusApproved()) {
             return preferences.getApprovedBadge();
         }
         return "";
-    }
-
-    private boolean isApprovedBadgeValidState() {
-        return isStatusApproved();
-    }
-
-    public boolean hasCustomizedImageIcon() {
-        PaymentResultScreenPreference preferences = CheckoutStore.getInstance().getPaymentResultScreenPreference();
-        if (preferences != null) {
-            if (isApprovedIconValidState()) {
-                return preferences.getApprovedIcon() != null;
-            } else if (isPendingIconValidState()) {
-                return preferences.getPendingIcon() != null;
-            } else if (isRejectedIconValidState()) {
-                return preferences.getRejectedIcon() != null;
-            }
-        }
-        return false;
-    }
-
-    public boolean hasCustomizedUrlIcon() {
-        PaymentResultScreenPreference preferences = CheckoutStore.getInstance().getPaymentResultScreenPreference();
-        if (preferences != null) {
-            if (isApprovedIconValidState()) {
-                return !TextUtils.isEmpty(preferences.getApprovedUrlIcon());
-            } else if (isPendingIconValidState()) {
-                return !TextUtils.isEmpty(preferences.getPendingUrlIcon());
-            } else if (isRejectedIconValidState()) {
-                return !TextUtils.isEmpty(preferences.getRejectedUrlIcon());
-            }
-        }
-        return false;
-    }
-
-    public int getPreferenceIcon() {
-        PaymentResultScreenPreference preferences = CheckoutStore.getInstance().getPaymentResultScreenPreference();
-        if (preferences != null) {
-            if (isApprovedIconValidState()) {
-                return preferences.getApprovedIcon();
-            } else if (isPendingIconValidState()) {
-                return preferences.getPendingIcon();
-            } else if (isRejectedIconValidState()) {
-                return preferences.getRejectedIcon();
-            }
-        }
-        return 0;
-    }
-
-    public String getPreferenceUrlIcon() {
-        PaymentResultScreenPreference preferences = CheckoutStore.getInstance().getPaymentResultScreenPreference();
-        if (preferences != null) {
-            if (isApprovedIconValidState()) {
-                return preferences.getApprovedUrlIcon();
-            } else if (isPendingIconValidState()) {
-                return preferences.getPendingUrlIcon();
-            } else if (isRejectedIconValidState()) {
-                return preferences.getRejectedUrlIcon();
-            }
-        }
-        return null;
-    }
-
-    private boolean isApprovedIconValidState() {
-        return isStatusApproved();
-    }
-
-    private boolean isPendingIconValidState() {
-        return paymentResult != null && (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_PENDING)
-                && paymentResult.getPaymentStatusDetail().equals(Payment.StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT));
-    }
-
-    private boolean isRejectedIconValidState() {
-        return isStatusRejected();
     }
 
     public boolean hasInstructions() {
