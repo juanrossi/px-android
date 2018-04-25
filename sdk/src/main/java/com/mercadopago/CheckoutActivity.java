@@ -395,7 +395,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                         .setPaymentMethod(mCheckoutPresenter.getSelectedPaymentMethod())
                         .setIssuer(mCheckoutPresenter.getIssuer())
                         .setPayerCost(mCheckoutPresenter.getSelectedPayerCost())
-                        .setAmount(mCheckoutPresenter.getCheckoutPreference().getAmount())
+                        .setAmount(mCheckoutPresenter.getCheckoutPreference().getTotalAmount())
                         .setSite(mCheckoutPresenter.getCheckoutPreference().getSite())
                         .setHasExtraPaymentMethods(!mCheckoutPresenter.isUniquePaymentMethod())
                         .setDiscountEnabled(mCheckoutPresenter.isDiscountEnabled())
@@ -444,7 +444,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                     .setPayerAccessToken(mPrivateKey)
                     .setPayerEmail(mCheckoutPresenter.getCheckoutPreference().getPayer().getEmail())
                     .setSite(mCheckoutPresenter.getCheckoutPreference().getSite())
-                    .setAmount(mCheckoutPresenter.getCheckoutPreference().getAmount())
+                    .setAmount(mCheckoutPresenter.getCheckoutPreference().getTotalAmount())
                     .setPaymentMethodSearch(mCheckoutPresenter.getPaymentMethodSearch())
                     .setDiscount(mCheckoutPresenter.getDiscount())
                     .setInstallmentsEnabled(true)
@@ -464,7 +464,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showPaymentResult(PaymentResult paymentResult) {
         BigDecimal amount =
-                mCheckoutPresenter.getCreatedPayment() == null ? mCheckoutPresenter.getCheckoutPreference().getAmount()
+                mCheckoutPresenter.getCreatedPayment() == null ? mCheckoutPresenter.getCheckoutPreference().getTotalAmount()
                         : mCheckoutPresenter.getCreatedPayment().getTransactionAmount();
 
         new MercadoPagoComponents.Activities.PaymentResultActivityBuilder()
@@ -577,7 +577,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                 .setMerchantPublicKey(mMerchantPublicKey)
                 .setPayerAccessToken(mPrivateKey)
                 .setPaymentPreference(paymentPreference)
-                .setAmount(mCheckoutPresenter.getCheckoutPreference().getAmount())
+                .setAmount(mCheckoutPresenter.getCheckoutPreference().getTotalAmount())
                 .setSite(mCheckoutPresenter.getCheckoutPreference().getSite())
                 .setInstallmentsEnabled(true)
                 .setAcceptedPaymentMethods(mCheckoutPresenter.getPaymentMethodSearch().getPaymentMethods())

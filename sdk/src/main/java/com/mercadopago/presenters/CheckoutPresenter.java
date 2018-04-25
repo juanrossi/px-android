@@ -289,7 +289,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private void getDirectDiscount(final boolean couponDiscountFound) {
         String payerEmail = mCheckoutPreference.getPayer() == null ? "" : mCheckoutPreference.getPayer().getEmail();
-        getResourcesProvider().getDirectDiscount(mCheckoutPreference.getAmount(), payerEmail, new TaggedCallback<Discount>(ApiUtil.RequestOrigin.GET_DIRECT_DISCOUNT) {
+        getResourcesProvider().getDirectDiscount(mCheckoutPreference.getTotalAmount(), payerEmail, new TaggedCallback<Discount>(ApiUtil.RequestOrigin.GET_DIRECT_DISCOUNT) {
             @Override
             public void onSuccess(final Discount discount) {
                 if (isViewAttached()) {
@@ -331,9 +331,9 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         BigDecimal amount;
 
         if (mDiscount != null && mFlowPreference.isDiscountEnabled() && mDiscount.isValid()) {
-            amount = mDiscount.getAmountWithDiscount(mCheckoutPreference.getAmount());
+            amount = mDiscount.getAmountWithDiscount(mCheckoutPreference.getTotalAmount());
         } else {
-            amount = mCheckoutPreference.getAmount();
+            amount = mCheckoutPreference.getTotalAmount();
         }
 
         return amount;
@@ -840,7 +840,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         paymentData.setIssuer(mSelectedIssuer);
         paymentData.setDiscount(mDiscount);
         paymentData.setToken(mCreatedToken);
-        paymentData.setTransactionAmount(mCheckoutPreference.getAmount());
+        paymentData.setTransactionAmount(mCheckoutPreference.getTotalAmount());
 
         Payer payer = createPayerFrom(mCheckoutPreference.getPayer(), mCollectedPayer);
         paymentData.setPayer(payer);

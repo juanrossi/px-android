@@ -1,5 +1,7 @@
 package com.mercadopago.preferences;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Item;
@@ -7,7 +9,6 @@ import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Sites;
-import com.mercadopago.lite.util.CurrenciesUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,7 +21,10 @@ import static com.mercadopago.lite.util.TextUtil.isEmpty;
 public class CheckoutPreference {
 
     private String id;
+
+    @NonNull
     private List<Item> items;
+
     private Payer payer;
 
     @SerializedName("payment_methods")
@@ -42,6 +46,7 @@ public class CheckoutPreference {
 
     public CheckoutPreference(String checkoutPreferenceId) {
         id = checkoutPreferenceId;
+        items = new ArrayList<>();
     }
 
     private CheckoutPreference(Builder builder) {
@@ -70,7 +75,7 @@ public class CheckoutPreference {
     }
 
     public void validate() throws CheckoutPreferenceException {
-        if (hasId() && !itemsValid()) {
+        if (hasId() && !Item.validItems(items)) {
             throw new CheckoutPreferenceException(CheckoutPreferenceException.INVALID_ITEM);
         } else if (hasId() && !hasEmail()) {
             throw new CheckoutPreferenceException(CheckoutPreferenceException.NO_EMAIL_FOUND);
@@ -96,49 +101,6 @@ public class CheckoutPreference {
     public boolean validInstallmentsPreference() {
         return paymentPreference == null || paymentPreference.installmentPreferencesValid();
     }
-
-    public Boolean itemsValid() {
-
-        boolean valid = true;
-
-        if (items == null || items.isEmpty() || items.get(0) == null) {
-            valid = false;
-        } else if (isEmpty(items.get(0).getCurrencyId())) {
-            valid = false;
-        } else {
-            String firstCurrencyId = items.get(0).getCurrencyId();
-            String currentCurrencyId;
-
-            for (Item item : items) {
-                currentCurrencyId = item.getCurrencyId();
-                if (!isItemValid(item) || !currentCurrencyId.equals(firstCurrencyId)) {
-                    valid = false;
-                    break;
-                }
-            }
-        }
-        return valid;
-    }
-
-    private boolean isItemValid(Item item) {
-        Boolean valid = true;
-
-        if (item == null) {
-            valid = false;
-        } else if (item.getId() == null) {
-            valid = false;
-        } else if (item.getQuantity() == null || item.getQuantity() < 1) {
-            valid = false;
-        } else if (item.getUnitPrice() == null || item.getUnitPrice().compareTo(BigDecimal.ZERO) < 0) {
-            valid = false;
-        } else if (item.getCurrencyId() == null) {
-            valid = false;
-        } else if ((!CurrenciesUtil.isValidCurrency(item.getCurrencyId()))) {
-            valid = false;
-        }
-        return valid;
-    }
-
 
     public Boolean isExpired() {
         Date date = new Date();
@@ -226,19 +188,8 @@ public class CheckoutPreference {
         this.paymentPreference = paymentPreference;
     }
 
-    public BigDecimal getAmount() {
-
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        if (items != null) {
-            for (Item item : items) {
-                if ((item != null) && (item.getUnitPrice() != null) && (item.getQuantity() != null)) {
-                    totalAmount = totalAmount.add(item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())));
-                } else {
-                    return null;
-                }
-            }
-        }
-        return totalAmount;
+    public BigDecimal getTotalAmount() {
+        return Item.getTotalAmountWith(items);
     }
 
     public List<String> getExcludedPaymentTypes() {
@@ -365,16 +316,28 @@ public class CheckoutPreference {
             excludedPaymentTypes = new ArrayList<>();
         }
 
-        public Builder addItem(Item item) {
-            if (item != null) {
-                items.add(item);
-            }
+        /**
+         * Add item to the preference
+         *
+         * @param item list of items to add
+         * @return builder
+         */
+        public Builder addItem(@NonNull Item item) {
+            items.add(item);
             return this;
         }
 
-        public Builder addItems(List<Item> items) {
-            if (items != null) {
-                this.items.addAll(items);
+        /**
+         * Add all non empty items to the preference
+         *
+         * @param items list of items to add
+         * @return builder
+         */
+        public Builder addItems(@NonNull List<Item> items) {
+            for (Item item : items) {
+                if (item != null) {
+                    items.add(item);
+                }
             }
             return this;
         }

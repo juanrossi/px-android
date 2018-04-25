@@ -39,7 +39,7 @@ public class CheckoutStore {
 
     //App state
     private Hook hook;
-    private final Map<String, Object> data = new HashMap();
+    private final Map<String, Object> data = new HashMap<>();
     private String selectedPaymentMethodId;
 
     //Payment
