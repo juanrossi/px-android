@@ -2,8 +2,10 @@ package com.mercadopago.review_and_confirm;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -41,8 +43,6 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     private static final String EXTRA_SUMMARY_MODEL = "extra_summary_model";
     private static final String EXTRA_PUBLIC_KEY = "extra_public_key";
     private static final String EXTRA_ITEMS = "extra_items";
-
-    private View floatingConfirmLayout;
 
     public static void start(final Activity activity,
                              final String merchantPublicKey,
@@ -96,41 +96,64 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     }
 
     private void initFloatingButton(final NestedScrollView scrollView) {
-        final View confirmButton = findViewById(R.id.floating_confirm);
-        floatingConfirmLayout = findViewById(R.id.floating_confirm_layout);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
+        final View floatingConfirmLayout = findViewById(R.id.floating_confirm_layout);
+        findViewById(R.id.floating_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 confirmPayment();
             }
         });
 
-        ViewTreeObserver viewTreeObserver = scrollView.getViewTreeObserver();
+        configureFloatingBehaviour(scrollView, floatingConfirmLayout);
+    }
 
+    private void configureFloatingBehaviour(final NestedScrollView scrollView, final View floatingConfirmLayout) {
+        addScrollBottomMargin(floatingConfirmLayout, scrollView);
+        configureScrollLayoutListener(floatingConfirmLayout, scrollView);
+        addScrollListener(floatingConfirmLayout, scrollView);
+    }
+
+    private void addScrollBottomMargin(final View floatingConfirmLayout, final NestedScrollView scrollView) {
+        ViewTreeObserver floatingObserver = floatingConfirmLayout.getViewTreeObserver();
+        floatingObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) scrollView.getLayoutParams();
+                int bottomMargin = floatingConfirmLayout.getHeight();
+                params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, bottomMargin);
+                scrollView.setLayoutParams(params);
+            }
+        });
+    }
+
+    private void configureScrollLayoutListener(final View floatingConfirmLayout, final NestedScrollView scrollView) {
+        ViewTreeObserver viewTreeObserver = scrollView.getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                resolveFloatingButtonVisibility(scrollView);
+                resolveFloatingButtonElevationVisibility(floatingConfirmLayout, scrollView);
             }
         });
+    }
 
+    private void addScrollListener(final View floatingConfirmLayout, final NestedScrollView scrollView) {
+        ViewTreeObserver viewTreeObserver = scrollView.getViewTreeObserver();
         viewTreeObserver.addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
-                resolveFloatingButtonVisibility(scrollView);
+                resolveFloatingButtonElevationVisibility(floatingConfirmLayout, scrollView);
             }
         });
     }
 
-    private void resolveFloatingButtonVisibility(final NestedScrollView scrollView) {
+
+    private void resolveFloatingButtonElevationVisibility(final View floatingConfirmLayout, final NestedScrollView scrollView) {
         ViewGroup content = (ViewGroup) scrollView.getChildAt(0);
         int containerHeight = content.getHeight();
-        // get footer/last child
-        View footer = content.getChildAt(content.getChildCount() - 1);
-        // This footer has two buttons, to avoid mesure cancel button we devide by 2 the footer height
-        float finalSize = containerHeight - scrollView.getHeight() - (footer.getHeight() / 2);
-        setFloatingVisibility(scrollView.getScrollY() < finalSize);
+        float finalSize = containerHeight - scrollView.getHeight();
+        setFloatingElevationVisibility(floatingConfirmLayout, scrollView.getScrollY() < finalSize);
     }
+
 
     private void initContent(final ViewGroup mainContent) {
         ReviewAndConfirmContainer.Props props = getActivityParameters();
@@ -163,8 +186,11 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         return new ReviewAndConfirmContainer.Props(termsAndConditionsModel, paymentModel, summaryModel, reviewAndConfirmPreferences, itemsModel);
     }
 
-    private void setFloatingVisibility(boolean visible) {
-        floatingConfirmLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    private void setFloatingElevationVisibility(View floatingConfirmLayout, boolean visible) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            float elevationInPixels = visible ? getBaseContext().getResources().getDimension(R.dimen.mpsdk_xxs_margin) : 0;
+            floatingConfirmLayout.setElevation(elevationInPixels);
+        }
     }
 
     private void confirmPayment() {
