@@ -62,7 +62,7 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingStart="4dp"
-                        android:text="*** *** *** **"
+                        android:text="@string/mpsdk_ticket_card_holder_identification_hint"
                         android:textColor="@color/mpsdk_base_text_alpha"
                         app:autoSizeMaxTextSize="14dp"
                         app:autoSizeMinTextSize="8dp"

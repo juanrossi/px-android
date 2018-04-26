@@ -22,7 +22,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="4 de diciembre de 2017"
             android:textColor="@color/mpsdk_brownish_grey"
             android:textSize="14dp"
             tools:text="4 de diciembre de 2017" />
