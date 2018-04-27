@@ -163,6 +163,7 @@
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:visibility="gone"
+        android:baselineAligned="false"
         android:weightSum="1">
 
         <FrameLayout

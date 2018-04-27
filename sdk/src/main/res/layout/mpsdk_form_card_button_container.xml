@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
+        android:baselineAligned="false"
         android:weightSum="1">
 
         <FrameLayout

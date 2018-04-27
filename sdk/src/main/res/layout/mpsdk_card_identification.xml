@@ -25,6 +25,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:orientation="horizontal"
+            android:baselineAligned="false"
             android:weightSum="1">
 
             <FrameLayout
