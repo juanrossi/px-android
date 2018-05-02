@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.mercadopago.components.CustomComponent;
@@ -20,6 +21,8 @@ import com.mercadopago.plugins.model.BusinessPayment;
 import com.mercadopago.plugins.model.ExitAction;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
+import com.mercadopago.tracking.listeners.TracksListener;
+import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
 
@@ -77,38 +80,38 @@ public class ExamplesUtils {
     */
 
     public static void resolveCheckoutResult(final Activity context, final int requestCode, final int resultCode,
-                                             final Intent data) {
+        final Intent data) {
         LayoutUtil.showRegularLayout(context);
 
         if (requestCode == MercadoPagoCheckout.CHECKOUT_REQUEST_CODE) {
             if (resultCode == MercadoPagoCheckout.PAYMENT_RESULT_CODE) {
                 Payment payment = JsonUtil.getInstance().fromJson(data.getStringExtra("payment"), Payment.class);
                 Toast.makeText(context, new StringBuilder()
-                        .append(PAYMENT_WITH_STATUS_MESSAGE)
-                        .append(payment.getStatus()), Toast.LENGTH_LONG)
-                        .show();
+                    .append(PAYMENT_WITH_STATUS_MESSAGE)
+                    .append(payment.getStatus()), Toast.LENGTH_LONG)
+                    .show();
             } else if (resultCode == RESULT_CANCELED) {
                 if (data != null && data.getStringExtra("mercadoPagoError") != null) {
                     MercadoPagoError mercadoPagoError = JsonUtil.getInstance()
-                            .fromJson(data.getStringExtra("mercadoPagoError"), MercadoPagoError.class);
+                        .fromJson(data.getStringExtra("mercadoPagoError"), MercadoPagoError.class);
                     Toast.makeText(context, "Error: " + mercadoPagoError.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(context, new StringBuilder()
-                            .append("Cancel - ")
-                            .append(REQUESTED_CODE_MESSAGE)
-                            .append(requestCode)
-                            .append(RESULT_CODE_MESSAGE)
-                            .append(resultCode), Toast.LENGTH_LONG)
-                            .show();
-                }
-            } else {
-
-                Toast.makeText(context, new StringBuilder()
+                        .append("Cancel - ")
                         .append(REQUESTED_CODE_MESSAGE)
                         .append(requestCode)
                         .append(RESULT_CODE_MESSAGE)
                         .append(resultCode), Toast.LENGTH_LONG)
                         .show();
+                }
+            } else {
+
+                Toast.makeText(context, new StringBuilder()
+                    .append(REQUESTED_CODE_MESSAGE)
+                    .append(requestCode)
+                    .append(RESULT_CODE_MESSAGE)
+                    .append(resultCode), Toast.LENGTH_LONG)
+                    .show();
             }
         }
     }
@@ -122,39 +125,45 @@ public class ExamplesUtils {
         options.add(new Pair<>("Business - Secondary And Help - Approved", startCompleteApprovedBusiness(activity)));
         options.add(new Pair<>("Business - Primary And Help - Pending", startCompletePendingBusiness(activity)));
         options.add(new Pair<>("Business - No help - Pending", startPendingBusinessNoHelp(activity)));
-        options.add(new Pair<>("Business - Complete w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethod(activity)));
-        options.add(new Pair<>("Business - NoHelp w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethodNoHelp(activity)));
+        options.add(new Pair<>("Business - Complete w/pm - Approved",
+            startCompleteApprovedBusinessWithPaymentMethod(activity)));
+        options.add(new Pair<>("Business - NoHelp w/pm - Approved",
+            startCompleteApprovedBusinessWithPaymentMethodNoHelp(activity)));
+        options.add(new Pair<>("Base flow - Tracks with listener", startBaseFlowWithTrackListener(activity)));
 
         return options;
     }
 
     private static Builder startCompleteRejectedBusiness(Activity activity) {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.REJECTED, R.drawable.mpsdk_icon_card, "Title")
-                        .setHelp("Help description!")
-                        .setReceiptId("#123455")
-                        .setPaymentMethodVisibility(true)
-                        .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
-                        .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
-                        .build();
+            new BusinessPayment.Builder(BusinessPayment.Status.REJECTED, R.drawable.mpsdk_icon_card, "Title")
+                .setHelp("Help description!")
+                .setReceiptId("#123455")
+                .setPaymentMethodVisibility(true)
+                .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
+                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+                .build();
 
         return customBusinessPayment(activity, payment);
     }
 
     private static Builder startCompleteApprovedBusinessWithPaymentMethod(Activity activity) {
-        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", "Title")
-                .setHelp("Help description!")
-                .setReceiptId("#123455")
-                .setStatementDescription("PEDRO")
-                .setPaymentMethodVisibility(true)
-                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
-                .build();
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED,
+            "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg",
+            "Title")
+            .setHelp("Help description!")
+            .setReceiptId("#123455")
+            .setStatementDescription("PEDRO")
+            .setPaymentMethodVisibility(true)
+            .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+            .build();
 
         return customBusinessPayment(activity, payment);
     }
 
     private static Builder startCompleteApprovedBusinessWithPaymentMethodNoHelp(Activity activity) {
-        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+        BusinessPayment payment =
+            new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
                 .setReceiptId("#123455")
                 .setPaymentMethodVisibility(true)
                 .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
@@ -163,34 +172,33 @@ public class ExamplesUtils {
         return customBusinessPayment(activity, payment);
     }
 
-
     private static Builder startCompleteApprovedBusiness(Activity activity) {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
-                        .setHelp("Help description!")
-                        .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
-                        .build();
+            new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+                .setHelp("Help description!")
+                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+                .build();
 
         return customBusinessPayment(activity, payment);
     }
 
     private static Builder startCompletePendingBusiness(Activity activity) {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
-                        .setHelp("Help description!")
-                        .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
-                        .build();
+            new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
+                .setHelp("Help description!")
+                .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
+                .build();
 
         return customBusinessPayment(activity, payment);
     }
 
     private static Builder startPendingBusinessNoHelp(Activity activity) {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
-                        .setReceiptId("#123455")
-                        .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
-                        .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
-                        .build();
+            new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
+                .setReceiptId("#123455")
+                .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
+                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+                .build();
 
         return customBusinessPayment(activity, payment);
     }
@@ -202,7 +210,7 @@ public class ExamplesUtils {
     private static Builder customExitReviewAndConfirm(Activity activity) {
         CustomComponent.Props props = new CustomComponent.Props(new HashMap<String, Object>(), null);
         ReviewAndConfirmPreferences preferences = new ReviewAndConfirmPreferences.Builder()
-                .setTopComponent(new SampleCustomComponent(props)).build();
+            .setTopComponent(new SampleCustomComponent(props)).build();
         return createBaseWithDecimals(activity).setReviewAndConfirmPreferences(preferences);
     }
 
@@ -215,14 +223,31 @@ public class ExamplesUtils {
         return createBase(activity).setDiscount(discount);
     }
 
+    private static Builder startBaseFlowWithTrackListener(final Activity activity) {
+        MPTracker.getInstance().setTracksListener(new TracksListener<HashMap<String, String>>() {
+
+            @Override
+            public void onScreenLaunched(@NonNull final String screenName,
+                @NonNull final Map<String, String> extraParams) {
+                Log.d("Screen track: ", screenName + " " + extraParams);
+            }
+
+            @Override
+            public void onEvent(@NonNull final HashMap<String, String> event) {
+                Log.d("Event track: ", event.toString());
+            }
+        });
+        return createBase(activity);
+    }
+
     public static Builder createBase(final Activity activity) {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder()
-                .setActivity(activity)
-                .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
-                .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID))
-                .setDataInitializationTask(getDataInitializationTask(defaultData));
+            .setActivity(activity)
+            .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
+            .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID))
+            .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
     public static Builder createBaseWithDecimals(final Activity activity) {
@@ -230,20 +255,20 @@ public class ExamplesUtils {
         defaultData.put("amount", 120f);
 
         return new Builder()
-                .setActivity(activity)
-                .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
-                .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID_WITH_DECIMALS))
-                .setDataInitializationTask(getDataInitializationTask(defaultData));
+            .setActivity(activity)
+            .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
+            .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID_WITH_DECIMALS))
+            .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
     public static Builder createBaseWithNoDecimals(final Activity activity) {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder()
-                .setActivity(activity)
-                .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
-                .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID_WITH_NO_DECIMALS))
-                .setDataInitializationTask(getDataInitializationTask(defaultData));
+            .setActivity(activity)
+            .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
+            .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID_WITH_NO_DECIMALS))
+            .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
     @NonNull

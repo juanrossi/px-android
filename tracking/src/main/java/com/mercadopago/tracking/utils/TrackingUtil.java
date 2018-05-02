@@ -1,10 +1,6 @@
 package com.mercadopago.tracking.utils;
 
-/**
- * Created by vaserber on 6/5/17.
- */
-
-public class TrackingUtil {
+public final class TrackingUtil {
 
     //Action IDs
     public static final String ACTION_CHECKOUT_CONFIRMED = "/checkout_confirmed";
@@ -30,7 +26,6 @@ public class TrackingUtil {
     public static final String SCREEN_ID_INSTALLMENTS = "/card/installments";
 
     //Screen Names
-    public static final String SCREEN_NAME_CHECKOUT = "INIT_CHECKOUT";
     public static final String SCREEN_NAME_PAYMENT_VAULT = "PAYMENT_METHOD_SEARCH";
     public static final String SCREEN_NAME_PAYMENT_VAULT_TICKET = "PAYMENT_METHOD_SEARCH";
     public static final String SCREEN_NAME_PAYMENT_VAULT_BANK_TRANSFER = "PAYMENT_METHOD_SEARCH";
@@ -82,6 +77,7 @@ public class TrackingUtil {
     public static final String PROPERTY_ERROR_STATUS = "error_status";
     public static final String PROPERTY_ERROR_CODE = "error_code";
     public static final String PROPERTY_ERROR_REQUEST = "error_request_origin";
+    public static final String PROPERTY_ERROR_MESSAGE = "error_message";
     public static final String PROPERTY_OPTIONS = "options";
     public static final String PROPERTY_CARD_ID = "card_id";
     public static final String PROPERTY_INSTALLMENTS = "installments";
@@ -96,4 +92,7 @@ public class TrackingUtil {
     public static final String REALTIME_STRATEGY = "realtime_strategy";
     public static final String BATCH_STRATEGY = "batch_strategy";
     public static final String FORCED_STRATEGY = "forced_strategy";
+
+    private TrackingUtil() {
+    }
 }

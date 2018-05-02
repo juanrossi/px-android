@@ -2,6 +2,7 @@ package com.mercadopago;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -80,6 +81,9 @@ public class ErrorActivity extends MercadoPagoBaseActivity {
                 }
                 if (apiException.getCause() != null && !apiException.getCause().isEmpty() && apiException.getCause().get(0).getCode() != null) {
                     builder.addProperty(TrackingUtil.PROPERTY_ERROR_CODE, String.valueOf(apiException.getCause().get(0).getCode()));
+                }
+                if (!TextUtils.isEmpty(apiException.getMessage())) {
+                    builder.addProperty(TrackingUtil.PROPERTY_ERROR_MESSAGE, apiException.getMessage());
                 }
             }
 

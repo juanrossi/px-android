@@ -49,6 +49,10 @@ public class ApiException {
                 && (getCause() == null || getCause().isEmpty());
     }
 
+    public boolean hasStatus() {
+        return status != null;
+    }
+
     public boolean containsCause(String code) {
         boolean found = false;
         if (cause != null && code != null) {

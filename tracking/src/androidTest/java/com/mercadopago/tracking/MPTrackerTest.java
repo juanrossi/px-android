@@ -2,6 +2,7 @@ package com.mercadopago.tracking;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
@@ -21,6 +22,8 @@ import com.mercadopago.tracking.strategies.TrackingStrategy;
 import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.tracking.utils.TrackingUtil;
 
+import java.util.Map;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -78,23 +81,34 @@ public class MPTrackerTest {
     private static final String MOCKED_STACK_TRACE_METHOD = "method_name";
     private static final String MOCKED_SCREEN_REVIEW_AND_CONFIRM = "Review and confirm";
 
+    private Context context;
+
+    @Before
+    public void setUp(){
+        context = InstrumentationRegistry.getTargetContext();
+    }
+
+    private AppInformation getAppInformation() {
+        return new AppInformation.Builder()
+            .setVersion(MOCKED_CHECKOUT_VERSION)
+            .setPlatform(MOCKED_PLATFORM)
+            .build();
+    }
+
+    private DeviceInfo getDeviceInfo() {
+        return new DeviceInfo.Builder()
+            .setModel(MOCKED_MODEL)
+            .setOS(MOCKED_OS)
+            .setResolution(MOCKED_RESOLUTION)
+            .setScreenSize(MOCKED_SCREEN_SIZE)
+            .setSystemVersion(MOCKED_SYSTEM_VERSION)
+            .build();
+    }
 
     @Test
     public void sendScreenViewEventTrack() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
-        AppInformation appInformation = new AppInformation.Builder()
-                .setVersion(MOCKED_CHECKOUT_VERSION)
-                .setPlatform(MOCKED_PLATFORM)
-                .build();
-
-        DeviceInfo deviceInfo = new DeviceInfo.Builder()
-                .setModel(MOCKED_MODEL)
-                .setOS(MOCKED_OS)
-                .setResolution(MOCKED_RESOLUTION)
-                .setScreenSize(MOCKED_SCREEN_SIZE)
-                .setSystemVersion(MOCKED_SYSTEM_VERSION)
-                .build();
+        final AppInformation appInformation = getAppInformation();
+        final DeviceInfo deviceInfo = getDeviceInfo();
 
         final Event screenViewEvent = new ScreenViewEvent.Builder()
                 .setFlowId(MOCKED_FLOW_ID)
@@ -102,23 +116,23 @@ public class MPTrackerTest {
                 .setScreenName(MOCKED_SCREEN_REVIEW_AND_CONFIRM)
                 .build();
 
-        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, appContext);
+        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, context);
 
         MPTracker.getInstance().setMPTrackingService(new MPMockedTrackingService());
 
         MPTracker.getInstance().setTracksListener(new TracksListener() {
             @Override
-            public void onScreenLaunched(String screenName) {
+            public void onScreenLaunched(@NonNull final String screenName, @Nullable final Map extraParams) {
                 assertEquals(((ScreenViewEvent) screenViewEvent).getScreenName(), screenName);
             }
 
             @Override
-            public void onEvent(@NonNull Object event) {
+            public void onEvent(@NonNull final Object event) {
 
             }
         });
 
-        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, screenViewEvent, appContext, TrackingUtil.BATCH_STRATEGY);
+        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, screenViewEvent, context, TrackingUtil.BATCH_STRATEGY);
 
         TrackingStrategy strategy = MPTracker.getInstance().getTrackingStrategy();
 
@@ -127,21 +141,44 @@ public class MPTrackerTest {
     }
 
     @Test
+    public void sendScreenViewEventWithExtraParamsInTrack() {
+        final AppInformation appInformation = getAppInformation();
+        final DeviceInfo deviceInfo = getDeviceInfo();
+
+        final Event screenViewEvent = new ScreenViewEvent.Builder()
+            .setFlowId(MOCKED_FLOW_ID)
+            .setScreenId(MOCKED_SCREEN_ID_1)
+            .setScreenName(MOCKED_SCREEN_REVIEW_AND_CONFIRM)
+            .addProperty(MOCKED_PROPERTY_KEY_1, MOCKED_PROPERTY_VALUE_1)
+            .build();
+
+        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, context);
+
+        MPTracker.getInstance().setMPTrackingService(new MPMockedTrackingService());
+
+        MPTracker.getInstance().setTracksListener(new TracksListener<HashMap<String, String>>() {
+
+            @Override
+            public void onScreenLaunched(@NonNull final String screenName,
+                @NonNull final Map<String, String> extraParams) {
+                assertNotNull(extraParams);
+                assertEquals(1, extraParams.size());
+                assertEquals(MOCKED_PROPERTY_VALUE_1, extraParams.get(MOCKED_PROPERTY_KEY_1));
+            }
+
+            @Override
+            public void onEvent(@NonNull final HashMap<String, String> event) {
+
+            }
+        });
+
+        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, screenViewEvent, context, TrackingUtil.BATCH_STRATEGY);
+    }
+
+    @Test
     public void sendActionEventTrack() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
-        AppInformation appInformation = new AppInformation.Builder()
-                .setVersion(MOCKED_CHECKOUT_VERSION)
-                .setPlatform(MOCKED_PLATFORM)
-                .build();
-
-        DeviceInfo deviceInfo = new DeviceInfo.Builder()
-                .setModel(MOCKED_MODEL)
-                .setOS(MOCKED_OS)
-                .setResolution(MOCKED_RESOLUTION)
-                .setScreenSize(MOCKED_SCREEN_SIZE)
-                .setSystemVersion(MOCKED_SYSTEM_VERSION)
-                .build();
+        final AppInformation appInformation = getAppInformation();
+        final DeviceInfo deviceInfo = getDeviceInfo();
 
         Event actionEvent = new ActionEvent.Builder()
                 .setAction(MOCKED_ACTION)
@@ -153,19 +190,18 @@ public class MPTrackerTest {
                 .addProperty(MOCKED_PROPERTY_KEY_1, MOCKED_PROPERTY_VALUE_1)
                 .build();
 
-        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, appContext);
+        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, context);
 
         MPTracker.getInstance().setMPTrackingService(new MPMockedTrackingService());
 
         MPTracker.getInstance().setTracksListener(new TracksListener<HashMap>() {
-
             @Override
-            public void onScreenLaunched(String screenName) {
+            public void onScreenLaunched(@NonNull final String screenName, @Nullable final Map extraParams) {
 
             }
 
             @Override
-            public void onEvent(@NonNull HashMap eventMap) {
+            public void onEvent(@NonNull final HashMap eventMap) {
                 assertEquals(eventMap.get(ACTION_EVENT_KEY_ACTION), MOCKED_ACTION);
                 assertEquals(eventMap.get(ACTION_EVENT_KEY_CATEGORY), MOCKED_CATEGORY);
                 assertEquals(eventMap.get(ACTION_EVENT_KEY_LABEL), MOCKED_LABEL);
@@ -173,169 +209,75 @@ public class MPTrackerTest {
                 assertEquals(eventMap.get(ACTION_EVENT_KEY_SCREEN_ID), MOCKED_SCREEN_ID_1);
                 assertEquals(eventMap.get(ACTION_EVENT_KEY_SCREEN_NAME), MOCKED_SCREEN_NAME_1);
             }
-
         });
 
-        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, actionEvent, appContext, TrackingUtil.BATCH_STRATEGY);
-    }
-
-    @Test
-    public void sendErrorEventTrack() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
-        AppInformation appInformation = new AppInformation.Builder()
-                .setVersion(MOCKED_CHECKOUT_VERSION)
-                .setPlatform(MOCKED_PLATFORM)
-                .build();
-
-        DeviceInfo deviceInfo = new DeviceInfo.Builder()
-                .setModel(MOCKED_MODEL)
-                .setOS(MOCKED_OS)
-                .setResolution(MOCKED_RESOLUTION)
-                .setScreenSize(MOCKED_SCREEN_SIZE)
-                .setSystemVersion(MOCKED_SYSTEM_VERSION)
-                .build();
-
-        Event errorEvent = new ErrorEvent.Builder()
-                .setErrorClass(MOCKED_ERROR_CLASS_1)
-                .setErrorMessage(MOCKED_ERROR_MESSAGE_1)
-                .setStackTraceList(new ArrayList<StackTraceInfo>())
-                .build();
-
-        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, appContext);
-
-        MPTracker.getInstance().setMPTrackingService(new MPMockedTrackingService());
-
-        MPTracker.getInstance().setTracksListener(new TracksListener() {
-            @Override
-            public void onScreenLaunched(String screenName) {
-
-            }
-
-            @Override
-            public void onEvent(@NonNull Object event) {
-
-            }
-        });
-
+        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, actionEvent, context, TrackingUtil.BATCH_STRATEGY);
     }
 
     @Test
     public void sendPaymentTrack() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
         MPTracker.getInstance().setMPTrackingService(new MPMockedTrackingService());
 
-        MPTracker.getInstance().setTracksListener(new TracksListener() {
-            @Override
-            public void onScreenLaunched(String screenName) {
-
-            }
-
-            @Override
-            public void onEvent(@NonNull Object event) {
-
-            }
-        });
-
         //Initialize tracker before creating a payment
-        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, appContext);
+        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, context);
 
         PaymentIntent paymentIntent = MPTracker.getInstance().trackPayment(MOCKED_PAYMENT_ID, MOCKED_PAYMENT_TYPE_ID);
 
-        assertEquals(paymentIntent.mPaymentId, String.valueOf(MOCKED_PAYMENT_ID));
-        assertEquals(paymentIntent.mPlatform, MOCKED_PAYMENT_PLATFORM);
-        assertEquals(paymentIntent.mPublicKey, MOCKED_PUBLIC_KEY);
-        assertEquals(paymentIntent.mSdkVersion, MOCKED_CHECKOUT_VERSION);
-        assertEquals(paymentIntent.mSite, MOCKED_SITE_ID);
-        assertEquals(paymentIntent.mType, MOCKED_SDK_TYPE);
+        assertEquals(String.valueOf(MOCKED_PAYMENT_ID), paymentIntent.mPaymentId);
+        assertEquals(MOCKED_PAYMENT_PLATFORM, paymentIntent.mPlatform);
+        assertEquals(MOCKED_PUBLIC_KEY, paymentIntent.mPublicKey);
+        assertEquals(MOCKED_CHECKOUT_VERSION, paymentIntent.mSdkVersion);
+        assertEquals(MOCKED_SITE_ID, paymentIntent.mSite);
+        assertEquals(MOCKED_SDK_TYPE, paymentIntent.mType);
     }
 
     @Test
     public void sendTokenTrack() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
         MPTracker.getInstance().setMPTrackingService(new MPMockedTrackingService());
 
-        MPTracker.getInstance().setTracksListener(new TracksListener() {
-            @Override
-            public void onScreenLaunched(String screenName) {
-
-            }
-
-            @Override
-            public void onEvent(@NonNull Object event) {
-
-            }
-        });
-
         //Initialize tracker before creating a token
-        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, appContext);
+        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, context);
 
-        TrackingIntent trackingIntent = MPTracker.getInstance().trackToken(MOCKED_TOKEN_ID);
+        final TrackingIntent trackingIntent = MPTracker.getInstance().trackToken(MOCKED_TOKEN_ID);
 
-        assertEquals(trackingIntent.mPlatform, MOCKED_PAYMENT_PLATFORM);
-        assertEquals(trackingIntent.mPublicKey, MOCKED_PUBLIC_KEY);
-        assertEquals(trackingIntent.mSdkVersion, MOCKED_CHECKOUT_VERSION);
-        assertEquals(trackingIntent.mSite, MOCKED_SITE_ID);
-        assertEquals(trackingIntent.mType, MOCKED_SDK_TYPE);
-        assertEquals(trackingIntent.mCardToken, MOCKED_TOKEN_ID);
+        assertEquals(MOCKED_PAYMENT_PLATFORM, trackingIntent.mPlatform);
+        assertEquals(MOCKED_PUBLIC_KEY, trackingIntent.mPublicKey);
+        assertEquals(MOCKED_CHECKOUT_VERSION, trackingIntent.mSdkVersion);
+        assertEquals(MOCKED_SITE_ID, trackingIntent.mSite);
+        assertEquals(MOCKED_SDK_TYPE, trackingIntent.mType);
+        assertEquals(MOCKED_TOKEN_ID, trackingIntent.mCardToken);
     }
 
     @Test
     public void sendErrorEventWithStackTraceInfo() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
+        final AppInformation appInformation = getAppInformation();
+        final DeviceInfo deviceInfo = getDeviceInfo();
 
-        AppInformation appInformation = new AppInformation.Builder()
-                .setVersion(MOCKED_CHECKOUT_VERSION)
-                .setPlatform(MOCKED_PLATFORM)
-                .build();
-
-        DeviceInfo deviceInfo = new DeviceInfo.Builder()
-                .setModel(MOCKED_MODEL)
-                .setOS(MOCKED_OS)
-                .setResolution(MOCKED_RESOLUTION)
-                .setScreenSize(MOCKED_SCREEN_SIZE)
-                .setSystemVersion(MOCKED_SYSTEM_VERSION)
-                .build();
-
-        List<StackTraceInfo> stackTraceInfoList = new ArrayList<>();
-        StackTraceInfo stackTraceInfo = new StackTraceInfo(MOCKED_STACK_TRACE_FILE, MOCKED_STACK_TRACE_LINE,
+        final List<StackTraceInfo> stackTraceInfoList = new ArrayList<>();
+        final StackTraceInfo stackTraceInfo = new StackTraceInfo(MOCKED_STACK_TRACE_FILE, MOCKED_STACK_TRACE_LINE,
                 MOCKED_STACK_TRACE_COLUMN, MOCKED_STACK_TRACE_METHOD);
         stackTraceInfoList.add(stackTraceInfo);
 
-        ErrorEvent errorEvent = new ErrorEvent.Builder()
+        final ErrorEvent errorEvent = new ErrorEvent.Builder()
                 .setErrorClass(MOCKED_ERROR_CLASS_1)
                 .setErrorMessage(MOCKED_ERROR_MESSAGE_1)
                 .setStackTraceList(stackTraceInfoList)
                 .build();
 
-        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, appContext);
+        MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, context);
 
         MPTracker.getInstance().setMPTrackingService(new MPMockedTrackingService());
 
-        MPTracker.getInstance().setTracksListener(new TracksListener() {
-            @Override
-            public void onScreenLaunched(String screenName) {
+        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, errorEvent, context, null);
 
-            }
-
-            @Override
-            public void onEvent(@NonNull Object event) {
-
-            }
-        });
-
-        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, errorEvent, appContext, null);
-
-        ErrorEvent sentEvent = (ErrorEvent) MPTracker.getInstance().getEvent();
-        List<StackTraceInfo> sentStackTraceList = sentEvent.getStackTraceList();
-        assertTrue(sentStackTraceList.size() == 1);
-        StackTraceInfo sentStackTrace = sentStackTraceList.get(0);
-        assertEquals(sentStackTrace.getFile(), MOCKED_STACK_TRACE_FILE);
-        assertEquals(sentStackTrace.getLineNumber(), MOCKED_STACK_TRACE_LINE);
-        assertEquals(sentStackTrace.getColumnNumber(), MOCKED_STACK_TRACE_COLUMN);
-        assertEquals(sentStackTrace.getMethod(), MOCKED_STACK_TRACE_METHOD);
+        final ErrorEvent sentEvent = (ErrorEvent) MPTracker.getInstance().getEvent();
+        final List<StackTraceInfo> sentStackTraceList = sentEvent.getStackTraceList();
+        assertEquals(1, sentStackTraceList.size());
+        final StackTraceInfo sentStackTrace = sentStackTraceList.get(0);
+        assertEquals(MOCKED_STACK_TRACE_FILE, sentStackTrace.getFile());
+        assertEquals(MOCKED_STACK_TRACE_LINE, sentStackTrace.getLineNumber());
+        assertEquals(MOCKED_STACK_TRACE_COLUMN, sentStackTrace.getColumnNumber());
+        assertEquals(MOCKED_STACK_TRACE_METHOD, sentStackTrace.getMethod());
     }
 
 }

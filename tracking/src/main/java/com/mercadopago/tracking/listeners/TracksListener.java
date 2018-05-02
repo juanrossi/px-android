@@ -1,27 +1,31 @@
 package com.mercadopago.tracking.listeners;
 
 import android.support.annotation.NonNull;
-
-/**
- * Created by vaserber on 6/5/17.
- */
+import java.util.Map;
 
 public interface TracksListener<T> {
 
-    void onScreenLaunched(@NonNull final String screenName);
+    /**
+     * This method is called when a new screen is shown to the user.
+     *
+     * @param screenName Name of the screen that is shown. Screen names start with prefixes that are described
+     * in TrackingUtil.java, under the key SCREEN_NAME.
+     * Example:
+     * {@link com.mercadopago.tracking.utils.TrackingUtil#SCREEN_NAME_PAYMENT_VAULT}
+     *
+     * @param extraParams Map containing information that the screen is showing. It also contains information
+     * about errors if the screen launched is the Error screen.
+     * The keys of the map are the ones described under the key PROPERTY in TrackingUtil.java.
+     * Example:
+     * Key = {@link com.mercadopago.tracking.utils.TrackingUtil#PROPERTY_ERROR_CODE}
+     */
+    void onScreenLaunched(@NonNull final String screenName, @NonNull final Map<String, String> extraParams);
 
-    @Deprecated
+    /**
+     * This method is called when an important event happens that needs tracking.
+     * Events: Checkout initialization, Confirm payment button pressed.
+     *
+     * @param event Information of the event
+     */
     void onEvent(@NonNull final T event);
-
-    class Empty<T> implements TracksListener<T> {
-        @Override
-        public void onScreenLaunched(@NonNull String screenName) {
-            //Do nothing
-        }
-
-        @Override
-        public void onEvent(@NonNull Object event) {
-            //Do nothing
-        }
-    }
 }
