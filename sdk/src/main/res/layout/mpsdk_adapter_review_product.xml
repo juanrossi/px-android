@@ -14,12 +14,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/mpsdkAdapterReviewProductImage"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"/>
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkAdapterReviewProductText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -34,7 +32,6 @@
             tools:text="nombre del producto asdasdasdasdasds"/>
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkAdapterReviewProductDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -49,7 +46,6 @@
             android:textColor="@color/mpsdk_review_description_text"
             tools:text="descripcion del producto"/>
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkAdapterReviewProductQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -63,7 +59,6 @@
             android:textColor="@color/mpsdk_review_description_text"
             tools:text="Cantidad"/>
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkAdapterReviewProductPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"

@@ -2,7 +2,6 @@ package com.mercadopago.testcheckout.pages;
 
 
 import android.support.test.espresso.contrib.RecyclerViewActions;
-
 import com.mercadopago.R;
 
 import static android.support.test.espresso.Espresso.onView;

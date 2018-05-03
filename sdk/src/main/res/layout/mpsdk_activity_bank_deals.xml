@@ -32,7 +32,6 @@
         android:orientation="vertical">
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkEmptyList"
             style="@style/mpsdk_big_text_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

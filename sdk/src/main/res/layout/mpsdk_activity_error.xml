@@ -6,7 +6,6 @@
     android:background="@color/mpsdk_white">
 
     <LinearLayout
-        android:id="@+id/mpsdkRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -15,7 +14,6 @@
         android:paddingRight="@dimen/mpsdk_l_margin">
 
         <ImageView
-            android:id="@+id/mpsdkErrorImage"
             android:layout_width="@dimen/mpsdk_xl_height"
             android:layout_height="@dimen/mpsdk_xl_height"
             android:layout_gravity="center_horizontal"

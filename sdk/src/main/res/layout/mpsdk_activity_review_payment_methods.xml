@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/mpsdkReviewPaymentMethodsContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mpsdk_discounts_summary_background_color"
@@ -24,7 +23,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/mpsdkReviewPaymentMethodsTitleContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/mpsdk_round_summary_top"
@@ -32,7 +30,6 @@
                 android:orientation="vertical">
 
                 <com.mercadopago.customviews.MPTextView
-                    android:id="@+id/mpsdkReviewPaymentMethodsTitleText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -50,7 +47,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/mpsdkReviewPaymentMethodsListContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/mpsdk_round_summary_bottom"

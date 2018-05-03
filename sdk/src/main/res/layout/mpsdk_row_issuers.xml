@@ -8,7 +8,6 @@
     android:background="@drawable/mpsdk_item_focusable_list">
 
     <LinearLayout
-        android:id="@+id/mpsdkIssuersItem"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mpsdk_list_item_height"
@@ -23,7 +22,6 @@
             android:layout_gravity="center_vertical"
             android:orientation="horizontal">
             <com.mercadopago.customviews.MPTextView
-                android:id="@+id/mpsdkAdapterIssuersText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"

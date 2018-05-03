@@ -16,7 +16,6 @@
         android:paddingTop="40dp">
 
         <ImageView
-            android:id="@+id/mpsdkAdapterReviewPaymentImage"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal|center_vertical"
@@ -24,7 +23,6 @@
             tools:src="@drawable/mpsdk_bapropagos" />
 
         <FrameLayout
-            android:id="@+id/mpsdkImageContainer"
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
@@ -32,7 +30,6 @@
             android:visibility="gone">
 
             <ImageView
-                android:id="@+id/mpsdkAdapterReviewPaymentPluginImage"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal|center_vertical"
@@ -40,7 +37,6 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/mpsdkAdapterReviewPayerCostContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -68,7 +64,6 @@
             tools:text="No incluye intereses bancarios" />
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkAdapterReviewPaymentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -83,7 +78,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/mpsdkExtraInfoContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -95,6 +89,7 @@
 
             <ImageView
                 android:id="@+id/mpsdkIconTime"
+                tools:ignore="UnusedIds"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -110,7 +105,6 @@
                 android:tint="@color/mpsdk_warm_grey_with_alpha" />
 
             <com.mercadopago.customviews.MPTextView
-                android:id="@+id/mpsdkAdapterReviewPaymentDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@id/mpsdkIconTime"
@@ -136,7 +130,6 @@
             tools:visibility="visible" />
 
         <FrameLayout
-            android:id="@+id/mpsdkAdapterReviewPaymentChangeButton"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginEnd="25dp"
@@ -148,7 +141,6 @@
             tools:visibility="visible">
 
             <com.mercadopago.customviews.MPTextView
-                android:id="@+id/mpsdkReviewChangePaymentText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

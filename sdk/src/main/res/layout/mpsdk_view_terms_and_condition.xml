@@ -28,7 +28,6 @@
         android:orientation="horizontal">
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkReviewTermsAndConditions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/mpsdk_text_terms_and_conditions_linked"

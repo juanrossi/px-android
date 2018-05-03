@@ -108,7 +108,6 @@
         android:orientation="vertical" />
 
     <LinearLayout
-        android:id="@+id/mpsdkCheckoutUnlockCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mpsdk_l_margin"
@@ -156,7 +155,6 @@
                     app:font_style="light" />
 
                 <com.mercadopago.customviews.MPTextView
-                    android:id="@+id/mpsdkUnlockCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/mpsdk_progress_stroke"

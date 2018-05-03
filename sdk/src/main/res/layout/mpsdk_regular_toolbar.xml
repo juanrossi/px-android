@@ -20,7 +20,6 @@
         style="@style/mpsdk_toolbar_text_large"/>
 
     <com.mercadopago.customviews.MPTextView
-        android:id="@+id/mpsdkButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"

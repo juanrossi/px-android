@@ -19,7 +19,6 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/mpsdkActivitySummaryView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
@@ -30,7 +29,6 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/mpsdkReviewSummarySubtotal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -47,7 +45,6 @@
             android:textSize="18dp" />
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkReviewSummarySubtotalText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.4"
@@ -154,7 +151,6 @@
         tools:text="CFT 0,00%" />
 
     <LinearLayout
-        android:id="@+id/mpsdkCheckoutUnlockCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="33dp"
@@ -202,7 +198,6 @@
                     app:font_style="light" />
 
                 <com.mercadopago.customviews.MPTextView
-                    android:id="@+id/mpsdkUnlockCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"

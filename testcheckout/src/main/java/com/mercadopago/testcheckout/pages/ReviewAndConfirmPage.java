@@ -1,6 +1,5 @@
 package com.mercadopago.testcheckout.pages;
 
-
 import com.mercadopago.R;
 
 import static android.support.test.espresso.Espresso.onView;

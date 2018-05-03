@@ -9,7 +9,6 @@
     android:background="@drawable/mpsdk_item_focusable_list">
 
     <LinearLayout
-        android:id="@+id/mpsdkInstallmentsItem"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
