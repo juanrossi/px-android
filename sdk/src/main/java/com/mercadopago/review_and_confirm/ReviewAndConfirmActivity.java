@@ -120,8 +120,10 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
             public void onGlobalLayout() {
                 CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) scrollView.getLayoutParams();
                 int bottomMargin = floatingConfirmLayout.getHeight();
-                params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, bottomMargin);
-                scrollView.setLayoutParams(params);
+                if (bottomMargin != params.bottomMargin) {
+                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, bottomMargin);
+                    scrollView.setLayoutParams(params);
+                }
             }
         });
     }
