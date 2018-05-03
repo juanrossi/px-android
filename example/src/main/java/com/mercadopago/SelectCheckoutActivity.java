@@ -30,7 +30,7 @@ public class SelectCheckoutActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
-        recyclerView.setAdapter(new SelectionAdapter(getOptions(this)));
+        recyclerView.setAdapter(new SelectionAdapter(getOptions()));
         recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
@@ -78,7 +78,7 @@ public class SelectCheckoutActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final View v) {
                         assert pair.second != null;
-                        pair.second.startForPayment();
+                        pair.second.build().startForPayment(SelectCheckoutActivity.this);
                     }
                 });
             }

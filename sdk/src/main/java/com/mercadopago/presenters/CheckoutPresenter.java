@@ -39,6 +39,7 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.providers.CheckoutProvider;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.JsonUtil;
+import com.mercadopago.util.TextUtil;
 import com.mercadopago.util.TextUtils;
 import com.mercadopago.views.CheckoutView;
 
@@ -51,7 +52,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private static final String INTERNAL_SERVER_ERROR_FIRST_DIGIT = "5";
 
-    private CheckoutPreference mCheckoutPreference;
+
     private PaymentResultScreenPreference mPaymentResultScreenPreference;
     private FlowPreference mFlowPreference;
     private ServicePreference mServicePreference;
@@ -61,7 +62,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     private PaymentData mPaymentDataInput;
     private PaymentResult mPaymentResultInput;
     private int mRequestedResult;
-
     private PaymentMethodSearch mPaymentMethodSearch;
     private Issuer mSelectedIssuer;
     private PayerCost mSelectedPayerCost;
@@ -70,47 +70,48 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     private PaymentMethod mSelectedPaymentMethod;
     private Payment mCreatedPayment;
     private Payer mCollectedPayer;
-
     private Boolean mPaymentMethodEdited = false;
     private boolean mPaymentMethodEditionRequested = false;
     private PaymentRecovery mPaymentRecovery;
-
     private String mCustomerId;
     private String mIdempotencyKeySeed;
     private String mCurrentPaymentIdempotencyKey;
-
     private transient FailureRecovery failureRecovery;
-
     private DataInitializationTask dataInitializationTask;
 
+    /**
+     * If preference id is set then the checkout did not start
+     * with a custom CheckoutPreference created by hand.
+     */
+    private String checkoutPreferenceId;
+
+    /**
+     * If preference is set then the checkout have just started
+     * with a custom CheckoutPreference created by hand.
+     */
+    private CheckoutPreference mCheckoutPreference;
+
     public CheckoutPresenter() {
-        if (mFlowPreference == null) {
-            mFlowPreference = new FlowPreference.Builder().build();
-        }
-        if (mServicePreference == null) {
-            mServicePreference = new ServicePreference.Builder().build();
-        }
+        mFlowPreference = new FlowPreference.Builder().build();
+        mServicePreference = new ServicePreference.Builder().build();
     }
 
     public void initialize() {
         getView().showProgress();
-        try {
-            validateParameters();
-            if (mCheckoutPreference.getId() != null) {
-                retrieveCheckoutPreference();
-            } else {
-                startCheckoutForPreference();
-            }
-        } catch (IllegalStateException e) {
-            String userMessage = getResourcesProvider().getCheckoutExceptionMessage(e);
-            String exceptionDetail = e.getMessage();
-            getView().showError(new MercadoPagoError(userMessage, exceptionDetail, false));
+        configurePreference();
+    }
+
+    private void configurePreference() {
+        if (TextUtil.isEmpty(checkoutPreferenceId)) { // custom checkout preference
+            startCheckoutForPreference();
+        } else {
+            retrieveCheckoutPreference(checkoutPreferenceId);
         }
     }
 
     private void startCheckoutForPreference() {
         try {
-            validatePreference();
+            mCheckoutPreference.validate();
             getView().initializeMPTracker();
             if (isNewFlow()) {
                 getView().trackScreen();
@@ -124,16 +125,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private boolean isNewFlow() {
         return mPaymentDataInput == null && mPaymentResultInput == null;
-    }
-
-    private void validateParameters() throws IllegalStateException {
-        if (mCheckoutPreference == null) {
-            throw new IllegalStateException("preference not set");
-        }
-    }
-
-    private void validatePreference() throws CheckoutPreferenceException {
-        mCheckoutPreference.validate();
     }
 
     private void startCheckout() {
@@ -471,8 +462,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         return mServicePreference;
     }
 
-    private void retrieveCheckoutPreference() {
-        getResourcesProvider().getCheckoutPreference(mCheckoutPreference.getId(), new TaggedCallback<CheckoutPreference>(ApiUtil.RequestOrigin.GET_PREFERENCE) {
+    private void retrieveCheckoutPreference(final String checkoutPreferenceId) {
+        getResourcesProvider().getCheckoutPreference(checkoutPreferenceId, new TaggedCallback<CheckoutPreference>(ApiUtil.RequestOrigin.GET_PREFERENCE) {
 
             @Override
             public void onSuccess(final CheckoutPreference checkoutPreference) {
@@ -489,7 +480,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
                     setFailureRecovery(new FailureRecovery() {
                         @Override
                         public void recover() {
-                            retrieveCheckoutPreference();
+                            retrieveCheckoutPreference(checkoutPreferenceId);
                         }
                     });
                 }
@@ -990,6 +981,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     public void setRequestedResult(final Integer requestedResult) {
         mRequestedResult = requestedResult;
+    }
+
+    public void setCheckoutPreferenceId(final String checkoutPreferenceId) {
+        this.checkoutPreferenceId = checkoutPreferenceId;
     }
 
     public CheckoutPreference getCheckoutPreference() {

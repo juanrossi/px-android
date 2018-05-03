@@ -4,7 +4,6 @@ package com.mercadopago.testcheckout.pages;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 
 import com.mercadopago.R;
-import com.mercadopago.core.MercadoPagoCheckout;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -24,10 +23,5 @@ public class PaymentMethodPage extends PageObject {
         onView(withId(R.id.mpsdkGroupsList))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
         return new CashPage();
-    }
-
-    public PaymentMethodPage start(MercadoPagoCheckout.Builder builder) {
-        builder.startForPayment();
-        return this;
     }
 }

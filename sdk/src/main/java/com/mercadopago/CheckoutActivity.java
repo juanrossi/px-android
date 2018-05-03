@@ -57,10 +57,14 @@ import static com.mercadopago.plugins.model.ExitAction.EXTRA_CLIENT_RES_CODE;
 
 public class CheckoutActivity extends MercadoPagoBaseActivity implements CheckoutView {
 
+    private static final String EXTRA_PREFERENCE_ID = "extra_preference_id";
+    private static final String EXTRA_CHECKOUT_PREFERENCE = "checkoutPreference";
+
     private static final String MERCHANT_PUBLIC_KEY_BUNDLE = "mMerchantPublicKey";
     private static final String SERVICE_PREFERENCE_BUNDLE = "mServicePreference";
     private static final String RESULT_CODE_BUNDLE = "mRequestedResultCode";
     private static final String PRESENTER_BUNDLE = "mCheckoutPresenter";
+
 
     private static final int PLUGIN_PAYMENT_PROCESSOR_REQUEST_CODE = 200;
     private static final int BUSINESS_REQUEST_CODE = 400;
@@ -99,33 +103,46 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     protected void getActivityParameters() {
 
-        CheckoutPreference checkoutPreference = JsonUtil.getInstance()
-                .fromJson(getIntent().getStringExtra("checkoutPreference"), CheckoutPreference.class);
+        Intent intent = getIntent();
+
         PaymentResultScreenPreference paymentResultScreenPreference = JsonUtil.getInstance()
-                .fromJson(getIntent().getStringExtra("paymentResultScreenPreference"),
+                .fromJson(intent.getStringExtra("paymentResultScreenPreference"),
                         PaymentResultScreenPreference.class);
         FlowPreference flowPreference =
-                JsonUtil.getInstance().fromJson(getIntent().getStringExtra("flowPreference"), FlowPreference.class);
+                JsonUtil.getInstance().fromJson(intent.getStringExtra("flowPreference"), FlowPreference.class);
 
-        Boolean binaryMode = getIntent().getBooleanExtra("binaryMode", false);
+        Boolean binaryMode = intent.getBooleanExtra("binaryMode", false);
 
-        Discount discount = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("discount"), Discount.class);
-        Boolean directDiscountEnabled = getIntent().getBooleanExtra("directDiscountEnabled", true);
+        Discount discount = JsonUtil.getInstance().fromJson(intent.getStringExtra("discount"), Discount.class);
+        Boolean directDiscountEnabled = intent.getBooleanExtra("directDiscountEnabled", true);
 
         PaymentData paymentDataInput =
-                JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentData"), PaymentData.class);
+                JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentData"), PaymentData.class);
         PaymentResult paymentResultInput =
-                JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentResult"), PaymentResult.class);
+                JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentResult"), PaymentResult.class);
 
-        mRequestedResultCode = getIntent().getIntExtra("resultCode", 0);
+        mRequestedResultCode = intent.getIntExtra("resultCode", 0);
 
         ServicePreference servicePreference = JsonUtil.getInstance()
-                .fromJson(getIntent().getStringExtra("servicePreference"), ServicePreference.class);
+                .fromJson(intent.getStringExtra("servicePreference"), ServicePreference.class);
 
-        mMerchantPublicKey = getIntent().getStringExtra("merchantPublicKey");
-        mPrivateKey = checkoutPreference.getPayer() != null ? checkoutPreference.getPayer().getAccessToken() : "";
+        mMerchantPublicKey = intent.getStringExtra("merchantPublicKey");
 
-        mCheckoutPresenter.setCheckoutPreference(checkoutPreference);
+        String preferenceId = intent.getStringExtra(EXTRA_PREFERENCE_ID);
+
+
+        // the preference is set by id
+        if (TextUtil.isEmpty(preferenceId)) {
+            CheckoutPreference checkoutPreference = JsonUtil.getInstance()
+                    .fromJson(intent.getStringExtra(EXTRA_CHECKOUT_PREFERENCE), CheckoutPreference.class);
+
+            mPrivateKey = checkoutPreference.getPayer() != null ? checkoutPreference.getPayer().getAccessToken() : "";
+            mCheckoutPresenter.setCheckoutPreference(checkoutPreference);
+        } else {
+            mPrivateKey = "";
+        }
+
+        mCheckoutPresenter.setCheckoutPreferenceId(preferenceId);
         mCheckoutPresenter.setPaymentResultScreenPreference(paymentResultScreenPreference);
         mCheckoutPresenter.setFlowPreference(flowPreference);
         mCheckoutPresenter.setBinaryMode(binaryMode);

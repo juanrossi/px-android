@@ -14,7 +14,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public class InstallmentsPage extends PageObject {
 
-    public ReviewAndConfirmPage selectInstallments(int installmentsOption){
+    public ReviewAndConfirmPage selectInstallments(int installmentsOption) {
 
         Matcher<View> InstallmentsRecyclerViewMatcher = withId(R.id.mpsdkActivityInstallmentsView);
 

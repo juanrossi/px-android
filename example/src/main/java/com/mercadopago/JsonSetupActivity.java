@@ -1,5 +1,6 @@
 package com.mercadopago;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -20,11 +21,11 @@ import android.widget.Toast;
 import com.google.gson.JsonSyntaxException;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.example.R;
-import com.mercadopago.utils.CheckoutConfiguration;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.TextUtil;
+import com.mercadopago.utils.CheckoutConfiguration;
 
 public class JsonSetupActivity extends AppCompatActivity {
 
@@ -43,6 +44,7 @@ public class JsonSetupActivity extends AppCompatActivity {
         setupCheckoutStart();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initializeViews() {
         mJsonInputEditText = findViewById(R.id.jsonEditText);
         mStartCheckoutButton = findViewById(R.id.checkoutStartButton);
@@ -90,18 +92,13 @@ public class JsonSetupActivity extends AppCompatActivity {
     }
 
     private void startCheckout() {
-        MercadoPagoCheckout.Builder checkoutBuilder = new MercadoPagoCheckout.Builder();
-
-        checkoutBuilder.setActivity(this);
-        if (!TextUtil.isEmpty(mConfiguration.getPublicKey())) {
-            checkoutBuilder.setPublicKey(mConfiguration.getPublicKey());
-        }
+        MercadoPagoCheckout.Builder checkoutBuilder;
 
         if (!TextUtil.isEmpty(mConfiguration.getPrefId())) {
-            checkoutBuilder.setCheckoutPreference(new CheckoutPreference(mConfiguration.getPrefId()));
+            checkoutBuilder = new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), mConfiguration.getPrefId());
         } else {
             CheckoutPreference preference = createCheckoutPreference(mConfiguration);
-            checkoutBuilder.setCheckoutPreference(preference);
+            checkoutBuilder = new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), preference);
         }
 
         if (mConfiguration.getServicePreference() != null) {
@@ -110,11 +107,12 @@ public class JsonSetupActivity extends AppCompatActivity {
         }
 
         checkoutBuilder.setFlowPreference(mConfiguration.getFlowPreference());
+        MercadoPagoCheckout checkout = checkoutBuilder.build();
 
         if (mConfiguration.paymentRequired()) {
-            checkoutBuilder.startForPayment();
+            checkout.startForPayment(this);
         } else if (mConfiguration.paymentDataRequired()) {
-            checkoutBuilder.startForPaymentData();
+            checkout.startForPaymentData(this);
         } else {
             Toast.makeText(this, R.string.start_for_wrong, Toast.LENGTH_SHORT).show();
         }
@@ -149,10 +147,7 @@ public class JsonSetupActivity extends AppCompatActivity {
     }
 
     private CheckoutPreference createCheckoutPreference(CheckoutConfiguration checkoutConfiguration) {
-        return new CheckoutPreference.Builder()
-                .addItems(checkoutConfiguration.getItems())
-                .setPayerEmail(checkoutConfiguration.getPayerEmail())
-                .setSite(checkoutConfiguration.getSite())
+        return new CheckoutPreference.Builder(checkoutConfiguration.getSite(), checkoutConfiguration.getPayerEmail(), checkoutConfiguration.getItems())
                 .build();
     }
 

@@ -11,7 +11,7 @@ import static com.mercadopago.testlib.utils.NestedScroll.nestedScrollTo;
 
 public class ReviewAndConfirmPage extends PageObject {
 
-    public CongratsPage pressConfirmButton(){
+    public CongratsPage pressConfirmButton() {
         try {
             onView(withId(R.id.floating_confirm)).perform(click());
         } catch (PerformException e) {

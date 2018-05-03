@@ -23,7 +23,6 @@ import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.Issuer;
-import com.mercadopago.model.Item;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.Payment;
@@ -33,7 +32,6 @@ import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
-import com.mercadopago.model.Sites;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.plugins.DataInitializationTask;
@@ -55,6 +53,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_PROCESSOR_KEY;
+import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubExpiredPreference;
+import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItem;
+import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItemAndPayer;
+import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceWithAccessToken;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -66,20 +68,6 @@ import static org.mockito.Mockito.when;
 public class CheckoutPresenterTest {
 
     //Validations
-    @Test
-    public void onCheckoutInitializedWithoutCheckoutPreferenceThenShowError() {
-
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        presenter.initialize();
-        assertTrue(view.showingError);
-    }
-
     @Ignore
     @Test
     public void ifDiscountNotSetAndDiscountsEnabledThenGetDiscountCampaigns() {
@@ -91,10 +79,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         presenter.setCheckoutPreference(preference);
 
@@ -119,13 +104,8 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
-
+        CheckoutPreference preference = stubPreferenceOneItem();
         presenter.setCheckoutPreference(preference);
-
         presenter.initialize();
 
         Mockito.verify(provider, times(1)).fetchFonts();
@@ -143,10 +123,9 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
+        CheckoutPreference preference = stubPreferenceOneItem();
         provider.setCheckoutPreferenceResponse(preference);
-        presenter.setCheckoutPreference(preference);
+        presenter.setCheckoutPreferenceId("123");
 
         presenter.initialize();
         assertTrue(provider.checkoutPreferenceRequested);
@@ -161,10 +140,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Dummy", BigDecimal.TEN))
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         presenter.setCheckoutPreference(preference);
 
@@ -182,7 +158,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
+        CheckoutPreference preference = stubExpiredPreference();
 
         provider.setCheckoutPreferenceResponse(preference);
         presenter.setCheckoutPreference(preference);
@@ -201,10 +177,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         presenter.setCheckoutPreference(preference);
@@ -224,10 +197,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -247,10 +217,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -272,10 +239,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -299,10 +263,7 @@ public class CheckoutPresenterTest {
 
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -331,10 +292,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -368,10 +326,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -409,10 +364,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -445,10 +397,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -488,10 +437,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         presenter.setCheckoutPreference(preference);
         presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
@@ -533,10 +479,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -566,10 +509,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -609,10 +549,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -653,10 +590,7 @@ public class CheckoutPresenterTest {
 
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -696,10 +630,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -739,10 +670,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -782,10 +710,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
@@ -816,10 +741,7 @@ public class CheckoutPresenterTest {
                 .disableReviewAndConfirmScreen()
                 .build();
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
@@ -861,10 +783,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
@@ -896,10 +815,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
@@ -934,11 +850,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer payer = new Payer();
-        payer.setEmail("unemail@gmail.com");
-        preference.setPayer(payer);
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -972,10 +884,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-        Payer payer = new Payer();
-        payer.setEmail("unemail@gmail.com");
-        preference.setPayer(payer);
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1014,12 +923,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer payer = new Payer();
-        payer.setEmail("unemail@gmail.com");
-        preference.setPayer(payer);
-
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
@@ -1047,11 +951,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1073,10 +973,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1098,12 +995,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
@@ -1134,10 +1026,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1173,11 +1062,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
+        CheckoutPreference preference = stubPreferenceOneItem();
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getApprovedPayment());
@@ -1206,10 +1091,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1239,11 +1121,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -1285,11 +1163,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -1331,11 +1205,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -1377,11 +1247,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         provider.setCheckoutPreferenceResponse(checkoutPreference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1425,11 +1291,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         provider.setCheckoutPreferenceResponse(checkoutPreference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1484,12 +1346,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
-
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
         provider.setCheckoutPreferenceResponse(checkoutPreference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
 
@@ -1529,11 +1386,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -1575,11 +1428,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -1622,12 +1471,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer preferencePayer = new Payer();
-        preferencePayer.setEmail("unemail@gmail.com");
-        preferencePayer.setAccessToken("AT");
-        preference.setPayer(preferencePayer);
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         String firstName = "FirstName";
         String lastName = "LastName";
@@ -1651,8 +1495,8 @@ public class CheckoutPresenterTest {
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, collectedPayer);
         presenter.onPaymentConfirmation();
 
-        assertEquals(provider.payerPosted.getEmail(), preferencePayer.getEmail());
-        assertEquals(provider.payerPosted.getAccessToken(), preferencePayer.getAccessToken());
+        assertEquals(provider.payerPosted.getEmail(), preference.getPayer().getEmail());
+        assertEquals(provider.payerPosted.getAccessToken(), preference.getPayer().getAccessToken());
         assertEquals(provider.payerPosted.getFirstName(), firstName);
         assertEquals(provider.payerPosted.getLastName(), lastName);
         assertEquals(provider.payerPosted.getIdentification().getType(), identification.getType());
@@ -1669,12 +1513,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer preferencePayer = new Payer();
-        preferencePayer.setEmail("unemail@gmail.com");
-        preferencePayer.setAccessToken("AT");
-        preference.setPayer(preferencePayer);
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1687,8 +1526,8 @@ public class CheckoutPresenterTest {
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         presenter.onPaymentConfirmation();
 
-        assertEquals(provider.payerPosted.getEmail(), preferencePayer.getEmail());
-        assertEquals(provider.payerPosted.getAccessToken(), preferencePayer.getAccessToken());
+        assertEquals(provider.payerPosted.getEmail(), preference.getPayer().getEmail());
+        assertEquals(provider.payerPosted.getAccessToken(), preference.getPayer().getAccessToken());
     }
 
     @Test
@@ -1701,12 +1540,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer preferencePayer = new Payer();
-        preferencePayer.setEmail("unemail@gmail.com");
-        preferencePayer.setAccessToken("AT");
-        preference.setPayer(preferencePayer);
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1732,11 +1566,7 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         provider.setCheckoutPreferenceResponse(checkoutPreference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -1778,10 +1608,7 @@ public class CheckoutPresenterTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
 
         //Real preference, with items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
 
         provider.setCheckoutPreferenceResponse(preference);
         presenter.setCheckoutPreference(preference);
@@ -1803,10 +1630,7 @@ public class CheckoutPresenterTest {
         presenter.attachView(view);
 
         //Real preference, with items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
 
         provider.setCheckoutPreferenceResponse(preference);
         presenter.setCheckoutPreference(preference);

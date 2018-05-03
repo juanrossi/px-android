@@ -10,8 +10,8 @@ import android.widget.ProgressBar;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.example.R;
 import com.mercadopago.lite.core.Settings;
-import com.mercadopago.utils.ExamplesUtils;
 import com.mercadopago.tracking.constants.TrackingEnvironments;
+import com.mercadopago.utils.ExamplesUtils;
 
 import static com.mercadopago.utils.ExamplesUtils.resolveCheckoutResult;
 
@@ -60,8 +60,8 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     }
 
     private void onContinueClicked() {
-        MercadoPagoCheckout.Builder builder = ExamplesUtils.createBase(this);
-        builder.startForPayment();
+        MercadoPagoCheckout.Builder builder = ExamplesUtils.createBase();
+        builder.build().startForPayment(this);
     }
 
 

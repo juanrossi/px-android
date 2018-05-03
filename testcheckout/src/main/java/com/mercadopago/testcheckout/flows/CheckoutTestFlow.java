@@ -1,5 +1,6 @@
 package com.mercadopago.testcheckout.flows;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.mercadopago.core.MercadoPagoCheckout;
@@ -10,32 +11,47 @@ import com.mercadopago.testcheckout.pages.PaymentMethodPage;
 
 public class CheckoutTestFlow {
 
-    private MercadoPagoCheckout.Builder builder;
+    private Context context;
+    private MercadoPagoCheckout checkout;
 
+
+    /**
+     * If you already started the checkout you can use an empty constructor
+     */
+    private CheckoutTestFlow() {
+    }
+
+    private CheckoutTestFlow(final MercadoPagoCheckout mercadoPagoCheckout, final Context context) {
+        checkout = mercadoPagoCheckout;
+        this.context = context;
+    }
+
+    /**
+     * If you already started the checkout you can use an empty constructor
+     */
     public static CheckoutTestFlow createFlow() {
         return new CheckoutTestFlow();
     }
 
-    public static CheckoutTestFlow createFlowWithCheckout(@NonNull MercadoPagoCheckout.Builder builder) {
-        return new CheckoutTestFlow(builder);
+    /**
+     * If you want to run with an instrumented context
+     * you can use this static method.
+     *
+     * @param mercadoPagoCheckout the checkout configuration.
+     * @param context             context that will start the checkout.
+     * @return
+     */
+    public static CheckoutTestFlow createFlowWithCheckout(@NonNull final MercadoPagoCheckout mercadoPagoCheckout,
+                                                          @NonNull final Context context) {
+        return new CheckoutTestFlow(mercadoPagoCheckout, context);
     }
-
-    private CheckoutTestFlow() {
-    }
-
-    private CheckoutTestFlow(@NonNull MercadoPagoCheckout.Builder builder) {
-        this.builder = builder;
-    }
-
 
     public CongratsPage runCreditCardPaymentFlowWithInstallments(Card card, int installmentsOption) {
-        PaymentMethodPage paymentMethodPage = new PaymentMethodPage();
-
-        if (builder != null) {
-            paymentMethodPage.start(builder);
+        if (checkout != null && context != null) {
+            checkout.startForPayment(context);
         }
 
-        return paymentMethodPage.selectCard()
+        return new PaymentMethodPage().selectCard()
                 .selectCreditCard()
                 .enterCreditCardNumber(card.cardNumber())
                 .enterCardholderName(card.cardHolderName())
@@ -57,8 +73,8 @@ public class CheckoutTestFlow {
     public CongratsPage runDebitCardPaymentFlow(final Card card) {
         PaymentMethodPage paymentMethodPage = new PaymentMethodPage();
 
-        if (builder != null) {
-            paymentMethodPage.start(builder);
+        if (checkout != null && context != null) {
+            checkout.startForPayment(context);
         }
 
         return paymentMethodPage.selectCard()
@@ -72,13 +88,12 @@ public class CheckoutTestFlow {
     }
 
     public CongratsPage runOff(final String paymentMethodName) {
-        PaymentMethodPage paymentMethodPage = new PaymentMethodPage();
 
-        if (builder != null) {
-            paymentMethodPage.start(builder);
+        if (checkout != null && context != null) {
+            checkout.startForPayment(context);
         }
 
-        return paymentMethodPage
+        return new PaymentMethodPage()
                 .selectCash()
                 .selectMethod(paymentMethodName)
                 .pressConfirmButton();
@@ -86,13 +101,11 @@ public class CheckoutTestFlow {
     }
 
     public CongratsPage runCreditCardPaymentFlowNoInstallmentsOptionAndBankSelection(final Card card, final int bankOption) {
-        PaymentMethodPage paymentMethodPage = new PaymentMethodPage();
-
-        if (builder != null) {
-            paymentMethodPage.start(builder);
+        if (checkout != null && context != null) {
+            checkout.startForPayment(context);
         }
 
-        return paymentMethodPage.selectCard()
+        return new PaymentMethodPage().selectCard()
                 .selectCreditCard()
                 .enterCreditCardNumber(card.cardNumber())
                 .enterCardholderName(card.cardHolderName())
@@ -105,13 +118,11 @@ public class CheckoutTestFlow {
     }
 
     public CongratsPage runCreditCardOnlyPaymentAvailable(final Card card) {
-        CreditCardPage creditCardPage = new CreditCardPage();
-
-        if (builder != null) {
-            creditCardPage.start(builder);
+        if (checkout != null && context != null) {
+            checkout.startForPayment(context);
         }
 
-        return creditCardPage.enterCreditCardNumber(card.cardNumber())
+        return new CreditCardPage().enterCreditCardNumber(card.cardNumber())
                 .enterCardholderName(card.cardHolderName())
                 .enterExpiryDate(card.expDate())
                 .enterSecurityCode(card.escNumber())
