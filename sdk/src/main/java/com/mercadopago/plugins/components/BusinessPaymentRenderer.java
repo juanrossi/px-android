@@ -21,6 +21,7 @@ import com.mercadopago.components.RendererFactory;
 import com.mercadopago.paymentresult.components.Header;
 import com.mercadopago.paymentresult.props.HeaderProps;
 import com.mercadopago.plugins.model.ExitAction;
+import com.mercadopago.util.FragmentUtil;
 
 public class BusinessPaymentRenderer extends Renderer<BusinessPaymentContainer> {
 
@@ -44,13 +45,26 @@ public class BusinessPaymentRenderer extends Renderer<BusinessPaymentContainer> 
                     .render(headerContainer);
         }
 
+
         if (component.props.payment.hasHelp()) {
             View helpView = new HelpComponent(component.props.payment.getHelp()).render(mainContentContainer);
             mainContentContainer.addView(helpView);
         }
 
+        if (component.props.payment.hasTopFragment()) {
+            FragmentUtil.addFragmentInside(mainContentContainer,
+                    R.id.mpsdk_fragmen_container_top,
+                    component.props.payment.getTopFragment());
+        }
+
         if (component.props.payment.shouldShowPaymentMethod()) {
             renderPaymentMethod(component.props.paymentMethod, mainContentContainer);
+        }
+
+        if (component.props.payment.hasBottomFragment()) {
+            FragmentUtil.addFragmentInside(mainContentContainer,
+                    R.id.mpsdk_fragmen_container_bottom,
+                    component.props.payment.getBottomFragment());
         }
 
         if (mainContentContainer.getChildCount() == 1) { //has only header
