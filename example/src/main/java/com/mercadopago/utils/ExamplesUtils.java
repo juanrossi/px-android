@@ -13,12 +13,17 @@ import com.mercadopago.core.MercadoPagoCheckout.Builder;
 import com.mercadopago.example.R;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Item;
 import com.mercadopago.model.Payment;
+import com.mercadopago.model.PaymentTypes;
+import com.mercadopago.model.Sites;
 import com.mercadopago.plugins.DataInitializationTask;
 import com.mercadopago.plugins.MainPaymentProcessor;
 import com.mercadopago.plugins.components.SampleCustomComponent;
 import com.mercadopago.plugins.model.BusinessPayment;
 import com.mercadopago.plugins.model.ExitAction;
+import com.mercadopago.preferences.CheckoutPreference;
+import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.tracking.listeners.TracksListener;
 import com.mercadopago.tracking.tracker.MPTracker;
@@ -27,6 +32,7 @@ import com.mercadopago.util.LayoutUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +99,26 @@ public class ExamplesUtils {
         options.add(new Pair<>("Business - Complete w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethod()));
         options.add(new Pair<>("Business - NoHelp w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethodNoHelp()));
         options.add(new Pair<>("Base flow - Tracks with listener", startBaseFlowWithTrackListener()));
+        options.add(new Pair<>("All but debit card", allButDebitCard()));
         return options;
+    }
+
+    private static Builder allButDebitCard() {
+        Item item = new Item("Aaaa", 1, new BigDecimal(10));
+        item.setId("123");
+        item.setCurrencyId("ARS");
+
+        CheckoutPreference.Builder builder = new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a",
+                Collections.singletonList(item));
+
+        builder.enableAccountMoney(); // to not exclude double account money.
+        for (String type : PaymentTypes.getAllPaymentTypes()) {
+            if (!PaymentTypes.DEBIT_CARD.equals(type)) {
+                builder.addExcludedPaymentType(type);
+            }
+        }
+
+        return createBase(builder.build()).setFlowPreference(new FlowPreference.Builder().exitOnPaymentMethodChange().build());
     }
 
     private static Builder startCompleteRejectedBusiness() {
@@ -204,6 +229,13 @@ public class ExamplesUtils {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID)
+                .setDataInitializationTask(getDataInitializationTask(defaultData));
+    }
+
+    public static Builder createBase(final CheckoutPreference checkoutPreference) {
+        final Map<String, Object> defaultData = new HashMap<>();
+
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, checkoutPreference)
                 .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 

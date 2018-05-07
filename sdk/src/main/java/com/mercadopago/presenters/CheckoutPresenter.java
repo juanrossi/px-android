@@ -708,14 +708,12 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void changePaymentMethod() {
-        if (!isUniquePaymentMethod()) {
-            if (mFlowPreference.shouldExitOnPaymentMethodChange()) {
-                getView().finishFromReviewAndConfirm();
-            } else {
-                mPaymentMethodEdited = true;
-                mPaymentMethodEditionRequested = true;
-                getView().startPaymentMethodEdition();
-            }
+        if (mFlowPreference.shouldExitOnPaymentMethodChange()) {
+            getView().finishFromReviewAndConfirm();
+        } else {
+            mPaymentMethodEdited = true;
+            mPaymentMethodEditionRequested = true;
+            getView().startPaymentMethodEdition();
         }
     }
 
