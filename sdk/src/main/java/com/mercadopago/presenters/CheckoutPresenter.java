@@ -178,7 +178,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void finishInitializingPluginsData() {
-        if (getView().isActive() && isViewAttached()) {
+        if (isViewAttached() && getView().isActive()) {
             if (shouldRetrieveDiscount()) {
                 getDiscountCampaigns();
             } else {
@@ -584,7 +584,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private boolean isErrorInvalidPaymentWithEsc(MercadoPagoError error, PaymentData paymentData) {
         if (error.isApiException() && error.getApiException().hasStatus() &&
-            error.getApiException().getStatus().equals(ApiUtil.StatusCodes.BAD_REQUEST)) {
+                error.getApiException().getStatus().equals(ApiUtil.StatusCodes.BAD_REQUEST)) {
             List<Cause> causes = error.getApiException().getCause();
             if (causes != null && !causes.isEmpty()) {
                 Cause cause = causes.get(0);
