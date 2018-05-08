@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -44,12 +45,12 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     private static final String EXTRA_PUBLIC_KEY = "extra_public_key";
     private static final String EXTRA_ITEMS = "extra_items";
 
-    public static void start(final Activity activity,
-                             final String merchantPublicKey,
-                             final TermsAndConditionsModel termsAndConditions,
-                             final PaymentModel paymentModel,
-                             final SummaryModel summaryModel,
-                             final ItemsModel itemsModel) {
+    public static void start(@NonNull final Activity activity,
+                             @NonNull final String merchantPublicKey,
+                             @NonNull final TermsAndConditionsModel termsAndConditions,
+                             @NonNull final PaymentModel paymentModel,
+                             @NonNull final SummaryModel summaryModel,
+                             @NonNull final ItemsModel itemsModel) {
         //TODO result code should be changed by the outside.
         Intent intent = new Intent(activity, ReviewAndConfirmActivity.class);
         intent.putExtra(EXTRA_PUBLIC_KEY, merchantPublicKey);
