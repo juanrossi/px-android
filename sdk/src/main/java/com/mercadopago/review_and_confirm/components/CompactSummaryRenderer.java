@@ -2,6 +2,7 @@ package com.mercadopago.review_and_confirm.components;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -11,9 +12,10 @@ import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.lite.util.CurrenciesUtil;
+import com.mercadopago.model.PaymentTypes;
+import com.mercadopago.review_and_confirm.models.SummaryModel;
 
 import static com.mercadopago.util.TextUtils.isEmpty;
-import static com.mercadopago.util.TextUtils.isNotEmpty;
 
 public class CompactSummaryRenderer extends Renderer<CompactSummary> {
 
@@ -27,7 +29,7 @@ public class CompactSummaryRenderer extends Renderer<CompactSummary> {
         setText(totalAmountTextView, CurrenciesUtil.getSpannedAmountWithCurrencySymbol(component.props.getTotalAmount(), component.props.currencyId));
         setText(itemTitleTextView, getItemTitle(component.props.title, context));
 
-        if (isNotEmpty(component.props.cftPercent)) {
+        if (shouldShowCftDisclaimer(component.props)) {
             String disclaimer = getDisclaimer(component, context);
             final Renderer disclaimerRenderer = RendererFactory.create(context, component.getDisclaimerComponent(disclaimer));
             final View disclaimerView = disclaimerRenderer.render();
@@ -36,6 +38,13 @@ public class CompactSummaryRenderer extends Renderer<CompactSummary> {
 
         return summaryView;
     }
+
+    @VisibleForTesting
+    boolean shouldShowCftDisclaimer(final SummaryModel props) {
+        return PaymentTypes.isCreditCardPaymentType(props.getPaymentTypeId())
+                && !isEmpty(props.getCftPercent());
+    }
+
 
     private String getItemTitle(String itemTitle, Context context) {
         return isEmpty(itemTitle) ? getDefaultTitle(context) : itemTitle;
@@ -47,13 +56,9 @@ public class CompactSummaryRenderer extends Renderer<CompactSummary> {
 
     private String getDisclaimer(CompactSummary component, Context context) {
         StringBuilder stringBuilder = new StringBuilder();
-
-        if (!isEmpty(component.props.cftPercent)) {
-            stringBuilder.append(context.getString(R.string.mpsdk_installments_cft));
-            stringBuilder.append(" ");
-            stringBuilder.append(component.props.cftPercent);
-        }
-
+        stringBuilder.append(context.getString(R.string.mpsdk_installments_cft));
+        stringBuilder.append(" ");
+        stringBuilder.append(component.props.getCftPercent());
         return stringBuilder.toString();
     }
 }
