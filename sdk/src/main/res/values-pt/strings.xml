@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="rn:oasis:names:tc:xliff:document:1.2">
+<resources>
 
     <!-- Banks deals -->
     <string name="mpsdk_empty_bank_deals">Você não tem nenhuma promoção disponível</string>
     <string name="mpsdk_bank">banco</string>
     <string name="mpsdk_and">e</string>
     <string name="mpsdk_title_activity_bank_deals">Promoções</string>
+    <string name="bank_deal_details_title">Condições</string>
+    <string name="bank_deal_details_date_format">Até %s</string>
 
     <!-- Payment Methods -->
     <string name="mpsdk_title_activity_payment_methods">Como você prefere pagar?</string>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:ns1="rn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Banks deals -->
     <string name="mpsdk_empty_bank_deals">No promotions available for you</string>
     <string name="mpsdk_bank">bank</string>
     <string name="mpsdk_and">and</string>
     <string name="mpsdk_title_activity_bank_deals">Promotions</string>
+    <string name="bank_deal_details_title">Conditions</string>
+    <string name="bank_deal_details_date_format">Until %s</string>
 
     <!-- Payment Methods -->
     <string name="mpsdk_title_activity_payment_methods">How do you want to pay?</string>
@@ -36,7 +38,7 @@
 
     <string name="mpsdk_installments_by">x</string>
     <string name="mpsdk_installments_tea">TEA</string>
-    <string name="mpsdk_installments_cft" >CFT</string>
+    <string name="mpsdk_installments_cft">CFT</string>
 
 
     <!-- Checkout -->

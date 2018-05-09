@@ -2,8 +2,7 @@ package com.mercadopago;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -29,7 +28,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 
-public class BankDealsActivity extends MercadoPagoActivity {
+public class BankDealsActivity extends MercadoPagoActivity implements OnSelectedCallback<BankDeal> {
 
     //Activity parameters
     protected String mMerchantPublicKey;
@@ -45,7 +44,6 @@ public class BankDealsActivity extends MercadoPagoActivity {
     @Override
     protected void onValidStart() {
         trackInitialScreen();
-
         mMercadoPago = new MercadoPagoServicesAdapter(getActivity(), mMerchantPublicKey, mPayerAccessToken);
         getBankDeals();
     }
@@ -78,8 +76,7 @@ public class BankDealsActivity extends MercadoPagoActivity {
         initializeToolbar();
         mRecyclerView = findViewById(R.id.mpsdkBankDealsList);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
     @Override
@@ -97,7 +94,6 @@ public class BankDealsActivity extends MercadoPagoActivity {
 
     private void initializeToolbar() {
         mToolbar = findViewById(R.id.mpsdkToolbar);
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -119,36 +115,33 @@ public class BankDealsActivity extends MercadoPagoActivity {
     }
 
     private void getBankDeals() {
-        if (mBankDeals != null) {
-            solveBankDeals(mBankDeals);
-        } else {
-            LayoutUtil.showProgressLayout(this);
-            mMercadoPago.getBankDeals(new TaggedCallback<List<BankDeal>>(ApiUtil.RequestOrigin.GET_BANK_DEALS) {
+        LayoutUtil.showProgressLayout(this);
+        mMercadoPago.getBankDeals(new TaggedCallback<List<BankDeal>>(ApiUtil.RequestOrigin.GET_BANK_DEALS) {
 
-                @Override
-                public void onSuccess(final List<BankDeal> bankDeals) {
-                    solveBankDeals(bankDeals);
-                }
+            @Override
+            public void onSuccess(final List<BankDeal> bankDeals) {
+                solveBankDeals(bankDeals);
+            }
 
-                @Override
-                public void onFailure(final MercadoPagoError error) {
-                    if (isActivityActive()) {
-                        setFailureRecovery(new FailureRecovery() {
-                            @Override
-                            public void recover() {
-                                getBankDeals();
-                            }
-                        });
-                        ApiUtil.showApiExceptionError(getActivity(),
-                                error.getApiException(),
-                                mMerchantPublicKey,
-                                ApiUtil.RequestOrigin.GET_BANK_DEALS);
-                    } else {
-                        finishWithCancelResult();
-                    }
+            @Override
+            public void onFailure(final MercadoPagoError error) {
+                if (isActivityActive()) {
+                    setFailureRecovery(new FailureRecovery() {
+                        @Override
+                        public void recover() {
+                            getBankDeals();
+                        }
+                    });
+
+                    ApiUtil.showApiExceptionError(getActivity(),
+                            error.getApiException(),
+                            mMerchantPublicKey,
+                            ApiUtil.RequestOrigin.GET_BANK_DEALS);
+                } else {
+                    finishWithCancelResult();
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -166,29 +159,13 @@ public class BankDealsActivity extends MercadoPagoActivity {
         setResult(RESULT_CANCELED);
         finish();
     }
-
-    protected OnSelectedCallback<View> getDpadSelectionCallback() {
-        return new OnSelectedCallback<View>() {
-            @Override
-            public void onSelected(View view) {
-                showSelectedBankDealTerms(view);
-            }
-        };
-    }
-
-    private void showSelectedBankDealTerms(View view) {
-        BankDeal selectedBankDeal = (BankDeal) view.getTag();
-        TermsAndConditionsActivity.startWithBankDealLegals(this, selectedBankDeal.getLegals());
-    }
-
     protected void solveBankDeals(List<BankDeal> bankDeals) {
-        mRecyclerView.setAdapter(new BankDealsAdapter(bankDeals, getDpadSelectionCallback(), new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showSelectedBankDealTerms(view);
-            }
-        }));
-
+        mRecyclerView.setAdapter(new BankDealsAdapter(bankDeals, this));
         LayoutUtil.showRegularLayout(getActivity());
+    }
+
+    @Override
+    public void onSelected(final BankDeal selectedBankDeal) {
+        BankDealDetailActivity.startWithBankDealLegals(this, selectedBankDeal);
     }
 }

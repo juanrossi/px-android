@@ -1,8 +1,12 @@
 package com.mercadopago.model;
 
+import com.mercadopago.lite.util.TextUtil;
+
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class BankDeal {
 
@@ -104,5 +108,14 @@ public class BankDeal {
 
     public void setTotalFinancialCost(BigDecimal totalFinancialCost) {
         this.totalFinancialCost = totalFinancialCost;
+    }
+
+    public boolean hasPictureUrl() {
+        return getPicture() != null && !TextUtil.isEmpty(getPicture().getUrl());
+    }
+
+    public String getPrettyExpirationDate() {
+        return DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
+                .format(getDateExpired());
     }
 }

@@ -222,4 +222,31 @@
         <item name="android:textColor">@color/mpsdk_brownish_grey</item>
     </style>
 
+    <style name="DealsLogoName">
+        <item name="android:textSize">@dimen/mpsdk_title_text</item>
+        <item name="android:textColor">@color/mpsdk_warm_grey</item>
+        <item name="android:lines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="DealsListTitle">
+        <item name="android:textSize">@dimen/mpsdk_regular_text</item>
+        <item name="android:textColor">@color/mpsdk_real_black</item>
+    </style>
+
+    <style name="DealsDescription">
+        <item name="android:textSize">@dimen/mpsdk_small_text</item>
+        <item name="android:textColor">@color/mpsdk_warm_grey</item>
+    </style>
+
+    <style name="DealsDetailTitle">
+        <item name="android:textSize">@dimen/mpsdk_title_text</item>
+        <item name="android:textColor">@color/mpsdk_black</item>
+    </style>
+
+    <style name="DealsLegal">
+        <item name="android:textSize">@dimen/mpsdk_smaller_text</item>
+        <item name="android:textColor">@color/mpsdk_warm_grey</item>
+    </style>
+
 </resources>

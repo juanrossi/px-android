@@ -7,6 +7,8 @@
     <string name="mpsdk_bank">banco</string>
     <string name="mpsdk_and">y</string>
     <string name="mpsdk_title_activity_bank_deals">Promociones</string>
+    <string name="bank_deal_details_title">Condiciones</string>
+    <string name="bank_deal_details_date_format">Hasta el %s</string>
 
     <!-- Payment Methods -->
     <string name="mpsdk_title_activity_payment_methods">¿Cómo quieres pagar?</string>

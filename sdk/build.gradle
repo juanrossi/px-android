@@ -82,4 +82,4 @@ dependencies {
 
 apply from: "$rootDir/gradle/jacoco.gradle"
 apply from: "$rootDir/gradle/static-analysis.gradle"
-apply from: "$rootDir/gradle/deploy.gradle"
+apply from: "$rootDir/gradle/deploy.gradle" 
