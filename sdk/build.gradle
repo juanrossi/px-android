@@ -30,10 +30,6 @@ android {
         preDexLibraries !(travisBuild)
     }
 
-    lintOptions {
-        abortOnError true
-    }
-
     testOptions {
         unitTests.returnDefaultValues = true
     }
