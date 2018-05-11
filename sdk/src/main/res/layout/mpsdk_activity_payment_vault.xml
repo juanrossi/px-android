@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/mpsdk_white"
     android:fitsSystemWindows="true"
-    tools:context=".PaymentVaultActivity"
-    tools:ignore="MergeRootFrame">
+    tools:context=".PaymentVaultActivity">
 
     <include layout="@layout/mpsdk_view_progress_bar" />
 

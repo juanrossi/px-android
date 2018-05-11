@@ -302,15 +302,13 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
 
     @Override
     public void showBackSecurityCodeCardView() {
-        int id = getResources().getIdentifier("mpsdk_tiny_card_cvv_screen", "drawable", getPackageName());
-        mSecurityCodeCardIcon.setImageResource(id);
+        mSecurityCodeCardIcon.setImageResource(R.drawable.mpsdk_tiny_card_cvv_screen);
         setSecurityCodeCardColorFilter();
     }
 
     @Override
     public void showFrontSecurityCodeCardView() {
-        int id = getResources().getIdentifier("mpsdk_amex_tiny_card_cvv_screen", "drawable", getPackageName());
-        mSecurityCodeCardIcon.setImageResource(id);
+        mSecurityCodeCardIcon.setImageResource(R.drawable.mpsdk_amex_tiny_card_cvv_screen);
         setSecurityCodeCardColorFilter();
     }
 
