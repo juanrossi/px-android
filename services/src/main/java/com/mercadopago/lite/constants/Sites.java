@@ -9,7 +9,7 @@ public class Sites {
     public static final Site CHILE = new Site("MLC", "CLP");
     public static final Site MEXICO = new Site("MLM", "MXN");
     public static final Site COLOMBIA = new Site("MCO", "COP");
-    public static final Site VENEZUELA = new Site("MLV", "VEF");
+    public static final Site VENEZUELA = new Site("MLV", "VES");
     public static final Site USA = new Site("USA", "USD");
     public static final Site PERU = new Site("MPE", "PEN");
 
