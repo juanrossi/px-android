@@ -6,7 +6,7 @@
     <string name="mpsdk_bank">bank</string>
     <string name="mpsdk_title_activity_bank_deals">Promotions</string>
     <string name="bank_deal_details_title">Conditions</string>
-    <string name="bank_deal_details_date_format">Until %s</string>
+    <string name="bank_deal_details_date_format">Up to %s</string>
 
     <!-- Payment Methods -->
     <string name="mpsdk_title_activity_payment_methods">How do you want to pay?</string>
