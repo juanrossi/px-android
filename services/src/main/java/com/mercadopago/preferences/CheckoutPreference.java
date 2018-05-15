@@ -11,6 +11,7 @@ import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Sites;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +20,7 @@ import java.util.List;
 import static com.mercadopago.lite.util.TextUtil.isEmpty;
 
 
-public final class CheckoutPreference {
+public final class CheckoutPreference implements Serializable {
 
     /**
      * When the preference comes from backend then

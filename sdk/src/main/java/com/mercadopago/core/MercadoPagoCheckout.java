@@ -34,7 +34,7 @@ import java.util.Map;
 import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
 
 
-public final class MercadoPagoCheckout implements Serializable {
+public class MercadoPagoCheckout implements Serializable {
 
     public static final int CHECKOUT_REQUEST_CODE = 5;
     public static final int PAYMENT_DATA_RESULT_CODE = 6;
@@ -48,10 +48,10 @@ public final class MercadoPagoCheckout implements Serializable {
     @Nullable
     private final CheckoutPreference checkoutPreference;
 
-    @Nullable
+    @NonNull
     private final ServicePreference servicePreference;
 
-    @Nullable
+    @NonNull
     private final FlowPreference flowPreference;
 
     @Nullable
@@ -182,7 +182,7 @@ public final class MercadoPagoCheckout implements Serializable {
         return paymentResultScreenPreference;
     }
 
-    @Nullable
+    @NonNull
     public FlowPreference getFlowPreference() {
         return flowPreference;
     }
@@ -206,7 +206,7 @@ public final class MercadoPagoCheckout implements Serializable {
         return paymentResult;
     }
 
-    @Nullable
+    @NonNull
     public ServicePreference getServicePreference() {
         return servicePreference;
     }
@@ -234,8 +234,8 @@ public final class MercadoPagoCheckout implements Serializable {
         private final List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
         private final Map<String, PaymentProcessor> paymentPlugins = new HashMap<>();
         private Boolean binaryMode = false;
-        private ServicePreference servicePreference;
-        private FlowPreference flowPreference;
+        private ServicePreference servicePreference = new ServicePreference.Builder().build();
+        private FlowPreference flowPreference = new FlowPreference.Builder().build();
         private PaymentResultScreenPreference paymentResultScreenPreference;
         private PaymentData paymentData;
         private PaymentResult paymentResult;
