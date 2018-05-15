@@ -5,10 +5,11 @@ import android.support.annotation.Size;
 
 import com.mercadopago.lite.util.CurrenciesUtil;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Item {
+public class Item implements Serializable {
 
     private String categoryId;
     private String currencyId;

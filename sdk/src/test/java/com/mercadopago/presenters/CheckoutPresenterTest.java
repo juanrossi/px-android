@@ -52,7 +52,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_PROCESSOR_KEY;
+
+import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
 import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubExpiredPreference;
 import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItem;
 import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItemAndPayer;

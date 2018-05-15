@@ -4,9 +4,9 @@ import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.exceptions.ApiException;
-import com.mercadopago.model.Cause;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
+import com.mercadopago.model.Cause;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
@@ -66,7 +66,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     //Discount
     protected boolean mDiscountEnabled;
-    protected boolean mDirectDiscountEnabled;
     protected Discount mDiscount;
     protected String mPayerEmail;
     protected List<PayerCost> mPayerCostsList;
@@ -273,14 +272,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         return mMerchantGetDiscountUri;
     }
 
-    public void setDirectDiscountEnabled(final boolean directDiscountEnabled) {
-        mDirectDiscountEnabled = directDiscountEnabled;
-    }
-
-    public boolean getDirectDiscountEnabled() {
-        return mDirectDiscountEnabled;
-    }
-
     public void setAutomaticSelection(final boolean automaticSelection) {
         mAutomaticSelection = automaticSelection;
     }
@@ -466,7 +457,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     }
 
     public void resolveNewCardRequest(final PaymentMethod paymentMethod, final Token token,
-                                      final boolean directDiscountEnabled,
                                       final boolean discountEnabled,
                                       final PayerCost payerCost, final Issuer issuer,
                                       final List<PayerCost> payerCosts, final List<Issuer> issuers,
@@ -475,7 +465,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         setPaymentMethod(paymentMethod);
         setToken(token);
         setCardInfo(new CardInfo(token));
-        setDirectDiscountEnabled(directDiscountEnabled);
         setDiscountEnabled(discountEnabled);
         setPayerCost(payerCost);
         setIssuer(issuer);

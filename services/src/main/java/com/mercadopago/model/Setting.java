@@ -3,9 +3,10 @@ package com.mercadopago.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Setting implements Parcelable {
+public class Setting implements Parcelable, Serializable {
 
     private Bin bin;
     private CardNumber cardNumber;

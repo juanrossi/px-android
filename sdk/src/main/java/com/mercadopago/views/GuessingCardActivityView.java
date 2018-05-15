@@ -102,7 +102,7 @@ public interface GuessingCardActivityView extends MvpView {
 
     void showDiscountRow(BigDecimal transactionAmount);
 
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, Boolean discountEnabled, List<Issuer> issuers);
+    void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean discountEnabled, List<Issuer> issuers);
 
     void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, Boolean discountEnabled, Issuer issuer, List<PayerCost> payerCosts);
 

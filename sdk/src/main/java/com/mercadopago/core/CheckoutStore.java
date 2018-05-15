@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
+
 public class CheckoutStore {
 
     private static final CheckoutStore INSTANCE = new CheckoutStore();
@@ -189,7 +191,7 @@ public class CheckoutStore {
     public PaymentProcessor doesPaymentProcessorSupportPaymentMethodSelected() {
         PaymentProcessor paymentProcessor = null;
         if (!TextUtil.isEmpty(selectedPaymentMethodId)) {
-            paymentProcessor = paymentPlugins.get(MercadoPagoCheckout.PAYMENT_PROCESSOR_KEY);
+            paymentProcessor = paymentPlugins.get(PAYMENT_PROCESSOR_KEY);
             if (paymentProcessor == null || !paymentProcessor.support(selectedPaymentMethodId, getData())) {
                 paymentProcessor = paymentPlugins.get(selectedPaymentMethodId);
             }
@@ -198,7 +200,7 @@ public class CheckoutStore {
     }
 
     public boolean hasPaymentProcessor() {
-        return paymentPlugins.containsKey(MercadoPagoCheckout.PAYMENT_PROCESSOR_KEY);
+        return paymentPlugins.containsKey(PAYMENT_PROCESSOR_KEY);
     }
 
     public void addPaymentPlugins(@NonNull final PaymentProcessor paymentProcessor, @NonNull final String paymentMethod) {

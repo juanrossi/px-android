@@ -10,10 +10,6 @@ import com.mercadopago.views.DiscountsActivityView;
 
 import java.math.BigDecimal;
 
-/**
- * Created by mromar on 11/29/16.
- */
-
 public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, DiscountsProvider> {
 
     private DiscountsActivityView mDiscountsView;
@@ -23,7 +19,6 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     private String mPayerEmail;
     private BigDecimal mTransactionAmount;
     private Discount mDiscount;
-    private Boolean mDirectDiscountEnabled;
 
     @Override
     public void attachView(DiscountsActivityView discountsView) {
@@ -39,31 +34,11 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void initDiscountFlow() {
-        if (mDirectDiscountEnabled && isTransactionAmountValid()) {
-            mDiscountsView.hideDiscountSummary();
-            getDirectDiscount();
-        } else {
-            mDiscountsView.requestDiscountCode();
-        }
+        mDiscountsView.requestDiscountCode();
     }
 
     private Boolean isTransactionAmountValid() {
         return mTransactionAmount != null && mTransactionAmount.compareTo(BigDecimal.ZERO) > 0;
-    }
-
-    private void getDirectDiscount() {
-        getResourcesProvider().getDirectDiscount(mTransactionAmount.toString(), mPayerEmail, new TaggedCallback<Discount>(ApiUtil.RequestOrigin.GET_DIRECT_DISCOUNT) {
-            @Override
-            public void onSuccess(Discount discount) {
-                mDiscount = discount;
-                mDiscountsView.drawSummary();
-            }
-
-            @Override
-            public void onFailure(MercadoPagoError error) {
-                mDiscountsView.requestDiscountCode();
-            }
-        });
     }
 
     private void getCodeDiscount(final String discountCode) {
@@ -124,14 +99,6 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 
     public void setTransactionAmount(BigDecimal transactionAmount) {
         mTransactionAmount = transactionAmount;
-    }
-
-    public void setDirectDiscountEnabled(Boolean directDiscountEnabled) {
-        mDirectDiscountEnabled = directDiscountEnabled;
-    }
-
-    public Boolean getDirectDiscountEnabled() {
-        return mDirectDiscountEnabled;
     }
 
     public String getCurrencyId() {

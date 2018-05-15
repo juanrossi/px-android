@@ -1,8 +1,7 @@
 package com.mercadopago.cardvault;
 
-import com.mercadopago.lite.exceptions.ApiException;
-import com.mercadopago.model.Sites;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.mocks.Cards;
 import com.mercadopago.mocks.Installments;
 import com.mercadopago.mocks.Issuers;
@@ -18,6 +17,7 @@ import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.SavedESCCardToken;
+import com.mercadopago.model.Sites;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.PaymentPreference;
@@ -415,11 +415,10 @@ public class CardVaultPresenterTest {
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
         List<Issuer> mockedIssuerList = Issuers.getIssuersListMLA();
         Discount mockedDiscount = null;
-        Boolean directDiscountEnabled = false;
         Boolean discountEnabled = false;
 
         //Response from GuessingCardActivity, without an issuer selected
-        presenter.resolveNewCardRequest(mockedPaymentMethod, mockedToken, directDiscountEnabled, discountEnabled, mockedPayerCost, mockedIssuer, mockedPayerCostList, mockedIssuerList, mockedDiscount);
+        presenter.resolveNewCardRequest(mockedPaymentMethod, mockedToken, discountEnabled, mockedPayerCost, mockedIssuer, mockedPayerCostList, mockedIssuerList, mockedDiscount);
 
         assertTrue(mockedView.issuerFlowStarted);
     }
@@ -446,10 +445,9 @@ public class CardVaultPresenterTest {
         List<Issuer> mockedIssuerList = Issuers.getIssuersListMLA();
         Discount mockedDiscount = null;
         Boolean directDiscountEnabled = false;
-        Boolean discountEnabled = false;
 
         //Response from GuessingCardActivity, with an issuer selected
-        presenter.resolveNewCardRequest(mockedPaymentMethod, mockedToken, directDiscountEnabled, discountEnabled, mockedPayerCost, mockedIssuer, mockedPayerCostList, mockedIssuerList, mockedDiscount);
+        presenter.resolveNewCardRequest(mockedPaymentMethod, mockedToken, directDiscountEnabled, mockedPayerCost, mockedIssuer, mockedPayerCostList, mockedIssuerList, mockedDiscount);
 
         assertFalse(mockedView.issuerFlowStarted);
         assertTrue(mockedView.installmentsFlowStarted);
@@ -476,11 +474,10 @@ public class CardVaultPresenterTest {
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
         List<Issuer> mockedIssuerList = Issuers.getIssuersListMLA();
         Discount mockedDiscount = null;
-        Boolean directDiscountEnabled = false;
         Boolean discountEnabled = false;
 
         //Response from GuessingCardActivity, with an issuer selected
-        presenter.resolveNewCardRequest(mockedPaymentMethod, mockedToken, directDiscountEnabled, discountEnabled, mockedPayerCost, mockedIssuer, mockedPayerCostList, mockedIssuerList, mockedDiscount);
+        presenter.resolveNewCardRequest(mockedPaymentMethod, mockedToken, discountEnabled, mockedPayerCost, mockedIssuer, mockedPayerCostList, mockedIssuerList, mockedDiscount);
 
         assertFalse(mockedView.issuerFlowStarted);
         assertFalse(mockedView.installmentsFlowStarted);
@@ -505,12 +502,10 @@ public class CardVaultPresenterTest {
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer mockedIssuer = Issuers.getIssuerMLA();
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
-        Boolean directDiscountEnabled = false;
 
         presenter.setToken(mockedToken);
         presenter.setPaymentMethod(mockedPaymentMethod);
         presenter.setPayerCostsList(mockedPayerCostList);
-        presenter.setDirectDiscountEnabled(directDiscountEnabled);
 
         //Response from IssuersActivity, with an issuer selected
         presenter.resolveIssuersRequest(mockedIssuer);
@@ -542,8 +537,6 @@ public class CardVaultPresenterTest {
         presenter.setToken(mockedToken);
         presenter.setPaymentMethod(mockedPaymentMethod);
         presenter.setIssuer(mockedIssuer);
-        presenter.setDirectDiscountEnabled(directDiscountEnabled);
-
         //Response from InstallmentsActivity, with payer cost selected
         presenter.resolveInstallmentsRequest(mockedPayerCost, mockedDiscount);
 

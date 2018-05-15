@@ -58,7 +58,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     private ServicePreference mServicePreference;
     private Boolean mBinaryMode;
     private Discount mDiscount;
-    private Boolean mDirectDiscountEnabled;
     private PaymentData mPaymentDataInput;
     private PaymentResult mPaymentResultInput;
     private int mRequestedResult;
@@ -268,9 +267,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             if (directDiscountFound) {
                 getDirectDiscount(couponDiscountFound);
             } else {
-                if (couponDiscountFound) {
-                    mDirectDiscountEnabled = false;
-                } else {
+                if (!couponDiscountFound) {
                     mFlowPreference.disableDiscount();
                 }
                 retrievePaymentMethodSearch();
@@ -292,7 +289,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             @Override
             public void onFailure(final MercadoPagoError error) {
                 if (isViewAttached()) {
-                    mDirectDiscountEnabled = false;
                     if (couponDiscountFound) {
                         retrievePaymentMethodSearch();
                     } else {
@@ -965,10 +961,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         mDiscount = discount;
     }
 
-    public void setDirectDiscountEnabled(final Boolean directDiscountEnabled) {
-        mDirectDiscountEnabled = directDiscountEnabled;
-    }
-
     public void setPaymentDataInput(final PaymentData paymentDataInput) {
         mPaymentDataInput = paymentDataInput;
     }
@@ -999,10 +991,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     public Discount getDiscount() {
         return mDiscount;
-    }
-
-    public boolean isDirectDiscountEnabled() {
-        return mDirectDiscountEnabled;
     }
 
     public Boolean getShowBankDeals() {

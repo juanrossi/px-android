@@ -3,7 +3,9 @@ package com.mercadopago.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class FinancialInstitution implements Parcelable {
+import java.io.Serializable;
+
+public class FinancialInstitution implements Parcelable, Serializable {
 
     private String id;
     private String description;

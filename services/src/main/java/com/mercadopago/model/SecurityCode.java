@@ -3,7 +3,9 @@ package com.mercadopago.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SecurityCode implements Parcelable {
+import java.io.Serializable;
+
+public class SecurityCode implements Parcelable, Serializable {
 
     private String cardLocation;
     private Integer length;

@@ -16,13 +16,13 @@ import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PayerCostsAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
-import com.mercadopago.lite.controllers.CustomServicesHandler;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.core.MercadoPagoUI;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.listeners.RecyclerItemClickListener;
+import com.mercadopago.lite.controllers.CustomServicesHandler;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
@@ -486,15 +486,9 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
                 .setMerchantPublicKey(mPublicKey)
                 .setPayerEmail(mPresenter.getPayerEmail())
                 .setAmount(transactionAmount)
-                .setDiscount(mPresenter.getDiscount())
-                .setDirectDiscountEnabled(mPresenter.getDirectDiscountEnabled());
+                .setDiscount(mPresenter.getDiscount());
 
-        if (mPresenter.getDiscount() == null) {
-            mercadoPagoBuilder.setDirectDiscountEnabled(false);
-        } else {
-            mercadoPagoBuilder.setDiscount(mPresenter.getDiscount());
-        }
-
+        mercadoPagoBuilder.setDiscount(mPresenter.getDiscount());
         mercadoPagoBuilder.startActivity();
     }
 

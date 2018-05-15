@@ -5,10 +5,11 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class PaymentMethod implements Parcelable {
+public class PaymentMethod implements Parcelable, Serializable {
 
     private String id;
     private String name;
