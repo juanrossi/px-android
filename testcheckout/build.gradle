@@ -1,5 +1,17 @@
 apply plugin: 'com.android.library'
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+    }
+}
+
+
 android {
     compileSdkVersion api_level as int
     buildToolsVersion build_tools_version as String
@@ -33,3 +45,5 @@ dependencies {
     implementation project(':testlib')
     implementation project(":sdk")
 }
+
+apply from: "$rootDir/gradle/deploy_testcheckout.gradle"
