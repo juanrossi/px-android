@@ -1,6 +1,7 @@
 package com.mercadopago.paymentresult.components;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -22,7 +23,7 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
         final MPTextView titleTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorTitle);
         final MPTextView descriptionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorDescription);
         final MPTextView secondDescriptionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorSecondDescription);
-        final MPTextView actionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorAction);
+        final AppCompatButton actionButton = bodyErrorView.findViewById(R.id.paymentResultBodyErrorAction);
         final View middleDivider = bodyErrorView.findViewById(R.id.bodyErrorMiddleDivider);
         final MPTextView secondaryTitleTextView = bodyErrorView.findViewById(R.id.bodyErrorSecondaryTitle);
         final View bottomDivider = bodyErrorView.findViewById(R.id.bodyErrorBottomDivider);
@@ -39,20 +40,20 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
         }
 
         if (component.hasActionForCallForAuth()) {
-            actionTextView.setText(component.getActionText());
-            actionTextView.setVisibility(View.VISIBLE);
+            actionButton.setText(component.getActionText());
+            actionButton.setVisibility(View.VISIBLE);
             middleDivider.setVisibility(View.VISIBLE);
             secondaryTitleTextView.setText(component.getSecondaryTitleForCallForAuth());
             secondaryTitleTextView.setVisibility(View.VISIBLE);
             bottomDivider.setVisibility(View.VISIBLE);
-            actionTextView.setOnClickListener(new View.OnClickListener() {
+            actionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     component.recoverPayment();
                 }
             });
         } else {
-            actionTextView.setVisibility(View.GONE);
+            actionButton.setVisibility(View.GONE);
             middleDivider.setVisibility(View.GONE);
             secondaryTitleTextView.setVisibility(View.GONE);
             bottomDivider.setVisibility(View.GONE);

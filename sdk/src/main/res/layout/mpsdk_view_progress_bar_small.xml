@@ -8,11 +8,10 @@
     android:gravity="center"
     android:background="@color/mpsdk_transparent">
 
-    <com.mercadopago.customviews.MPProgressBar
+    <com.mercadolibre.android.ui.widgets.MeliSpinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:mpsdk_size="@dimen/mpsdk_m_height"
-        app:mpsdk_ui_stroke="@dimen/mpsdk_progress_stroke"/>
+        app:size="small"/>
 
 </FrameLayout>

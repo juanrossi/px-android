@@ -38,22 +38,19 @@
             android:layout_height="1dp"
             android:background="@color/mpsdk_med_light_gray" />
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadolibre.android.ui.widgets.MeliButton
             android:id="@+id/floating_confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/mpsdk_s_margin"
-            android:background="@drawable/mpsdk_button_bg_stroke"
+            android:gravity="center"
+            app:type="actionPrimary"
+            app:state="normal"
+            android:text="@string/mpsdk_confirm"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:padding="@dimen/mpsdk_s_margin"
-            android:text="@string/mpsdk_confirm"
-            android:textColor="@color/mpsdk_white_background"
-            android:textSize="@dimen/mpsdk_m_text"
-            app:font_style="regular" />
+            android:layout_margin="@dimen/mpsdk_s_margin"/>
 
     </FrameLayout>
 

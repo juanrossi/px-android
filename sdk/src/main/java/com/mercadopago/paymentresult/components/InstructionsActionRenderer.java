@@ -1,30 +1,27 @@
 package com.mercadopago.paymentresult.components;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mercadopago.R;
+import com.mercadolibre.android.ui.widgets.MeliButton;
 import com.mercadopago.components.LinkAction;
 import com.mercadopago.components.Renderer;
-import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.InstructionAction;
-
-/**
- * Created by vaserber on 11/14/17.
- */
 
 public class InstructionsActionRenderer extends Renderer<InstructionsAction> {
 
     @Override
-    public View render(final InstructionsAction component, final Context context, final ViewGroup parent) {
-        final View actionView = inflate(R.layout.mpsdk_payment_result_instructions_action, parent);
-        final MPTextView actionTextView = actionView.findViewById(R.id.instructionAction);
+    public View render(@NonNull final InstructionsAction component, @NonNull final Context context, final ViewGroup parent) {
+
+        final MeliButton button = new MeliButton(context);
+        button.setType(MeliButton.Type.OPTION_PRIMARY);
 
         if (component.props.instructionAction.getTag().equals(InstructionAction.Tags.LINK)) {
-            actionTextView.setText(component.props.instructionAction.getLabel());
+            button.setText(component.props.instructionAction.getLabel());
 
-            actionTextView.setOnClickListener(new View.OnClickListener() {
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     component.getDispatcher().dispatch(new LinkAction(component.props.instructionAction.getUrl()));
@@ -32,6 +29,8 @@ public class InstructionsActionRenderer extends Renderer<InstructionsAction> {
             });
         }
 
-        return actionView;
+        parent.addView(button);
+
+        return parent;
     }
 }

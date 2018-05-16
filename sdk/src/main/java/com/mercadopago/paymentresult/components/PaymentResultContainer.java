@@ -1,5 +1,6 @@
 package com.mercadopago.paymentresult.components;
 
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 
 import com.mercadopago.R;
@@ -25,11 +26,6 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
     static {
         RendererFactory.register(PaymentResultContainer.class, PaymentResultRenderer.class);
     }
-
-    public static final int DEFAULT_BACKGROUND_COLOR = R.color.mpsdk_blue_MP;
-    public static final int GREEN_BACKGROUND_COLOR = R.color.mpsdk_green_payment_result_background;
-    public static final int RED_BACKGROUND_COLOR = R.color.mpsdk_red_payment_result_background;
-    public static final int ORANGE_BACKGROUND_COLOR = R.color.mpsdk_orange_payment_result_background;
 
     private static final int DEFAULT_STATUS_BAR_COLOR = R.color.mpsdk_blue_status_MP;
     private static final int GREEN_STATUS_BAR_COLOR = R.color.mpsdk_green_status_MP;
@@ -138,15 +134,16 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
         return headerMode;
     }
 
+    @ColorRes
     private int getBackground(@NonNull final PaymentResult paymentResult) {
         if (isGreenBackground(paymentResult)) {
-            return GREEN_BACKGROUND_COLOR;
+            return R.color.ui_components_success_color;
         } else if (isRedBackground(paymentResult)) {
-            return RED_BACKGROUND_COLOR;
+            return R.color.ui_components_error_color;
         } else if (isOrangeBackground(paymentResult)) {
-            return ORANGE_BACKGROUND_COLOR;
+            return R.color.ui_components_warning_color;
         } else {
-            return DEFAULT_BACKGROUND_COLOR;
+            return R.color.mpsdk_blue_MP;
         }
     }
 
