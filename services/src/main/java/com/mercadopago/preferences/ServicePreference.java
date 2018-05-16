@@ -3,10 +3,11 @@ package com.mercadopago.preferences;
 import com.google.gson.annotations.SerializedName;
 import com.mercadopago.lite.constants.ProcessingModes;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServicePreference {
+public class ServicePreference implements Serializable {
 
     @SerializedName("default_base_url")
     private final String defaultBaseURL;

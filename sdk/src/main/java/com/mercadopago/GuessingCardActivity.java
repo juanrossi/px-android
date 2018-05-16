@@ -264,7 +264,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
         BigDecimal transactionAmount = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("amount"), BigDecimal.class);
         Boolean discountEnabled = getIntent().getBooleanExtra("discountEnabled", true);
-        Boolean directDiscountEnabled = getIntent().getBooleanExtra("directDiscountEnabled", true);
         Discount discount = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("discount"), Discount.class);
         String payerEmail = getIntent().getStringExtra("payerEmail");
 
@@ -300,7 +299,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mPresenter.setDiscount(discount);
         mPresenter.setTransactionAmount(transactionAmount);
         mPresenter.setDiscountEnabled(discountEnabled);
-        mPresenter.setDirectDiscountEnabled(directDiscountEnabled);
         mPresenter.setShowDiscount(showDiscount);
     }
 
@@ -698,7 +696,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
                     returnIntent.putExtra("discountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDiscountEnabled()));
-                    returnIntent.putExtra("directDiscountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDirectDiscountEnabled()));
                     setResult(RESULT_CANCELED, returnIntent);
                     finish();
                 }
@@ -1753,13 +1750,12 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
-    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, Boolean discountEnabled, List<Issuer> issuers) {
+    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean discountEnabled, List<Issuer> issuers) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuers", JsonUtil.getInstance().toJson(issuers));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-        returnIntent.putExtra("directDiscountEnabled", directDiscountEnabled);
         returnIntent.putExtra("discountEnabled", discountEnabled);
         setResult(RESULT_OK, returnIntent);
         finish();
@@ -1803,7 +1799,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         Intent returnIntent = new Intent();
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
         returnIntent.putExtra("discountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDiscountEnabled()));
-        returnIntent.putExtra("directDiscountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDirectDiscountEnabled()));
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);
         finish();
@@ -1835,15 +1830,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 .setMerchantPublicKey(mPresenter.getPublicKey())
                 .setPayerEmail(mPresenter.getPayerEmail())
                 .setAmount(transactionAmount)
-                .setDiscount(mPresenter.getDiscount())
-                .setDirectDiscountEnabled(mPresenter.getDirectDiscountEnabled());
-
-        if (mPresenter.getDiscount() == null) {
-            discountsActivityBuilder.setDirectDiscountEnabled(false);
-        } else {
-            discountsActivityBuilder.setDiscount(mPresenter.getDiscount());
-        }
-
+                .setDiscount(mPresenter.getDiscount());
+        discountsActivityBuilder.setDiscount(mPresenter.getDiscount());
         discountsActivityBuilder.startActivity();
     }
 

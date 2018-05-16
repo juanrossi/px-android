@@ -1,11 +1,12 @@
 package com.mercadopago.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class Payment {
+public class Payment implements Serializable {
 
     private Boolean binaryMode;
     private String callForAuthorizeId;

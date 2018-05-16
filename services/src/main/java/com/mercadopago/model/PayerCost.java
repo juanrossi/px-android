@@ -4,12 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PayerCost implements Parcelable {
+public class PayerCost implements Parcelable, Serializable {
 
     private static final String CFT = "CFT";
     private static final String TEA = "TEA";

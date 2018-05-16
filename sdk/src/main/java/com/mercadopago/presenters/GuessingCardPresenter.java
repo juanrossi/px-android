@@ -6,11 +6,11 @@ import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.core.CheckoutStore;
-import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.exceptions.ApiException;
-import com.mercadopago.model.Bin;
+import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.model.BankDeal;
+import com.mercadopago.model.Bin;
 import com.mercadopago.model.CardInformation;
 import com.mercadopago.model.CardToken;
 import com.mercadopago.model.Cardholder;
@@ -1093,7 +1093,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
             mIssuer = issuers.get(0);
             getInstallments();
         } else {
-            getView().finishCardFlow(mPaymentMethod, mToken, mDiscount, mDirectDiscountEnabled, mDiscountEnabled, issuers);
+            getView().finishCardFlow(mPaymentMethod, mToken, mDiscount, mDiscountEnabled, issuers);
         }
     }
 

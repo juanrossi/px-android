@@ -1,10 +1,12 @@
 package com.mercadopago.model;
 
+import java.io.Serializable;
+
 /**
  * Created by vaserber on 2/13/17.
  */
 
-public class PaymentResult {
+public class PaymentResult implements Serializable {
 
     public static final String SELECT_OTHER_PAYMENT_METHOD = "select_other_payment_method";
     public static final String RECOVER_PAYMENT = "recover_payment";

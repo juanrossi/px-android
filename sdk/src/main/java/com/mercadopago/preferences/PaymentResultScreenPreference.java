@@ -10,6 +10,7 @@ import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.model.Payment;
 import com.mercadopago.paymentresult.model.Badge;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  * Created by vaserber on 2/13/17.
  */
 
-public class PaymentResultScreenPreference {
+public class PaymentResultScreenPreference implements Serializable {
 
     private final Integer titleBackgroundColor;
     private final String approvedTitle;

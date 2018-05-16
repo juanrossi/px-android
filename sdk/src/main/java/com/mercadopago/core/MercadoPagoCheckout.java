@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mercadopago.CheckoutActivity;
 import com.mercadopago.callbacks.CallbackHolder;
@@ -23,30 +24,17 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.uicontrollers.FontCache;
-import com.mercadopago.util.JsonUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
 
-public final class MercadoPagoCheckout {
 
-    //TODO will make them public or internal in order to use always the same constants
-    // region constants bundle
-    private static final String MERCHANT_PUBLIC_KEY = "merchantPublicKey";
-    private static final String PAYMENT_DATA = "paymentData";
-    private static final String CHECKOUT_PREFERENCE = "checkoutPreference";
-    private static final String SERVICE_PREFERENCE = "servicePreference";
-    private static final String FLOW_PREFERENCE = "flowPreference";
-    private static final String PAYMENT_RESULT_SCREEN_PREFERENCE = "paymentResultScreenPreference";
-    private static final String PAYMENT_RESULT = "paymentResult";
-    private static final String DISCOUNT = "discount";
-    private static final String BINARY_MODE = "binaryMode";
-    private static final String RESULT_CODE = "resultCode";
-    private static final String EXTRA_PREFERENCE_ID = "extra_preference_id";
-    //endregion constants bundle
+public class MercadoPagoCheckout implements Serializable {
 
     public static final int CHECKOUT_REQUEST_CODE = 5;
     public static final int PAYMENT_DATA_RESULT_CODE = 6;
@@ -54,19 +42,34 @@ public final class MercadoPagoCheckout {
     public static final int TIMER_FINISHED_RESULT_CODE = 8;
     public static final int PAYMENT_METHOD_CHANGED_REQUESTED = 9;
 
-    public static final String PAYMENT_PROCESSOR_KEY = "payment_processor";
-
-
+    @NonNull
     private final String publicKey;
+
+    @Nullable
     private final CheckoutPreference checkoutPreference;
+
+    @NonNull
     private final ServicePreference servicePreference;
+
+    @NonNull
     private final FlowPreference flowPreference;
+
+    @Nullable
     private final PaymentResultScreenPreference paymentResultScreenPreference;
+
+    @Nullable
     private final PaymentData paymentData;
+
+    @Nullable
     private final PaymentResult paymentResult;
-    private final Boolean binaryMode;
-    private final Discount discount;
+
+    @Nullable
     private final String preferenceId;
+
+    @Nullable
+    private final Discount discount;
+
+    private final boolean binaryMode;
 
     private MercadoPagoCheckout(Builder builder) {
         publicKey = builder.publicKey;
@@ -163,7 +166,7 @@ public final class MercadoPagoCheckout {
 
     private void startCheckoutActivity(@NonNull final Context context, int resultCode) {
         validate(resultCode);
-        startIntent(context, getIntent(context, resultCode));
+        startIntent(context, CheckoutActivity.getIntent(context, resultCode, this));
     }
 
     private void startIntent(@NonNull final Context context, @NonNull final Intent checkoutIntent) {
@@ -174,21 +177,53 @@ public final class MercadoPagoCheckout {
         }
     }
 
+    @Nullable
+    public PaymentResultScreenPreference getPaymentResultScreenPreference() {
+        return paymentResultScreenPreference;
+    }
+
     @NonNull
-    private Intent getIntent(@NonNull final Context context, final int resultCode) {
-        Intent checkoutIntent = new Intent(context, CheckoutActivity.class);
-        checkoutIntent.putExtra(MERCHANT_PUBLIC_KEY, publicKey);
-        checkoutIntent.putExtra(PAYMENT_DATA, JsonUtil.getInstance().toJson(paymentData));
-        checkoutIntent.putExtra(CHECKOUT_PREFERENCE, JsonUtil.getInstance().toJson(checkoutPreference));
-        checkoutIntent.putExtra(EXTRA_PREFERENCE_ID, preferenceId);
-        checkoutIntent.putExtra(SERVICE_PREFERENCE, JsonUtil.getInstance().toJson(servicePreference));
-        checkoutIntent.putExtra(FLOW_PREFERENCE, JsonUtil.getInstance().toJson(flowPreference));
-        checkoutIntent.putExtra(PAYMENT_RESULT_SCREEN_PREFERENCE, JsonUtil.getInstance().toJson(paymentResultScreenPreference));
-        checkoutIntent.putExtra(PAYMENT_RESULT, JsonUtil.getInstance().toJson(paymentResult));
-        checkoutIntent.putExtra(DISCOUNT, JsonUtil.getInstance().toJson(discount));
-        checkoutIntent.putExtra(BINARY_MODE, binaryMode);
-        checkoutIntent.putExtra(RESULT_CODE, resultCode);
-        return checkoutIntent;
+    public FlowPreference getFlowPreference() {
+        return flowPreference;
+    }
+
+    public boolean isBinaryMode() {
+        return binaryMode;
+    }
+
+    @Nullable
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    @Nullable
+    public PaymentData getPaymentData() {
+        return paymentData;
+    }
+
+    @Nullable
+    public PaymentResult getPaymentResult() {
+        return paymentResult;
+    }
+
+    @NonNull
+    public ServicePreference getServicePreference() {
+        return servicePreference;
+    }
+
+    @NonNull
+    public String getMerchantPublicKey() {
+        return publicKey;
+    }
+
+    @Nullable
+    public String getPreferenceId() {
+        return preferenceId;
+    }
+
+    @Nullable
+    public CheckoutPreference getCheckoutPreference() {
+        return checkoutPreference;
     }
 
     public static class Builder {
@@ -199,8 +234,8 @@ public final class MercadoPagoCheckout {
         private final List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
         private final Map<String, PaymentProcessor> paymentPlugins = new HashMap<>();
         private Boolean binaryMode = false;
-        private ServicePreference servicePreference;
-        private FlowPreference flowPreference;
+        private ServicePreference servicePreference = new ServicePreference.Builder().build();
+        private FlowPreference flowPreference = new FlowPreference.Builder().build();
         private PaymentResultScreenPreference paymentResultScreenPreference;
         private PaymentData paymentData;
         private PaymentResult paymentResult;

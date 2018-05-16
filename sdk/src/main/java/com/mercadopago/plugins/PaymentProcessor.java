@@ -7,6 +7,8 @@ import java.util.Map;
 
 public abstract class PaymentProcessor {
 
+    public static final String PAYMENT_PROCESSOR_KEY = "payment_processor";
+
     public boolean support(@NonNull final String paymentMethodId,
                            @NonNull final Map<String, Object> data) {
         return true;
