@@ -7,14 +7,14 @@ ext {
     androidRunner = '1.0.1'
 }
 
-group = 'com.mercadopago.android.testlib'
-version = '0.0.1'
-
 buildscript {
     repositories {
         jcenter()
     }
+
     dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
         classpath "com.stanfy.spoon:spoon-gradle-plugin:1.2.2"
     }
 }
@@ -54,3 +54,5 @@ dependencies {
     compile "com.android.support.test.espresso:espresso-intents:$espressoVersion"
     compile "com.jakewharton.espresso:okhttp3-idling-resource:$okHttpIdlingVersion"
 }
+
+apply from: "$rootDir/gradle/deploy_testlib.gradle"

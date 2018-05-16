@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:textColor="@color/mpsdk_color_payer_costs_no_rate"
+                android:textColor="@color/mpsdk_discount_description"
                 android:text="@string/mpsdk_zero_rate"
                 android:textSize="16dp"
                 android:visibility="gone"/>

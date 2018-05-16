@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/mpsdk_summary_discount_color"
+                android:textColor="@color/mpsdk_discount_description"
                 android:textSize="16dp"
                 android:visibility="gone"
                 tools:text="$ 1.309" />
@@ -103,7 +103,7 @@
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
                     android:text="@string/mpsdk_discount"
-                    android:textColor="@color/mpsdk_summary_discount_color"
+                    android:textColor="@color/mpsdk_discount_description"
                     android:textSize="16dp" />
 
                 <com.mercadopago.customviews.MPTextView

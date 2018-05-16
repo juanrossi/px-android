@@ -101,7 +101,7 @@
                     android:layout_gravity="start"
                     android:layout_weight="0.7"
                     android:text="@string/mpsdk_review_summary_discount"
-                    android:textColor="@color/mpsdk_summary_discount_color"
+                    android:textColor="@color/mpsdk_discount_description"
                     android:textSize="18dp"
                     app:font_style="regular" />
 
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:gravity="end"
-                    android:textColor="@color/mpsdk_summary_discount_color"
+                    android:textColor="@color/mpsdk_discount_description"
                     android:textSize="18dp"
                     app:font_style="regular"
                     tools:text="$ 100" />

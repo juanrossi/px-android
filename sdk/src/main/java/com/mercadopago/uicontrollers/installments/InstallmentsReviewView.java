@@ -1,12 +1,12 @@
 package com.mercadopago.uicontrollers.installments;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatButton;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
@@ -29,8 +29,7 @@ public class InstallmentsReviewView implements InstallmentsView {
     private MPTextView mInstallmentsAmount;
     private MPTextView mTotalAmount;
     private MPTextView mCftpercent;
-    private MPTextView mContinueTextButton;
-    private FrameLayout mInstallmentsContinueButton;
+    private AppCompatButton mInstallmentsContinueButton;
 
     public InstallmentsReviewView(Context context, PayerCost payerCost, String currencyId) {
         mContext = context;
@@ -69,7 +68,6 @@ public class InstallmentsReviewView implements InstallmentsView {
     @Override
     public void initializeControls() {
         mInstallmentsContinueButton = mView.findViewById(R.id.mpsdkInstallmentsContinueButton);
-        mContinueTextButton = mView.findViewById(R.id.mpsdkInstallmentsButtonText);
         mInstallmentsAmount = mView.findViewById(R.id.mpsdkInstallmentsAmount);
         mTotalAmount = mView.findViewById(R.id.mpsdkReviewTotalAmount);
         mCftpercent = mView.findViewById(R.id.mpsdkCftpercent);

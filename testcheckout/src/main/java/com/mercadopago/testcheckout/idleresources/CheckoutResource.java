@@ -1,4 +1,4 @@
-package com.mercadopago.testcheckout;
+package com.mercadopago.testcheckout.idleresources;
 
 
 import android.support.test.InstrumentationRegistry;

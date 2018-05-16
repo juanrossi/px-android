@@ -2,6 +2,8 @@ package com.mercadopago.testcheckout.pages;
 
 import android.view.View;
 
+import com.mercadopago.testcheckout.assertions.Validator;
+
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -11,22 +13,30 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public class IdentificationPage extends PageObject {
 
+    public IdentificationPage() {
+        // This constructor is intentionally empty. Nothing special is needed here.
+    }
+
+    public IdentificationPage(Validator validator) {
+        super(validator);
+    }
+
     // Case credit card - a way to resolve this is with a card type
     public InstallmentsPage enterIdentificationNumberToInstallments(final String idNumber) {
         insertIdAndPressNext(idNumber);
-        return new InstallmentsPage();
+        return new InstallmentsPage(validator);
     }
 
     // Case debit card - a way to resolve this is with a card type
 
     public ReviewAndConfirmPage enterIdentificationNumberToReviewAndConfirm(final String idNumber) {
         insertIdAndPressNext(idNumber);
-        return new ReviewAndConfirmPage();
+        return new ReviewAndConfirmPage(validator);
     }
 
     public IssuerPage enterIdentificationNumberToIssuer(final String idNumber) {
         insertIdAndPressNext(idNumber);
-        return new IssuerPage();
+        return new IssuerPage(validator);
     }
 
     private void insertIdAndPressNext(final String idNumber) {
@@ -34,5 +44,10 @@ public class IdentificationPage extends PageObject {
         Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButtonText);
         onView(cardIdentificationNumberEditTextMatcher).perform(typeText(idNumber));
         onView(cardNextButtonTextMatcher).perform(click());
+    }
+
+    @Override
+    protected void validate() {
+        validator.validate(this);
     }
 }

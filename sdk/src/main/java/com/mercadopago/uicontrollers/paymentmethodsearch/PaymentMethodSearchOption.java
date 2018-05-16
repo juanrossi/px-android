@@ -1,6 +1,8 @@
 package com.mercadopago.uicontrollers.paymentmethodsearch;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +12,11 @@ import com.mercadopago.R;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.PaymentMethodSearchItem;
-import com.mercadopago.util.MercadoPagoUtil;
-
-/**
- * Created by mreverter on 29/4/16.
- */
+import com.mercadopago.util.ResourceUtil;
 
 public class PaymentMethodSearchOption implements PaymentMethodSearchViewController {
 
     private static final int COMMENT_MAX_LENGTH = 75;
-    private static final String TO_TINT_IMAGES_PREFIX = "grey_";
 
     protected PaymentMethodSearchItem mItem;
     protected Context mContext;
@@ -77,10 +74,18 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
 
         int resourceId = 0;
 
-        String imageId = mItem.getId();
+        final boolean needsTint = needsTint();
+
+        final StringBuilder imageName = new StringBuilder();
+        if (!mItem.getId().isEmpty()) {
+            if (needsTint) {
+                imageName.append(ResourceUtil.TINT_PREFIX);
+            }
+            imageName.append(mItem.getId());
+        }
 
         if (mItem.isIconRecommended()) {
-            resourceId = MercadoPagoUtil.getPaymentMethodSearchItemIcon(mContext, imageId);
+            resourceId = ResourceUtil.getIconResource(mContext, imageName.toString());
         }
 
         if (resourceId != 0) {
@@ -88,6 +93,17 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
         } else {
             mIcon.setVisibility(View.GONE);
         }
+
+        if(needsTint) {
+            mIcon.setColorFilter(ContextCompat.getColor(mContext, R.color.mpsdk_main_color),
+                PorterDuff.Mode.MULTIPLY);
+        }
+    }
+
+    private boolean needsTint() {
+        final int originalColor = ContextCompat.getColor(mContext, R.color.mpsdk_original_main_color);
+        final int realColor = ContextCompat.getColor(mContext, R.color.mpsdk_main_color);
+        return (originalColor != realColor) && (mItem.isGroup() || mItem.isPaymentType());
     }
 
     @Override

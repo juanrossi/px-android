@@ -49,7 +49,9 @@ public class ExamplesUtils {
     private static final String DUMMY_PREFERENCE_ID = "243962506-0bb62e22-5c7b-425e-a0a6-c22d0f4758a9";
     private static final String DUMMY_PREFERENCE_ID_WITH_DECIMALS = "243962506-ad5df092-f5a2-4b99-bcc4-7578d6e71849";
     private static final String DUMMY_PREFERENCE_ID_WITH_NO_DECIMALS = "243966003-3db6717c-371a-4660-8d01-ebf63f588fd8";
+    private static final String DUMMY_PREFERENCE_ID_MLM = "253812950-1f347959-4ed9-4fee-9189-0eb84fe8f049";
     private static final String DUMMY_MERCHANT_PUBLIC_KEY = "TEST-c6d9b1f9-71ff-4e05-9327-3c62468a23ee";
+    private static final String DUMMY_MERCHANT_PUBLIC_KEY_MLM = "TEST-0f375857-0881-447c-9b2b-23e97b93f947";
 
     public static void resolveCheckoutResult(final Activity context, final int requestCode, final int resultCode,
                                              final Intent data) {
@@ -123,7 +125,7 @@ public class ExamplesUtils {
 
     private static Builder startCompleteRejectedBusiness() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.REJECTED, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.ERROR, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
                         .setReceiptId("#123455")
                         .setPaymentMethodVisibility(true)
@@ -135,7 +137,7 @@ public class ExamplesUtils {
     }
 
     private static Builder startCompleteApprovedBusinessWithPaymentMethod() {
-        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", "Title")
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.SUCCESS, "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", "Title")
                 .setHelp("Help description!")
                 .setReceiptId("#123455")
                 .setStatementDescription("PEDRO")
@@ -147,7 +149,7 @@ public class ExamplesUtils {
     }
 
     private static Builder startCompleteApprovedBusinessWithPaymentMethodNoHelp() {
-        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.SUCCESS, R.drawable.mpsdk_icon_card, "Title")
                 .setReceiptId("#123455")
                 .setPaymentMethodVisibility(true)
                 .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
@@ -159,7 +161,7 @@ public class ExamplesUtils {
 
     private static Builder startCompleteApprovedBusiness() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.SUCCESS, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
                         .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
                         .build();
@@ -169,7 +171,7 @@ public class ExamplesUtils {
 
     private static Builder startCompletePendingBusiness() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.WARNING, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
                         .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                         .build();
@@ -179,7 +181,7 @@ public class ExamplesUtils {
 
     private static Builder startPendingBusinessNoHelp() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.WARNING, R.drawable.mpsdk_icon_card, "Title")
                         .setReceiptId("#123455")
                         .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                         .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
@@ -229,7 +231,14 @@ public class ExamplesUtils {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID)
-                .setDataInitializationTask(getDataInitializationTask(defaultData));
+            .setDataInitializationTask(getDataInitializationTask(defaultData));
+    }
+
+    public static Builder createBaseWithMLM() {
+        final Map<String, Object> defaultData = new HashMap<>();
+
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY_MLM, DUMMY_PREFERENCE_ID_MLM)
+            .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
     public static Builder createBase(final CheckoutPreference checkoutPreference) {

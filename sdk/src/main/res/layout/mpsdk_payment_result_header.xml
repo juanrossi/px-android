@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/mpsdk_m_alternative_margin"
     android:paddingStart="@dimen/mpsdk_m_alternative_margin"
     android:paddingBottom="@dimen/mpsdk_xxxl_margin"
-    tools:background="@color/mpsdk_green_MP">
+    tools:background="@color/ui_components_success_color">
 
     <FrameLayout
         android:id="@+id/iconContainer"
