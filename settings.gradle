@@ -1,1 +1,1 @@
-include ':sdk', ':example', ':example_services', ':services', ':tracking', 'example_tracking', ':testcheckout', ':testlib'
+include ':sdk', ':example', ':services', ':tracking', ':testcheckout', ':testlib'
