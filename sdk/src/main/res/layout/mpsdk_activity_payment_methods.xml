@@ -47,10 +47,6 @@
                 android:visibility="gone" />
         </android.support.v7.widget.Toolbar>
 
-        <FrameLayout
-            android:id="@+id/mpsdkShoppingCartFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout

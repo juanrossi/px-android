@@ -1,6 +1,8 @@
 package com.mercadopago.model;
 
-public interface CardInformation {
+import java.io.Serializable;
+
+public interface CardInformation extends Serializable {
 
     int CARD_NUMBER_MAX_LENGTH = 16;
 

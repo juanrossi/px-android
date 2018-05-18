@@ -5,6 +5,7 @@ import android.support.annotation.VisibleForTesting;
 
 import com.mercadopago.components.Component;
 import com.mercadopago.components.RendererFactory;
+import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Summary;
 import com.mercadopago.model.SummaryDetail;
 import com.mercadopago.review_and_confirm.SummaryProvider;
@@ -36,7 +37,7 @@ public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> 
     BigDecimal getTotalAmount() {
         BigDecimal totalAmount;
 
-        if (isCardPaymentMethod()) {
+        if (PaymentTypes.isCardPaymentMethod(props.summaryModel.getPaymentTypeId())) {
             if (props.summaryModel.getInstallments() == 1) {
                 if (props.summaryModel.getCouponAmount() != null && !isEmptySummaryDetails()) {
                     totalAmount = props.summaryModel.getPayerCostTotalAmount();
@@ -52,11 +53,6 @@ public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> 
             totalAmount = props.summaryModel.getTotalAmount();
         }
         return totalAmount;
-    }
-
-    @VisibleForTesting
-    boolean hasToRenderPayerCost() {
-        return isCardPaymentMethod() && props.summaryModel.getInstallments() > 1;
     }
 
     public List<AmountDescription> getAmountDescriptionComponents() {
@@ -203,21 +199,6 @@ public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> 
 
     private boolean hasDiscount() {
         return props.summaryModel.currencyId != null && props.summaryModel.getCouponAmount() != null;
-    }
-
-    private boolean isCardPaymentMethod() {
-        return props.summaryModel.paymentTypeId != null && isCard(props.summaryModel.paymentTypeId);
-    }
-
-    private boolean isCard(String paymentTypeId) {
-        boolean isCard = false;
-
-        if ((paymentTypeId != null) && (paymentTypeId.equals("credit_card") ||
-            paymentTypeId.equals("debit_card") || paymentTypeId.equals("prepaid_card"))) {
-            isCard = true;
-        }
-
-        return isCard;
     }
 
     public DisclaimerComponent getDisclaimerComponent(String disclaimer) {

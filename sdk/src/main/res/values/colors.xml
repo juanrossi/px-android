@@ -15,64 +15,18 @@
     <color name="mpsdk_very_light_gray">#EEEEEE</color>
     <color name="mpsdk_gray">#D6D6D6</color>
     <color name="mpsdk_darker_gray">#ABABAB</color>
-    <color name="mpsdk_info_color_light">#FBF8E1</color>
-    <color name="mpsdk_info_color_dark">#F5F1D3</color>
-    <color name="mpsdk_congrats_color_light">#EAFFE1</color>
-    <color name="mpsdk_congrats_color_dark">#D2E5CA</color>
-    <color name="mpsdk_call_for_authorize_color_light">#E4F2F9</color>
-    <color name="mpsdk_call_for_authorize_color_dark">#C7E6F5</color>
-    <color name="mpsdk_rejection_color_light">#F8E9E9</color>
-    <color name="mpsdk_rejection_color_dark">#F8DADA</color>
-    <color name="mpsdk_process_color_dark">#30AFE2</color>
-    <color name="mpsdk_icon_image_color">#1D9FDE</color>
     <color name="mpsdk_warm_grey_with_alpha">#b7999999</color>
-    <color name="mpsdk_shopping_cart_background">#ce76cdf1</color>
     <color name="mpsdk_transparent">#00000000</color>
-    <color name="mpsdk_color_instructions_title_image">#EFC703</color>
     <color name="mpsdk_color_light_grey">#F0F0F0</color>
-    <color name="mpsdk_color_instructions_font">#B29054</color>
-    <color name="mpsdk_color_instructions_button">#41c6f4</color>
-    <color name="mpsdk_continue_button">#009EE3</color>
-    <color name="mpsdk_color_link">#0066CC</color>
-    <color name="mpsdk_active_button">#3383FA</color>
+    <color name="mpsdk_active_button">@color/mpsdk_input</color>
     <color name="mpsdk_inactive_button">#84b4fc</color>
     <color name="mpsdk_error_red_pink">#F04449</color>
     <color name="mpsdk_black_info_background">#333333</color>
-
-    <color name="mpsdk_color_instructions_background_title">#FFA15A</color>
-    <color name="mpsdk_color_instructions_status_bar">#E69150</color>
-
     <color name="mpsdk_color_congrats_background">#0DB478</color>
-    <color name="mpsdk_color_congrats_status_bar">#35AE73</color>
-
-    <color name="mpsdk_color_congrats_installments">#009FDE</color>
-    <color name="mpsdk_color_congrats_interest">#43B000</color>
-
-    <color name="mpsdk_color_rejection_background">#D9D9D9</color>
-    <color name="mpsdk_color_rejection_image">#990601</color>
-    <color name="mpsdk_color_rejection_result_text">#BD494A</color>
-    <color name="mpsdk_color_rejection_title_background">#FF5959</color>
-    <color name="mpsdk_color_rejection_status_bar">#FF6E6E</color>
-
-    <color name="mpsdk_installments_text">#009FDE</color>
-    <color name="mpsdk_installments_zero_rate">#43B000</color>
-    <color name="mpsdk_color_call_for_authorize_image">#3188AA</color>
-    <color name="mpsdk_color_call_for_authorize_background">#3AB8EF</color>
-
-    <color name="mpsdk_color_pending_background">#FFA15A</color>
-    <color name="mpsdk_color_call_for_authorize_status_bar">#34a5d7</color>
-
-    <color name="mpsdk_color_pending_status_bar">#E59051</color>
-
-    <color name="mpsdk_color_pending_image">#EFC701</color>
-    <color name="mpsdk_color_new_card_form_background">#59C0ED</color>
     <color name="mpsdk_color_new_card_form_background_light_alpha">#4DFFFFFF</color>
     <color name="mpsdk_color_new_card_form_background_dark_alpha">#B3FFFFFF</color>
     <color name="mpsdk_color_new_card_text">#999999</color>
-    <color name="mpsdk_color_new_card_image">#D8D8D8</color>
     <color name="mpsdk_color_red_error">#FF2B2B</color>
-
-    <color name="mpsdk_dark_font_color">#212121</color>
 
     <!-- Card Colors -->
     <color name="mpsdk_visa">#001D77</color>
@@ -106,9 +60,6 @@
     <color name="mpsdk_redlink">#FFFFFF</color>
     <color name="mpsdk_bapropagos">#FFFFFF</color>
     <color name="mpsdk_cargavirtual">#FFFFFF</color>
-
-    <color name="mpsdk_submit">#1B9EE3</color>
-    <color name="mpsdk_submit_pressed">#1976D2</color>
 
     <!-- Card font color -->
     <color name="mpsdk_font_visa">#B3FFFFFF</color>
@@ -147,18 +98,11 @@
 
     <color name="mpsdk_summary_top_color">#EEEEEE</color>
 
-    <color name="mpsdk_discounts_summary_background_color">#474747</color>
-    <color name="mpsdk_ryc_status_bar">#DCDCDC</color>
     <color name="mpsdk_background_blue">#009EE3</color>
     <color name="mpsdk_colorPrimary">#009EE3</color>
     <color name="mpsdk_color_payer_costs">#999999</color>
-    <color name="mpsdk_issuers_background_gray">#F0F0F0</color>
     <color name="mpsdk_blue_button">#009FDE</color>
-    <color name="mpsdk_blue_button_focused">#007FB1</color>
-    <color name="mpsdk_blue_button_pressed">#005F85</color>
     <color name="mpsdk_review_gray_background">#F7F7F7</color>
-    <color name="mpsdk_review_payment_text">#333333</color>
-    <color name="mpsdk_review_description_text">#666666</color>
     <color name="mpsdk_discount_row">#F5F5F5</color>
     <color name="mpsdk_color_unlock_card_text">#A1924C</color>
     <color name="mpsdk_color_unlock_card_link">#118BDC</color>
@@ -177,37 +121,76 @@
     <color name="mpsdk_light_gray">#F7F7F7</color>
     <color name="mpsdk_white">#FFFFFF</color>
     <color name="mpsdk_blue_MP">#009CEE</color>
-    <color name="mpsdk_green_MP">#00C677</color>
-    <color name="mpsdk_red_MP">#FF4E55</color>
-    <color name="mpsdk_orange_MP">#FFA644</color>
     <color name="mpsdk_blue_status_MP">#008CD6</color>
     <color name="mpsdk_green_status_MP">#00B26B</color>
     <color name="mpsdk_red_status_MP">#E5464C</color>
     <color name="mpsdk_orange_status_MP">#E5953D</color>
 
+
     <!-- Customized colors -->
-    <color name="mpsdk_background">#009EE3</color>
-    <color name="mpsdk_discount_summary_background">#474747</color>
-    <color name="mpsdk_toolbar_text">#FFFFFF</color>
+
+    <!-- Main Color -->
+    <color name="mpsdk_original_main_color">#009EE3</color>
+    <color name="mpsdk_main_color">#009EE3</color>
+
+    <!-- Toolbar and status bar default -->
+    <color name="mpsdk_background">@color/mpsdk_main_color</color>
     <color name="mpsdk_status_bar">#008CD6</color>
+    <color name="mpsdk_toolbar_text">#FFFFFF</color>
+
+    <!-- Discount modal and discount description -->
+    <color name="mpsdk_discount_summary_background">#474747</color>
     <color name="mpsdk_modal_status_bar">#404040</color>
-    <color name="mpsdk_input">#009CEE</color>
+    <color name="mpsdk_discount_description">#3BC280</color>
+
+    <!-- Inputs -->
+    <color name="mpsdk_input">@color/mpsdk_main_color</color>
+
+    <!-- R&C toolbar -->
+    <color name="mpsdk_review_background">#FFFFFF</color>
+    <color name="mpsdk_review_toolbar_text">@color/mpsdk_main_color</color>
+
+    <!-- R&C summary -->
+    <color name="mpsdk_review_summary_background">@color/mpsdk_white</color>
     <color name="mpsdk_summary_text_color">#666666</color>
     <color name="mpsdk_summary_separator_color">#DEDEDE</color>
-    <color name="mpsdk_summary_discount_color">#3BC280</color>
-    <color name="mpsdk_review_background">#FFFFFF</color>
-    <color name="mpsdk_review_toolbar_text">#009EE3</color>
-    <color name="mpsdk_review_component_background">#F7F7F7</color>
-    <color name="mpsdk_link">#009EE3</color>
-    <color name="mpsdk_button">#009EE3</color>
-    <color name="mpsdk_green_payment_result_background">#00C677</color>
-    <color name="mpsdk_red_payment_result_background">#E5464C</color>
-    <color name="mpsdk_orange_payment_result_background">#E5953D</color>
-    <color name="mpsdk_loading">#009EE3</color>
+
+    <!-- R&C components -->
+    <color name="mpsdk_detailed_background">@color/mpsdk_light_gray</color>
+    <color name="mpsdk_review_payment_method_background">@color/mpsdk_detailed_background</color>
+    <color name="mpsdk_review_item_background">@color/mpsdk_detailed_background</color>
+
+    <!-- Spinner -->
     <color name="mpsdk_background_loading">#FFFFFF</color>
-    <color name="mpsdk_color_payer_costs_no_rate">#3BC280</color>
-    <!--Review and confirm custom colors-->
-    <color name="mpsdk_review_payment_method_background">@color/mpsdk_light_gray</color>
-    <color name="mpsdk_review_summary_background">@color/mpsdk_white</color>
-    <color name="mpsdk_review_item_background">@color/mpsdk_light_gray</color>
+    <color name="mpsdk_tint_loading">@color/mpsdk_main_color</color>
+
+    <!-- UI lib colors -->
+    <!-- Primary action button background -->
+    <!-- Primary option button enabled text -->
+    <!-- Link for terms and conditions text -->
+    <color name="ui_components_primary_color">@color/mpsdk_main_color</color>
+
+    <!-- Primary action button disabled background -->
+    <!-- Primary option button disabled text -->
+    <color name="ui_components_primary_color_disabled">#404040</color>
+
+    <!-- Primary action button pressed background -->
+    <!-- Primary optiom button pressed text -->
+    <color name="ui_components_primary_color_pressed">@color/mpsdk_main_color</color>
+
+    <!-- Spinner -->
+    <color name="ui_components_spinner_primary_color">@color/mpsdk_tint_loading</color>
+    <color name="ui_components_spinner_secondary_color">@color/mpsdk_tint_loading</color>
+
+    <!-- Snackbar success -->
+    <!-- Background success -->
+    <color name="ui_components_success_color">#00C677</color>
+
+    <!-- Snackbar error -->
+    <!-- Background error -->
+    <color name="ui_components_error_color">#E5464C</color>
+
+    <!-- Snackbar warning -->
+    <!-- Background warning -->
+    <color name="ui_components_warning_color">#E5953D</color>
 </resources>

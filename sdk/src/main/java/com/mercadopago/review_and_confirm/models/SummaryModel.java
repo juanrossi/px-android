@@ -23,10 +23,10 @@ public class SummaryModel implements Parcelable {
     private final String amount;
     public final String currencyId;
     public final String siteId;
-    public final String paymentTypeId;
+    private final String paymentTypeId;
     private final String payerCostTotalAmount;
     private final String installments;
-    public final String cftPercent;
+    private final String cftPercent;
     private final String couponAmount;
     public final boolean hasPercentOff;
     private final String installmentsRate;
@@ -100,6 +100,14 @@ public class SummaryModel implements Parcelable {
         dest.writeString(installmentsRate);
         dest.writeString(installmentAmount);
         dest.writeString(title);
+    }
+
+    public String getPaymentTypeId() {
+        return paymentTypeId;
+    }
+
+    public String getCftPercent() {
+        return cftPercent;
     }
 
     public BigDecimal getTotalAmount() {

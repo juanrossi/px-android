@@ -8,3 +8,5 @@
 .idea
 *.iml
 *.log
+sdk/jacoco.exec
+config/

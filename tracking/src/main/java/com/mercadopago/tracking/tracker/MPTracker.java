@@ -2,6 +2,8 @@ package com.mercadopago.tracking.tracker;
 
 import android.content.Context;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.tracking.listeners.TracksListener;
@@ -30,11 +32,7 @@ import java.util.Map;
 
 import static android.text.TextUtils.isEmpty;
 
-/**
- * Created by vaserber on 6/5/17.
- */
-
-public class MPTracker {
+public final class MPTracker {
 
     private static MPTracker mMPTrackerInstance;
     private EventsDatabaseImpl database;
@@ -59,10 +57,10 @@ public class MPTracker {
     private TrackingStrategy trackingStrategy;
     private Event mEvent;
 
-    protected MPTracker() {
+    private MPTracker() {
     }
 
-    synchronized public static MPTracker getInstance() {
+    public static synchronized MPTracker getInstance() {
         if (mMPTrackerInstance == null) {
             mMPTrackerInstance = new MPTracker();
         }
@@ -79,13 +77,17 @@ public class MPTracker {
         mMPTrackingService = trackingService;
     }
 
+    /**
+     * Set listener to track library's screens and events in the app.
+     * @param tracksListener TracksListener implementing the tracking methods
+     */
     public void setTracksListener(TracksListener tracksListener) {
         this.mTracksListener = tracksListener;
     }
 
-    private void trackScreenLaunchedListener(String screenName) {
+    private void trackScreenLaunchedListener(@NonNull String screenName, @Nullable Map<String, String> extraParams) {
         if (this.mTracksListener != null) {
-            this.mTracksListener.onScreenLaunched(screenName);
+            this.mTracksListener.onScreenLaunched(screenName, extraParams);
         }
     }
 
@@ -122,12 +124,6 @@ public class MPTracker {
             mMPTrackingService.trackToken(trackingIntent, mContext);
         }
         return trackingIntent;
-    }
-
-    public void trackCustomEvent(final Object event) {
-        if (mTracksListener != null) {
-            mTracksListener.onEvent(event);
-        }
     }
 
     /**
@@ -185,7 +181,7 @@ public class MPTracker {
             trackEventPerformedListener(eventMap);
         } else if (event.getType().equals(Event.TYPE_SCREEN_VIEW)) {
             ScreenViewEvent screenViewEvent = (ScreenViewEvent) event;
-            trackScreenLaunchedListener(screenViewEvent.getScreenName());
+            trackScreenLaunchedListener(screenViewEvent.getScreenName(), screenViewEvent.getProperties());
         }
     }
 

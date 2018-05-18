@@ -2,9 +2,10 @@ package com.mercadopago.model;
 
 import android.support.annotation.DrawableRes;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PaymentMethodSearchItem {
+public class PaymentMethodSearchItem implements Serializable {
 
     private static final String TYPE_PAYMENT_METHOD = "payment_method";
     private static final String TYPE_PAYMENT_TYPE = "payment_type";

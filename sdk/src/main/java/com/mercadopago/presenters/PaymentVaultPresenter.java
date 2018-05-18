@@ -47,7 +47,6 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     private BigDecimal mAmount;
     private Boolean mInstallmentsReviewEnabled;
     private Boolean mDiscountEnabled = true;
-    private Boolean mDirectDiscountEnabled = true;
     private Boolean mShowAllSavedCardsEnabled = false;
     private Integer mMaxSavedCards;
 
@@ -518,14 +517,6 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     public void setDiscountEnabled(Boolean discountEnabled) {
         mDiscountEnabled = discountEnabled;
-    }
-
-    public void setDirectDiscountEnabled(Boolean directDiscountEnabled) {
-        mDirectDiscountEnabled = directDiscountEnabled;
-    }
-
-    public Boolean getDirectDiscountEnabled() {
-        return mDirectDiscountEnabled;
     }
 
     public Boolean getDiscountEnabled() {

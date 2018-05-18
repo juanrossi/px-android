@@ -28,11 +28,10 @@
         android:orientation="horizontal">
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkReviewTermsAndConditions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/mpsdk_text_terms_and_conditions_linked"
-            android:textColor="@color/mpsdk_link"
+            android:textColor="@color/ui_components_primary_color"
             android:textSize="@dimen/mpsdk_xxs_text"
             app:font_style="regular" />
 

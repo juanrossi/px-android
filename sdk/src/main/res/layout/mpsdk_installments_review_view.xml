@@ -45,28 +45,20 @@
             tools:text="CFT 109,00%" />
     </LinearLayout>
 
-    <FrameLayout
+    <com.mercadolibre.android.ui.widgets.MeliButton
         android:id="@+id/mpsdkInstallmentsContinueButton"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginEnd="25dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginStart="25dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/mpsdk_button_bg_stroke">
-
-        <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkInstallmentsButtonText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:focusable="true"
-            android:text="@string/mpsdk_continue_label"
-            android:textAllCaps="false"
-            android:textColor="@color/mpsdk_white_background"
-            android:textSize="16dp"
-            app:font_style="regular" />
-    </FrameLayout>
+        android:layout_gravity="center"
+        android:focusable="true"
+        android:text="@string/mpsdk_continue_label"
+        app:type="actionPrimary"
+        app:state="normal"
+        android:textAllCaps="false"/>
 </LinearLayout>

@@ -17,14 +17,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PaymentMethodSearchItemAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
-import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.core.MercadoPagoUI;
-import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.customviews.GridSpacingItemDecoration;
+import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.hooks.HookActivity;
@@ -38,6 +37,7 @@ import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
+import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.observers.TimerObserver;
@@ -171,7 +171,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         mPaymentVaultPresenter.setPayerEmail(getIntent().getStringExtra("payerEmail"));
         mPaymentVaultPresenter.setDiscount(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("discount"), Discount.class));
         mPaymentVaultPresenter.setDiscountEnabled(getIntent().getBooleanExtra("discountEnabled", true));
-        mPaymentVaultPresenter.setDirectDiscountEnabled(getIntent().getBooleanExtra("directDiscountEnabled", true));
         mPaymentVaultPresenter.setInstallmentsReviewEnabled(
                 getIntent().getBooleanExtra("installmentsReviewEnabled", true));
         mPaymentVaultPresenter.setMaxSavedCards(getIntent().getIntExtra("maxSavedCards", FlowPreference.DEFAULT_MAX_SAVED_CARDS_TO_SHOW));
@@ -384,7 +383,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                 .setPayerEmail(mPaymentVaultPresenter.getPayerEmail())
                 .setDiscount(mPaymentVaultPresenter.getDiscount())
                 .setDiscountEnabled(mPaymentVaultPresenter.getDiscountEnabled())
-                .setDirectDiscountEnabled(mPaymentVaultPresenter.getDirectDiscountEnabled())
                 .setInstallmentsReviewEnabled(mPaymentVaultPresenter.getInstallmentsReviewEnabled())
                 .setShowBankDeals(mShowBankDeals)
                 .setESCEnabled(mEscEnabled)
@@ -400,7 +398,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         intent.putExtra("discount", JsonUtil.getInstance().toJson(mPaymentVaultPresenter.getDiscount()));
         intent.putExtra("paymentMethodSearch", JsonUtil.getInstance().toJson(mPaymentVaultPresenter.getPaymentMethodSearch()));
         intent.putExtra("discountEnabled", mPaymentVaultPresenter.getDiscountEnabled());
-        intent.putExtra("directDiscountEnabled", mPaymentVaultPresenter.getDirectDiscountEnabled());
 
         startActivityForResult(intent, MercadoPagoComponents.Activities.PAYMENT_VAULT_REQUEST_CODE);
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
@@ -644,7 +641,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                 .setDiscount(mPaymentVaultPresenter.getDiscount())
                 .setAutomaticSelection(automaticSelection)
                 .setDiscountEnabled(mPaymentVaultPresenter.getDiscountEnabled())
-                .setDirectDiscountEnabled(mPaymentVaultPresenter.getDirectDiscountEnabled())
                 .setInstallmentsReviewEnabled(mPaymentVaultPresenter.getInstallmentsReviewEnabled())
                 .setShowBankDeals(mShowBankDeals)
                 .setESCEnabled(mEscEnabled)
@@ -794,15 +790,9 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                 .setMerchantPublicKey(mPublicKey)
                 .setPayerEmail(mPaymentVaultPresenter.getPayerEmail())
                 .setAmount(transactionAmount)
-                .setDiscount(mPaymentVaultPresenter.getDiscount())
-                .setDirectDiscountEnabled(mPaymentVaultPresenter.getDirectDiscountEnabled());
+                .setDiscount(mPaymentVaultPresenter.getDiscount());
 
-        if (mPaymentVaultPresenter.getDiscount() == null) {
-            mercadoPagoBuilder.setDirectDiscountEnabled(false);
-        } else {
-            mercadoPagoBuilder.setDiscount(mPaymentVaultPresenter.getDiscount());
-        }
-
+        mercadoPagoBuilder.setDiscount(mPaymentVaultPresenter.getDiscount());
         mercadoPagoBuilder.startActivity();
     }
 

@@ -36,10 +36,6 @@
         <item name="android:textSize">@dimen/mpsdk_xxs_text</item>
     </style>
 
-    <style name="mpsdk_basic_color">
-        <item name="android:textColor">@color/mpsdk_black</item>
-    </style>
-
     <style name="Theme.MercadoPagoTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -52,16 +48,9 @@
         <item name="android:statusBarColor">@color/mpsdk_modal_status_bar</item>
     </style>
 
-    <style name="mpsdk_button_normal" parent="@android:style/Widget.Button">
-        <item name="android:background">@drawable/mpsdk_button</item>
-        <item name="android:textSize">@dimen/mpsdk_big_text</item>
-        <item name="android:textColor">@color/mpsdk_white</item>
-        <item name="android:stateListAnimator">@null</item>
-    </style>
-
     <style name="Theme.ProcessMercadoPagoTheme.NoActionbar" parent="Theme.MercadoPagoTheme.NoActionBar">
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
 
-
+    
 </resources>

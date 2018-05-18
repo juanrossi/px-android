@@ -44,7 +44,7 @@ public class SummaryProviderImpl implements SummaryProvider {
 
     @Override
     public int getDiscountTextColor() {
-        return ContextCompat.getColor(context, R.color.mpsdk_summary_discount_color);
+        return ContextCompat.getColor(context, R.color.mpsdk_discount_description);
     }
 
     @Override

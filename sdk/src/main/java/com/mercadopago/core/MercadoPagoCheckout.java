@@ -5,11 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mercadopago.CheckoutActivity;
 import com.mercadopago.callbacks.CallbackHolder;
-import com.mercadopago.lite.controllers.CustomServicesHandler;
 import com.mercadopago.hooks.CheckoutHooks;
+import com.mercadopago.lite.controllers.CustomServicesHandler;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
@@ -23,16 +24,17 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.uicontrollers.FontCache;
-import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.TextUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
 
-public class MercadoPagoCheckout {
+
+public class MercadoPagoCheckout implements Serializable {
 
     public static final int CHECKOUT_REQUEST_CODE = 5;
     public static final int PAYMENT_DATA_RESULT_CODE = 6;
@@ -40,47 +42,93 @@ public class MercadoPagoCheckout {
     public static final int TIMER_FINISHED_RESULT_CODE = 8;
     public static final int PAYMENT_METHOD_CHANGED_REQUESTED = 9;
 
-    public static final String PAYMENT_PROCESSOR_KEY = "payment_processor";
-
-    private Context context;
-    private final Activity activity;
+    @NonNull
     private final String publicKey;
+
+    @Nullable
     private final CheckoutPreference checkoutPreference;
+
+    @NonNull
     private final ServicePreference servicePreference;
+
+    @NonNull
     private final FlowPreference flowPreference;
+
+    @Nullable
     private final PaymentResultScreenPreference paymentResultScreenPreference;
+
+    @Nullable
     private final PaymentData paymentData;
+
+    @Nullable
     private final PaymentResult paymentResult;
-    private final Boolean binaryMode;
+
+    @Nullable
+    private final String preferenceId;
+
+    @Nullable
     private final Discount discount;
-    private final String regularFontPath;
-    private final String lightFontPath;
-    public final List<PaymentMethodPlugin> paymentMethodPluginList;
-    public final Map<String, PaymentProcessor> paymentPlugins;
-    public final DataInitializationTask dataInitializationTask;
-    public final CheckoutHooks checkoutHooks;
+
+    private final boolean binaryMode;
 
     private MercadoPagoCheckout(Builder builder) {
-        activity = builder.activity;
-        context = builder.context;
         publicKey = builder.publicKey;
-        paymentData = builder.paymentData;
         checkoutPreference = builder.checkoutPreference;
         servicePreference = builder.servicePreference;
         flowPreference = builder.flowPreference;
         paymentResultScreenPreference = builder.paymentResultScreenPreference;
-        paymentResult = builder.paymentResult;
         binaryMode = builder.binaryMode;
         discount = builder.discount;
-        dataInitializationTask = builder.dataInitializationTask;
-        paymentMethodPluginList = builder.paymentMethodPluginList;
-        paymentPlugins = builder.paymentPlugins;
-        checkoutHooks = builder.checkoutHooks;
-        regularFontPath = builder.regularFontPath;
-        lightFontPath = builder.lightFontPath;
+        paymentResult = builder.paymentResult;
+        paymentData = builder.paymentData;
+        preferenceId = builder.preferenceId;
+        configureCustomServicesHandler(servicePreference);
+        configureCheckoutStore(builder);
+        configureFlowHandler();
+    }
 
-        customizeServices(servicePreference);
+    /**
+     * Deprecated - new implementation involves payment processor.
+     * <p>
+     * Starts checkout experience.
+     * When the flows ends it returns a {@link PaymentData} object to finish the payment.
+     * will be returned on {@link Activity#onActivityResult(int, int, Intent)} if success or
+     * {@link com.mercadopago.exceptions.MercadoPagoError}
+     * if something went wrong or canceled.
+     *
+     * @param context context needed to start checkout.
+     */
+    @Deprecated
+    @SuppressWarnings("unused")
+    public void startForPaymentData(@NonNull final Context context) {
+        //TODO payment result code should not be hardcoded.
+        startForResult(context, MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE);
+    }
 
+    /**
+     * Starts checkout experience.
+     * When the flows ends it returns a {@link PaymentResult} object that
+     * will be returned on {@link Activity#onActivityResult(int, int, Intent)} if success or
+     * {@link com.mercadopago.exceptions.MercadoPagoError}
+     * <p>
+     * will return on {@link Activity#onActivityResult(int, int, Intent)}
+     *
+     * @param context context needed to start checkout.
+     */
+    @SuppressWarnings("unused")
+    public void startForPayment(@NonNull final Context context) {
+        //TODO payment result code should not be hardcoded.
+        startForResult(context, MercadoPagoCheckout.PAYMENT_RESULT_CODE);
+    }
+
+    private void configureFlowHandler() {
+        //Create flow identifier only for new checkouts
+        if (paymentResult == null && paymentData == null) {
+            FlowHandler.getInstance().generateFlowId();
+        }
+    }
+
+    private void configureCheckoutStore(final Builder builder) {
         final CheckoutStore store = CheckoutStore.getInstance();
         store.reset();
         store.setReviewAndConfirmPreferences(builder.reviewAndConfirmPreferences);
@@ -90,31 +138,14 @@ public class MercadoPagoCheckout {
         store.setCheckoutHooks(builder.checkoutHooks);
         store.setDataInitializationTask(builder.dataInitializationTask);
         store.setCheckoutPreference(builder.checkoutPreference);
-
-        //Create flow identifier only for new checkouts
-        if (paymentResult == null && paymentData == null) {
-            FlowHandler.getInstance().generateFlowId();
-        }
     }
 
-    private void customizeServices(ServicePreference servicePreference) {
+    private void configureCustomServicesHandler(ServicePreference servicePreference) {
         CustomServicesHandler.getInstance().clear();
         CustomServicesHandler.getInstance().setServices(servicePreference);
     }
 
-    private void validate(Integer resultCode) throws IllegalStateException {
-        if (context == null && activity == null) {
-            throw new IllegalStateException("activity not set");
-        }
-        if (TextUtil.isEmpty(publicKey)) {
-            throw new IllegalStateException("public key not set");
-        }
-        if (checkoutPreference == null) {
-            throw new IllegalStateException("Checkout preference required");
-        }
-        if (hasTwoDiscountsSet()) {
-            throw new IllegalStateException("payment data discount and discount set");
-        }
+    private void validate(int resultCode) throws IllegalStateException {
         if (isCheckoutTimerAvailable() && isPaymentDataIntegration(resultCode)) {
             throw new IllegalStateException("CheckoutTimer is not available with PaymentData integration");
         }
@@ -128,108 +159,116 @@ public class MercadoPagoCheckout {
         return resultCode == MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE;
     }
 
-    private Boolean hasTwoDiscountsSet() {
-        Boolean hasTwoDiscountsSet = false;
-
-        if ((hasPaymentDataDiscount() || hasPaymentResultDiscount()) && hasDiscount()) {
-            hasTwoDiscountsSet = true;
-        }
-
-        return hasTwoDiscountsSet;
-    }
-
-    private Boolean hasPaymentDataDiscount() {
-        return paymentData != null && paymentData.getDiscount() != null;
-    }
-
-    private Boolean hasPaymentResultDiscount() {
-        return paymentResult != null && paymentResult.getPaymentData() != null &&
-                paymentResult.getPaymentData().getDiscount() != null;
-    }
-
-    private Boolean hasDiscount() {
-        return discount != null;
-    }
-
-    private void startForResult(@NonNull Integer resultCode) {
+    private void startForResult(@NonNull final Context context, int resultCode) {
         CallbackHolder.getInstance().clean();
-        startCheckoutActivity(resultCode);
+        startCheckoutActivity(context, resultCode);
     }
 
-    private void startCheckoutActivity(Integer resultCode) {
+    private void startCheckoutActivity(@NonNull final Context context, int resultCode) {
         validate(resultCode);
-        startIntent(getIntent(resultCode));
+        startIntent(context, CheckoutActivity.getIntent(context, resultCode, this));
     }
 
-    private void startIntent(final Intent checkoutIntent) {
-        if (context != null) {
-            context.startActivity(checkoutIntent);
+    private void startIntent(@NonNull final Context context, @NonNull final Intent checkoutIntent) {
+        if (context instanceof Activity) {
+            ((Activity) context).startActivityForResult(checkoutIntent, MercadoPagoCheckout.CHECKOUT_REQUEST_CODE);
         } else {
-            activity.startActivityForResult(checkoutIntent, MercadoPagoCheckout.CHECKOUT_REQUEST_CODE);
+            context.startActivity(checkoutIntent);
         }
+    }
+
+    @Nullable
+    public PaymentResultScreenPreference getPaymentResultScreenPreference() {
+        return paymentResultScreenPreference;
     }
 
     @NonNull
-    private Intent getIntent(final Integer resultCode) {
-        Intent checkoutIntent;
-        if (context != null) {
-            checkoutIntent = new Intent(context, CheckoutActivity.class);
-        } else {
-            checkoutIntent = new Intent(activity, CheckoutActivity.class);
-        }
+    public FlowPreference getFlowPreference() {
+        return flowPreference;
+    }
 
-        checkoutIntent.putExtra("merchantPublicKey", publicKey);
-        checkoutIntent.putExtra("paymentData", JsonUtil.getInstance().toJson(paymentData));
-        checkoutIntent.putExtra("checkoutPreference", JsonUtil.getInstance().toJson(checkoutPreference));
-        checkoutIntent.putExtra("servicePreference", JsonUtil.getInstance().toJson(servicePreference));
-        checkoutIntent.putExtra("flowPreference", JsonUtil.getInstance().toJson(flowPreference));
-        checkoutIntent.putExtra("paymentResultScreenPreference", JsonUtil.getInstance().toJson(paymentResultScreenPreference));
-        checkoutIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(paymentResult));
-        checkoutIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-        checkoutIntent.putExtra("binaryMode", binaryMode);
-        checkoutIntent.putExtra("resultCode", resultCode);
-        return checkoutIntent;
+    public boolean isBinaryMode() {
+        return binaryMode;
+    }
+
+    @Nullable
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    @Nullable
+    public PaymentData getPaymentData() {
+        return paymentData;
+    }
+
+    @Nullable
+    public PaymentResult getPaymentResult() {
+        return paymentResult;
+    }
+
+    @NonNull
+    public ServicePreference getServicePreference() {
+        return servicePreference;
+    }
+
+    @NonNull
+    public String getMerchantPublicKey() {
+        return publicKey;
+    }
+
+    @Nullable
+    public String getPreferenceId() {
+        return preferenceId;
+    }
+
+    @Nullable
+    public CheckoutPreference getCheckoutPreference() {
+        return checkoutPreference;
     }
 
     public static class Builder {
-        private Activity activity;
-        private String publicKey;
+
+        private final String publicKey;
+        private final String preferenceId;
+        private final CheckoutPreference checkoutPreference;
+        private final List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
+        private final Map<String, PaymentProcessor> paymentPlugins = new HashMap<>();
         private Boolean binaryMode = false;
-        private CheckoutPreference checkoutPreference;
-        private ServicePreference servicePreference;
-        private FlowPreference flowPreference;
+        private ServicePreference servicePreference = new ServicePreference.Builder().build();
+        private FlowPreference flowPreference = new FlowPreference.Builder().build();
         private PaymentResultScreenPreference paymentResultScreenPreference;
         private PaymentData paymentData;
         private PaymentResult paymentResult;
         private Discount discount;
         private CheckoutHooks checkoutHooks;
-        private final List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
-        private final Map<String, PaymentProcessor> paymentPlugins = new HashMap<>();
         private DataInitializationTask dataInitializationTask;
         private String regularFontPath;
         private String lightFontPath;
         private String monoFontPath;
         private ReviewAndConfirmPreferences reviewAndConfirmPreferences;
-        private Context context;
 
-        public Builder setActivity(Activity activity) {
-            this.activity = activity;
-            return this;
-        }
-
-        public Builder setContext(Context context) {
-            this.context = context;
-            return this;
-        }
-
-        public Builder setPublicKey(String publicKey) {
-            this.publicKey = publicKey.trim();
-            return this;
-        }
-
-        public Builder setCheckoutPreference(CheckoutPreference checkoutPreference) {
+        /**
+         * Checkout builder allow you to create a {@link MercadoPagoCheckout}
+         *
+         * @param publicKey merchant public key.
+         * @param checkoutPreference the preference that represents the payment information.
+         */
+        public Builder(@NonNull final String publicKey, @NonNull final CheckoutPreference checkoutPreference) {
+            this.publicKey = publicKey;
+            this.preferenceId = null;
             this.checkoutPreference = checkoutPreference;
-            return this;
+        }
+
+        /**
+         * Checkout builder allow you to create a {@link MercadoPagoCheckout}
+         *
+         * @param publicKey    merchant public key.
+         * @param preferenceId the preference id that represents the payment information.
+         */
+        public Builder(@NonNull final String publicKey, @NonNull final String preferenceId) {
+            this.publicKey = publicKey;
+            this.preferenceId = preferenceId;
+            this.checkoutPreference = null;
         }
 
         public Builder setDiscount(Discount discount) {
@@ -247,6 +286,7 @@ public class MercadoPagoCheckout {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setPaymentResultScreenPreference(PaymentResultScreenPreference paymentResultScreenPreference) {
             this.paymentResultScreenPreference = paymentResultScreenPreference;
             return this;
@@ -257,26 +297,38 @@ public class MercadoPagoCheckout {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder enableBinaryMode() {
             binaryMode = true;
             return this;
         }
 
+        /**
+         * Enable to preset configurations to customize visualization on
+         * the Review and Confirm Screen see {@link ReviewAndConfirmPreferences.Builder}
+         *
+         * @param reviewAndConfirmPreferences the custom preference configuration
+         * @return builder to keep operating
+         */
+        @SuppressWarnings("unused")
         public Builder setReviewAndConfirmPreferences(ReviewAndConfirmPreferences reviewAndConfirmPreferences) {
             this.reviewAndConfirmPreferences = reviewAndConfirmPreferences;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setPaymentResult(PaymentResult paymentResult) {
             this.paymentResult = paymentResult;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setCheckoutHooks(@NonNull final CheckoutHooks checkoutHooks) {
             this.checkoutHooks = checkoutHooks;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder addPaymentMethodPlugin(@NonNull final PaymentMethodPlugin paymentMethodPlugin,
                                               @NonNull final PaymentProcessor paymentProcessor) {
             paymentMethodPluginList.add(paymentMethodPlugin);
@@ -284,26 +336,19 @@ public class MercadoPagoCheckout {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setPaymentProcessor(@NonNull final PaymentProcessor paymentProcessor) {
             paymentPlugins.put(PAYMENT_PROCESSOR_KEY, paymentProcessor);
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setDataInitializationTask(@NonNull final DataInitializationTask dataInitializationTask) {
             this.dataInitializationTask = dataInitializationTask;
             return this;
         }
 
-        public void startForPaymentData() {
-            MercadoPagoCheckout mercadoPagoCheckout = new MercadoPagoCheckout(this);
-            mercadoPagoCheckout.startForResult(MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE);
-        }
-
-        public void startForPayment() {
-            MercadoPagoCheckout mercadoPagoCheckout = new MercadoPagoCheckout(this);
-            mercadoPagoCheckout.startForResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        }
-
+        @SuppressWarnings("unused")
         public Builder setCustomLightFont(String lightFontPath, Context context) {
             this.lightFontPath = lightFontPath;
             if (lightFontPath != null) {
@@ -312,6 +357,7 @@ public class MercadoPagoCheckout {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setCustomRegularFont(String regularFontPath, Context context) {
             this.regularFontPath = regularFontPath;
             if (regularFontPath != null) {
@@ -320,6 +366,7 @@ public class MercadoPagoCheckout {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setCustomMonoFont(String monoFontPath, Context context) {
             this.monoFontPath = monoFontPath;
             if (monoFontPath != null) {
@@ -329,12 +376,31 @@ public class MercadoPagoCheckout {
         }
 
         private void setCustomFont(Context context, String fontType, String fontPath) {
-            Typeface typeFace = null;
+            Typeface typeFace;
             if (!FontCache.hasTypeface(fontType)) {
                 typeFace = Typeface.createFromAsset(context.getAssets(), fontPath);
                 FontCache.setTypeface(fontType, typeFace);
             }
         }
 
+        private boolean hasPaymentDataDiscount() {
+            return paymentData != null && paymentData.getDiscount() != null;
+        }
+
+        private boolean hasPaymentResultDiscount() {
+            return paymentResult != null && paymentResult.getPaymentData() != null &&
+                    paymentResult.getPaymentData().getDiscount() != null;
+        }
+
+        private boolean hasTwoDiscountsSet() {
+            return (hasPaymentDataDiscount() || hasPaymentResultDiscount()) && discount != null;
+        }
+
+        public MercadoPagoCheckout build() {
+            if (hasTwoDiscountsSet()) {
+                throw new IllegalStateException("payment data discount and discount set");
+            }
+            return new MercadoPagoCheckout(this);
+        }
     }
 }

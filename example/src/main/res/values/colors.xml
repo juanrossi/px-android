@@ -2,41 +2,66 @@
 <resources>
     <color name="colorPrimary">#009EE3</color>
     <color name="colorPrimaryDark">#004f71</color>
-    <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="button">#00B2EB</color>
     <color name="button_pressed">#0277BD</color>
     <color name="button_disabled">#CCCCCC</color>
-    <color name="myPrimaryColor">#30cc28</color>
     <color name="examples_green">#5bcc55</color>
 
+    <!-- Meli Integration Template -->
+
+    <!-- UI lib colors -->
+    <!-- Primary action button background -->
+    <!-- Primary option button enabled text -->
+    <color name="ui_components_primary_color">#3483FA</color>
+
+    <!-- Primary action button disabled background -->
+    <!-- Primary option button disabled text -->
+    <color name="ui_components_primary_color_disabled">#332681FF</color>
+
+    <!-- Primary action button pressed background -->
+    <!-- Primary optiom button pressed text -->
+    <color name="ui_components_primary_color_pressed">#2761BA</color>
+
+    <!-- Spinner -->
+    <color name="ui_components_spinner_primary_color">#3483FA</color>
+    <color name="ui_components_spinner_secondary_color">#3483FA</color>
+
+    <!-- Snackbar success -->
+    <!-- Background success -->
+    <color name="ui_components_success_color">#64C574</color>
+    <!-- Snackbar error -->
+    <!-- Background error -->
+    <color name="ui_components_error_color">#F04449</color>
+    <!-- Snackbar warning -->
+    <!-- Background warning -->
+    <color name="ui_components_warning_color">#FBAB60</color>
+
     <!-- Customized colors -->
-    <!--
+    <!-- Toolbar and status bar default -->
     <color name="mpsdk_background">#FFEA78</color>
-    <color name="mpsdk_discount_summary_background">#FFDB15</color>
     <color name="mpsdk_toolbar_text">#333333</color>
     <color name="mpsdk_status_bar">#FFDB15</color>
+
+    <!-- Discount modal and discount description -->
+    <color name="mpsdk_discount_summary_background">#FFDB15</color>
     <color name="mpsdk_modal_status_bar">#FFDB15</color>
+    <color name="mpsdk_discount_description">#39B54A</color>
+
+    <!-- Inputs -->
     <color name="mpsdk_input">#3483FA</color>
-    <color name="mpsdk_summary_text_color">#333333</color>
-    <color name="mpsdk_summary_discount_color">#39B54A</color>
-    <color name="mpsdk_summary_separator_color">#33000000</color>
+
+    <!-- R&C toolbar -->
     <color name="mpsdk_review_background">#FFEA78</color>
     <color name="mpsdk_review_toolbar_text">#333333</color>
-    <color name="mpsdk_review_component_background">#FFFFFF</color>
-    <color name="mpsdk_green_payment_result_background">#64C574</color>
-    <color name="mpsdk_red_payment_result_background">#F96061</color>
-    <color name="mpsdk_orange_payment_result_background">#FBAB60</color>
-    <color name="mpsdk_loading">#3483FA</color>
+    <!-- R&C summary -->
+    <color name="mpsdk_review_summary_background">#FFEA78</color>
+    <color name="mpsdk_summary_text_color">#333333</color>
+    <color name="mpsdk_summary_separator_color">#33000000</color>
+    <!-- R&C components -->
+    <color name="mpsdk_detailed_background">#FFFFFF</color>
+    <!-- Spinner background -->
     <color name="mpsdk_background_loading">#FFEA78</color>
-    <color name="mpsdk_color_payer_costs_no_rate">#39B54A</color>
 
-    <color name="mpsdk_review_payment_method_background">#39B54A</color>
-    <color name="mpsdk_review_summary_background">#F96061</color>
-    <color name="mpsdk_review_item_background">#3483FA</color>
-
-    <color name="mpsdk_link">#FF00FF</color>
-    <color name="mpsdk_button">#00FFFF</color>
-    -->
 
 </resources>

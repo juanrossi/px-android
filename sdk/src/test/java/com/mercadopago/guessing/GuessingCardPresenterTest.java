@@ -1,10 +1,9 @@
 package com.mercadopago.guessing;
 
-import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
-import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.exceptions.ApiException;
+import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.mocks.BankDeals;
 import com.mercadopago.mocks.Cards;
 import com.mercadopago.mocks.DummyCard;
@@ -24,6 +23,7 @@ import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentRecovery;
+import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.PaymentPreference;
@@ -1358,7 +1358,7 @@ public class GuessingCardPresenterTest {
         }
 
         @Override
-        public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, Boolean discountEnabled,  List<Issuer> issuers) {
+        public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean discountEnabled, List<Issuer> issuers) {
 
         }
 

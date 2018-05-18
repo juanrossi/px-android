@@ -14,7 +14,7 @@
         android:orientation="horizontal"
         android:visibility="gone"
         android:onClick="initializeDiscountActivity"
-        android:background="@color/mpsdk_color_payer_costs_no_rate"
+        android:background="@color/mpsdk_discount_description"
         android:gravity="center">
 
         <com.mercadopago.customviews.MPTextView
@@ -36,7 +36,7 @@
             android:paddingLeft="6dp"
             android:paddingRight="3dp"
             android:gravity="center"
-            android:textColor="@color/mpsdk_color_payer_costs_no_rate"
+            android:textColor="@color/mpsdk_discount_description"
             android:background="@drawable/mpsdk_discount_applied_white"
             tools:text="25%"/>
 

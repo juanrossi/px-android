@@ -7,16 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.mercadopago.R;
 import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.Button;
 import com.mercadopago.components.CustomComponent;
-import com.mercadopago.components.Footer;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
-import com.mercadopago.review_and_confirm.components.actions.CancelPaymentAction;
 import com.mercadopago.review_and_confirm.components.actions.ChangePaymentMethodAction;
-import com.mercadopago.review_and_confirm.components.actions.ConfirmPaymentAction;
 import com.mercadopago.review_and_confirm.components.items.ReviewItems;
 import com.mercadopago.review_and_confirm.components.payment_method.PaymentMethodComponent;
 import com.mercadopago.review_and_confirm.models.PaymentModel;
@@ -56,9 +51,6 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
             addTermsAndConditions(component, linearLayout);
         }
 
-
-        addFooter(component, linearLayout);
-
         parent.addView(linearLayout);
 
         return parent;
@@ -79,16 +71,6 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         return linearLayout;
-    }
-
-    private void addFooter(@NonNull final ReviewAndConfirmContainer component, final LinearLayout linearLayout) {
-        Context context = linearLayout.getContext();
-        String primaryText = context.getString(R.string.mpsdk_confirm);
-        String linkText = context.getString(R.string.mpsdk_cancel);
-        Button.Props primaryButton = new Button.Props(primaryText, new ConfirmPaymentAction());
-        Button.Props linkButton = new Button.Props(linkText, new CancelPaymentAction());
-        Footer footer = new Footer(new Footer.Props(primaryButton, linkButton), component.getDispatcher());
-        linearLayout.addView(footer.render(linearLayout));
     }
 
     private void addPaymentMethod(final PaymentModel paymentModel, final ActionDispatcher dispatcher, final ViewGroup parent) {

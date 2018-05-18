@@ -1,11 +1,12 @@
 package com.mercadopago.components;
 
 
-import android.support.annotation.LayoutRes;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.mercadolibre.android.ui.widgets.MeliButton;
 import javax.annotation.Nonnull;
 
 public abstract class Button extends CompactComponent<Button.Props, Button.Actions> {
@@ -30,12 +31,11 @@ public abstract class Button extends CompactComponent<Button.Props, Button.Actio
         super(props, callBack);
     }
 
-    @LayoutRes
-    public abstract int getButtonViewLayout();
+    public abstract MeliButton getButtonView(@NonNull final Context context);
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        TextView view = (TextView) inflate(parent, getButtonViewLayout());
+        final MeliButton view = getButtonView(parent.getContext());
         view.setText(props.label);
         view.setOnClickListener(new View.OnClickListener() {
             @Override

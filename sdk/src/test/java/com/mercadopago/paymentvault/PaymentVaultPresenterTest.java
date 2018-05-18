@@ -683,7 +683,6 @@ public class PaymentVaultPresenterTest {
 
         presenter.setAmount(BigDecimal.TEN);
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDirectDiscountEnabled(false);
 
         presenter.initialize(true);
 

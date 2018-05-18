@@ -2,6 +2,7 @@ package com.mercadopago.review_and_confirm.components;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,10 @@ import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
 import com.mercadopago.customviews.MPTextView;
-import com.mercadopago.uicontrollers.payercosts.PayerCostColumn;
 import com.mercadopago.lite.util.CurrenciesUtil;
+import com.mercadopago.model.PaymentTypes;
+import com.mercadopago.review_and_confirm.models.SummaryModel;
+import com.mercadopago.uicontrollers.payercosts.PayerCostColumn;
 
 import java.math.BigDecimal;
 
@@ -45,7 +48,7 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
             summaryDetailsContainer.addView(amountView);
         }
 
-        if (component.hasToRenderPayerCost()) {
+        if (shouldShowPayerCost(component.props.summaryModel)) {
             //payer cost
             PayerCostColumn payerCostColumn = new PayerCostColumn(context, component.props.summaryModel.currencyId,
                     component.props.summaryModel.siteId, component.props.summaryModel.getInstallmentsRate(),
@@ -60,7 +63,7 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
         }
 
         //disclaimer
-        if (!isEmpty(component.props.summaryModel.cftPercent)) {
+        if (shouldShowCftDisclaimer(component.props.summaryModel)) {
             String disclaimer = getDisclaimer(component, context);
             final Renderer disclaimerRenderer = RendererFactory.create(context, component.getDisclaimerComponent(disclaimer));
             final View disclaimerView = disclaimerRenderer.render();
@@ -79,19 +82,28 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
         return summaryView;
     }
 
+    @VisibleForTesting
+    boolean shouldShowCftDisclaimer(final SummaryModel props) {
+        return PaymentTypes.isCreditCardPaymentType(props.getPaymentTypeId())
+                && !isEmpty(props.getCftPercent());
+    }
+
+    @VisibleForTesting
+    boolean shouldShowPayerCost(final SummaryModel props) {
+        return PaymentTypes.isCreditCardPaymentType(props.getPaymentTypeId())
+                && props.getInstallments() > 1;
+    }
+
+
     private Spanned getFormattedAmount(BigDecimal amount, String currencyId) {
         return amount != null && !isEmpty(currencyId) ? CurrenciesUtil.getSpannedAmountWithCurrencySymbol(amount, currencyId) : null;
     }
 
     public String getDisclaimer(FullSummary component, Context context) {
         StringBuilder stringBuilder = new StringBuilder();
-
-        if (!isEmpty(component.props.summaryModel.cftPercent)) {
-            stringBuilder.append(context.getString(R.string.mpsdk_installments_cft));
-            stringBuilder.append(" ");
-            stringBuilder.append(component.props.summaryModel.cftPercent);
-        }
-
+        stringBuilder.append(context.getString(R.string.mpsdk_installments_cft));
+        stringBuilder.append(" ");
+        stringBuilder.append(component.props.summaryModel.getCftPercent());
         return stringBuilder.toString();
     }
 }

@@ -30,10 +30,6 @@ android {
         preDexLibraries !(travisBuild)
     }
 
-    lintOptions {
-        abortOnError false
-    }
-
     testOptions {
         unitTests.returnDefaultValues = true
     }
@@ -78,8 +74,9 @@ dependencies {
 
     implementation "com.google.code.gson:gson:$gson"
     implementation "com.squareup.picasso:picasso:$picasso"
+    implementation "com.mercadolibre.android:ui:$meli_ui_lib"
 }
 
 apply from: "$rootDir/gradle/jacoco.gradle"
 apply from: "$rootDir/gradle/static-analysis.gradle"
-apply from: "$rootDir/gradle/deploy.gradle"
+apply from: "$rootDir/gradle/deploy.gradle" 

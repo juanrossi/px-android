@@ -41,22 +41,22 @@ public class ScreenViewEvent extends Event {
         private String screenName;
         private Map<String, String> properties = new HashMap<>();
 
-        public Builder setFlowId(String flowId) {
+        public Builder setFlowId(final String flowId) {
             this.flowId = flowId;
             return this;
         }
 
-        public Builder setScreenId(String screenId) {
+        public Builder setScreenId(final String screenId) {
             this.screenId = screenId;
             return this;
         }
 
-        public Builder setScreenName(String screenName) {
+        public Builder setScreenName(final String screenName) {
             this.screenName = screenName;
             return this;
         }
 
-        public Builder addProperty(String key, String value) {
+        public Builder addProperty(final String key, final String value) {
             properties.put(key, value);
             return this;
         }

@@ -23,7 +23,7 @@ public final class CurrenciesUtil {
     private static final String CURRENCY_CHILE = "CLP";
     private static final String CURRENCY_COLOMBIA = "COP";
     private static final String CURRENCY_MEXICO = "MXN";
-    private static final String CURRENCY_VENEZUELA = "VEF";
+    private static final String CURRENCY_VENEZUELA = "VES";
     private static final String CURRENCY_USA = "USD";
     private static final String CURRENCY_PERU = "PEN";
     private static final String CURRENCY_URUGUAY = "UYU";
@@ -41,7 +41,7 @@ public final class CurrenciesUtil {
                 new Currency(CURRENCY_COLOMBIA, "Peso colombiano", "$", 0, ",".charAt(0), ".".charAt(0)));
         put(CURRENCY_MEXICO, new Currency(CURRENCY_MEXICO, "Peso mexicano", "$", 2, ".".charAt(0), ",".charAt(0)));
         put(CURRENCY_VENEZUELA,
-                new Currency(CURRENCY_VENEZUELA, "Bolivar fuerte", "BsF", 2, ",".charAt(0), ".".charAt(0)));
+                new Currency(CURRENCY_VENEZUELA, "Bolívares Soberanos", "BsS", 2, ",".charAt(0), ".".charAt(0)));
         put(CURRENCY_USA, new Currency(CURRENCY_USA, "Dolar americano", "US$", 2, ",".charAt(0), ".".charAt(0)));
         put(CURRENCY_PERU, new Currency(CURRENCY_PERU, "Soles", "S/.", 2, ",".charAt(0), ".".charAt(0)));
         put(CURRENCY_URUGUAY, new Currency(CURRENCY_URUGUAY, "Peso Uruguayo", "$", 2, ",".charAt(0), ".".charAt(0)));

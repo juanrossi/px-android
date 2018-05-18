@@ -9,32 +9,21 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Sites;
 import com.mercadopago.util.ErrorUtil;
-
-import static android.text.TextUtils.isEmpty;
 
 public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     public static final String EXTRA_SITE_ID = "siteId";
-    public static final String EXTRA_BANK_DEAL_LEGALS = "bankDealLegals";
+
     protected View mMPTermsAndConditionsView;
-    protected View mBankDealsTermsAndConditionsView;
     protected WebView mTermsAndConditionsWebView;
     protected ViewGroup mProgressLayout;
-    protected MPTextView mBankDealsLegalsTextView;
     protected Toolbar mToolbar;
     protected TextView mTitle;
 
     protected String mBankDealsTermsAndConditions;
     protected String mSiteId;
-
-    public static void startWithBankDealLegals(final Context context, final String bankDealLegals) {
-        Intent intent = new Intent(context, TermsAndConditionsActivity.class);
-        intent.putExtra(EXTRA_BANK_DEAL_LEGALS, bankDealLegals);
-        context.startActivity(intent);
-    }
 
     public static void start(final Context context, final String siteId) {
         Intent intent = new Intent(context, TermsAndConditionsActivity.class);
@@ -44,14 +33,12 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void getActivityParameters() {
-        mBankDealsTermsAndConditions = getIntent().getStringExtra(EXTRA_BANK_DEAL_LEGALS);
         mSiteId = getIntent().getStringExtra(EXTRA_SITE_ID);
     }
 
     @Override
     protected void validateActivityParameters() throws IllegalStateException {
-        if (mBankDealsTermsAndConditions == null
-                && mSiteId == null) {
+        if (mBankDealsTermsAndConditions == null && mSiteId == null) {
             throw new IllegalStateException("bank deal terms or site id required");
         }
     }
@@ -63,11 +50,9 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void initializeControls() {
-        mBankDealsTermsAndConditionsView = findViewById(R.id.mpsdkBankDealsTermsAndConditions);
         mProgressLayout = findViewById(R.id.mpsdkProgressLayout);
         mMPTermsAndConditionsView = findViewById(R.id.mpsdkMPTermsAndConditions);
         mTermsAndConditionsWebView = findViewById(R.id.mpsdkTermsAndConditionsWebView);
-        mBankDealsLegalsTextView = findViewById(R.id.mpsdkTermsAndConditions);
         mTermsAndConditionsWebView.setVerticalScrollBarEnabled(true);
         mTermsAndConditionsWebView.setHorizontalScrollBarEnabled(true);
         initializeToolbar();
@@ -78,7 +63,6 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
         mToolbar = findViewById(R.id.mpsdkToolbar);
         setSupportActionBar(mToolbar);
         mTitle = findViewById(R.id.mpsdkTitle);
-
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -92,13 +76,7 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void onValidStart() {
-        if (!isEmpty(mBankDealsTermsAndConditions)) {
-            mMPTermsAndConditionsView.setVisibility(View.GONE);
-            showBankDealsTermsAndConditions();
-        } else if (!isEmpty(mSiteId)) {
-            mBankDealsTermsAndConditionsView.setVisibility(View.GONE);
-            showMPTermsAndConditions();
-        }
+        showMPTermsAndConditions();
     }
 
     @Override
@@ -115,6 +93,7 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
                 mMPTermsAndConditionsView.setVisibility(View.VISIBLE);
             }
         });
+
         if (Sites.ARGENTINA.getId().equals(mSiteId)) {
             mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.ar/ayuda/terminos-y-condiciones_299");
         } else if (Sites.MEXICO.getId().equals(mSiteId)) {
@@ -132,9 +111,5 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
         } else {
             finish();
         }
-    }
-
-    private void showBankDealsTermsAndConditions() {
-        mBankDealsLegalsTextView.setText(mBankDealsTermsAndConditions);
     }
 }

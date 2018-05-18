@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <include layout="@layout/mpsdk_view_progress_bar" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/mpsdkToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mpsdk_toolbar_height"
-        android:background="@color/mpsdk_background"
-        android:theme="@style/ToolbarTheme"
-        app:popupTheme="@style/Theme.MercadoPagoTheme.NoActionBar">
-
-        <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkTitle"
-            style="@style/mpsdk_title_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/mpsdk_title_activity_bank_deals"
-            android:textColor="@color/mpsdk_toolbar_text" />
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/mpsdk_toolbar_primary_with_title" />
 
     <LinearLayout
         android:id="@+id/mpsdkRegularLayout"
@@ -32,7 +15,6 @@
         android:orientation="vertical">
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkEmptyList"
             style="@style/mpsdk_big_text_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,8 +27,9 @@
             android:id="@+id/mpsdkBankDealsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/mpsdk_white"
             android:descendantFocusability="afterDescendants"
             android:scrollbars="vertical" />
+
     </LinearLayout>
+
 </LinearLayout>

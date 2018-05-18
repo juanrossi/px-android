@@ -48,7 +48,6 @@
                     tools:text="CPF: " />
 
                 <FrameLayout
-                    android:id="@+id/mpsdkIdNumberClickableZone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -62,7 +61,7 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingStart="4dp"
-                        android:text="*** *** *** **"
+                        android:text="@string/mpsdk_ticket_card_holder_identification_hint"
                         android:textColor="@color/mpsdk_base_text_alpha"
                         app:autoSizeMaxTextSize="14dp"
                         app:autoSizeMinTextSize="8dp"
@@ -96,7 +95,6 @@
                 android:orientation="horizontal">
 
                 <FrameLayout
-                    android:id="@+id/mpsdkNameClickableZone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"

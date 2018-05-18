@@ -6,9 +6,10 @@ import android.support.annotation.VisibleForTesting;
 
 import com.mercadopago.lite.util.CurrenciesUtil;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Discount implements Parcelable {
+public class Discount implements Parcelable, Serializable {
 
     private String id;
     private String name;

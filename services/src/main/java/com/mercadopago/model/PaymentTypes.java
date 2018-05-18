@@ -55,4 +55,8 @@ public class PaymentTypes {
             add(ACCOUNT_MONEY);
         }};
     }
+
+    public static boolean isCreditCardPaymentType(final String paymentTypeId) {
+        return PaymentTypes.CREDIT_CARD.equals(paymentTypeId);
+    }
 }

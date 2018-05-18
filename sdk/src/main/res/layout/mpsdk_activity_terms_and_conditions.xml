@@ -27,10 +27,6 @@
                 android:textColor="@color/mpsdk_toolbar_text"
                 android:layout_gravity="center"/>
         </android.support.v7.widget.Toolbar>
-        <FrameLayout
-            android:id="@+id/mpsdkShoppingCartFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
     </android.support.design.widget.AppBarLayout>
     <RelativeLayout
         android:layout_height="match_parent"
@@ -46,17 +42,6 @@
                 android:id="@+id/mpsdkTermsAndConditionsWebView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-        </ScrollView>
-        <ScrollView
-            android:id="@+id/mpsdkBankDealsTermsAndConditions"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.mercadopago.customviews.MPTextView
-                android:id="@+id/mpsdkTermsAndConditions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/mpsdk_form_input"/>
         </ScrollView>
     </RelativeLayout>
 </LinearLayout>

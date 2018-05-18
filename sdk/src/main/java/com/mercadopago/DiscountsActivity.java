@@ -115,7 +115,6 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         mPresenter.setPayerEmail(getIntent().getStringExtra("payerEmail"));
         mPresenter.setTransactionAmount(new BigDecimal(getIntent().getStringExtra("amount")));
         mPresenter.setDiscount(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("discount"), Discount.class));
-        mPresenter.setDirectDiscountEnabled(getIntent().getBooleanExtra("directDiscountEnabled", true));
     }
 
     protected void setContentView() {
@@ -376,8 +375,6 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     public void finishWithResult() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
-        returnIntent.putExtra("directDiscountEnabled", mPresenter.getDirectDiscountEnabled());
-
         setResult(RESULT_OK, returnIntent);
         finish();
     }

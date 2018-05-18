@@ -7,7 +7,6 @@
     android:layout_height="@dimen/mpsdk_card_size_extra_big_height">
 
     <FrameLayout
-        android:id="@+id/mpsdkCardFrontFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal">
@@ -41,6 +40,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -71,11 +71,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="start"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginEnd="16dp"
                     android:layout_weight="0.4">
 
                     <FrameLayout
@@ -89,6 +89,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="start"
                             android:src="@drawable/mpsdk_base_card_image" />
+
                     </FrameLayout>
 
                     <ImageView
@@ -96,29 +97,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start" />
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="64dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="-20dp"
-                    android:layout_weight="0.2"
-                    android:visibility="visible">
 
                     <com.mercadopago.customviews.MPTextView
                         android:id="@+id/mpsdkCardSecurityCodeViewFront"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="end"
+                        android:layout_gravity="right|end|bottom"
                         android:textColor="@color/mpsdk_base_text"
                         android:textSize="18dp"
                         app:font_style="mono_regular"
                         tools:text="1234" />
+
                 </FrameLayout>
 
                 <FrameLayout
@@ -158,55 +147,60 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="12dp"
                     android:layout_weight="0.15"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <com.mercadopago.customviews.MPTextView
-                        android:id="@+id/mpsdkCardholderNameView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.6"
-                        android:gravity="start"
-                        android:maxLines="1"
-                        android:paddingLeft="15dp"
-                        android:paddingStart="15dp"
-                        android:text="@string/mpsdk_cardholder_name_short"
-                        android:textColor="@color/mpsdk_base_text"
-                        android:textSize="14dp" />
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.4"
-                        android:gravity="end"
-                        android:paddingEnd="15dp"
-                        android:paddingRight="15dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:weightSum="1">
 
                         <com.mercadopago.customviews.MPTextView
-                            android:id="@+id/mpsdkCardHolderExpiryMonth"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/mpsdkCardholderNameView"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/mpsdk_card_expiry_month_hint"
+                            android:layout_weight="0.6"
+                            android:gravity="start"
+                            android:maxLines="1"
+                            android:paddingLeft="15dp"
+                            android:paddingStart="15dp"
+                            android:text="@string/mpsdk_cardholder_name_short"
                             android:textColor="@color/mpsdk_base_text"
                             android:textSize="14dp" />
 
-                        <com.mercadopago.customviews.MPTextView
-                            android:id="@+id/mpsdkCardHolderDateDivider"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/mpsdk_card_expiry_divider_hint"
-                            android:textColor="@color/mpsdk_base_text"
-                            android:textSize="14dp" />
+                            android:layout_weight="0.4"
+                            android:gravity="end"
+                            android:paddingEnd="15dp"
+                            android:paddingRight="15dp">
 
-                        <com.mercadopago.customviews.MPTextView
-                            android:id="@+id/mpsdkCardHolderExpiryYear"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mpsdk_card_expiry_year_hint"
-                            android:textColor="@color/mpsdk_base_text"
-                            android:textSize="14dp" />
+                            <com.mercadopago.customviews.MPTextView
+                                android:id="@+id/mpsdkCardHolderExpiryMonth"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mpsdk_card_expiry_month_hint"
+                                android:textColor="@color/mpsdk_base_text"
+                                android:textSize="14dp" />
+
+                            <com.mercadopago.customviews.MPTextView
+                                android:id="@+id/mpsdkCardHolderDateDivider"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mpsdk_card_expiry_divider_hint"
+                                android:textColor="@color/mpsdk_base_text"
+                                android:textSize="14dp" />
+
+                            <com.mercadopago.customviews.MPTextView
+                                android:id="@+id/mpsdkCardHolderExpiryYear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mpsdk_card_expiry_year_hint"
+                                android:textColor="@color/mpsdk_base_text"
+                                android:textSize="14dp" />
+                        </LinearLayout>
+
                     </LinearLayout>
-
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>

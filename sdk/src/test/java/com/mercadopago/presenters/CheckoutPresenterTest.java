@@ -1,6 +1,7 @@
 package com.mercadopago.presenters;
 
-import com.mercadopago.controllers.Timer;
+import android.support.annotation.NonNull;
+
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -23,7 +24,6 @@ import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.Issuer;
-import com.mercadopago.model.Item;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.Payment;
@@ -33,7 +33,6 @@ import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
-import com.mercadopago.model.Sites;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.plugins.DataInitializationTask;
@@ -46,381 +45,226 @@ import com.mercadopago.providers.CheckoutProvider;
 import com.mercadopago.util.TextUtils;
 import com.mercadopago.views.CheckoutView;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_PROCESSOR_KEY;
+import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE;
+import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_RESULT_CODE;
+import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
+import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubExpiredPreference;
+import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItem;
+import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItemAndPayer;
+import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceWithAccessToken;
+import static com.mercadopago.utils.StubPaymentResult.stubApprovedOffPaymentResult;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CheckoutPresenterTest {
 
-    //Validations
-    @Test
-    public void onCheckoutInitializedWithoutCheckoutPreferenceThenShowError() {
+    private static final String PREF_ID = "123";
 
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
+    private static final int REQUESTED_RESULT = 0x20;
 
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
+    @Mock
+    private MercadoPagoCheckout mercadoPagoCheckout;
 
-        presenter.initialize();
-        assertTrue(view.showingError);
+    @Mock
+    private CheckoutView checkoutView;
+
+    @Mock
+    private CheckoutProvider checkoutProvider;
+
+    private MockedView view;
+    private MockedProvider provider;
+
+    @Before
+    public void setUp() {
+        view = new MockedView();
+        provider = new MockedProvider();
     }
 
-    @Ignore
-    @Test
-    public void ifDiscountNotSetAndDiscountsEnabledThenGetDiscountCampaigns() {
+    @NonNull
+    private CheckoutPresenter getPresenter(int resultCode) {
+        return getBasePresenter(resultCode, checkoutView, checkoutProvider);
+    }
 
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
+    @NonNull
+    private CheckoutPresenter getPaymentPresenterWithDefaultFlowPreferenceMla() {
+        CheckoutPreference preference = stubPreferenceOneItem();
+        FlowPreference flowPreference = new FlowPreference.Builder()
                 .build();
 
-        presenter.setCheckoutPreference(preference);
-
-        provider.setCampaignsResponse(Discounts.getCampaigns());
-        presenter.initialize();
-        assertTrue(provider.campaignsRequested);
-    }
-
-    @Ignore
-    @Test
-    public void ifDirectDiscountCampaignAvailableThenRequestDirectDiscount() {
-
-        CheckoutProvider provider = mock(CheckoutProvider.class);
-        DataInitializationTask dataMock = mock(DataInitializationTask.class);
-        CheckoutView view = mock(CheckoutView.class);
-        CheckoutStore store = CheckoutStore.getInstance();
-
-        store.setDataInitializationTask(dataMock);
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
-
-        presenter.setCheckoutPreference(preference);
-
-        presenter.initialize();
-
-        Mockito.verify(provider, times(1)).fetchFonts();
-        Mockito.verify(provider, times(1)).getDiscountCampaigns(presenter.onCampaignsRetrieved());
-    }
-
-    //Preferences configuration
-
-    @Test
-    public void ifPreferenceSetHasIdThenRetrievePreferenceFromMercadoPago() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        provider.setCheckoutPreferenceResponse(preference);
-        presenter.setCheckoutPreference(preference);
-
-        presenter.initialize();
-        assertTrue(provider.checkoutPreferenceRequested);
-    }
-
-    @Test
-    public void ifPreferenceSetDoesNotHaveIdThenDoNotRetrievePreferenceFromMercadoPago() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Dummy", BigDecimal.TEN))
-                .build();
-
-        presenter.setCheckoutPreference(preference);
-
-        presenter.initialize();
-        assertFalse(provider.checkoutPreferenceRequested);
-    }
-
-    @Test
-    public void ifPreferenceIsInvalidThenShowError() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        provider.setCheckoutPreferenceResponse(preference);
-        presenter.setCheckoutPreference(preference);
-        presenter.initialize();
-        assertTrue(view.showingError);
-    }
-
-    @Ignore
-    @Test
-    public void ifCheckoutInitiatedThenRequestPaymentMethodSearch() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        presenter.setCheckoutPreference(preference);
-        presenter.initialize();
-        assertTrue(provider.paymentMethodSearchRequested);
-    }
-
-    //Flow started
-
-    @Test
-    public void ifCheckoutInitiatedThenStartPaymentMethodSelection() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        presenter.setCheckoutPreference(preference);
-        presenter.initialize();
-        assertTrue(view.showingPaymentMethodSelection);
+        return getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
     }
 
-    //Response from payment methodSelection
-    @Test
-    public void ifOkPaymentMethodSelectionResponseReceivedThenStartRyC() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
+    @NonNull
+    private CheckoutPresenter getPaymentPresenter(final FlowPreference flowPreference) {
+        CheckoutPreference preference = stubPreferenceOneItem();
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        return getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+    }
 
-        CheckoutPresenter presenter = new CheckoutPresenter();
+    @NonNull
+    private CheckoutPresenter getBasePresenter(int resultCode, CheckoutView view, CheckoutProvider provider) {
+        CheckoutPresenter.PersistentDataModel model = CheckoutPresenter.PersistentDataModel.createWith(resultCode, mercadoPagoCheckout);
+        CheckoutPresenter presenter = new CheckoutPresenter(model);
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
+        return presenter;
+    }
 
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
+    @Test
+    public void whenChoHasPrefIdSetRetrievePreferenceFromMercadoPago() {
+        when(mercadoPagoCheckout.getPreferenceId()).thenReturn(PREF_ID);
+        CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
+        presenter.initialize();
+        verify(checkoutProvider).getCheckoutPreference(any(String.class), any(TaggedCallback.class));
+        verifyNoMoreInteractions(checkoutProvider);
+    }
 
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        presenter.setCheckoutPreference(preference);
+    @Test
+    public void whenChoHasCompletePrefSetDoNotCallProviderToGetPreference() {
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItemAndPayer());
+        CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
+        presenter.initialize();
+        verify(checkoutProvider).fetchFonts();
+        verifyNoMoreInteractions(checkoutProvider);
+    }
+
+    @Test
+    public void whenPreferenceIsExpiredThenShowErrorInView() {
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubExpiredPreference());
+        CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
+        presenter.initialize();
+        verify(checkoutProvider).getCheckoutExceptionMessage(any(CheckoutPreferenceException.class));
+        verify(checkoutView).showError(any(MercadoPagoError.class));
+    }
+
+    @Test
+    public void whenChoHasPreferenceAndPaymentMethodRetrivedShowPaymentMethodSelection() {
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItemAndPayer());
+        CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
         presenter.initialize();
 
-        //Payment method off, no issuer, installments or token
+        verify(checkoutView).isActive();
+        verify(checkoutView).showProgress();
+        verify(checkoutView).initializeMPTracker();
+        verify(checkoutView).trackScreen();
+        // TODO we assume that plugin init ok.
+        // TODO remove, we assume that the request went ok.
+        presenter.startFlow();
+        verify(checkoutView).showPaymentMethodSelection();
+        verifyNoMoreInteractions(checkoutView);
+    }
+
+
+    @Test
+    public void whenAPaymentMethodIsSelectedThenShowReviewAndConfirm() {
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItemAndPayer());
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder().build());
+        CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
-        assertTrue(view.showingReviewAndConfirm);
+        verify(checkoutView).showReviewAndConfirm();
+        verifyNoMoreInteractions(checkoutView);
     }
 
     @Test
-    public void onBackFromPaymentMethodSelectionThenCancelCheckout() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        presenter.setCheckoutPreference(preference);
-        presenter.initialize();
-
-        //Payment method off, no issuer, installments or token
+    public void whenPaymentMethodCanceledThenCancelCheckout() {
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItem());
+        CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
         presenter.onPaymentMethodSelectionCancel();
-        assertTrue(view.checkoutCanceled);
+        verify(checkoutView).cancelCheckout();
     }
 
-    //Review and confirm disabled
     @Test
-    public void ifPaymentDataRequestedAndReviewConfirmDisabledThenFinishWithPaymentData() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
+    public void whenChoFlowPrefDisableReviewAndConfirmAndPaymentMethodIsSelectedThenFinishWithDataResult() {
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .disableReviewAndConfirmScreen()
                 .build();
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.setFlowPreference(flowPreference);
-        presenter.initialize();
-
-        //Payment method off, no issuer, installments or token
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItem());
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOff();
         presenter.onPaymentMethodSelectionResponse(paymentMethod, null, null, null, null, null, null);
-        assertEquals(paymentMethod.getId(), view.paymentDataFinalResponse.getPaymentMethod().getId());
+        //TODO should not be any payment data but equality by hashing is applying
+        verify(checkoutView).finishWithPaymentDataResult(any(PaymentData.class), any(boolean.class));
     }
 
     @Test
     public void ifPaymentRequestedAndReviewConfirmDisabledThenStartPaymentResultScreen() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        provider.setPaymentResponse(Payments.getApprovedPayment());
-
+        CheckoutPreference preference = stubPreferenceOneItem();
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .disableReviewAndConfirmScreen()
                 .build();
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.setFlowPreference(flowPreference);
-        presenter.initialize();
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        provider.setPaymentResponse(Payments.getApprovedPayment());
 
-        PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
-        Issuer issuer = Issuers.getIssuers().get(0);
-        PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
-        Token token = Tokens.getVisaToken();
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
 
-        presenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, null, null, null);
+        presenter.onPaymentMethodSelectionResponse(null,
+                null, null, null,
+                null, null, null);
         assertTrue(view.showingPaymentResult);
     }
 
+    //
     @Test
     public void whenPaymentRequestedAndOnReviewAndConfirmOkResponseThenCreatePayment() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        provider.setPaymentResponse(Payments.getApprovedPayment());
-
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .disableReviewAndConfirmScreen()
                 .build();
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.setFlowPreference(flowPreference);
-        presenter.initialize();
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItem());
+
+        CheckoutPresenter checkoutPresenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+        //Real preference, without items
+        CheckoutPreference preference = stubPreferenceOneItem();
+        provider.setCheckoutPreferenceResponse(preference);
+        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        provider.setPaymentResponse(Payments.getApprovedPayment());
+
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
         PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
         Token token = Tokens.getVisaToken();
 
-        //Response from payment method selection
-        presenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, null, null, null);
+        checkoutPresenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, null, null, null);
 
         //Response from Review And confirm
-        presenter.onPaymentConfirmation();
+        checkoutPresenter.onPaymentConfirmation();
         assertTrue(provider.paymentRequested);
     }
 
     @Test
     public void whenPaymentCreatedThenShowResultScreen() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getApprovedPayment());
-
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -437,27 +281,10 @@ public class CheckoutPresenterTest {
 
     @Test
     public void onPaymentResultScreenResponseThenFinishWithPaymentResponse() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         Payment payment = Payments.getApprovedPayment();
         provider.setPaymentResponse(payment);
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -478,79 +305,21 @@ public class CheckoutPresenterTest {
         assertEquals(view.paymentFinalResponse.getId(), payment.getId());
     }
 
-    @Ignore
-    @Test
-    public void whenPaymentMethodEditedAndPaymentConfirmedThenPayEditedPaymentMethod() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
-
-        presenter.setCheckoutPreference(preference);
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-
-        provider.setCampaignsResponse(Discounts.getCampaigns());
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        provider.setPaymentResponse(Payments.getApprovedPayment());
-        presenter.initialize();
-
-        presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
-
-        //User changes paymentMethod
-        presenter.changePaymentMethod();
-
-        assertTrue(view.showingPaymentMethodSelection);
-
-        PaymentMethod editedPaymentMethod = PaymentMethods.getPaymentMethodOnVisa();
-        presenter.onPaymentMethodSelectionResponse(editedPaymentMethod,
-                Issuers.getIssuers().get(0),
-                Installments.getInstallments().getPayerCosts().get(0),
-                Tokens.getVisaToken(), null, null, null);
-
-        assertTrue(view.showingReviewAndConfirm);
-
-        presenter.onPaymentConfirmation();
-
-        assertTrue(provider.paymentMethodPaid.getId().equals(editedPaymentMethod.getId()));
-    }
-
-    //Flow preference tests
 
     @Test
     public void whenDiscountDisabledThenDoNotMakeDiscountsAPICall() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
-        Payment payment = Payments.getApprovedPayment();
-        provider.setPaymentResponse(payment);
-
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .disableDiscount()
                 .build();
+        CheckoutPreference preference = stubPreferenceOneItem();
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        provider.setCheckoutPreferenceResponse(preference);
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.setFlowPreference(flowPreference);
+        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        Payment payment = Payments.getApprovedPayment();
+        provider.setPaymentResponse(payment);
         presenter.initialize();
 
         assertFalse(provider.campaignsRequested);
@@ -558,34 +327,17 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenPaymentCreatedAndResultScreenDisabledThenFinishWithPaymentResponse() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
-        Payment payment = Payments.getApprovedPayment();
-        provider.setPaymentResponse(payment);
-
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .disablePaymentResultScreen()
                 .build();
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.setFlowPreference(flowPreference);
-        presenter.initialize();
+        CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
 
+        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+
+        Payment payment = Payments.getApprovedPayment();
+        provider.setPaymentResponse(payment);
+        presenter.initialize();
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
         PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
@@ -599,34 +351,18 @@ public class CheckoutPresenterTest {
         assertEquals(view.paymentFinalResponse.getId(), payment.getId());
     }
 
+
     @Test
     public void whenApprovedPaymentCreatedAndApprovedResultScreenDisabledThenFinishWithPaymentResponse() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
-        Payment payment = Payments.getApprovedPayment();
-        provider.setPaymentResponse(payment);
-
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .disablePaymentApprovedScreen()
                 .build();
+        CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.setFlowPreference(flowPreference);
+        Payment payment = Payments.getApprovedPayment();
+        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        provider.setPaymentResponse(payment);
+
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -644,33 +380,13 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenApprovedPaymentCreatedAndCongratsDisplayIsZeroThenFinishWithPaymentResponse() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
-        Payment payment = Payments.getApprovedPayment();
-        provider.setPaymentResponse(payment);
-
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .setCongratsDisplayTime(0)
                 .build();
+        CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
+        Payment payment = Payments.getApprovedPayment();
+        provider.setPaymentResponse(payment);
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.setFlowPreference(flowPreference);
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -678,42 +394,23 @@ public class CheckoutPresenterTest {
         PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
         Token token = Tokens.getVisaToken();
 
-        //Response from payment method selection
         presenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, null, null, null);
 
-        //Response from Review And confirm
         presenter.onPaymentConfirmation();
         assertEquals(view.paymentFinalResponse.getId(), payment.getId());
     }
 
     @Test
     public void whenRejectedPaymentCreatedAndRejectedResultScreenDisabledThenFinishWithPaymentResponse() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
-        Payment payment = Payments.getRejectedPayment();
-        provider.setPaymentResponse(payment);
 
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .disablePaymentRejectedScreen()
                 .build();
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.setFlowPreference(flowPreference);
+        CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
+        Payment rejectedPayment = Payments.getRejectedPayment();
+        provider.setPaymentResponse(rejectedPayment);
+
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -726,37 +423,20 @@ public class CheckoutPresenterTest {
 
         //Response from Review And confirm
         presenter.onPaymentConfirmation();
-        assertEquals(view.paymentFinalResponse.getId(), payment.getId());
+        assertEquals(view.paymentFinalResponse.getId(), rejectedPayment.getId());
     }
 
     @Test
     public void whenPendingPaymentCreatedAndPendingResultScreenDisabledThenFinishWithPaymentResponse() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
-        Payment payment = Payments.getPendingPayment();
-        provider.setPaymentResponse(payment);
-
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .disablePaymentPendingScreen()
                 .build();
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
-        presenter.setFlowPreference(flowPreference);
+        CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
+
+        Payment pendingPayment = Payments.getPendingPayment();
+        provider.setPaymentResponse(pendingPayment);
+
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -769,29 +449,22 @@ public class CheckoutPresenterTest {
 
         //Response from Review And confirm
         presenter.onPaymentConfirmation();
-        assertEquals(view.paymentFinalResponse.getId(), payment.getId());
+        assertEquals(view.paymentFinalResponse.getId(), pendingPayment.getId());
     }
+
 
     // Forwarded flows
     @Test
     public void whenPaymentDataSetThenStartRyCScreen() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
-
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
 
-        presenter.setCheckoutPreference(preference);
-        presenter.setPaymentDataInput(paymentData);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
+        when(mercadoPagoCheckout.getPaymentData()).thenReturn(paymentData);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder().build());
+
+        CheckoutPresenter presenter = getBasePresenter(REQUESTED_RESULT, view, provider);
 
         provider.setCampaignsResponse(Discounts.getCampaigns());
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -802,83 +475,20 @@ public class CheckoutPresenterTest {
         assertTrue(view.showingReviewAndConfirm);
     }
 
-    @Ignore
-    @Test
-    public void whenPaymentDataSetAndReviewAndConfirmDisabledThenStartRyCScreenOnStartButSkipLater() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        FlowPreference flowPreference = new FlowPreference.Builder()
-                .disableReviewAndConfirmScreen()
-                .build();
-
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
-
-        PaymentData paymentData = new PaymentData();
-        paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
-
-        presenter.setCheckoutPreference(preference);
-        presenter.setPaymentDataInput(paymentData);
-        presenter.setFlowPreference(flowPreference);
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE);
-
-        provider.setCampaignsResponse(Discounts.getCampaigns());
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
-        presenter.initialize();
-
-        //Starts in RyC
-        assertTrue(view.showingReviewAndConfirm);
-
-        //User changes paymentMethod
-        presenter.changePaymentMethod();
-
-        //Starts payment method selection
-        assertTrue(view.showingPaymentMethodSelection);
-
-        String dummyId = "anotherId";
-        PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setId(dummyId);
-        presenter.onPaymentMethodSelectionResponse(paymentMethod, null, null, null, null, null, null);
-
-        //Presenter skips RyC, responds payment data
-        assertTrue(view.paymentDataFinalResponse.getPaymentMethod().getId().equals(dummyId));
-    }
 
     @Test
     public void whenPaymentResultSetThenStartResultScreen() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
-
-        PaymentData paymentData = new PaymentData();
-        paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
-
-        PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentData(paymentData)
-                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
-                .build();
-
-        presenter.setCheckoutPreference(preference);
-        presenter.setPaymentResultInput(paymentResult);
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
+        when(mercadoPagoCheckout.getPaymentResult()).thenReturn(stubApprovedOffPaymentResult());
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder()
+                .disableReviewAndConfirmScreen()
+                .build());
 
         provider.setCampaignsResponse(Discounts.getCampaigns());
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+
+        CheckoutPresenter presenter = getBasePresenter(REQUESTED_RESULT, view, provider);
 
         presenter.initialize();
 
@@ -889,31 +499,16 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenPaymentResultSetAndUserLeavesScreenThenRespondWithoutPayment() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .setSite(Sites.ARGENTINA)
-                .addItem(new Item("Item", BigDecimal.TEN))
-                .build();
-
-        PaymentData paymentData = new PaymentData();
-        paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
-
-        PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentData(paymentData)
-                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
-                .build();
-
-        presenter.setCheckoutPreference(preference);
-        presenter.setPaymentResultInput(paymentResult);
+        CheckoutPreference preference = stubPreferenceOneItemAndPayer();
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
+        when(mercadoPagoCheckout.getPaymentResult()).thenReturn(stubApprovedOffPaymentResult());
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder()
+                .build());
 
         provider.setCampaignsResponse(Discounts.getCampaigns());
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+
+        CheckoutPresenter presenter = getBasePresenter(REQUESTED_RESULT, view, provider);
 
         presenter.initialize();
         assertTrue(view.showingPaymentResult);
@@ -923,29 +518,11 @@ public class CheckoutPresenterTest {
         assertTrue(view.finishedCheckoutWithoutPayment);
     }
 
-    // Payment recovery flow
     @Test
     public void ifPaymentRecoveryRequiredThenStartPaymentRecoveryFlow() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer payer = new Payer();
-        payer.setEmail("unemail@gmail.com");
-        preference.setPayer(payer);
-
-        provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
-
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
+        CheckoutPresenter presenter = getPaymentPresenter(new FlowPreference.Builder().build());
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -964,25 +541,10 @@ public class CheckoutPresenterTest {
 
     @Test
     public void onTokenRecoveryFlowOkResponseThenCreatePayment() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
 
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-        Payer payer = new Payer();
-        payer.setEmail("unemail@gmail.com");
-        preference.setPayer(payer);
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -1006,26 +568,9 @@ public class CheckoutPresenterTest {
 
     @Test
     public void ifPaymentRecoveryRequiredWithInvalidPaymentMethodThenShowError() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer payer = new Payer();
-        payer.setEmail("unemail@gmail.com");
-        preference.setPayer(payer);
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
         presenter.initialize();
 
         presenter.onPaymentMethodSelectionResponse(PaymentMethods
@@ -1040,47 +585,18 @@ public class CheckoutPresenterTest {
     //Backs
     @Test
     public void ifCheckoutInitiatedAndUserPressesBackCancelCheckout() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        presenter.setCheckoutPreference(preference);
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         presenter.initialize();
         assertTrue(view.showingPaymentMethodSelection);
         presenter.onPaymentMethodSelectionCancel();
         assertTrue(view.checkoutCanceled);
     }
 
+    //
     @Ignore
     @Test
     public void ifReviewAndConfirmShownAndUserPressesBackThenRestartPaymentMethodSelection() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        presenter.setCheckoutPreference(preference);
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         presenter.initialize();
         assertTrue(view.showingPaymentMethodSelection);
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
@@ -1091,25 +607,8 @@ public class CheckoutPresenterTest {
 
     @Test
     public void ifPaymentRecoveryShownAndUserPressesBackThenRestartPaymentMethodSelection() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
-
-        presenter.setCheckoutPreference(preference);
-
         presenter.initialize();
         assertTrue(view.showingPaymentMethodSelection);
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOnVisa(),
@@ -1126,22 +625,7 @@ public class CheckoutPresenterTest {
 
     @Test
     public void ifPaymentMethodEditionRequestedAndUserPressesBackTwiceCancelCheckout() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        presenter.setCheckoutPreference(preference);
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
 
         presenter.initialize();
         assertTrue(view.showingPaymentMethodSelection);
@@ -1165,26 +649,10 @@ public class CheckoutPresenterTest {
     //Payment tests
     @Test
     public void whenPaymentCreationRequestedThenGenerateTransactionId() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getApprovedPayment());
 
-        presenter.setIdempotencyKeySeed("TEST");
-        presenter.setCheckoutPreference(preference);
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
         presenter.initialize();
 
         //Payment method off, no issuer, installments or token
@@ -1198,27 +666,9 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenCustomerAvailableAndPaymentCreationRequestedThenCreatePaymentWithCustomerId() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         provider.setPaymentResponse(Payments.getApprovedPayment());
         provider.setCustomerResponse(Customers.getCustomerWithCards());
-
-        presenter.setIdempotencyKeySeed("TEST");
-        presenter.setCheckoutPreference(preference);
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
         presenter.initialize();
 
         //Payment method off, no issuer, installments or token
@@ -1230,21 +680,9 @@ public class CheckoutPresenterTest {
         assertFalse(TextUtils.isEmpty(provider.paymentCustomerId));
     }
 
+
     @Test
     public void ifPaymentResultApprovedSetAndTokenWithESCAndESCEnabledThenSaveESC() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
-
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
         PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
@@ -1257,6 +695,8 @@ public class CheckoutPresenterTest {
         paymentData.setPayerCost(payerCost);
         paymentData.setToken(token);
 
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
+
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .enableESC()
                 .build();
@@ -1268,9 +708,11 @@ public class CheckoutPresenterTest {
                 .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED)
                 .build();
 
-        presenter.setCheckoutPreference(checkoutPreference);
-        presenter.setPaymentResultInput(paymentResult);
-        presenter.setFlowPreference(flowPreference);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        when(mercadoPagoCheckout.getPaymentResult()).thenReturn(paymentResult);
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+
         presenter.initialize();
 
         assertTrue(provider.saveESCRequested);
@@ -1278,18 +720,8 @@ public class CheckoutPresenterTest {
 
     @Test
     public void ifPaymentResultApprovedSetAndESCEnabledButTokenHasNoESCThenDontSaveESC() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
 
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -1314,28 +746,21 @@ public class CheckoutPresenterTest {
                 .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED)
                 .build();
 
-        presenter.setCheckoutPreference(checkoutPreference);
-        presenter.setPaymentResultInput(paymentResult);
-        presenter.setFlowPreference(flowPreference);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        when(mercadoPagoCheckout.getPaymentResult()).thenReturn(paymentResult);
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+
         presenter.initialize();
+
 
         assertFalse(provider.saveESCRequested);
     }
 
     @Test
     public void ifPaymentResultApprovedSetAndESCEnabledThenShowPaymentResultScreen() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
 
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -1360,9 +785,10 @@ public class CheckoutPresenterTest {
                 .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED)
                 .build();
 
-        presenter.setCheckoutPreference(checkoutPreference);
-        presenter.setPaymentResultInput(paymentResult);
-        presenter.setFlowPreference(flowPreference);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        when(mercadoPagoCheckout.getPaymentResult()).thenReturn(paymentResult);
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
         presenter.initialize();
 
         assertTrue(view.showingPaymentResult);
@@ -1370,33 +796,26 @@ public class CheckoutPresenterTest {
 
     @Test
     public void onCreatePaymentWithESCTokenErrorThenDeleteESC() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         provider.setCheckoutPreferenceResponse(checkoutPreference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
 
         ApiException apiException = Payments.getInvalidESCPayment();
         MercadoPagoError mpException = new MercadoPagoError(apiException, "");
-        provider.setPaymentResponse(mpException);
 
         FlowPreference flowPreference = new FlowPreference.Builder()
                 .enableESC()
                 .disableReviewAndConfirmScreen()
                 .build();
 
-        presenter.setCheckoutPreference(checkoutPreference);
-        presenter.setFlowPreference(flowPreference);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        provider.setPaymentResponse(mpException);
+
+
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -1418,21 +837,8 @@ public class CheckoutPresenterTest {
 
     @Test
     public void onCreatePaymentWithESCTokenErrorThenRequestSecurityCode() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
 
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
-
-        provider.setCheckoutPreferenceResponse(checkoutPreference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         ApiException apiException = Payments.getInvalidESCPayment();
         MercadoPagoError mpException = new MercadoPagoError(apiException, "");
@@ -1443,8 +849,10 @@ public class CheckoutPresenterTest {
                 .disableReviewAndConfirmScreen()
                 .build();
 
-        presenter.setCheckoutPreference(checkoutPreference);
-        presenter.setFlowPreference(flowPreference);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -1477,21 +885,8 @@ public class CheckoutPresenterTest {
 
     @Test
     public void createPaymentWithESCTokenThenSaveESC() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
 
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
-
-        provider.setCheckoutPreferenceResponse(checkoutPreference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         provider.setPaymentResponse(Payments.getApprovedPayment());
 
@@ -1500,8 +895,11 @@ public class CheckoutPresenterTest {
                 .disableReviewAndConfirmScreen()
                 .build();
 
-        presenter.setCheckoutPreference(checkoutPreference);
-        presenter.setFlowPreference(flowPreference);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -1522,18 +920,7 @@ public class CheckoutPresenterTest {
 
     @Test
     public void ifPaymentResultInvalidESCSetAndESCEnabledThenDontSaveESC() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -1558,9 +945,11 @@ public class CheckoutPresenterTest {
                 .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC)
                 .build();
 
-        presenter.setCheckoutPreference(checkoutPreference);
-        presenter.setPaymentResultInput(paymentResult);
-        presenter.setFlowPreference(flowPreference);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        when(mercadoPagoCheckout.getPaymentResult()).thenReturn(paymentResult);
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+
         presenter.initialize();
 
         assertFalse(provider.saveESCRequested);
@@ -1568,19 +957,8 @@ public class CheckoutPresenterTest {
 
     @Test
     public void ifPaymentResultInvalidESCSetAndESCEnabledThenDeleteESCSaved() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
 
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
-
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
         PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
@@ -1604,9 +982,11 @@ public class CheckoutPresenterTest {
                 .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC)
                 .build();
 
-        presenter.setCheckoutPreference(checkoutPreference);
-        presenter.setPaymentResultInput(paymentResult);
-        presenter.setFlowPreference(flowPreference);
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        when(mercadoPagoCheckout.getPaymentResult()).thenReturn(paymentResult);
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+
         presenter.initialize();
 
         assertTrue(provider.deleteESCRequested);
@@ -1614,21 +994,6 @@ public class CheckoutPresenterTest {
 
     @Test
     public void ifPayerDataCollectedAndPayerInPreferenceThenUseBothForPayment() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer preferencePayer = new Payer();
-        preferencePayer.setEmail("unemail@gmail.com");
-        preferencePayer.setAccessToken("AT");
-        preference.setPayer(preferencePayer);
-
         String firstName = "FirstName";
         String lastName = "LastName";
         Identification identification = new Identification();
@@ -1640,19 +1005,24 @@ public class CheckoutPresenterTest {
         collectedPayer.setLastName(lastName);
         collectedPayer.setIdentification(identification);
 
+        provider.setPaymentResponse(Payments.getCallForAuthPayment());
+        CheckoutPreference preference = stubPreferenceOneItem();
+        FlowPreference flowPreference = new FlowPreference.Builder()
+                .build();
+
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        provider.setPaymentResponse(Payments.getCallForAuthPayment());
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
         presenter.initialize();
 
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, collectedPayer);
         presenter.onPaymentConfirmation();
 
-        assertEquals(provider.payerPosted.getEmail(), preferencePayer.getEmail());
-        assertEquals(provider.payerPosted.getAccessToken(), preferencePayer.getAccessToken());
+        assertEquals(provider.payerPosted.getEmail(), preference.getPayer().getEmail());
+        assertEquals(provider.payerPosted.getAccessToken(), preference.getPayer().getAccessToken());
         assertEquals(provider.payerPosted.getFirstName(), firstName);
         assertEquals(provider.payerPosted.getLastName(), lastName);
         assertEquals(provider.payerPosted.getIdentification().getType(), identification.getType());
@@ -1661,62 +1031,32 @@ public class CheckoutPresenterTest {
 
     @Test
     public void ifOnlyPayerFromPreferenceThenUseItForPayment() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
+        CheckoutPreference preference = stubPreferenceWithAccessToken();
+        FlowPreference flowPreference = new FlowPreference.Builder()
+                .build();
 
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer preferencePayer = new Payer();
-        preferencePayer.setEmail("unemail@gmail.com");
-        preferencePayer.setAccessToken("AT");
-        preference.setPayer(preferencePayer);
-
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
         presenter.initialize();
 
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         presenter.onPaymentConfirmation();
-
-        assertEquals(provider.payerPosted.getEmail(), preferencePayer.getEmail());
-        assertEquals(provider.payerPosted.getAccessToken(), preferencePayer.getAccessToken());
+        assertEquals(provider.payerPosted.getEmail(), preference.getPayer().getEmail());
+        assertEquals(provider.payerPosted.getAccessToken(), preference.getPayer().getAccessToken());
     }
 
     @Test
     public void onIdentificationInvalidAndErrorShownThenGoBackToPaymentMethodSelection() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, without items
-        CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
-        Payer preferencePayer = new Payer();
-        preferencePayer.setEmail("unemail@gmail.com");
-        preferencePayer.setAccessToken("AT");
-        preference.setPayer(preferencePayer);
-
-        provider.setCheckoutPreferenceResponse(preference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         ApiException apiException = Payments.getInvalidIdentificationPayment();
         MercadoPagoError mpException = new MercadoPagoError(apiException, "");
         provider.setPaymentResponse(mpException);
 
-        presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
-        presenter.setCheckoutPreference(preference);
         presenter.initialize();
 
         presenter.onErrorCancel(mpException);
@@ -1725,27 +1065,12 @@ public class CheckoutPresenterTest {
 
     @Test
     public void createPaymentWithInvalidIdentificationThenShowError() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                .addItem(new Item("description", new BigDecimal(100)))
-                .setSite(Sites.ARGENTINA)
-                .setPayerAccessToken("ACCESS_TOKEN")
-                .build();
-
-        provider.setCheckoutPreferenceResponse(checkoutPreference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
 
         ApiException apiException = Payments.getInvalidIdentificationPayment();
         MercadoPagoError mpException = new MercadoPagoError(apiException, "");
         provider.setPaymentResponse(mpException);
 
-        presenter.setCheckoutPreference(checkoutPreference);
         presenter.initialize();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
@@ -1767,50 +1092,17 @@ public class CheckoutPresenterTest {
 
     @Test
     public void ifNotNewFlowThenDoNotTrackInit() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
-
-        //Real preference, with items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        presenter.setCheckoutPreference(preference);
-
-        //With a PaymentData input
-        presenter.setPaymentDataInput(paymentData);
-
+        when(mercadoPagoCheckout.getPaymentData()).thenReturn(paymentData);
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         presenter.initialize();
         assertFalse(view.initTracked);
     }
 
     @Test
     public void ifNewFlowThenDoTrackInit() {
-        MockedProvider provider = new MockedProvider();
-        MockedView view = new MockedView();
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(view);
-
-        //Real preference, with items
-        CheckoutPreference preference = new CheckoutPreference.Builder()
-                .addItem(new Item("id", BigDecimal.TEN))
-                .setSite(Sites.ARGENTINA)
-                .build();
-
-        provider.setCheckoutPreferenceResponse(preference);
-        presenter.setCheckoutPreference(preference);
-
+        CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         presenter.initialize();
         assertTrue(view.initTracked);
     }
@@ -1818,31 +1110,20 @@ public class CheckoutPresenterTest {
     @Test
     public void whenIsDiscountEnabledAndNotHasDiscountThenShouldGetDiscountTrue() {
         CheckoutPresenter presenter = getPresenterWithFlowDiscount(true);
-
-        presenter.setDiscount(null);
-
-        boolean shouldRetrieveDiscount = presenter.shouldRetrieveDiscount();
-
-        assertTrue(shouldRetrieveDiscount);
+        assertTrue(presenter.shouldRetrieveDiscount());
     }
 
     @Test
     public void whenIsDiscountEnabledAndHasDiscountThenShouldGetDiscountFalse() {
+        when(mercadoPagoCheckout.getDiscount()).thenReturn(new Discount());
         CheckoutPresenter presenter = getPresenterWithFlowDiscount(true);
-
-        presenter.setDiscount(new Discount());
-
-        boolean shouldRetrieveDiscount = presenter.shouldRetrieveDiscount();
-
-        assertFalse(shouldRetrieveDiscount);
+        assertFalse(presenter.shouldRetrieveDiscount());
     }
 
     @Test
     public void whenIsNotDiscountEnabledAndNotHasDiscountThenShouldGetDiscountFalse() {
         CheckoutPresenter presenter = getPresenterWithFlowDiscount(false);
-
         boolean shouldGetDiscount = presenter.shouldRetrieveDiscount();
-
         assertFalse(shouldGetDiscount);
     }
 
@@ -1858,9 +1139,7 @@ public class CheckoutPresenterTest {
         store.getData().put(DataInitializationTask.KEY_INIT_SUCCESS, true);
 
         when(paymentMethodPlugin.isEnabled(store.getData())).thenReturn(true);
-
         CheckoutPresenter presenter = getPresenterWithFlowDiscount(true);
-        presenter.setDiscount(null);
 
         boolean shouldGetDiscount = presenter.shouldRetrieveDiscount();
 
@@ -1870,30 +1149,20 @@ public class CheckoutPresenterTest {
     @Test
     public void whenIsDiscountEnabledAndHasPaymentPluginThenShouldGetDiscountFalse() {
         CheckoutStore store = CheckoutStore.getInstance();
-
         PaymentProcessor paymentProcessor = mock(PaymentProcessor.class);
         store.addPaymentPlugins(paymentProcessor, PAYMENT_PROCESSOR_KEY);
-
-
         CheckoutPresenter presenter = getPresenterWithFlowDiscount(true);
-        presenter.setDiscount(null);
-
         boolean shouldGetDiscount = presenter.shouldRetrieveDiscount();
-
         assertFalse(shouldGetDiscount);
     }
 
     private CheckoutPresenter getPresenterWithFlowDiscount(boolean enabled) {
         FlowPreference flowPreference = mock(FlowPreference.class);
         when(flowPreference.isDiscountEnabled()).thenReturn(enabled);
-
-        CheckoutPresenter presenter = new CheckoutPresenter();
-        presenter.setFlowPreference(flowPreference);
-
-        return presenter;
+        return getPaymentPresenter(flowPreference);
     }
 
-    private class MockedView implements CheckoutView {
+    private static class MockedView implements CheckoutView {
 
         private MercadoPagoError errorShown;
         private boolean showingError = false;
@@ -2060,7 +1329,7 @@ public class CheckoutPresenterTest {
     public class MockedProvider implements CheckoutProvider {
 
         private boolean campaignsRequested = false;
-        private boolean directDiscountRequested = false;
+
         private List<Campaign> campaigns;
         private boolean checkoutPreferenceRequested = false;
         private CheckoutPreference preference;
@@ -2099,7 +1368,6 @@ public class CheckoutPresenterTest {
 
         @Override
         public void getDirectDiscount(BigDecimal amount, String payerEmail, TaggedCallback<Discount> taggedCallback) {
-            this.directDiscountRequested = true;
             taggedCallback.onSuccess(null);
         }
 
@@ -2170,36 +1438,6 @@ public class CheckoutPresenterTest {
         public void setPaymentResponse(MercadoPagoError error) {
             this.shouldFail = true;
             this.failedResponse = error;
-        }
-    }
-
-    private class MockedTimer implements Timer {
-
-        private boolean enabled = false;
-
-        @Override
-        public void start(long seconds) {
-            enabled = true;
-        }
-
-        @Override
-        public void stop() {
-
-        }
-
-        @Override
-        public Boolean isTimerEnabled() {
-            return enabled;
-        }
-
-        @Override
-        public void setOnFinishListener(FinishListener listener) {
-
-        }
-
-        @Override
-        public void finishCheckout() {
-
         }
     }
 }

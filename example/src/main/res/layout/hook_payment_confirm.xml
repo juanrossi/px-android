@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="25dp"
-            android:background="@drawable/mpsdk_button_bg_stroke"
+            android:background="@drawable/button"
             android:text="Continuar"
             android:textColor="@color/mpsdk_white_background"
             android:textSize="16dp" />

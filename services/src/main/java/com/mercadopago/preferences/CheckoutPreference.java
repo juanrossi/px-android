@@ -1,5 +1,8 @@
 package com.mercadopago.preferences;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Size;
+
 import com.google.gson.annotations.SerializedName;
 import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Item;
@@ -7,8 +10,8 @@ import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Sites;
-import com.mercadopago.lite.util.CurrenciesUtil;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,10 +20,20 @@ import java.util.List;
 import static com.mercadopago.lite.util.TextUtil.isEmpty;
 
 
-public class CheckoutPreference {
+public final class CheckoutPreference implements Serializable {
 
+    /**
+     * When the preference comes from backend then
+     * id is received - Custom created CheckoutPreferences have null id.
+     */
+    @SuppressWarnings("UnusedDeclaration")
     private String id;
+    @SuppressWarnings("UnusedDeclaration")
+    private String siteId;
+
+    @NonNull
     private List<Item> items;
+
     private Payer payer;
 
     @SerializedName("payment_methods")
@@ -28,21 +41,15 @@ public class CheckoutPreference {
 
     private Date expirationDateTo;
     private Date expirationDateFrom;
-    private String siteId;
-
     private Site localPreferenceSite;
-
-    //To support external integrations
+    //region support external integrations - payment processor instores
     private BigDecimal marketplaceFee;
     private BigDecimal shippingCost;
     private String operationType;
     private Integer differentialPricingId;
     private BigDecimal conceptAmount;
     private String conceptId;
-
-    public CheckoutPreference(String checkoutPreferenceId) {
-        id = checkoutPreferenceId;
-    }
+    //endregion support external integrations
 
     private CheckoutPreference(Builder builder) {
         items = builder.items;
@@ -55,12 +62,7 @@ public class CheckoutPreference {
         differentialPricingId = builder.differentialPricingId;
         conceptAmount = builder.conceptAmount;
         conceptId = builder.conceptId;
-
-        final Payer payer = new Payer();
-        payer.setEmail(builder.payerEmail);
-        payer.setAccessToken(builder.payerAccessToken);
-        this.payer = payer;
-
+        this.payer = getPayer(builder);
         final PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setExcludedPaymentTypeIds(builder.excludedPaymentTypes);
         paymentPreference.setExcludedPaymentMethodIds(builder.excludedPaymentMethods);
@@ -69,10 +71,18 @@ public class CheckoutPreference {
         this.paymentPreference = paymentPreference;
     }
 
+    @NonNull
+    private Payer getPayer(final Builder builder) {
+        final Payer payer = new Payer();
+        payer.setEmail(builder.payerEmail);
+        payer.setAccessToken(builder.payerAccessToken);
+        return payer;
+    }
+
     public void validate() throws CheckoutPreferenceException {
-        if (hasId() && !itemsValid()) {
+        if (!Item.validItems(items)) {
             throw new CheckoutPreferenceException(CheckoutPreferenceException.INVALID_ITEM);
-        } else if (hasId() && !hasEmail()) {
+        } else if (!hasEmail()) {
             throw new CheckoutPreferenceException(CheckoutPreferenceException.NO_EMAIL_FOUND);
         } else if (isExpired()) {
             throw new CheckoutPreferenceException(CheckoutPreferenceException.EXPIRED_PREFERENCE);
@@ -97,49 +107,6 @@ public class CheckoutPreference {
         return paymentPreference == null || paymentPreference.installmentPreferencesValid();
     }
 
-    public Boolean itemsValid() {
-
-        boolean valid = true;
-
-        if (items == null || items.isEmpty() || items.get(0) == null) {
-            valid = false;
-        } else if (isEmpty(items.get(0).getCurrencyId())) {
-            valid = false;
-        } else {
-            String firstCurrencyId = items.get(0).getCurrencyId();
-            String currentCurrencyId;
-
-            for (Item item : items) {
-                currentCurrencyId = item.getCurrencyId();
-                if (!isItemValid(item) || !currentCurrencyId.equals(firstCurrencyId)) {
-                    valid = false;
-                    break;
-                }
-            }
-        }
-        return valid;
-    }
-
-    private boolean isItemValid(Item item) {
-        Boolean valid = true;
-
-        if (item == null) {
-            valid = false;
-        } else if (item.getId() == null) {
-            valid = false;
-        } else if (item.getQuantity() == null || item.getQuantity() < 1) {
-            valid = false;
-        } else if (item.getUnitPrice() == null || item.getUnitPrice().compareTo(BigDecimal.ZERO) < 0) {
-            valid = false;
-        } else if (item.getCurrencyId() == null) {
-            valid = false;
-        } else if ((!CurrenciesUtil.isValidCurrency(item.getCurrencyId()))) {
-            valid = false;
-        }
-        return valid;
-    }
-
-
     public Boolean isExpired() {
         Date date = new Date();
         return expirationDateTo != null && date.after(expirationDateTo);
@@ -150,95 +117,50 @@ public class CheckoutPreference {
         return expirationDateFrom == null || date.after(expirationDateFrom);
     }
 
-    public String getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(final String operationType) {
-        this.operationType = operationType;
-    }
-
-    public BigDecimal getMarketplaceFee() {
-        return marketplaceFee;
-    }
-
-    public void setMarketplaceFee(final BigDecimal marketplaceFee) {
-        this.marketplaceFee = marketplaceFee;
-    }
-
-    public BigDecimal getShippingCost() {
-        return shippingCost;
-    }
-
-    public void setShippingCost(final BigDecimal shippingCost) {
-        this.shippingCost = shippingCost;
-    }
-
-    public void setExpirationDate(Date date) {
-        expirationDateTo = date;
-    }
-
-    public void setActiveFrom(Date date) {
-        expirationDateFrom = date;
-    }
-
-    public Site getLocalPreferenceSite() {
-        return localPreferenceSite;
-    }
-
-    public void setLocalPreferenceSite(final Site localPreferenceSite) {
-        this.localPreferenceSite = localPreferenceSite;
-    }
 
     public String getSiteId() {
         return siteId;
     }
 
-    public void setSiteId(final String siteId) {
-        this.siteId = siteId;
+    //region support external integrations - payment processor instores
+    @SuppressWarnings("unused")
+    public String getOperationType() {
+        return operationType;
     }
 
+    @SuppressWarnings("unused")
+    public BigDecimal getMarketplaceFee() {
+        return marketplaceFee;
+    }
+
+    @SuppressWarnings("unused")
+    public BigDecimal getShippingCost() {
+        return shippingCost;
+    }
+
+    @SuppressWarnings("unused")
+    public Site getLocalPreferenceSite() {
+        return localPreferenceSite;
+    }
+
+    @SuppressWarnings("unused")
     public Integer getDifferentialPricingId() {
         return differentialPricingId;
     }
 
-    public void setDifferentialPricingId(final Integer differentialPricingId) {
-        this.differentialPricingId = differentialPricingId;
-    }
-
+    @SuppressWarnings("unused")
     public BigDecimal getConceptAmount() {
         return conceptAmount;
     }
 
-    public void setConceptAmount(final BigDecimal conceptAmount) {
-        this.conceptAmount = conceptAmount;
-    }
-
+    @SuppressWarnings("unused")
     public String getConceptId() {
         return conceptId;
     }
+    //endregion support external integrations
 
-    public void setConceptId(final String conceptId) {
-        this.conceptId = conceptId;
-    }
-
-    public void setPaymentPreference(PaymentPreference paymentPreference) {
-        this.paymentPreference = paymentPreference;
-    }
-
-    public BigDecimal getAmount() {
-
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        if (items != null) {
-            for (Item item : items) {
-                if ((item != null) && (item.getUnitPrice() != null) && (item.getQuantity() != null)) {
-                    totalAmount = totalAmount.add(item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())));
-                } else {
-                    return null;
-                }
-            }
-        }
-        return totalAmount;
+    public BigDecimal getTotalAmount() {
+        return Item.getTotalAmountWith(items);
     }
 
     public List<String> getExcludedPaymentTypes() {
@@ -249,41 +171,25 @@ public class CheckoutPreference {
     }
 
     public Site getSite() {
-        Site site = null;
+        Site site;
         if (localPreferenceSite == null) {
-
             site = Sites.getById(siteId);
-
         } else {
             site = localPreferenceSite;
         }
         return site;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+    @NonNull
     public List<Item> getItems() {
         return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
     }
 
     public Payer getPayer() {
         return payer;
     }
 
-    public void setPayer(Payer payer) {
-        this.payer = payer;
-    }
-
+    @SuppressWarnings("unused")
     public Integer getMaxInstallments() {
         if (paymentPreference != null) {
             return paymentPreference.getMaxInstallments();
@@ -292,6 +198,7 @@ public class CheckoutPreference {
         }
     }
 
+    @SuppressWarnings("unused")
     public Integer getDefaultInstallments() {
         if (paymentPreference != null) {
             return paymentPreference.getDefaultInstallments();
@@ -308,10 +215,17 @@ public class CheckoutPreference {
         }
     }
 
+    @SuppressWarnings("unused")
+    public Date getExpirationDateFrom() {
+        return expirationDateFrom;
+    }
+
+    @SuppressWarnings("unused")
     public Date getExpirationDateTo() {
         return expirationDateTo;
     }
 
+    @SuppressWarnings("unused")
     public String getDefaultPaymentMethodId() {
         if (paymentPreference != null) {
             return paymentPreference.getDefaultPaymentMethodId();
@@ -324,32 +238,22 @@ public class CheckoutPreference {
         return paymentPreference;
     }
 
-    public void setExpirationDateTo(final Date expirationDateTo) {
-        this.expirationDateTo = expirationDateTo;
-    }
-
-    public boolean hasId() {
-        return getId() != null;
-    }
-
-    public Date getExpirationDateFrom() {
-        return expirationDateFrom;
-    }
-
-    public void setExpirationDateFrom(final Date expirationDateFrom) {
-        this.expirationDateFrom = expirationDateFrom;
+    public String getId() {
+        return id;
     }
 
     public static class Builder {
+        //region mandatory params
         private final List<Item> items;
+        private final Site localPreferenceSite;
+        private final String payerEmail;
+        //endregion mandatory params
         private final List<String> excludedPaymentMethods;
         private final List<String> excludedPaymentTypes;
         private Integer maxInstallments;
         private Integer defaultInstallments;
-        private String payerEmail;
         private Date expirationDateTo;
         private Date expirationDateFrom;
-        private Site localPreferenceSite;
         private String payerAccessToken;
         private boolean excludeAccountMoney = true;
         private BigDecimal marketplaceFee;
@@ -359,134 +263,123 @@ public class CheckoutPreference {
         private BigDecimal conceptAmount;
         private String conceptId;
 
-        public Builder() {
-            items = new ArrayList<>();
+
+        /**
+         * Builder for custom CheckoutPreference construction
+         *
+         * @param site       preference site
+         * @param payerEmail payer email
+         * @param items      items to pay
+         */
+        public Builder(@NonNull final Site site, @NonNull String payerEmail, @Size(min = 1) @NonNull final List<Item> items) {
+            this.items = items;
+            this.payerEmail = payerEmail;
+            this.localPreferenceSite = site;
             excludedPaymentMethods = new ArrayList<>();
             excludedPaymentTypes = new ArrayList<>();
         }
 
-        public Builder addItem(Item item) {
-            if (item != null) {
-                items.add(item);
-            }
+        @SuppressWarnings("unused")
+        public Builder addExcludedPaymentMethod(@NonNull String paymentMethodId) {
+            excludedPaymentMethods.add(paymentMethodId);
             return this;
         }
 
-        public Builder addItems(List<Item> items) {
-            if (items != null) {
-                this.items.addAll(items);
-            }
+        @SuppressWarnings("unused")
+        public Builder addExcludedPaymentMethods(@NonNull List<String> paymentMethodIds) {
+            excludedPaymentMethods.addAll(paymentMethodIds);
             return this;
         }
 
-        public Builder addExcludedPaymentMethod(String paymentMethodId) {
-            if (paymentMethodId != null) {
-                excludedPaymentMethods.add(paymentMethodId);
-            }
+        @SuppressWarnings("unused")
+        public Builder addExcludedPaymentType(@NonNull String paymentTypeId) {
+            excludedPaymentTypes.add(paymentTypeId);
             return this;
         }
 
-        public Builder addExcludedPaymentMethods(List<String> paymentMethodIds) {
-            if (paymentMethodIds != null) {
-                excludedPaymentMethods.addAll(paymentMethodIds);
-            }
+        @SuppressWarnings("unused")
+        public Builder addExcludedPaymentTypes(@NonNull List<String> paymentTypeIds) {
+            excludedPaymentTypes.addAll(paymentTypeIds);
             return this;
         }
 
-        public Builder addExcludedPaymentType(String paymentTypeId) {
-            if (paymentTypeId != null) {
-                excludedPaymentTypes.add(paymentTypeId);
-            }
-            return this;
-        }
-
-        public Builder addExcludedPaymentTypes(List<String> paymentTypeIds) {
-            if (paymentTypeIds != null) {
-                excludedPaymentTypes.addAll(paymentTypeIds);
-            }
-            return this;
-        }
-
+        @SuppressWarnings("unused")
         public Builder setMaxInstallments(Integer maxInstallments) {
             this.maxInstallments = maxInstallments;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setDefaultInstallments(Integer defaultInstallments) {
             this.defaultInstallments = defaultInstallments;
             return this;
         }
 
-        public Builder setPayerEmail(String payerEmail) {
-            this.payerEmail = payerEmail;
-            return this;
-        }
-
-        public Builder setSite(Site site) {
-            localPreferenceSite = site;
-            return this;
-        }
-
+        @SuppressWarnings("unused")
         public Builder setExpirationDate(Date date) {
             expirationDateTo = date;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setActiveFrom(Date date) {
             expirationDateFrom = date;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setPayerAccessToken(String payerAccessToken) {
             this.payerAccessToken = payerAccessToken;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder enableAccountMoney() {
             excludeAccountMoney = false;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setMarketplaceFee(final BigDecimal marketplaceFee) {
             this.marketplaceFee = marketplaceFee;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setShippingCost(final BigDecimal shippingCost) {
             this.shippingCost = shippingCost;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setOperationType(final String operationType) {
             this.operationType = operationType;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setDifferentialPricingId(final Integer differentialPricingId) {
             this.differentialPricingId = differentialPricingId;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setConceptAmount(final BigDecimal conceptAmount) {
             this.conceptAmount = conceptAmount;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder setConceptId(final String conceptId) {
             this.conceptId = conceptId;
             return this;
         }
 
+        @SuppressWarnings("unused")
         public CheckoutPreference build() {
-
-            if (items.isEmpty())
-                throw new IllegalStateException("Items required");
-            if (localPreferenceSite == null)
-                throw new IllegalStateException("Site is required");
             if (excludeAccountMoney) {
                 addExcludedPaymentType(PaymentTypes.ACCOUNT_MONEY);
             }
-
             return new CheckoutPreference(this);
         }
     }

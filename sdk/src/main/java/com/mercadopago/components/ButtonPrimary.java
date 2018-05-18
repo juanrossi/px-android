@@ -1,7 +1,9 @@
 package com.mercadopago.components;
 
 
-import com.mercadopago.R;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import com.mercadolibre.android.ui.widgets.MeliButton;
 
 public class ButtonPrimary extends Button {
 
@@ -10,7 +12,7 @@ public class ButtonPrimary extends Button {
     }
 
     @Override
-    public int getButtonViewLayout() {
-        return R.layout.mpsdk_view_text_button_blue;
+    public MeliButton getButtonView(@NonNull final Context context) {
+        return new MeliButton(context);
     }
 }

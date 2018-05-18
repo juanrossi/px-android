@@ -1,5 +1,6 @@
 package com.mercadopago.plugins.model;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
@@ -7,10 +8,13 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
 
 import com.mercadopago.R;
+import com.mercadopago.model.ExternalFragment;
 import com.mercadopago.util.TextUtils;
 
+@SuppressWarnings("unused")
 public final class BusinessPayment implements PluginPayment, Parcelable {
 
     private final String help;
@@ -24,6 +28,9 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
     private final String receiptId;
     private final String imageUrl;
 
+    private final ExternalFragment topFragment;
+    private final ExternalFragment bottomFragment;
+
     private BusinessPayment(Builder builder) {
         help = builder.help;
         title = builder.title;
@@ -35,6 +42,9 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         statementDescription = builder.statementDescription;
         receiptId = builder.receiptId;
         imageUrl = builder.imageUrl;
+        topFragment = builder.topFragment;
+        bottomFragment = builder.bottomFragment;
+
     }
 
     protected BusinessPayment(Parcel in) {
@@ -48,6 +58,8 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         statementDescription = in.readString();
         receiptId = in.readString();
         imageUrl = in.readString();
+        topFragment = in.readParcelable(ExternalFragment.class.getClassLoader());
+        bottomFragment = in.readParcelable(ExternalFragment.class.getClassLoader());
     }
 
     public static final Creator<BusinessPayment> CREATOR = new Creator<BusinessPayment>() {
@@ -84,10 +96,20 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         dest.writeString(statementDescription);
         dest.writeString(receiptId);
         dest.writeString(imageUrl);
+        dest.writeParcelable(topFragment, 0);
+        dest.writeParcelable(bottomFragment, 0);
     }
 
     public boolean hasReceipt() {
         return receiptId != null;
+    }
+
+    public boolean hasTopFragment() {
+        return topFragment != null;
+    }
+
+    public boolean hasBottomFragment() {
+        return bottomFragment != null;
     }
 
     public Status getStatus() {
@@ -134,10 +156,18 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         return imageUrl;
     }
 
+    public ExternalFragment getTopFragment() {
+        return topFragment;
+    }
+
+    public ExternalFragment getBottomFragment() {
+        return bottomFragment;
+    }
+
     public enum Status {
-        APPROVED("APPROVED", R.color.mpsdk_green_payment_result_background, R.drawable.mpsdk_badge_check, 0),
-        REJECTED("REJECTED", R.color.mpsdk_red_payment_result_background, R.drawable.mpsdk_badge_error, R.string.mpsdk_rejection_label),
-        PENDING("PENDING", R.color.mpsdk_orange_payment_result_background, R.drawable.mpsdk_badge_pending_orange, 0);
+        SUCCESS("SUCCESS", R.color.ui_components_success_color, R.drawable.mpsdk_badge_check, 0),
+        ERROR("ERROR", R.color.ui_components_error_color, R.drawable.mpsdk_badge_error, R.string.mpsdk_rejection_label),
+        WARNING("WARNING", R.color.ui_components_warning_color, R.drawable.mpsdk_badge_pending_orange, 0);
 
         public final String name;
         public final int resColor;
@@ -184,6 +214,9 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         private ExitAction buttonSecondary;
         private String help;
         private String receiptId;
+
+        private ExternalFragment topFragment;
+        private ExternalFragment bottomFragment;
 
         public Builder(@NonNull final Status status,
                        @DrawableRes final int iconId,
@@ -283,6 +316,30 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
          */
         public Builder setReceiptId(final String receiptId) {
             this.receiptId = receiptId;
+            return this;
+        }
+
+        /**
+         * Custom fragment that will appear before payment method description
+         * inside Business result screen.
+         *
+         * @param zClass fragment class
+         * @return builder
+         */
+        public Builder setTopFragment(@NonNull final Class<? extends Fragment> zClass, @Nullable final Bundle args) {
+            this.topFragment = new ExternalFragment(zClass, args);
+            return this;
+        }
+
+        /**
+         * Custom fragment that will appear after payment method description
+         * inside Business result screen.
+         *
+         * @param zClass fragment class
+         * @return builder
+         */
+        public Builder setBottomFragment(@NonNull final Class<? extends Fragment> zClass, @Nullable final Bundle args) {
+            this.bottomFragment = new ExternalFragment(zClass, args);
             return this;
         }
     }

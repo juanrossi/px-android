@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.mercadopago.components.CustomComponent;
@@ -12,19 +13,26 @@ import com.mercadopago.core.MercadoPagoCheckout.Builder;
 import com.mercadopago.example.R;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Item;
 import com.mercadopago.model.Payment;
+import com.mercadopago.model.PaymentTypes;
+import com.mercadopago.model.Sites;
 import com.mercadopago.plugins.DataInitializationTask;
 import com.mercadopago.plugins.MainPaymentProcessor;
 import com.mercadopago.plugins.components.SampleCustomComponent;
 import com.mercadopago.plugins.model.BusinessPayment;
 import com.mercadopago.plugins.model.ExitAction;
 import com.mercadopago.preferences.CheckoutPreference;
+import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
+import com.mercadopago.tracking.listeners.TracksListener;
+import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,40 +49,9 @@ public class ExamplesUtils {
     private static final String DUMMY_PREFERENCE_ID = "243962506-0bb62e22-5c7b-425e-a0a6-c22d0f4758a9";
     private static final String DUMMY_PREFERENCE_ID_WITH_DECIMALS = "243962506-ad5df092-f5a2-4b99-bcc4-7578d6e71849";
     private static final String DUMMY_PREFERENCE_ID_WITH_NO_DECIMALS = "243966003-3db6717c-371a-4660-8d01-ebf63f588fd8";
+    private static final String DUMMY_PREFERENCE_ID_MLM = "253812950-1f347959-4ed9-4fee-9189-0eb84fe8f049";
     private static final String DUMMY_MERCHANT_PUBLIC_KEY = "TEST-c6d9b1f9-71ff-4e05-9327-3c62468a23ee";
-
-    /*
-    public static final String DUMMY_PREFERENCE_ID = "243962506-e9464aff-30dd-43e0-a6fa-37e3a54b884c";
-
-    public static final String DUMMY_MERCHANT_PUBLIC_KEY_EXAMPLES_SERVICE = "444a9ef5-8a6b-429f-abdf-587639155d88";
-    public static final String DUMMY_MERCHANT_PUBLIC_KEY_AR = "444a9ef5-8a6b-429f-abdf-587639155d88";
-    public static final String DUMMY_MERCHANT_PUBLIC_KEY_BR = "APP_USR-f163b2d7-7462-4e7b-9bd5-9eae4a7f99c3";
-    public static final String DUMMY_MERCHANT_PUBLIC_KEY_MX = "6c0d81bc-99c1-4de8-9976-c8d1d62cd4f2";
-    public static final String DUMMY_MERCHANT_PUBLIC_KEY_VZ = "2b66598b-8b0f-4588-bd2f-c80ca21c6d18";
-
-    public static final String DUMMY_MERCHANT_PUBLIC_KEY_CO = "aa371283-ad00-4d5d-af5d-ed9f58e139f1";
-    // * Merchant server vars
-    public static final String DUMMY_MERCHANT_BASE_URL = "https://www.mercadopago.com";
-    public static final String DUMMY_MERCHANT_GET_CUSTOMER_URI = "/checkout/examples/getCustomer";
-    public static final String DUMMY_MERCHANT_CREATE_PAYMENT_URI = "/checkout/examples/doPayment";
-
-
-    public static final String DUMMY_MERCHANT_GET_DISCOUNT_URI = "/checkout/examples/getDiscounts";
-    // * Merchant access token
-    public static final String DUMMY_MERCHANT_ACCESS_TOKEN = "mla-cards-data";
-    public static final String DUMMY_MERCHANT_ACCESS_TOKEN_AR = "mla-cards-data";
-    public static final String DUMMY_MERCHANT_ACCESS_TOKEN_BR = "mlb-cards-data";
-    public static final String DUMMY_MERCHANT_ACCESS_TOKEN_MX = "mlm-cards-data";
-    //    public static final String DUMMY_MERCHANT_ACCESS_TOKEN_VZ = "mlv-cards-data";
-    public static final String DUMMY_MERCHANT_ACCESS_TOKEN_VZ = "mco-cards-data";
-
-    public static final String DUMMY_MERCHANT_ACCESS_TOKEN_NO_CCV = "mla-cards-data-tarshop";
-    // * Payment item
-    public static final String DUMMY_ITEM_ID = "id1";
-    public static final Integer DUMMY_ITEM_QUANTITY = 1;
-    public static final BigDecimal DUMMY_ITEM_UNIT_PRICE = new BigDecimal("1000");
-
-    */
+    private static final String DUMMY_MERCHANT_PUBLIC_KEY_MLM = "TEST-0f375857-0881-447c-9b2b-23e97b93f947";
 
     public static void resolveCheckoutResult(final Activity context, final int requestCode, final int resultCode,
                                              final Intent data) {
@@ -113,24 +90,42 @@ public class ExamplesUtils {
         }
     }
 
-    public static List<Pair<String, Builder>> getOptions(Activity activity) {
+    public static List<Pair<String, Builder>> getOptions() {
         List<Pair<String, Builder>> options = new ArrayList<>();
-
-        options.add(new Pair<>("Discount", discountSample(activity)));
-        options.add(new Pair<>("Review and Confirm - Custom exit", customExitReviewAndConfirm(activity)));
-        options.add(new Pair<>("Business - Complete - Rejected", startCompleteRejectedBusiness(activity)));
-        options.add(new Pair<>("Business - Secondary And Help - Approved", startCompleteApprovedBusiness(activity)));
-        options.add(new Pair<>("Business - Primary And Help - Pending", startCompletePendingBusiness(activity)));
-        options.add(new Pair<>("Business - No help - Pending", startPendingBusinessNoHelp(activity)));
-        options.add(new Pair<>("Business - Complete w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethod(activity)));
-        options.add(new Pair<>("Business - NoHelp w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethodNoHelp(activity)));
-
+        options.add(new Pair<>("Discount", discountSample()));
+        options.add(new Pair<>("Review and Confirm - Custom exit", customExitReviewAndConfirm()));
+        options.add(new Pair<>("Business - Complete - Rejected", startCompleteRejectedBusiness()));
+        options.add(new Pair<>("Business - Secondary And Help - Approved", startCompleteApprovedBusiness()));
+        options.add(new Pair<>("Business - Primary And Help - Pending", startCompletePendingBusiness()));
+        options.add(new Pair<>("Business - No help - Pending", startPendingBusinessNoHelp()));
+        options.add(new Pair<>("Business - Complete w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethod()));
+        options.add(new Pair<>("Business - NoHelp w/pm - Approved", startCompleteApprovedBusinessWithPaymentMethodNoHelp()));
+        options.add(new Pair<>("Base flow - Tracks with listener", startBaseFlowWithTrackListener()));
+        options.add(new Pair<>("All but debit card", allButDebitCard()));
         return options;
     }
 
-    private static Builder startCompleteRejectedBusiness(Activity activity) {
+    private static Builder allButDebitCard() {
+        Item item = new Item("Aaaa", 1, new BigDecimal(10));
+        item.setId("123");
+        item.setCurrencyId("ARS");
+
+        CheckoutPreference.Builder builder = new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a",
+                Collections.singletonList(item));
+
+        builder.enableAccountMoney(); // to not exclude double account money.
+        for (String type : PaymentTypes.getAllPaymentTypes()) {
+            if (!PaymentTypes.DEBIT_CARD.equals(type)) {
+                builder.addExcludedPaymentType(type);
+            }
+        }
+
+        return createBase(builder.build()).setFlowPreference(new FlowPreference.Builder().exitOnPaymentMethodChange().build());
+    }
+
+    private static Builder startCompleteRejectedBusiness() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.REJECTED, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.ERROR, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
                         .setReceiptId("#123455")
                         .setPaymentMethodVisibility(true)
@@ -138,11 +133,11 @@ public class ExamplesUtils {
                         .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
                         .build();
 
-        return customBusinessPayment(activity, payment);
+        return customBusinessPayment(payment);
     }
 
-    private static Builder startCompleteApprovedBusinessWithPaymentMethod(Activity activity) {
-        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", "Title")
+    private static Builder startCompleteApprovedBusinessWithPaymentMethod() {
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.SUCCESS, "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", "Title")
                 .setHelp("Help description!")
                 .setReceiptId("#123455")
                 .setStatementDescription("PEDRO")
@@ -150,99 +145,120 @@ public class ExamplesUtils {
                 .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
                 .build();
 
-        return customBusinessPayment(activity, payment);
+        return customBusinessPayment(payment);
     }
 
-    private static Builder startCompleteApprovedBusinessWithPaymentMethodNoHelp(Activity activity) {
-        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+    private static Builder startCompleteApprovedBusinessWithPaymentMethodNoHelp() {
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.SUCCESS, R.drawable.mpsdk_icon_card, "Title")
                 .setReceiptId("#123455")
                 .setPaymentMethodVisibility(true)
                 .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
                 .build();
 
-        return customBusinessPayment(activity, payment);
+        return customBusinessPayment(payment);
     }
 
 
-    private static Builder startCompleteApprovedBusiness(Activity activity) {
+    private static Builder startCompleteApprovedBusiness() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.SUCCESS, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
                         .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
                         .build();
 
-        return customBusinessPayment(activity, payment);
+        return customBusinessPayment(payment);
     }
 
-    private static Builder startCompletePendingBusiness(Activity activity) {
+    private static Builder startCompletePendingBusiness() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.WARNING, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
                         .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                         .build();
 
-        return customBusinessPayment(activity, payment);
+        return customBusinessPayment(payment);
     }
 
-    private static Builder startPendingBusinessNoHelp(Activity activity) {
+    private static Builder startPendingBusinessNoHelp() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.WARNING, R.drawable.mpsdk_icon_card, "Title")
                         .setReceiptId("#123455")
                         .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                         .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
                         .build();
 
-        return customBusinessPayment(activity, payment);
+        return customBusinessPayment(payment);
     }
 
-    private static Builder customBusinessPayment(Activity activity, BusinessPayment businessPayment) {
-        return createBase(activity).setPaymentProcessor(new MainPaymentProcessor(businessPayment));
+    private static Builder customBusinessPayment(final BusinessPayment businessPayment) {
+        return createBase().setPaymentProcessor(new MainPaymentProcessor(businessPayment));
     }
 
-    private static Builder customExitReviewAndConfirm(Activity activity) {
+    private static Builder customExitReviewAndConfirm() {
         CustomComponent.Props props = new CustomComponent.Props(new HashMap<String, Object>(), null);
         ReviewAndConfirmPreferences preferences = new ReviewAndConfirmPreferences.Builder()
                 .setTopComponent(new SampleCustomComponent(props)).build();
-        return createBaseWithDecimals(activity).setReviewAndConfirmPreferences(preferences);
+        return createBaseWithDecimals().setReviewAndConfirmPreferences(preferences);
     }
 
-    private static Builder discountSample(Activity activity) {
+    private static Builder discountSample() {
         Discount discount = new Discount();
         discount.setCurrencyId("ARS");
         discount.setId("77123");
         discount.setCouponAmount(new BigDecimal(20));
         discount.setPercentOff(new BigDecimal(20));
-        return createBase(activity).setDiscount(discount);
+        return createBase().setDiscount(discount);
     }
 
-    public static Builder createBase(final Activity activity) {
+    private static Builder startBaseFlowWithTrackListener() {
+        MPTracker.getInstance().setTracksListener(new TracksListener<HashMap<String, String>>() {
+
+            @Override
+            public void onScreenLaunched(@NonNull final String screenName,
+                                         @NonNull final Map<String, String> extraParams) {
+                Log.d("Screen track: ", screenName + " " + extraParams);
+            }
+
+            @Override
+            public void onEvent(@NonNull final HashMap<String, String> event) {
+                Log.d("Event track: ", event.toString());
+            }
+        });
+        return createBase();
+    }
+
+    public static Builder createBase() {
         final Map<String, Object> defaultData = new HashMap<>();
 
-        return new Builder()
-                .setActivity(activity)
-                .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
-                .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID))
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID)
+            .setDataInitializationTask(getDataInitializationTask(defaultData));
+    }
+
+    public static Builder createBaseWithMLM() {
+        final Map<String, Object> defaultData = new HashMap<>();
+
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY_MLM, DUMMY_PREFERENCE_ID_MLM)
+            .setDataInitializationTask(getDataInitializationTask(defaultData));
+    }
+
+    public static Builder createBase(final CheckoutPreference checkoutPreference) {
+        final Map<String, Object> defaultData = new HashMap<>();
+
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, checkoutPreference)
                 .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
-    public static Builder createBaseWithDecimals(final Activity activity) {
+    public static Builder createBaseWithDecimals() {
         final Map<String, Object> defaultData = new HashMap<>();
         defaultData.put("amount", 120f);
 
-        return new Builder()
-                .setActivity(activity)
-                .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
-                .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID_WITH_DECIMALS))
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_DECIMALS)
                 .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
-    public static Builder createBaseWithNoDecimals(final Activity activity) {
+    public static Builder createBaseWithNoDecimals() {
         final Map<String, Object> defaultData = new HashMap<>();
-
-        return new Builder()
-                .setActivity(activity)
-                .setPublicKey(DUMMY_MERCHANT_PUBLIC_KEY)
-                .setCheckoutPreference(new CheckoutPreference(DUMMY_PREFERENCE_ID_WITH_NO_DECIMALS))
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_NO_DECIMALS)
                 .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 

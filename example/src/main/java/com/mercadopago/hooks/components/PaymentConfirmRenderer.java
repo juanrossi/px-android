@@ -10,6 +10,8 @@ import com.mercadopago.hooks.HookRenderer;
 
 public class PaymentConfirmRenderer extends HookRenderer<PaymentConfirm> {
 
+    //TODO do not pass all payment data just to render amount.
+
     @Override
     public View renderContents(final PaymentConfirm component, final Context context) {
         final View view = LayoutInflater.from(context)

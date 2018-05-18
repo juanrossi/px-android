@@ -3,7 +3,9 @@ package com.mercadopago.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Bin implements Parcelable {
+import java.io.Serializable;
+
+public class Bin implements Parcelable, Serializable {
 
     public static final int BIN_LENGTH = 6;
 

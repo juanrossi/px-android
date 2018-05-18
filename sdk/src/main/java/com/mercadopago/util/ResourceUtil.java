@@ -17,6 +17,7 @@ public class ResourceUtil {
     private static final String SDK_PREFIX = "mpsdk_";
     private static final String DEF_TYPE_DRAWABLE = "drawable";
     public static final String BANK_SUFFIX = "bank";
+    public static final String TINT_PREFIX = "grey_";
 
     @DrawableRes
     private static int getPaymentMethodIcon(Context context, String id) {
@@ -50,4 +51,5 @@ public class ResourceUtil {
         }
         return icon;
     }
+
 }

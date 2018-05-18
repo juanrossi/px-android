@@ -25,7 +25,7 @@ public class MercadoPagoError {
     public MercadoPagoError(ApiException apiException, String requestOrigin) {
         this.apiException = apiException;
         this.requestOrigin = requestOrigin;
-        recoverable = apiException.isRecoverable();
+        recoverable = apiException != null && apiException.isRecoverable();
     }
 
     public ApiException getApiException() {

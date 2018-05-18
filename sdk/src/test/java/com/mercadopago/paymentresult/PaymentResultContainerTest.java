@@ -1,5 +1,6 @@
 package com.mercadopago.paymentresult;
 
+import com.mercadopago.R;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.mocks.PaymentMethods;
 import com.mercadopago.mocks.PaymentResults;
@@ -63,7 +64,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusApprovedPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.GREEN_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.ui_components_success_color);
     }
 
     @Test
@@ -72,7 +73,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusInProcessContingencyPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.ORANGE_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.ui_components_warning_color);
     }
 
     @Test
@@ -81,7 +82,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getPaymentMethodOffPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.GREEN_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.ui_components_success_color);
     }
 
     @Test
@@ -90,7 +91,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedOtherPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.RED_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.ui_components_error_color);
     }
 
     @Test
@@ -99,7 +100,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusCallForAuthPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.ORANGE_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.ui_components_warning_color);
     }
 
     @Test
@@ -108,7 +109,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedInsufficientAmountPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.ORANGE_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.ui_components_warning_color);
     }
 
     @Test
@@ -117,7 +118,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedBadFilledSecuPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.ORANGE_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.ui_components_warning_color);
     }
 
     @Test
@@ -126,7 +127,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedBadFilledDatePaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.ORANGE_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.ui_components_warning_color);
     }
 
     @Test
@@ -135,7 +136,7 @@ public class PaymentResultContainerTest {
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedBadFilledFormPaymentResult();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
 
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.ORANGE_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.ui_components_warning_color);
     }
 
     @Test
@@ -149,7 +150,7 @@ public class PaymentResultContainerTest {
                 .setPaymentData(paymentData)
                 .build();
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult);
-        Assert.assertEquals(headerProps.background, PaymentResultContainer.DEFAULT_BACKGROUND_COLOR);
+        Assert.assertEquals(headerProps.background, R.color.mpsdk_blue_MP);
     }
 
     @Test

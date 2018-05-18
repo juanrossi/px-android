@@ -1,9 +1,11 @@
 package com.mercadopago.preferences;
 
+import java.io.Serializable;
+
 /**
  * Created by mreverter on 1/17/17.
  */
-public class FlowPreference {
+public class FlowPreference implements Serializable {
 
     public static final int DEFAULT_MAX_SAVED_CARDS_TO_SHOW = 3;
     public static final String SHOW_ALL_SAVED_CARDS_CODE = "all";

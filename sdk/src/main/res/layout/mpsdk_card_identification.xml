@@ -25,6 +25,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:orientation="horizontal"
+            android:baselineAligned="false"
             android:weightSum="1">
 
             <FrameLayout
@@ -66,7 +67,6 @@
                     android:textSize="10dp" />
 
                 <FrameLayout
-                    android:id="@+id/mpsdkIdNumberClickableZone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="start"
@@ -83,7 +83,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:maxLength="40"
-                        android:text="•• ••• •••"
+                        android:text="@string/mpsdk_identification_card_holder_hint"
                         android:textColor="@color/mpsdk_base_text"
                         app:autoSizeMaxTextSize="20dp"
                         app:autoSizeMinTextSize="10dp"

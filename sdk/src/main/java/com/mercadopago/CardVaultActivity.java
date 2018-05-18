@@ -37,10 +37,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by vaserber on 10/12/16.
- */
-
 public class CardVaultActivity extends AppCompatActivity implements CardVaultView {
 
     protected CardVaultPresenter mCardVaultPresenter;
@@ -157,7 +153,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
     private void getActivityParameters() {
         Boolean installmentsEnabled = getIntent().getBooleanExtra("installmentsEnabled", true);
-        Boolean directDiscountEnabled = getIntent().getBooleanExtra("directDiscountEnabled", true);
         Boolean installmentsReviewEnabled = getIntent().getBooleanExtra("installmentsReviewEnabled", true);
         mEscEnabled = getIntent().getBooleanExtra("escEnabled", false);
 
@@ -209,7 +204,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
         mCardVaultPresenter.setPayerEmail(payerEmail);
         mCardVaultPresenter.setDiscount(discount);
         mCardVaultPresenter.setDiscountEnabled(discountEnabled);
-        mCardVaultPresenter.setDirectDiscountEnabled(directDiscountEnabled);
         mCardVaultPresenter.setInstallmentsReviewEnabled(installmentsReviewEnabled);
         mCardVaultPresenter.setAutomaticSelection(automaticSelection);
     }
@@ -291,7 +285,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
                         .setPayerAccessToken(mPrivateKey)
                         .setDiscount(mCardVaultPresenter.getDiscount())
                         .setDiscountEnabled(mCardVaultPresenter.getDiscountEnabled())
-                        .setDirectDiscountEnabled(mCardVaultPresenter.getDirectDiscountEnabled())
                         .setShowBankDeals(mShowBankDeals)
                         .setPaymentPreference(mCardVaultPresenter.getPaymentPreference())
                         .setAcceptedPaymentMethods(mCardVaultPresenter.getPaymentMethodList())
@@ -442,7 +435,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
                 issuers = null;
             }
 
-            mCardVaultPresenter.resolveNewCardRequest(paymentMethod, token, directDiscountEnabled, discountEnabled, payerCost, issuer, payerCosts, issuers, discount);
+            mCardVaultPresenter.resolveNewCardRequest(paymentMethod, token, discountEnabled, payerCost, issuer, payerCosts, issuers, discount);
 
         } else if (resultCode == RESULT_CANCELED) {
             mCardVaultPresenter.onResultCancel();

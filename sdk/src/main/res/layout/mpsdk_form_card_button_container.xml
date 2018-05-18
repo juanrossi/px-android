@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
+        android:baselineAligned="false"
         android:weightSum="1">
 
         <FrameLayout
@@ -95,7 +96,6 @@
         android:visibility="gone">
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkRedErrorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
@@ -106,7 +106,6 @@
             android:textSize="12sp" />
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkRedErrorMoreInfoTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
