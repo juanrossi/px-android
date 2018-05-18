@@ -4,9 +4,9 @@ import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.exceptions.ApiException;
-import com.mercadopago.model.Cause;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
+import com.mercadopago.model.Cause;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
@@ -587,7 +587,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
                 @Override
                 public void onFailure(final MercadoPagoError error) {
 
-                    if (error.isApiException() && error.getApiException().getStatus().equals(ApiUtil.StatusCodes.BAD_REQUEST)) {
+                    if (error.isApiException() && error.getApiException().getStatus() == ApiUtil.StatusCodes.BAD_REQUEST) {
                         List<Cause> causes = error.getApiException().getCause();
                         if (causes != null && !causes.isEmpty()) {
                             Cause cause = causes.get(0);

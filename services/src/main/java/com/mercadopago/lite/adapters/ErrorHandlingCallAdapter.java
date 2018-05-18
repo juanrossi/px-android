@@ -6,9 +6,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.lite.callbacks.Callback;
+import com.mercadopago.lite.util.ApiUtil;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.Token;
-import com.mercadopago.lite.util.ApiUtil;
 import com.mercadopago.tracking.tracker.MPTracker;
 
 import java.lang.annotation.Annotation;
@@ -29,8 +29,8 @@ public class ErrorHandlingCallAdapter {
     public static class ErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
 
         @Override
-        public CallAdapter<MPCall<?>, MPCallAdapter> get(Type returnType, Annotation[] annotations,
-                                                         Retrofit retrofit) {
+        public CallAdapter<MPCall<?>, MPCallAdapter> get(@NonNull Type returnType, @NonNull Annotation[] annotations,
+                                                         @NonNull Retrofit retrofit) {
             TypeToken<?> token = TypeToken.get(returnType);
             if (token.getRawType() != MPCall.class) {
                 return null;
@@ -47,7 +47,7 @@ public class ErrorHandlingCallAdapter {
                 }
 
                 @Override
-                public MPCallAdapter adapt(final Call<MPCall<?>> call) {
+                public MPCallAdapter adapt(@NonNull final Call<MPCall<?>> call) {
                     return new MPCallAdapter<>(call);
                 }
             };
@@ -103,7 +103,7 @@ public class ErrorHandlingCallAdapter {
                 }
 
                 @Override
-                public void onFailure(final Call<T> call, Throwable t) {
+                public void onFailure(@NonNull final Call<T> call, @NonNull Throwable t) {
                     final Throwable th = t;
                     if (callback.attempts++ == 3 || (th instanceof SocketTimeoutException)) {
                         executeOnMainThread(new Runnable() {

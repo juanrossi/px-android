@@ -1,7 +1,7 @@
 package com.mercadopago.lite.exceptions;
 
-import com.mercadopago.model.Cause;
 import com.mercadopago.lite.util.ApiUtil;
+import com.mercadopago.model.Cause;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public class ApiException {
     private List<Cause> cause;
     private String error;
     private String message;
-    private Integer status;
+    private int status = ApiUtil.StatusCodes.INTERNAL_SERVER_ERROR;
 
     public List<Cause> getCause() {
         return cause;
@@ -36,17 +36,16 @@ public class ApiException {
         this.message = message;
     }
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
     public boolean isRecoverable() {
-        return getStatus() == null || getStatus() != ApiUtil.StatusCodes.NOT_FOUND
-                && (getCause() == null || getCause().isEmpty());
+        return getStatus() != ApiUtil.StatusCodes.NOT_FOUND && (getCause() == null || getCause().isEmpty());
     }
 
     public boolean containsCause(String code) {
