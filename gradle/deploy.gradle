@@ -1,5 +1,8 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+apply from: "$rootDir/gradle/sources_and_javadocs.gradle"
 
 Properties properties = new Properties()
 
@@ -19,11 +22,10 @@ ext {
     groupName = "com.mercadopago"
 }
 
+
 version = versionToDeploy
 group = groupName
 archivesBaseName = artifactLib
-
-apply plugin: 'com.github.dcendents.android-maven'
 
 install {
     group = groupName
@@ -90,33 +92,6 @@ install {
     }
 }
 
-apply plugin: 'com.jfrog.bintray'
-
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
-
-task javadoc(type: Javadoc) {
-    failOnError = false
-    options.encoding = 'UTF-8'
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = "javadoc"
-    from sourcesJar.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-
-
 bintray {
     version = versionToDeploy
     user = properties.getProperty("bintray.user", "")
@@ -126,20 +101,20 @@ bintray {
 
     configurations = ['archives']
     pkg {
-        repo = 'maven'
+        repo = 'PX'
         name = libraryName
         desc = libraryDescription
+        userOrg = 'mercadopago'
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         publish = true
         publicDownloadNumbers = true
         version {
+            name = versionToDeploy
             desc = libraryDescription
-            gpg {
-                sign = true
-                passphrase = properties.getProperty("bintray.gpg.password", "")
-            }
+            vcsTag = versionToDeploy
+            released  = new Date()
         }
     }
 }
