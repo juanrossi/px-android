@@ -48,10 +48,6 @@ public class ApiException {
         return getStatus() != ApiUtil.StatusCodes.NOT_FOUND && (getCause() == null || getCause().isEmpty());
     }
 
-    public boolean hasStatus() {
-        return status != null;
-    }
-
     public boolean containsCause(String code) {
         boolean found = false;
         if (cause != null && code != null) {
