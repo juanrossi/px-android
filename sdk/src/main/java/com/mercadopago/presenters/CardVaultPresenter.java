@@ -576,7 +576,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
                 @Override
                 public void onFailure(final MercadoPagoError error) {
 
-                    if (error.isApiException() && error.getApiException().getStatus().equals(ApiUtil.StatusCodes.BAD_REQUEST)) {
+                    if (error.isApiException() && error.getApiException().getStatus() == ApiUtil.StatusCodes.BAD_REQUEST) {
                         List<Cause> causes = error.getApiException().getCause();
                         if (causes != null && !causes.isEmpty()) {
                             Cause cause = causes.get(0);
