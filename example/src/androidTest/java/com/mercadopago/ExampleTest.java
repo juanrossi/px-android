@@ -1,5 +1,6 @@
 package com.mercadopago;
 
+import android.support.annotation.NonNull;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -14,6 +15,7 @@ import com.mercadopago.testcheckout.input.Card;
 import com.mercadopago.testcheckout.input.Country;
 import com.mercadopago.testcheckout.input.FakeCard;
 import com.mercadopago.testcheckout.input.Visa;
+import com.mercadopago.testcheckout.pages.CongratsPage;
 import com.mercadopago.testcheckout.pages.NamePage;
 import com.mercadopago.testlib.HttpResource;
 
@@ -29,6 +31,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -54,14 +57,18 @@ public class ExampleTest {
         CreditCardTestFlow creditCardTestFlow = new CreditCardTestFlow();
         Card card = new Visa(FakeCard.CardState.APRO, Country.ARGENTINA);
 
-        creditCardTestFlow.runCreditCardPaymentFlowInstallmentsFirstOption(card, new DefaultValidator(){
+        CongratsPage congratsPage =
+            creditCardTestFlow.runCreditCardPaymentFlowInstallmentsFirstOption(card, new DefaultValidator() {
 
-            @Override
-            public void validate(NamePage namePage){
-                super.validate(namePage);
-                Matcher<View> cardCardholderNameEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardholderName);
-                onView(cardCardholderNameEditTextMatcher).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            }
-        });
+                @Override
+                public void validate(@NonNull NamePage namePage) {
+                    super.validate(namePage);
+                    Matcher<View> cardCardholderNameEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardholderName);
+                    onView(cardCardholderNameEditTextMatcher)
+                        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+                }
+            });
+
+        assertNotNull(congratsPage);
     }
 }

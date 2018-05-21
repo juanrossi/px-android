@@ -1,6 +1,5 @@
 package com.mercadopago.testcheckout.assertions;
 
-
 import android.support.annotation.NonNull;
 
 import com.mercadopago.testcheckout.pages.CardPage;
@@ -13,11 +12,14 @@ import com.mercadopago.testcheckout.pages.IdentificationPage;
 import com.mercadopago.testcheckout.pages.InstallmentsPage;
 import com.mercadopago.testcheckout.pages.IssuerPage;
 import com.mercadopago.testcheckout.pages.NamePage;
+import com.mercadopago.testcheckout.pages.NoCheckoutPage;
 import com.mercadopago.testcheckout.pages.PaymentMethodPage;
 import com.mercadopago.testcheckout.pages.ReviewAndConfirmPage;
+import com.mercadopago.testcheckout.pages.ReviewPaymentMethodsPage;
 import com.mercadopago.testcheckout.pages.SecurityCodePage;
+import com.mercadopago.testlib.assertions.Validator;
 
-public interface Validator {
+public interface CheckoutValidator extends Validator {
 
     void validate(@NonNull final CardPage cardPage);
 
@@ -44,5 +46,9 @@ public interface Validator {
     void validate(@NonNull final ReviewAndConfirmPage reviewAndConfirmPage);
 
     void validate(@NonNull final SecurityCodePage securityCodePage);
+
+    void validate(@NonNull final NoCheckoutPage noCheckoutPage);
+
+    void validate(@NonNull final ReviewPaymentMethodsPage reviewPaymentMethodsPage);
 
 }

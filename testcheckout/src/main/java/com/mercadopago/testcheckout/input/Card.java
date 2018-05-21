@@ -1,5 +1,6 @@
 package com.mercadopago.testcheckout.input;
 
+import javax.annotation.Nullable;
 
 public class Card {
 
@@ -11,7 +12,7 @@ public class Card {
 
     public Card(final String escNumber,
                 final String cardHolderName,
-                final String cardNumber,
+                @Nullable final String cardNumber,
                 final String cardHolderIdentityNumber,
                 final String expDate) {
 

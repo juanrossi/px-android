@@ -1,23 +1,26 @@
 package com.mercadopago.testcheckout.pages;
 
+import android.support.test.espresso.action.ViewActions;
 import android.view.View;
 
-import com.mercadopago.testcheckout.assertions.Validator;
+import com.mercadopago.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.testlib.pages.PageObject;
 
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public class IdentificationPage extends PageObject {
+public class IdentificationPage extends PageObject<CheckoutValidator> {
 
     public IdentificationPage() {
         // This constructor is intentionally empty. Nothing special is needed here.
     }
 
-    public IdentificationPage(Validator validator) {
+    public IdentificationPage(CheckoutValidator validator) {
         super(validator);
     }
 
@@ -47,7 +50,18 @@ public class IdentificationPage extends PageObject {
     }
 
     @Override
-    protected void validate() {
+    public IdentificationPage validate(CheckoutValidator validator) {
         validator.validate(this);
+        return this;
+    }
+
+    public NoCheckoutPage pressBack() {
+        onView(isRoot()).perform(ViewActions.pressBack());
+        return new NoCheckoutPage(validator);
+    }
+
+    public SecurityCodePage pressPrevious() {
+        onView(withId(com.mercadopago.R.id.mpsdkBackButton)).perform(click());
+        return new SecurityCodePage(validator);
     }
 }

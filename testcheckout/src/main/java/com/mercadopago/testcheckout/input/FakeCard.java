@@ -3,10 +3,11 @@ package com.mercadopago.testcheckout.input;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
 public class FakeCard extends Card {
 
-    public FakeCard(final CardState cardState, final String cardNumber) {
+    public FakeCard(final CardState cardState, @Nullable final String cardNumber) {
         super("123", cardState.toString(), cardNumber, "11234567", "1121");
     }
 

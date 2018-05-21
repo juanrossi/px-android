@@ -2,21 +2,22 @@ package com.mercadopago.testcheckout.pages;
 
 
 import android.support.test.espresso.contrib.RecyclerViewActions;
+
 import com.mercadopago.R;
-import com.mercadopago.testcheckout.assertions.Validator;
+import com.mercadopago.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.testlib.pages.PageObject;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 
-public class PaymentMethodPage extends PageObject {
+public class PaymentMethodPage extends PageObject<CheckoutValidator> {
 
-    public PaymentMethodPage() {
-        // This constructor is intentionally empty. Nothing special is needed here.
+    protected PaymentMethodPage() {
     }
 
-    public PaymentMethodPage(Validator validator) {
+    public PaymentMethodPage(final CheckoutValidator validator) {
         super(validator);
     }
 
@@ -34,7 +35,8 @@ public class PaymentMethodPage extends PageObject {
     }
 
     @Override
-    protected void validate() {
+    public PaymentMethodPage validate(CheckoutValidator validator) {
         validator.validate(this);
+        return this;
     }
 }
