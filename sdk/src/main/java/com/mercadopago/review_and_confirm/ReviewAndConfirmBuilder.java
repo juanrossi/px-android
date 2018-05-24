@@ -107,7 +107,7 @@ public class ReviewAndConfirmBuilder {
                 activity.getResources().getString(R.string.mpsdk_review_summary_products));
 
         TermsAndConditionsModel termsAndConditionsModel =
-                new TermsAndConditionsModel(site.getId(), termsAndConditionsEnabled);
+                new TermsAndConditionsModel(site.getTermsAndConditionsUrl(), termsAndConditionsEnabled);
 
         PaymentModel paymentModel = new PaymentModel(paymentMethod, token, issuer, hasExtraPaymentMethods);
         SummaryModel summaryModel = new SummaryModel(amount, paymentMethod, site, payerCost, discount, title);

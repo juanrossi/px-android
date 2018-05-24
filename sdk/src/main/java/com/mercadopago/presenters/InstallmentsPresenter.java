@@ -4,6 +4,7 @@ import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
@@ -16,10 +17,8 @@ import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.InstallmentsProvider;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.util.InstallmentsUtil;
 import com.mercadopago.views.InstallmentsActivityView;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -47,7 +46,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     private Site mSite;
 
     public void initialize() {
-        initializeDiscountRow();
         showSiteRelatedInformation();
         loadPayerCosts();
     }
@@ -115,10 +113,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
                 getView().showError(mercadoPagoError, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
             }
         });
-    }
-
-    public void initializeDiscountRow() {
-        getView().showDiscountRow(mAmount);
     }
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
@@ -208,7 +202,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
 
     public void onDiscountReceived(Discount discount) {
         setDiscount(discount);
-        initializeDiscountRow();
         getInstallmentsAsync();
     }
 
@@ -284,8 +277,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         if (isInstallmentsReviewEnabled() && isInstallmentsReviewRequired(selectedPayerCost)) {
             getView().hideInstallmentsRecyclerView();
             getView().showInstallmentsReviewView();
-
-            initializeDiscountRow();
             getView().initInstallmentsReviewView(selectedPayerCost);
         } else {
             getView().finishWithResult(selectedPayerCost);

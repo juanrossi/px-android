@@ -34,12 +34,10 @@ import com.mercadopago.uicontrollers.card.CardView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.utils.CardTestUtils;
 import com.mercadopago.views.GuessingCardActivityView;
-
-import org.junit.Test;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -1295,11 +1293,6 @@ public class GuessingCardPresenterTest {
         @Override
         public void setIdentificationNumber(String identificationNumber) {
             this.savedIdentificationNumber = identificationNumber;
-        }
-
-        @Override
-        public void showDiscountRow(BigDecimal transactionAmount) {
-
         }
 
         @Override

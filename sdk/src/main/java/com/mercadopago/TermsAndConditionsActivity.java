@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
-
-import com.mercadopago.model.Sites;
 import com.mercadopago.util.ErrorUtil;
+import com.mercadopago.util.TextUtil;
 
 public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
-    public static final String EXTRA_SITE_ID = "siteId";
+    public static final String EXTRA_URL = "extra_url";
 
     protected View mMPTermsAndConditionsView;
     protected WebView mTermsAndConditionsWebView;
@@ -22,24 +21,23 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
     protected Toolbar mToolbar;
     protected TextView mTitle;
 
-    protected String mBankDealsTermsAndConditions;
-    protected String mSiteId;
+    private String url;
 
-    public static void start(final Context context, final String siteId) {
+    public static void start(final Context context, final String url) {
         Intent intent = new Intent(context, TermsAndConditionsActivity.class);
-        intent.putExtra(EXTRA_SITE_ID, siteId);
+        intent.putExtra(EXTRA_URL, url);
         context.startActivity(intent);
     }
 
     @Override
     protected void getActivityParameters() {
-        mSiteId = getIntent().getStringExtra(EXTRA_SITE_ID);
+        url = getIntent().getStringExtra(EXTRA_URL);
     }
 
     @Override
     protected void validateActivityParameters() throws IllegalStateException {
-        if (mBankDealsTermsAndConditions == null && mSiteId == null) {
-            throw new IllegalStateException("bank deal terms or site id required");
+        if (TextUtil.isEmpty(url)) {
+            throw new IllegalStateException("no site provided");
         }
     }
 
@@ -94,22 +92,6 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
             }
         });
 
-        if (Sites.ARGENTINA.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.ar/ayuda/terminos-y-condiciones_299");
-        } else if (Sites.MEXICO.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.mx/ayuda/terminos-y-condiciones_715");
-        } else if (Sites.BRASIL.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.br/ajuda/termos-e-condicoes_300");
-        } else if (Sites.CHILE.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.cl/ayuda/terminos-y-condiciones_299");
-        } else if (Sites.VENEZUELA.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.ve/ayuda/terminos-y-condiciones_299");
-        } else if (Sites.PERU.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.pe/ayuda/terminos-condiciones-uso_2483");
-        } else if (Sites.COLOMBIA.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.co/ayuda/terminos-y-condiciones_299");
-        } else {
-            finish();
-        }
+        mTermsAndConditionsWebView.loadUrl(url);
     }
 }

@@ -8,16 +8,16 @@ import android.os.Parcelable;
  */
 
 public class TermsAndConditionsModel implements Parcelable {
-    private final String siteId;
+    private final String termsAndConditionsUrl;
     private final boolean isActive;
 
-    public TermsAndConditionsModel(String siteId, boolean isActive) {
-        this.siteId = siteId;
+    public TermsAndConditionsModel(String termsAndConditionsUrl, boolean isActive) {
+        this.termsAndConditionsUrl = termsAndConditionsUrl;
         this.isActive = isActive;
     }
 
     protected TermsAndConditionsModel(Parcel in) {
-        siteId = in.readString();
+        termsAndConditionsUrl = in.readString();
         isActive = in.readByte() != 0;
     }
 
@@ -33,8 +33,8 @@ public class TermsAndConditionsModel implements Parcelable {
         }
     };
 
-    public String getSiteId() {
-        return siteId;
+    public String getUrl() {
+        return termsAndConditionsUrl;
     }
 
     public boolean isActive() {
@@ -48,7 +48,7 @@ public class TermsAndConditionsModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(siteId);
+        dest.writeString(termsAndConditionsUrl);
         dest.writeByte((byte) (isActive ? 1 : 0));
     }
 }

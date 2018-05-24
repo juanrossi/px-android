@@ -1,5 +1,6 @@
 package com.mercadopago.presenters;
 
+import android.support.annotation.NonNull;
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.constants.PaymentMethods;
@@ -8,7 +9,9 @@ import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.hooks.HookHelper;
+import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.model.Card;
+import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Payer;
@@ -17,22 +20,22 @@ import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Site;
-import com.mercadopago.preferences.PaymentPreference;
-import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.plugins.PaymentMethodPlugin;
+import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.PaymentVaultProvider;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.MercadoPagoUtil;
+import com.mercadopago.views.AmountView;
 import com.mercadopago.views.PaymentVaultView;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, PaymentVaultProvider> {
+public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, PaymentVaultProvider> implements
+    AmountView.OnClick {
 
     private static final String MISMATCHING_PAYMENT_METHOD_ERROR = "Payment method in search not found";
 
@@ -88,7 +91,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     public void initializeAmountRow() {
         if (isViewAttached()) {
-            getView().showDiscount(mAmount);
+            getView().showAmount(mDiscount, mAmount, mSite);
         }
     }
 
@@ -607,4 +610,18 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         }
     }
 
+    @Override
+    public void onDetailClicked(@NonNull final Discount discount) {
+        getView().showDetailDialog(discount, mSite);
+    }
+
+    @Override
+    public void onDetailClicked(@NonNull final CouponDiscount discount) {
+        getView().showDetailDialog(discount, mSite);
+    }
+
+    @Override
+    public void onInputRequestClicked() {
+        getView().showDiscountInputDialog();
+    }
 }

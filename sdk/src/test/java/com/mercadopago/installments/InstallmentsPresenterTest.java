@@ -1,7 +1,6 @@
 package com.mercadopago.installments;
 
 import com.mercadopago.callbacks.OnSelectedCallback;
-import com.mercadopago.model.Sites;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.mocks.Installments;
 import com.mercadopago.mocks.Issuers;
@@ -14,17 +13,16 @@ import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.Sites;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.InstallmentsPresenter;
 import com.mercadopago.providers.InstallmentsProvider;
 import com.mercadopago.views.InstallmentsActivityView;
-
-import org.junit.Test;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Test;
 
 import static com.mercadopago.util.TextUtil.isEmpty;
 import static org.junit.Assert.assertEquals;
@@ -186,7 +184,6 @@ public class InstallmentsPresenterTest {
 
         assertFalse(mockedView.installmentRecyclerViewShown);
         assertTrue(mockedView.installmentsReviewViewShown);
-        assertTrue(mockedView.discountRowShown);
         assertTrue(mockedView.installmentsReviewViewInitialized);
     }
 
@@ -832,10 +829,7 @@ public class InstallmentsPresenterTest {
             this.headerShown = true;
         }
 
-        @Override
-        public void showDiscountRow(BigDecimal transactionAmount) {
-            this.discountRowShown = true;
-        }
+        //this.discountRowShown = true;
 
         @Override
         public void initInstallmentsReviewView(PayerCost payerCost) {

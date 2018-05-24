@@ -1,11 +1,9 @@
 package com.mercadopago.presenters;
 
 import android.text.TextUtils;
-
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
-import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.lite.exceptions.CardTokenException;
@@ -37,7 +35,6 @@ import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.MPCardMaskUtil;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.views.GuessingCardActivityView;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -398,7 +395,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     }
 
     private void loadDiscount() {
-        initializeDiscountRow();
         loadPaymentMethods();
 
     }
@@ -407,15 +403,8 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         getView().startDiscountActivity(mTransactionAmount);
     }
 
-    private void initializeDiscountRow() {
-        if (CheckoutStore.getInstance().getPaymentMethodPluginList().isEmpty()) {
-            getView().showDiscountRow(mTransactionAmount);
-        }
-    }
-
     public void onDiscountReceived(Discount discount) {
         setDiscount(discount);
-        initializeDiscountRow();
     }
 
     public Discount getDiscount() {

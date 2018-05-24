@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <com.mercadopago.customviews.MPTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/mpsdk_xxl_text"
+        android:layout_marginTop="@dimen/mpsdk_xxl_text"
+        android:text="@string/mpsdk_review_summary_discount"
+        android:textSize="@dimen/mpsdk_xxl_text"/>
+
+    <com.mercadopago.customviews.MPTextView
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/mpsdk_m_margin"
+        tools:text="50 % OFF"
+        android:textSize="@dimen/mpsdk_large_text"/>
+
+    <com.mercadopago.customviews.MPTextView
+        android:id="@+id/detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/mpsdk_m_margin"
+        tools:text="Tope de descuento $ 250. Para todas las tarjetas de crédito"/>
+
+</LinearLayout>

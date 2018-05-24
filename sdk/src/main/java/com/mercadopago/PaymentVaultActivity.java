@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.FrameLayout;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PaymentMethodSearchItemAdapter;
@@ -21,7 +21,6 @@ import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
-import com.mercadopago.core.MercadoPagoUI;
 import com.mercadopago.customviews.GridSpacingItemDecoration;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -29,6 +28,7 @@ import com.mercadopago.hooks.Hook;
 import com.mercadopago.hooks.HookActivity;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.Card;
+import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
@@ -50,7 +50,6 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.presenters.PaymentVaultPresenter;
 import com.mercadopago.providers.PaymentVaultProviderImpl;
 import com.mercadopago.uicontrollers.FontCache;
-import com.mercadopago.uicontrollers.discounts.DiscountRowView;
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodInfoController;
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchCustomOption;
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchOption;
@@ -59,15 +58,17 @@ import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.views.AmountView;
+import com.mercadopago.views.DiscountDetailDialog;
 import com.mercadopago.views.PaymentVaultView;
-
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PaymentVaultActivity extends MercadoPagoBaseActivity implements PaymentVaultView, TimerObserver {
+public class PaymentVaultActivity extends MercadoPagoBaseActivity
+    implements PaymentVaultView, TimerObserver {
 
     private static final String PUBLIC_KEY_BUNDLE = "mPublicKey";
     private static final String MERCHANT_BASE_URL_BUNDLE = "mMerchantBaseUrl";
@@ -102,9 +103,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     protected MPTextView mTimerTextView;
     protected Boolean mShowBankDeals;
     protected Boolean mEscEnabled;
-    protected FrameLayout mDiscountFrameLayout;
 
-    protected View mContentLayout;
     protected View mProgressLayout;
 
     protected String mPublicKey;
@@ -117,6 +116,8 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     protected String mMerchantGetCustomerUri;
     protected Map<String, String> mMerchantGetCustomerAdditionalInfo;
     protected Map<String, String> mGetDiscountAdditionalInfo;
+
+    private AmountView amountView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,8 +217,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     protected void initializeControls() {
         mTimerTextView = findViewById(R.id.mpsdkTimerTextView);
 
-        mDiscountFrameLayout = findViewById(R.id.mpsdkDiscount);
-        mContentLayout = findViewById(R.id.mpsdkContentLayout);
+        amountView = findViewById(R.id.amount_view);
         mProgressLayout = findViewById(R.id.mpsdkProgressLayout);
 
         initializePaymentOptionsRecyclerView();
@@ -242,10 +242,12 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     private void initializeToolbar() {
         Toolbar toolbar = findViewById(R.id.mpsdkToolbar);
         setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayShowTitleEnabled(false);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowHomeEnabled(true);
+        }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -607,14 +609,13 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     public void showProgress() {
         mProgressLayout.setVisibility(View.VISIBLE);
         mAppBar.setVisibility(View.GONE);
-        mContentLayout.setVisibility(View.GONE);
+
     }
 
     @Override
     public void hideProgress() {
         mProgressLayout.setVisibility(View.GONE);
         mAppBar.setVisibility(View.VISIBLE);
-        mContentLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -806,29 +807,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         overrideTransitionIn();
     }
 
-    @Override
-    public void showDiscount(BigDecimal transactionAmount) {
-        DiscountRowView discountRowView = new MercadoPagoUI.Views.DiscountRowViewBuilder()
-                .setContext(this)
-                .setDiscount(mPaymentVaultPresenter.getDiscount())
-                .setTransactionAmount(transactionAmount)
-                .setCurrencyId(mPaymentVaultPresenter.getSite().getCurrencyId())
-                .setDiscountEnabled(mPaymentVaultPresenter.getDiscountEnabled())
-                .build();
-
-        discountRowView.inflateInParent(mDiscountFrameLayout, true);
-        discountRowView.initializeControls();
-        discountRowView.draw();
-        discountRowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mPaymentVaultPresenter.getDiscountEnabled()) {
-                    mPaymentVaultPresenter.onDiscountOptionSelected();
-                }
-            }
-        });
-    }
-
     //### HOOKS ######################
 
     public void resolveHook1Request(int resultCode) {
@@ -844,5 +822,34 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     public void showHook(final Hook hook, final int code) {
         startActivityForResult(HookActivity.getIntent(this, hook), code);
         overrideTransitionIn();
+    }
+
+    @Override
+    public void showDetailDialog(@NonNull final Discount discount, @NonNull final Site site) {
+        DiscountDetailDialog.showDialog(discount, site, getSupportFragmentManager());
+    }
+
+    @Override
+    public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Site site) {
+        //TODO - Other dialog.
+        DiscountDetailDialog.showDialog(null, null, getSupportFragmentManager());
+    }
+
+    @Override
+    public void showDiscountInputDialog() {
+        //TODO - Other dialog.
+        DiscountDetailDialog.showDialog(null, null, getSupportFragmentManager());
+    }
+
+    @Override
+    public void showAmount(@Nullable Discount discount, final BigDecimal totalAmount, final Site site) {
+        //TODO refactor -> should be not null // Quick and dirty implementation.
+        if (discount == null) {
+            amountView.show(totalAmount, site);
+        } else {
+            amountView.show(discount, totalAmount, site);
+        }
+
+        amountView.setOnClickListener(mPaymentVaultPresenter);
     }
 }

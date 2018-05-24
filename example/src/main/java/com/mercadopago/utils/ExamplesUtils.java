@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.mercadopago.components.CustomComponent;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoCheckout.Builder;
@@ -29,7 +28,6 @@ import com.mercadopago.tracking.listeners.TracksListener;
 import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;

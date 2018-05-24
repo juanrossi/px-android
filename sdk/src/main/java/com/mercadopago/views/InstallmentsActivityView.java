@@ -4,7 +4,6 @@ import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.mvp.MvpView;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -26,8 +25,6 @@ public interface InstallmentsActivityView extends MvpView {
     void showError(MercadoPagoError error, String requestOrigin);
 
     void showHeader();
-
-    void showDiscountRow(BigDecimal transactionAmount);
 
     void initInstallmentsReviewView(PayerCost payerCost);
 

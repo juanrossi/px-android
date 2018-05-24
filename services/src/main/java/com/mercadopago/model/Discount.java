@@ -3,11 +3,10 @@ package com.mercadopago.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
-
 import com.mercadopago.lite.util.CurrenciesUtil;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 public class Discount implements Parcelable, Serializable {
 
@@ -85,7 +84,7 @@ public class Discount implements Parcelable, Serializable {
         this.couponAmount = couponAmount;
     }
 
-    public Boolean hasPercentOff() {
+    public boolean hasPercentOff() {
         return percentOff != null && !percentOff.equals(new BigDecimal(0));
     }
 
@@ -158,5 +157,11 @@ public class Discount implements Parcelable, Serializable {
         dest.writeString(percentOff.toString());
         dest.writeString(amountOff.toString());
         dest.writeString(couponAmount.toString());
+    }
+
+    public String getDiscountTermsUrl() {
+        return String
+            .format(Locale.US, "https://api.mercadolibre.com/campaigns/%s/terms_and_conditions?format_type=html",
+                this.id);
     }
 }

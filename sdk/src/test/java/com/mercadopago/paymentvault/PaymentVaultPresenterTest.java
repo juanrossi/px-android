@@ -1,5 +1,7 @@
 package com.mercadopago.paymentvault;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.constants.PaymentMethods;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -7,6 +9,7 @@ import com.mercadopago.hooks.Hook;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.mocks.PaymentMethodSearchs;
 import com.mercadopago.model.Card;
+import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Payer;
@@ -24,14 +27,12 @@ import com.mercadopago.presenters.PaymentVaultPresenter;
 import com.mercadopago.providers.PaymentVaultProvider;
 import com.mercadopago.utils.Discounts;
 import com.mercadopago.views.PaymentVaultView;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -75,7 +76,7 @@ public class PaymentVaultPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
 
-        presenter.setSite(new Site("invalid_id", "invalid_currency"));
+        presenter.setSite(null);
         presenter.setAmount(BigDecimal.TEN);
 
         presenter.initialize(true);
@@ -1329,11 +1330,6 @@ public class PaymentVaultPresenterTest {
         }
 
         @Override
-        public void showDiscount(BigDecimal transactionAmount) {
-            this.showedDiscountRow = true;
-        }
-
-        @Override
         public void startDiscountFlow(BigDecimal transactionAmount) {
             discountsFlowStarted = true;
         }
@@ -1354,8 +1350,28 @@ public class PaymentVaultPresenterTest {
         }
 
         @Override
-        public void showPaymentMethodPluginConfiguration() {
+        public void showAmount(@Nullable final Discount discount, final BigDecimal totalAmount, final Site site) {
+            showedDiscountRow = true;
+        }
 
+        @Override
+        public void showPaymentMethodPluginConfiguration() {
+            //Do nothing
+        }
+
+        @Override
+        public void showDetailDialog(@NonNull final Discount discount, @NonNull final Site site) {
+            //Do nothing
+        }
+
+        @Override
+        public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Site site) {
+            //Do nothing
+        }
+
+        @Override
+        public void showDiscountInputDialog() {
+            //Do nothing
         }
 
         private void simulateItemSelection(int index) {

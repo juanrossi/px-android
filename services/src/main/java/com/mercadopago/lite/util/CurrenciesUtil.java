@@ -7,9 +7,8 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.RelativeSizeSpan;
-
 import com.mercadopago.model.Currency;
-
+import com.mercadopago.model.Site;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -73,6 +72,10 @@ public final class CurrenciesUtil {
         df.setMinimumFractionDigits(currency.getDecimalPlaces());
         df.setMaximumFractionDigits(currency.getDecimalPlaces());
         return df.format(amount);
+    }
+
+    public static String getLocalizedAmountWithCurrencySymbol(BigDecimal amount, Site site) {
+        return getLocalizedAmountWithCurrencySymbol(amount, site.getCurrencyId(), true);
     }
 
     public static String getLocalizedAmountWithCurrencySymbol(BigDecimal amount, String currencyId) {
