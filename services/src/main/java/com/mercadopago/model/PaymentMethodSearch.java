@@ -1,7 +1,6 @@
 package com.mercadopago.model;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +10,11 @@ public class PaymentMethodSearch implements Serializable {
 
     private List<PaymentMethodSearchItem> groups;
 
-    @Deprecated
     @SerializedName("custom_options")
     private List<CustomSearchItem> customSearchItems;
+
+    @SerializedName("one_tap")
+    private OneTapMetadata oneTapMetadata;
 
     private List<PaymentMethod> paymentMethods;
 
