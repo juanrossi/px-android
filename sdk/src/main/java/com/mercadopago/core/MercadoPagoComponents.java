@@ -103,9 +103,6 @@ public class MercadoPagoComponents {
             private boolean installmentsReviewEnabled;
             private boolean showAllSavedCardsEnabled;
             private boolean escEnabled;
-            private String merchantDiscountBaseUrl;
-            private String merchantGetDiscountUri;
-            private Map<String, String> discountAdditionalInfo;
             private CheckoutPreference checkoutPreference;
 
             public PaymentVaultActivityBuilder setActivity(Activity activity) {
@@ -208,21 +205,6 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public PaymentVaultActivityBuilder setMerchantDiscountBaseUrl(String merchantDiscountBaseUrl) {
-                this.merchantDiscountBaseUrl = merchantDiscountBaseUrl;
-                return this;
-            }
-
-            public PaymentVaultActivityBuilder setMerchantGetDiscountUri(String merchantGetDiscountUri) {
-                this.merchantGetDiscountUri = merchantGetDiscountUri;
-                return this;
-            }
-
-            public PaymentVaultActivityBuilder setDiscountAdditionalInfo(Map<String, String> discountAdditionalInfo) {
-                this.discountAdditionalInfo = discountAdditionalInfo;
-                return this;
-            }
-
             public PaymentVaultActivityBuilder setInstallmentsReviewEnabled(boolean installmentsReviewEnabled) {
                 this.installmentsReviewEnabled = installmentsReviewEnabled;
                 return this;
@@ -267,12 +249,7 @@ public class MercadoPagoComponents {
                 paymentVaultIntent.putExtra("payerEmail", payerEmail);
                 paymentVaultIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
                 paymentVaultIntent.putExtra("discountEnabled", discountEnabled);
-
                 paymentVaultIntent.putExtra("installmentsReviewEnabled", installmentsReviewEnabled);
-                paymentVaultIntent.putExtra("merchantDiscountBaseUrl", merchantDiscountBaseUrl);
-                paymentVaultIntent.putExtra("merchantGetDiscountUri", merchantGetDiscountUri);
-                paymentVaultIntent
-                    .putExtra("discountAdditionalInfo", JsonUtil.getInstance().toJson(discountAdditionalInfo));
 
                 activity.startActivityForResult(paymentVaultIntent, PAYMENT_VAULT_REQUEST_CODE);
             }
@@ -937,7 +914,7 @@ public class MercadoPagoComponents {
                 }
                 if (card != null && token != null && paymentRecovery == null) {
                     throw new IllegalStateException(
-                        "can't start with card and token at the same time if it's not recoverable");
+                            "can't start with card and token at the same time if it's not recoverable");
                 }
                 if (card == null && token == null) {
                     throw new IllegalStateException("card and token can't both be null");
@@ -1168,7 +1145,7 @@ public class MercadoPagoComponents {
             }
 
             public PaymentResultActivityBuilder setPaymentResultScreenPreference(
-                PaymentResultScreenPreference preference) {
+                    PaymentResultScreenPreference preference) {
                 paymentResultScreenPreference = preference;
                 return this;
             }
@@ -1212,7 +1189,7 @@ public class MercadoPagoComponents {
                 resultIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(paymentResult));
                 resultIntent.putExtra("site", JsonUtil.getInstance().toJson(site));
                 resultIntent.putExtra("paymentResultScreenPreference",
-                    JsonUtil.getInstance().toJson(paymentResultScreenPreference));
+                        JsonUtil.getInstance().toJson(paymentResultScreenPreference));
                 resultIntent.putExtra("servicePreference", JsonUtil.getInstance().toJson(servicePreference));
                 if (amount != null) {
                     resultIntent.putExtra("amount", amount.toString());

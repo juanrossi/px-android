@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PaymentMethodSearchItemAdapter;
@@ -61,6 +62,7 @@ import com.mercadopago.util.ScaleUtil;
 import com.mercadopago.views.AmountView;
 import com.mercadopago.views.DiscountDetailDialog;
 import com.mercadopago.views.PaymentVaultView;
+
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -68,7 +70,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PaymentVaultActivity extends MercadoPagoBaseActivity
-    implements PaymentVaultView, TimerObserver {
+        implements PaymentVaultView, TimerObserver {
 
     private static final String PUBLIC_KEY_BUNDLE = "mPublicKey";
     private static final String MERCHANT_BASE_URL_BUNDLE = "mMerchantBaseUrl";
@@ -111,11 +113,8 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     protected ServicePreference mServicePreference;
 
     protected String mMerchantBaseUrl;
-    protected String mGetMerchantDiscountBaseURL;
-    protected String mGetMerchantDiscountURI;
     protected String mMerchantGetCustomerUri;
     protected Map<String, String> mMerchantGetCustomerAdditionalInfo;
-    protected Map<String, String> mGetDiscountAdditionalInfo;
 
     private AmountView amountView;
 
@@ -140,7 +139,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     private void configurePresenter() {
         mPaymentVaultPresenter.attachView(this);
         mPaymentVaultPresenter.attachResourcesProvider(new PaymentVaultProviderImpl(this, mPublicKey, mPrivateKey, mMerchantBaseUrl, mMerchantGetCustomerUri,
-                mMerchantGetCustomerAdditionalInfo, mGetMerchantDiscountBaseURL, mGetMerchantDiscountURI, mGetDiscountAdditionalInfo, mEscEnabled));
+                mMerchantGetCustomerAdditionalInfo, mEscEnabled));
     }
 
     protected void setMerchantInfo() {
@@ -148,10 +147,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
             mMerchantBaseUrl = mServicePreference.getDefaultBaseURL();
             mMerchantGetCustomerUri = mServicePreference.getGetCustomerURI();
             mMerchantGetCustomerAdditionalInfo = mServicePreference.getGetCustomerAdditionalInfo();
-
-            mGetMerchantDiscountBaseURL = mServicePreference.getGetMerchantDiscountBaseURL();
-            mGetMerchantDiscountURI = mServicePreference.getGetMerchantDiscountURI();
-            mGetDiscountAdditionalInfo = mServicePreference.getGetDiscountAdditionalInfo();
         }
     }
 

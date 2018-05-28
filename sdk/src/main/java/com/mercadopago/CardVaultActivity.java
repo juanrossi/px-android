@@ -171,11 +171,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
         Boolean discountEnabled = getIntent().getBooleanExtra("discountEnabled", true);
         Boolean automaticSelection = getIntent().getBooleanExtra("automaticSelection", false);
 
-        String discountAdditionalInfo = getIntent().getStringExtra("discountAdditionalInfo");
-        Type type = new TypeToken<Map<String, String>>() {
-        }.getType();
-        Map<String, String> discountAdditionalInfoMap = JsonUtil.getInstance().getGson().fromJson(discountAdditionalInfo, type);
-
         if (amount != null) {
             amountValue = new BigDecimal(amount);
         }

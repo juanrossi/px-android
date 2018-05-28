@@ -211,13 +211,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
     @Override
     public void getDirectDiscount(BigDecimal amount, String payerEmail, TaggedCallback<Discount> taggedCallback) {
-        if (servicePreference != null && servicePreference.hasGetDiscountURL()) {
-            Map<String, Object> discountInfoMap = new HashMap<>();
-            discountInfoMap.putAll(servicePreference.getGetDiscountAdditionalInfo());
-            CustomServer.getDirectDiscount(context, amount.toString(), payerEmail, servicePreference.getGetMerchantDiscountBaseURL(), servicePreference.getGetMerchantDiscountURI(), servicePreference.getGetDiscountAdditionalInfo(), taggedCallback);
-        } else {
-            mercadoPagoServicesAdapter.getDirectDiscount(amount.toString(), payerEmail, taggedCallback);
-        }
+        mercadoPagoServicesAdapter.getDirectDiscount(amount.toString(), payerEmail, taggedCallback);
     }
 
     @Override
