@@ -1,4 +1,4 @@
-package com.mercadopago.onetap;
+package com.mercadopago.onetap.components;
 
 import android.support.annotation.NonNull;
 import android.text.SpannableStringBuilder;
@@ -10,6 +10,7 @@ import com.mercadopago.components.CompactComponent;
 import com.mercadopago.model.CardPaymentMetadata;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PayerCost;
+import com.mercadopago.onetap.OneTap;
 import com.mercadopago.util.ViewUtils;
 import com.mercadopago.util.textformatter.TextFormatter;
 import com.mercadopago.viewmodel.OneTapModel;
@@ -17,7 +18,7 @@ import java.math.BigDecimal;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-class CompactAmount extends CompactComponent<CompactAmount.Props, OneTap.Actions> {
+class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
 
     static class Props {
         /* default */ @NonNull final BigDecimal amount;
@@ -41,22 +42,27 @@ class CompactAmount extends CompactComponent<CompactAmount.Props, OneTap.Actions
         static Props from(final OneTapModel props) {
             final CardPaymentMetadata card = props.getPaymentMethods().getOneTapMetadata().getCard();
             final PayerCost payerCost = card != null ? card.getAutoSelectedInstallment() : null;
-            return new CompactAmount.Props(
+            return new Amount.Props(
                 props.hasExtraAmount(),
                 props.getCheckoutPreference().getTotalAmount(), props.getDiscount(),
                 props.getCheckoutPreference().getSite().getCurrencyId(), payerCost);
         }
 
-        boolean hasExtrasAmount() {
+        /* default */ boolean hasExtrasAmount() {
             return hasExtraAmount;
         }
 
-        boolean hasDiscount() {
+        /* default */ boolean hasDiscount() {
             return discount != null;
         }
+
+        /* default */ boolean shouldShowPercentOff() {
+            return hasDiscount() && discount.hasPercentOff();
+        }
+
     }
 
-    /* default */ CompactAmount(final Props props, final OneTap.Actions callBack) {
+    /* default */ Amount(final Props props, final OneTap.Actions callBack) {
         super(props, callBack);
     }
 
@@ -94,18 +100,18 @@ class CompactAmount extends CompactComponent<CompactAmount.Props, OneTap.Actions
     }
 
     private void resolveOffAmount(@NonNull final ViewGroup discountLayout) {
-        final boolean hasDiscount = props.discount != null;
-        final TextView discountMessage = discountLayout.findViewById(R.id.discount_message);
-        ViewUtils.showOrGone(discountLayout, hasDiscount);
 
-        if (hasDiscount && props.discount.hasPercentOff()) {
+        final TextView discountMessage = discountLayout.findViewById(R.id.discount_message);
+        ViewUtils.showOrGone(discountLayout, props.hasDiscount());
+
+        if (props.shouldShowPercentOff()) {
             TextFormatter.withCurrencyId(props.currencyId)
                 .noSpace().noSymbol()
                 .amount(props.discount.getPercentOff())
                 .normalDecimals()
                 .into(discountMessage)
                 .holder(R.string.mpsdk_discount_percent_off_percent);
-        } else if (hasDiscount) {
+        } else if (props.hasDiscount()) {
             TextFormatter.withCurrencyId(props.currencyId)
                 .withSpace()
                 .amount(props.discount.getCouponAmount())
@@ -114,7 +120,7 @@ class CompactAmount extends CompactComponent<CompactAmount.Props, OneTap.Actions
                 .holder(R.string.mpsdk_discount_percent_off_amount);
         }
 
-        ViewUtils.showOrGone(discountMessage, hasDiscount);
+        ViewUtils.showOrGone(discountMessage, props.hasDiscount());
     }
 
     private void resolveSmallAmountPlusDiscount(final View content) {

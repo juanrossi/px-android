@@ -1,5 +1,6 @@
-package com.mercadopago.onetap;
+package com.mercadopago.onetap.components;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
-import com.mercadopago.core.CheckoutStore;
-import com.mercadopago.plugins.model.PaymentMethodInfo;
+import com.mercadopago.onetap.OneTap;
+import com.mercadopago.util.ResourceUtil;
 import javax.annotation.Nonnull;
 
 class MethodPlugin extends CompactComponent<MethodPlugin.Props, OneTap.Actions> {
@@ -22,7 +23,7 @@ class MethodPlugin extends CompactComponent<MethodPlugin.Props, OneTap.Actions> 
         }
 
         /* default */
-        static Props createFrom(final CompactPaymentMethod.Props props) {
+        static Props createFrom(final PaymentMethod.Props props) {
             return new Props(props.paymentMethodId);
         }
     }
@@ -33,14 +34,14 @@ class MethodPlugin extends CompactComponent<MethodPlugin.Props, OneTap.Actions> 
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        //TODO refactor - bad way to get the icon.
-        final PaymentMethodInfo pluginInfo =
-            CheckoutStore.getInstance().getPaymentMethodPluginInfoById(props.paymentMethodId, parent.getContext());
+        final Context context = parent.getContext();
+        final int iconResource = ResourceUtil.getIconResource(context, props.paymentMethodId);
+        final String resName = ResourceUtil.getPluginName(context, props.paymentMethodId);
         final View main = inflate(parent, R.layout.mpsdk_payment_method_plugin_compact);
         final ImageView logo = main.findViewById(R.id.icon);
         final TextView name = main.findViewById(R.id.name);
-        logo.setImageResource(pluginInfo.icon);
-        name.setText(pluginInfo.name);
+        logo.setImageResource(iconResource);
+        name.setText(resName);
         return main;
     }
 }

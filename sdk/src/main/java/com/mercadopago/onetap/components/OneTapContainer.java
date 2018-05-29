@@ -1,4 +1,4 @@
-package com.mercadopago.onetap;
+package com.mercadopago.onetap.components;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +8,14 @@ import com.mercadopago.components.Button;
 import com.mercadopago.components.ButtonPrimary;
 import com.mercadopago.components.CompactComponent;
 import com.mercadopago.components.TermsAndCondition;
+import com.mercadopago.onetap.OneTap;
 import com.mercadopago.review_and_confirm.models.TermsAndConditionsModel;
 import com.mercadopago.viewmodel.OneTapModel;
 import javax.annotation.Nonnull;
 
-class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Actions> {
+public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Actions> {
 
-    /* default */ OneTapContainer(final OneTapModel oneTapModel, final OneTap.Actions callBack) {
+    public OneTapContainer(final OneTapModel oneTapModel, final OneTap.Actions callBack) {
         super(oneTapModel, callBack);
     }
 
@@ -39,15 +40,15 @@ class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Actions> {
     }
 
     private void addAmount(final ViewGroup parent) {
-        final CompactAmount.Props props = CompactAmount.Props.from(this.props);
-        final View view = new CompactAmount(props, getActions())
+        final Amount.Props props = Amount.Props.from(this.props);
+        final View view = new Amount(props, getActions())
             .render(parent);
         parent.addView(view);
     }
 
     private void addPaymentMethod(final ViewGroup parent) {
         final View view =
-            new CompactPaymentMethod(CompactPaymentMethod.Props.createFrom(props),
+            new PaymentMethod(PaymentMethod.Props.createFrom(props),
                 getActions()).render(parent);
         parent.addView(view);
     }

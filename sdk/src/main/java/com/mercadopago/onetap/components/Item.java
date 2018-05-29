@@ -1,4 +1,4 @@
-package com.mercadopago.onetap;
+package com.mercadopago.onetap.components;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -17,14 +17,14 @@ class Item extends CompactComponent<Item.Props, Void> {
         @DrawableRes final int icon;
         @NonNull final String itemTitle;
 
-        public Props(final int icon, @NonNull final String itemTitle) {
+        /* default */ Props(final int icon, @NonNull final String itemTitle) {
 
             this.icon = icon;
             this.itemTitle = itemTitle;
         }
     }
 
-    public Item(final Props props) {
+    /* default */ Item(final Props props) {
         super(props);
     }
 
@@ -35,7 +35,6 @@ class Item extends CompactComponent<Item.Props, Void> {
         final ImageView itemImage = layout.findViewById(R.id.item_image);
         itemImage.setImageResource(props.icon);
         itemTitle.setText(props.itemTitle);
-
         return layout;
     }
 }

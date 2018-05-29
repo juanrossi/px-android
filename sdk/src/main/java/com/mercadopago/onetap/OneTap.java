@@ -8,7 +8,7 @@ import com.mercadopago.mvp.MvpView;
 import com.mercadopago.viewmodel.CardPaymentModel;
 import com.mercadopago.viewmodel.OneTapModel;
 
-interface OneTap {
+public interface OneTap {
 
     interface View extends MvpView {
 

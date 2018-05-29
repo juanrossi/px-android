@@ -1,4 +1,4 @@
-package com.mercadopago.onetap;
+package com.mercadopago.onetap.components;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -10,11 +10,12 @@ import com.mercadopago.model.CardPaymentMetadata;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.OneTapMetadata;
 import com.mercadopago.model.PaymentTypes;
+import com.mercadopago.onetap.OneTap;
 import com.mercadopago.viewmodel.OneTapModel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-class CompactPaymentMethod extends CompactComponent<CompactPaymentMethod.Props, OneTap.Actions> {
+class PaymentMethod extends CompactComponent<PaymentMethod.Props, OneTap.Actions> {
 
     static class Props {
         /* default */ @NonNull final String paymentMethodType;
@@ -62,7 +63,7 @@ class CompactPaymentMethod extends CompactComponent<CompactPaymentMethod.Props, 
         }
     }
 
-    /* default */ CompactPaymentMethod(final Props props, final OneTap.Actions callBack) {
+    /* default */ PaymentMethod(final Props props, final OneTap.Actions callBack) {
         super(props, callBack);
     }
 

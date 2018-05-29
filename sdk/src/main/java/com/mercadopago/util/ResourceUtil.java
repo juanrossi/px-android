@@ -3,7 +3,6 @@ package com.mercadopago.util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.DrawableRes;
-
 import com.mercadopago.R;
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.plugins.PaymentMethodPlugin;
@@ -52,4 +51,13 @@ public class ResourceUtil {
         return icon;
     }
 
+    public static String getPluginName(final Context context, final String paymentMethodId) {
+        final PaymentMethodPlugin paymentMethodPluginById =
+            CheckoutStore.getInstance().getPaymentMethodPluginById(paymentMethodId);
+        if (paymentMethodPluginById != null) {
+            return paymentMethodPluginById.getPaymentMethodInfo(context).name;
+        } else {
+            return null;
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.mercadopago.onetap;
+package com.mercadopago.onetap.components;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,7 @@ import com.mercadopago.components.CompactComponent;
 import com.mercadopago.model.CardPaymentMetadata;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PayerCost;
+import com.mercadopago.onetap.OneTap;
 import com.mercadopago.util.ResourceUtil;
 import com.mercadopago.util.textformatter.TextFormatter;
 import javax.annotation.Nonnull;
@@ -36,7 +37,7 @@ class MethodCard extends CompactComponent<MethodCard.Props, OneTap.Actions> {
         }
 
         /* default */
-        static Props createFrom(final CompactPaymentMethod.Props props) {
+        static Props createFrom(final PaymentMethod.Props props) {
             return new Props(props.card, props.paymentMethodId, props.currencyId, props.discount);
         }
     }
@@ -99,11 +100,8 @@ class MethodCard extends CompactComponent<MethodCard.Props, OneTap.Actions> {
         final PayerCost autoSelectedInstallment = props.card.getAutoSelectedInstallment();
         final TextView cft = main.findViewById(R.id.cft);
         final Context context = main.getContext();
-        if (autoSelectedInstallment.hasCFT()) {
-            cft.setVisibility(View.VISIBLE);
-            cft.setText(context.getString(R.string.mpsdk_installments_cft, autoSelectedInstallment.getCFTPercent()));
-        } else {
-            cft.setVisibility(View.GONE);
-        }
+        cft.setVisibility(autoSelectedInstallment.hasCFT() ? View.VISIBLE : View.GONE);
+        cft.setText(autoSelectedInstallment.hasCFT() ? context
+            .getString(R.string.mpsdk_installments_cft, autoSelectedInstallment.getCFTPercent()) : "");
     }
 }

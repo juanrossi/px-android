@@ -15,6 +15,7 @@ import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Token;
+import com.mercadopago.onetap.components.OneTapContainer;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.viewmodel.CardPaymentModel;
