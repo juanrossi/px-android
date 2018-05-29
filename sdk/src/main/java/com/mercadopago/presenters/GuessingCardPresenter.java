@@ -453,7 +453,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     public BigDecimal getTransactionAmount() {
         BigDecimal amount;
 
-        if (mDiscount != null && mDiscountEnabled && mDiscount.isValid()) {
+        if (mDiscount != null && mDiscountEnabled) {
             amount = mDiscount.getAmountWithDiscount(mTransactionAmount);
         } else {
             amount = mTransactionAmount;

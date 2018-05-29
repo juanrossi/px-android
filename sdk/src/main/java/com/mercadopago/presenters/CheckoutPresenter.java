@@ -289,7 +289,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             for (Campaign campaign : campaigns) {
                 if (campaign.isDirectDiscountCampaign()) {
                     directDiscountFound = true;
-                } else if (campaign.isCodeDiscountCampaign()) {
+                } else if (campaign.isSingleCodeDiscountCampaign()) {
                     couponDiscountFound = true;
                 }
             }
@@ -348,7 +348,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     public BigDecimal getTransactionAmount() {
         BigDecimal amount;
 
-        if (persistentData.discount != null && persistentData.flowPreference.isDiscountEnabled() && persistentData.discount.isValid()) {
+        if (persistentData.discount != null && persistentData.flowPreference.isDiscountEnabled()) {
             amount = persistentData.discount.getAmountWithDiscount(persistentData.checkoutPreference.getTotalAmount());
         } else {
             amount = persistentData.checkoutPreference.getTotalAmount();

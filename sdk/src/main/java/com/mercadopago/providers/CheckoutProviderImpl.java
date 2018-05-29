@@ -343,7 +343,6 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         if (discount != null) {
             paymentBody.setCampaignId(discount.getId());
             paymentBody.setCouponAmount(discount.getCouponAmount().floatValue());
-            paymentBody.setCouponCode(paymentData.getDiscount().getCouponCode());
         }
 
         paymentBody.setTransactionId(transactionId);

@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -43,6 +44,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class PaymentVaultPresenterTest {
+
+    @Mock
+    private Discount discount;
 
     @Test
     public void ifSiteNotSetShowInvalidSiteError() {
@@ -790,11 +794,6 @@ public class PaymentVaultPresenterTest {
 
         presenter.initialize(true);
 
-        Discount discount = new Discount();
-        discount.setCurrencyId("ARS");
-        discount.setId("123");
-        discount.setAmountOff(new BigDecimal("10"));
-        discount.setCouponAmount(new BigDecimal("10"));
         presenter.onDiscountReceived(discount);
 
         assertTrue(mockedView.showedDiscountRow);
@@ -825,11 +824,6 @@ public class PaymentVaultPresenterTest {
 
         provider.setResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
 
-        Discount discount = new Discount();
-        discount.setCurrencyId("ARS");
-        discount.setId("123");
-        discount.setAmountOff(new BigDecimal("10"));
-        discount.setCouponAmount(new BigDecimal("10"));
         presenter.onDiscountReceived(discount);
 
         assertTrue(mockedView.searchItemsShown.size() != originalPaymentMethodSearch.getGroups().size());

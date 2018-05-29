@@ -1,272 +1,118 @@
 package com.mercadopago.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
-public class Campaign {
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+public class Campaign implements Serializable, Parcelable {
 
     private Long id;
-    private String code;
-    private String name;
-    private String discountType;
-    private BigDecimal value;
-    private Date endDate;
-    private BigDecimal minPaymentAmount;
-    private BigDecimal maxPaymentAmount;
-    private BigDecimal maxCouponAmount;
-    private BigDecimal totalAmountLimit;
-    private Long maxCoupons;
-    private Integer maxCouponsByCode;
-    private Integer maxRedeemPerUser;
-    private String siteId;
-    private String marketplace;
     private String codeType;
-    private BigDecimal maxUserAmountPerCampaign;
-    private List<String> labels;
-    private List<String> paymentMethods;
-    private List<String> paymentTypes;
-    private List<String> cardIssuers;
-    private List<String> shippingModes;
-    private Long clientId;
-    private List<String> tags;
-    private Integer multipleCodeLimit;
-    private Integer codeCount;
-    private BigDecimal couponAmount;
-    private List<Long> collectors;
+    private BigDecimal maxCouponAmount;
 
     private static final String CODE_TYPE_SINGLE = "single";
+    private static final String CODE_TYPE_MULTIPLE = "multiple";
     private static final String CODE_TYPE_NONE = "none";
 
+    public Campaign(Builder builder) {
+        this.id = builder.id;
+        this.maxCouponAmount = builder.maxCouponAmount;
+        this.codeType = builder.codeType;
+    }
+
+    @SuppressWarnings("unused")
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDiscountType() {
-        return discountType;
-    }
-
-    public void setDiscountType(String discountType) {
-        this.discountType = discountType;
-    }
-
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public void setValue(BigDecimal value) {
-        this.value = value;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public BigDecimal getMinPaymentAmount() {
-        return minPaymentAmount;
-    }
-
-    public void setMinPaymentAmount(BigDecimal minPaymentAmount) {
-        this.minPaymentAmount = minPaymentAmount;
-    }
-
-    public BigDecimal getMaxPaymentAmount() {
-        return maxPaymentAmount;
-    }
-
-    public void setMaxPaymentAmount(BigDecimal maxPaymentAmount) {
-        this.maxPaymentAmount = maxPaymentAmount;
-    }
-
+    @SuppressWarnings("unused")
     public BigDecimal getMaxCouponAmount() {
         return maxCouponAmount;
     }
 
-    public void setMaxCouponAmount(BigDecimal maxCouponAmount) {
-        this.maxCouponAmount = maxCouponAmount;
-    }
-
-    public BigDecimal getTotalAmountLimit() {
-        return totalAmountLimit;
-    }
-
-    public void setTotalAmountLimit(BigDecimal totalAmountLimit) {
-        this.totalAmountLimit = totalAmountLimit;
-    }
-
-    public Long getMaxCoupons() {
-        return maxCoupons;
-    }
-
-    public void setMaxCoupons(Long maxCoupons) {
-        this.maxCoupons = maxCoupons;
-    }
-
-    public Integer getMaxCouponsByCode() {
-        return maxCouponsByCode;
-    }
-
-    public void setMaxCouponsByCode(Integer maxCouponsByCode) {
-        this.maxCouponsByCode = maxCouponsByCode;
-    }
-
-    public Integer getMaxRedeemPerUser() {
-        return maxRedeemPerUser;
-    }
-
-    public void setMaxRedeemPerUser(Integer maxRedeemPerUser) {
-        this.maxRedeemPerUser = maxRedeemPerUser;
-    }
-
-    public String getSiteId() {
-        return siteId;
-    }
-
-    public void setSiteId(String siteId) {
-        this.siteId = siteId;
-    }
-
-    public String getMarketplace() {
-        return marketplace;
-    }
-
-    public void setMarketplace(String marketplace) {
-        this.marketplace = marketplace;
-    }
-
+    @SuppressWarnings("unused")
     public String getCodeType() {
         return codeType;
     }
 
-    public void setCodeType(String codeType) {
-        this.codeType = codeType;
+    public boolean isSingleCodeDiscountCampaign() {
+        return CODE_TYPE_SINGLE.contains(codeType);
     }
 
-    public BigDecimal getMaxUserAmountPerCampaign() {
-        return maxUserAmountPerCampaign;
+    public boolean isMultipleCodeDiscountCampaign() {
+        return CODE_TYPE_MULTIPLE.contains(codeType);
     }
 
-    public void setMaxUserAmountPerCampaign(BigDecimal maxUserAmountPerCampaign) {
-        this.maxUserAmountPerCampaign = maxUserAmountPerCampaign;
+    public boolean isDirectDiscountCampaign() {
+        return CODE_TYPE_NONE.contains(codeType);
     }
 
-    public List<String> getLabels() {
-        return labels;
+    private Campaign(Parcel in) {
+        id = Long.valueOf(in.readString());
+        maxCouponAmount = new BigDecimal(in.readString());
+        codeType = in.readString();
     }
 
-    public void setLabels(List<String> labels) {
-        this.labels = labels;
+    public static final Creator<Campaign> CREATOR = new Creator<Campaign>() {
+        @Override
+        public Campaign createFromParcel(Parcel in) {
+            return new Campaign(in);
+        }
+
+        @Override
+        public Campaign[] newArray(int size) {
+            return new Campaign[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public List<String> getPaymentMethods() {
-        return paymentMethods;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id.toString());
+        dest.writeString(maxCouponAmount.toString());
+        dest.writeString(codeType);
     }
 
-    public void setPaymentMethods(List<String> paymentMethods) {
-        this.paymentMethods = paymentMethods;
+    public static class Builder {
+        //region mandatory params
+        private Long id;
+        //endregion mandatory params
+        private BigDecimal maxCouponAmount = BigDecimal.ZERO;
+        private String codeType;
+
+        /**
+         * Builder for campaign construction
+         *
+         * @param id campaign id
+         */
+        @SuppressWarnings("unused")
+        public Builder(@NonNull Long id) {
+            this.id = id;
+        }
+
+        @SuppressWarnings("unused")
+        public Campaign.Builder setMaxCouponAmount(BigDecimal maxCouponAmount) {
+            this.maxCouponAmount = maxCouponAmount;
+            return this;
+        }
+
+        @SuppressWarnings("unused")
+        public Campaign.Builder setCodeType(String codeType) {
+            this.codeType = codeType;
+            return this;
+        }
+
+        public Campaign build() {
+            return new Campaign(this);
+        }
     }
 
-    public List<String> getPaymentTypes() {
-        return paymentTypes;
-    }
-
-    public void setPaymentTypes(List<String> paymentTypes) {
-        this.paymentTypes = paymentTypes;
-    }
-
-    public List<String> getCardIssuers() {
-        return cardIssuers;
-    }
-
-    public void setCardIssuers(List<String> cardIssuers) {
-        this.cardIssuers = cardIssuers;
-    }
-
-    public List<String> getShippingModes() {
-        return shippingModes;
-    }
-
-    public void setShippingModes(List<String> shippingModes) {
-        this.shippingModes = shippingModes;
-    }
-
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public Integer getMultipleCodeLimit() {
-        return multipleCodeLimit;
-    }
-
-    public void setMultipleCodeLimit(Integer multipleCodeLimit) {
-        this.multipleCodeLimit = multipleCodeLimit;
-    }
-
-    public Integer getCodeCount() {
-        return codeCount;
-    }
-
-    public void setCodeCount(Integer codeCount) {
-        this.codeCount = codeCount;
-    }
-
-    public BigDecimal getCouponAmount() {
-        return couponAmount;
-    }
-
-    public void setCouponAmount(BigDecimal couponAmount) {
-        this.couponAmount = couponAmount;
-    }
-
-    public List<Long> getCollectors() {
-        return collectors;
-    }
-
-    public void setCollectors(List<Long> collectors) {
-        this.collectors = collectors;
-    }
-
-    public Boolean isCodeDiscountCampaign() {
-        return codeType.contains(CODE_TYPE_SINGLE);
-    }
-
-    public Boolean isDirectDiscountCampaign() {
-        return codeType.contains(CODE_TYPE_NONE);
-    }
 }

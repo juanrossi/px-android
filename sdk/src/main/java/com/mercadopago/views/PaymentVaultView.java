@@ -2,6 +2,7 @@ package com.mercadopago.views;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
@@ -15,6 +16,7 @@ import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpView;
 import com.mercadopago.plugins.PaymentMethodPlugin;
+
 import java.math.BigDecimal;
 import java.util.List;
 

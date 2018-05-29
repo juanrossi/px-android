@@ -1115,7 +1115,9 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenIsDiscountEnabledAndHasDiscountThenShouldGetDiscountFalse() {
-        when(mercadoPagoCheckout.getDiscount()).thenReturn(new Discount());
+        Discount discount = mock(Discount.class);
+
+        when(mercadoPagoCheckout.getDiscount()).thenReturn(discount);
         CheckoutPresenter presenter = getPresenterWithFlowDiscount(true);
         assertFalse(presenter.shouldRetrieveDiscount());
     }

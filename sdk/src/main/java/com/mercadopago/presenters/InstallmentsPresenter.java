@@ -19,6 +19,7 @@ import com.mercadopago.providers.InstallmentsProvider;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.InstallmentsUtil;
 import com.mercadopago.views.InstallmentsActivityView;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -168,7 +169,7 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     public BigDecimal getAmount() {
         BigDecimal amount;
 
-        if (!mDiscountEnabled || mDiscount == null || !isDiscountValid()) {
+        if (!mDiscountEnabled || mDiscount == null) {
             amount = mAmount;
         } else {
             amount = mDiscount.getAmountWithDiscount(mAmount);
@@ -176,20 +177,8 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         return amount;
     }
 
-    private Boolean isDiscountValid() {
-        return isAmountValid(mDiscount.getCouponAmount()) && isCampaignIdValid() && isDiscountCurrencyIdValid();
-    }
-
-    private Boolean isDiscountCurrencyIdValid() {
-        return mDiscount != null && mDiscount.getCurrencyId() != null && CurrenciesUtil.isValidCurrency(mDiscount.getCurrencyId());
-    }
-
     private Boolean isAmountValid(BigDecimal amount) {
         return amount != null && amount.compareTo(BigDecimal.ZERO) >= 0;
-    }
-
-    private Boolean isCampaignIdValid() {
-        return mDiscount.getId() != null;
     }
 
     public boolean isRequiredCardDrawn() {

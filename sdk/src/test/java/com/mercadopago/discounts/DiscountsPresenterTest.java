@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockingDetails;
 
 /**
  * Created by mromar on 1/24/17.
@@ -40,7 +42,7 @@ public class DiscountsPresenterTest {
         DiscountMockedResourcesProvider provider = new DiscountMockedResourcesProvider();
 
         DiscountsPresenter presenter = new DiscountsPresenter();
-        Discount discount = new Discount();
+        Discount discount = mock(Discount.class);
 
         presenter.setDiscount(discount);
         presenter.setTransactionAmount(new BigDecimal(100));
@@ -131,12 +133,12 @@ public class DiscountsPresenterTest {
 
         @Override
         public void getDirectDiscount(String transactionAmount, String payerEmail, TaggedCallback<Discount> taggedCallback) {
-            taggedCallback.onSuccess(new Discount());
+            taggedCallback.onSuccess(mock(Discount.class));
         }
 
         @Override
         public void getCodeDiscount(String transactionAmount, String payerEmail, String discountCode, TaggedCallback<Discount> taggedCallback) {
-            taggedCallback.onSuccess(new Discount());
+            taggedCallback.onSuccess(mock(Discount.class));
         }
 
         @Override

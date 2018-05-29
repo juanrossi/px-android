@@ -196,7 +196,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     public BigDecimal getTransactionAmount() {
         BigDecimal amount;
 
-        if (mDiscount != null && mDiscountEnabled && mDiscount.isValid()) {
+        if (mDiscount != null && mDiscountEnabled) {
             amount = mDiscount.getAmountWithDiscount(mAmount);
         } else {
             amount = mAmount;

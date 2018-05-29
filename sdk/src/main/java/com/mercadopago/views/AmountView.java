@@ -9,17 +9,20 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+
 import com.mercadopago.R;
 import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Site;
+
 import java.math.BigDecimal;
 
 import static com.mercadopago.lite.util.CurrenciesUtil.getLocalizedAmountWithCurrencySymbol;
 
 public class AmountView extends LinearLayoutCompat {
 
-    @Nullable private OnClick callback;
+    @Nullable
+    private OnClick callback;
 
     private TextView discountAmount;
     private TextView amount;
@@ -78,8 +81,8 @@ public class AmountView extends LinearLayoutCompat {
     }
 
     public void show(@NonNull final Discount discount,
-        @NonNull final BigDecimal totalAmount,
-        @NonNull final Site site) {
+                     @NonNull final BigDecimal totalAmount,
+                     @NonNull final Site site) {
         discountWording.setText(R.string.mpsdk_discount);
         showDiscount(discount, totalAmount, site);
         showEffectiveAmount(totalAmount.subtract(discount.getCouponAmount()), site);
@@ -105,8 +108,8 @@ public class AmountView extends LinearLayoutCompat {
     }
 
     public void show(@NonNull final CouponDiscount discount,
-        @NonNull final BigDecimal totalAmount,
-        @NonNull final Site site) {
+                     @NonNull final BigDecimal totalAmount,
+                     @NonNull final Site site) {
         showDiscount(discount, totalAmount, site);
         showEffectiveAmount(totalAmount.subtract(discount.getCouponAmount()), site);
         discountWording.setText(R.string.mpsdk_discount_code);
@@ -123,8 +126,8 @@ public class AmountView extends LinearLayoutCompat {
     }
 
     private void showDiscount(final @NonNull Discount discount,
-        final @NonNull BigDecimal totalAmount,
-        final @NonNull Site site) {
+                              final @NonNull BigDecimal totalAmount,
+                              final @NonNull Site site) {
         discountRow.setVisibility(VISIBLE);
         discountAmount.setText(getLocalizedAmountWithCurrencySymbol(discount.getCouponAmount(), site));
         amount.setText(getLocalizedAmountWithCurrencySymbol(totalAmount, site));

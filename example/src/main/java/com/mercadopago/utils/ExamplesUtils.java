@@ -6,11 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.mercadopago.components.CustomComponent;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoCheckout.Builder;
 import com.mercadopago.example.R;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Item;
 import com.mercadopago.model.Payment;
@@ -28,6 +30,7 @@ import com.mercadopago.tracking.listeners.TracksListener;
 import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -200,12 +203,13 @@ public class ExamplesUtils {
     }
 
     private static Builder discountSample() {
-        Discount discount = new Discount();
-        discount.setCurrencyId("ARS");
-        discount.setId("77123");
-        discount.setCouponAmount(new BigDecimal(20));
-        discount.setPercentOff(new BigDecimal(20));
-        return createBase().setDiscount(discount);
+        Discount.Builder discountBuilder = new Discount.Builder("77123", "ARS", new BigDecimal(20));
+        discountBuilder.setPercentOff(new BigDecimal(20));
+
+        //TODO refactor campaignId
+        Campaign.Builder campaignBuilder = new Campaign.Builder(77123L, new BigDecimal(200));
+
+        return createBase().setDiscount(discountBuilder.build(), campaignBuilder.build());
     }
 
     private static Builder startBaseFlowWithTrackListener() {
@@ -229,14 +233,14 @@ public class ExamplesUtils {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID)
-            .setDataInitializationTask(getDataInitializationTask(defaultData));
+                .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
     public static Builder createBaseWithMLM() {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY_MLM, DUMMY_PREFERENCE_ID_MLM)
-            .setDataInitializationTask(getDataInitializationTask(defaultData));
+                .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
     public static Builder createBase(final CheckoutPreference checkoutPreference) {

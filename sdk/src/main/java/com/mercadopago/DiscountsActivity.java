@@ -270,9 +270,6 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
                     mPresenter.getCurrencyId(), false, true);
 
             mReviewSummaryDiscountAmount.setText(TextUtils.concat(discountAmountBuilder, discountAmount));
-            if (!TextUtil.isEmpty(mPresenter.getDiscount().getConcept())) {
-                mReviewSummaryDiscountLabel.setText(mPresenter.getDiscount().getConcept());
-            }
         } else {
             finishWithCancelResult();
         }
