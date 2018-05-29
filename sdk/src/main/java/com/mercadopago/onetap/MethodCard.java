@@ -52,7 +52,7 @@ class MethodCard extends CompactComponent<MethodCard.Props, OneTap.Actions> {
         final TextView name = main.findViewById(R.id.name);
         final String cardDescription =
             parent.getContext()
-                .getString(R.string.mpsdk_card_hint, props.card.issuer.getName(), props.card.lastFourDigits);
+                .getString(R.string.mpsdk_card_hint, props.card.getIssuer().getName(), props.card.getLastFourDigits());
         name.setText(cardDescription);
         logo.setImageResource(ResourceUtil.getIconResource(parent.getContext(), props.paymentMethodId));
         resolveCft(main);

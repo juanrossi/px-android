@@ -9,19 +9,19 @@ import java.util.List;
 
 public class CardPaymentMetadata implements Parcelable, Serializable {
 
-    public String id;
+    private String id;
 
-    public String description;
+    private String description;
 
-    public Issuer issuer;
+    private Issuer issuer;
 
     @SerializedName("last_four_digits")
-    public String lastFourDigits;
+    private String lastFourDigits;
 
-    public int installments;
+    private int installments;
 
     @SerializedName("payer_costs")
-    public List<PayerCost> payerCosts;
+    private List<PayerCost> payerCosts;
 
     protected CardPaymentMetadata(Parcel in) {
         id = in.readString();
@@ -67,5 +67,25 @@ public class CardPaymentMetadata implements Parcelable, Serializable {
             }
         }
         return null;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Issuer getIssuer() {
+        return issuer;
+    }
+
+    public String getLastFourDigits() {
+        return lastFourDigits;
+    }
+
+    public int getInstallments() {
+        return installments;
     }
 }

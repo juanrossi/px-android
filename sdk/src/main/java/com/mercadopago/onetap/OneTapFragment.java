@@ -163,9 +163,9 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
             .setMerchantPublicKey(publicKey)
             .setPayerAccessToken(privateKey)
-            .setCheckoutPreference(model.checkoutPreference)
-            .setDiscount(model.discount)
-            .setESCEnabled(model.isEscEnabled)
+            .setCheckoutPreference(model.getCheckoutPreference())
+            .setDiscount(model.getDiscount())
+            .setESCEnabled(model.isEscEnabled())
             .setInstallmentsEnabled(false)
             .setCard(card)
             .startActivity(this, REQ_CODE_CARD_VAULT);

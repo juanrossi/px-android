@@ -6,14 +6,9 @@ import com.mercadopago.model.PaymentMethodSearch;
 
 public class PaymentMethodMapper extends Mapper<PaymentMethodSearch, PaymentMethod> {
 
-    @NonNull private final String paymentTypeId;
-
-    public PaymentMethodMapper(@NonNull final String paymentTypeId) {
-        this.paymentTypeId = paymentTypeId;
-    }
-
     @Override
     public PaymentMethod map(@NonNull final PaymentMethodSearch val) {
-        return val.getPaymentMethodById(paymentTypeId);
+        final String paymentMethodId = val.getOneTapMetadata().getPaymentMethodId();
+        return val.getPaymentMethodById(paymentMethodId);
     }
 }

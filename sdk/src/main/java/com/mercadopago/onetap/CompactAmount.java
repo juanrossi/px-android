@@ -39,12 +39,12 @@ class CompactAmount extends CompactComponent<CompactAmount.Props, OneTap.Actions
 
         /* default */
         static Props from(final OneTapModel props) {
-            final CardPaymentMetadata card = props.paymentMethods.getOneTapMetadata().card;
+            final CardPaymentMetadata card = props.getPaymentMethods().getOneTapMetadata().getCard();
             final PayerCost payerCost = card != null ? card.getAutoSelectedInstallment() : null;
             return new CompactAmount.Props(
-                props.hasExtraAmount,
-                props.checkoutPreference.getTotalAmount(), props.discount,
-                props.checkoutPreference.getSite().getCurrencyId(), payerCost);
+                props.hasExtraAmount(),
+                props.getCheckoutPreference().getTotalAmount(), props.getDiscount(),
+                props.getCheckoutPreference().getSite().getCurrencyId(), payerCost);
         }
 
         boolean hasExtrasAmount() {

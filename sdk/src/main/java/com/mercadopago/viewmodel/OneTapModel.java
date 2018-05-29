@@ -9,16 +9,16 @@ import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import java.io.Serializable;
 
-public final class OneTapModel implements Serializable {
+public class OneTapModel implements Serializable {
 
-    public final CheckoutPreference checkoutPreference;
-    public final Discount discount;
-    public final PaymentMethodSearch paymentMethods;
-    public final boolean isEscEnabled;
-    public final boolean hasExtraAmount;
+    private final CheckoutPreference checkoutPreference;
+    private final Discount discount;
+    private final PaymentMethodSearch paymentMethods;
+    private final boolean isEscEnabled;
+    private final boolean hasExtraAmount;
     @DrawableRes
     @Nullable
-    public final Integer collectorIcon;
+    private final Integer collectorIcon;
 
     private OneTapModel(@NonNull final CheckoutPreference checkoutPreference,
         @Nullable final Discount discount,
@@ -42,5 +42,30 @@ public final class OneTapModel implements Serializable {
             checkoutStateModel.flowPreference.isESCEnabled(),
             reviewAndConfirmPreferences.hasExtrasAmount(),
             reviewAndConfirmPreferences.getCollectorIcon());
+    }
+
+    public CheckoutPreference getCheckoutPreference() {
+        return checkoutPreference;
+    }
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public PaymentMethodSearch getPaymentMethods() {
+        return paymentMethods;
+    }
+
+    public boolean isEscEnabled() {
+        return isEscEnabled;
+    }
+
+    public boolean hasExtraAmount() {
+        return hasExtraAmount;
+    }
+
+    @Nullable
+    public Integer getCollectorIcon() {
+        return collectorIcon;
     }
 }

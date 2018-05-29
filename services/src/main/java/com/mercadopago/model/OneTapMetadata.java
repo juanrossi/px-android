@@ -7,10 +7,10 @@ import java.io.Serializable;
 
 public class OneTapMetadata implements Parcelable, Serializable {
     @SerializedName("payment_method_id")
-    public String paymentMethodId;
+    private String paymentMethodId;
     @SerializedName("payment_type_id")
-    public String paymentTypeId;
-    public CardPaymentMetadata card;
+    private String paymentTypeId;
+    private CardPaymentMetadata card;
 
     public OneTapMetadata(final String paymentMethodId,
         final String paymentTypeId,
@@ -48,5 +48,17 @@ public class OneTapMetadata implements Parcelable, Serializable {
         dest.writeString(paymentMethodId);
         dest.writeString(paymentTypeId);
         dest.writeParcelable(card, flags);
+    }
+
+    public String getPaymentMethodId() {
+        return paymentMethodId;
+    }
+
+    public String getPaymentTypeId() {
+        return paymentTypeId;
+    }
+
+    public CardPaymentMetadata getCard() {
+        return card;
     }
 }

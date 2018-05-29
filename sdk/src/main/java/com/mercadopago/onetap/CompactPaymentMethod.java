@@ -56,9 +56,9 @@ class CompactPaymentMethod extends CompactComponent<CompactPaymentMethod.Props, 
 
         /* default */
         static Props createFrom(final OneTapModel props) {
-            final OneTapMetadata oneTapMetadata = props.paymentMethods.getOneTapMetadata();
-            return new Props(oneTapMetadata.paymentTypeId, oneTapMetadata.paymentMethodId, oneTapMetadata.card,
-                props.checkoutPreference.getSite().getCurrencyId(), props.discount);
+            final OneTapMetadata oneTapMetadata = props.getPaymentMethods().getOneTapMetadata();
+            return new Props(oneTapMetadata.getPaymentTypeId(), oneTapMetadata.getPaymentMethodId(), oneTapMetadata.getCard(),
+                props.getCheckoutPreference().getSite().getCurrencyId(), props.getDiscount());
         }
     }
 

@@ -30,9 +30,10 @@ class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Actions> {
 
     private void addItem(final ViewGroup parent) {
         final String defaultMultipleTitle = parent.getContext().getString(R.string.mpsdk_review_summary_products);
-        final int icon = props.collectorIcon == null ? R.drawable.mpsdk_review_item_default : props.collectorIcon;
+        final int icon =
+            props.getCollectorIcon() == null ? R.drawable.mpsdk_review_item_default : props.getCollectorIcon();
         final String itemsTitle = com.mercadopago.model.Item
-            .getItemsTitle(props.checkoutPreference.getItems(), defaultMultipleTitle);
+            .getItemsTitle(props.getCheckoutPreference().getItems(), defaultMultipleTitle);
         final View render = new Item(new Item.Props(icon, itemsTitle)).render(parent);
         parent.addView(render);
     }
@@ -54,7 +55,7 @@ class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Actions> {
     private void addTermsAndConditions(final ViewGroup parent) {
         //TODO remove true and add depending on ...discount? login? if discount is other view that does not exists yet.
         final TermsAndConditionsModel model =
-            new TermsAndConditionsModel(props.checkoutPreference.getSiteId(), true);
+            new TermsAndConditionsModel(props.getCheckoutPreference().getSiteId(), true);
         final View view = new TermsAndCondition(model)
             .render(parent);
         parent.addView(view);

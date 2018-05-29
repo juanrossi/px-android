@@ -20,8 +20,8 @@ public class CardPaymentMapper extends Mapper<OneTapModel, CardPaymentModel> {
 
     @Override
     public CardPaymentModel map(@NonNull final OneTapModel val) {
-        Issuer issuer = val.paymentMethods.getOneTapMetadata().card.issuer;
-        PayerCost installment = val.paymentMethods.getOneTapMetadata().card.getAutoSelectedInstallment();
+        Issuer issuer = val.getPaymentMethods().getOneTapMetadata().getCard().getIssuer();
+        PayerCost installment = val.getPaymentMethods().getOneTapMetadata().getCard().getAutoSelectedInstallment();
         return new CardPaymentModel(cardMapper.map(val), token, installment, issuer);
     }
 }

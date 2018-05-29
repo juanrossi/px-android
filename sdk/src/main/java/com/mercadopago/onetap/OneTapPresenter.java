@@ -29,14 +29,14 @@ class OneTapPresenter extends MvpPresenter<OneTap.View, ResourcesProvider> imple
     OneTapPresenter(@NonNull final OneTapModel model) {
         this.model = model;
         cardMapper = new CardMapper();
-        paymentMethodMapper = new PaymentMethodMapper(model.paymentMethods.getOneTapMetadata().paymentMethodId);
+        paymentMethodMapper = new PaymentMethodMapper();
     }
 
     @Override
     public void confirmPayment() {
-        OneTapMetadata oneTapMetadata = model.paymentMethods.getOneTapMetadata();
-        String paymentTypeId = oneTapMetadata.paymentTypeId;
-        String paymentMethodId = oneTapMetadata.paymentMethodId;
+        OneTapMetadata oneTapMetadata = model.getPaymentMethods().getOneTapMetadata();
+        String paymentTypeId = oneTapMetadata.getPaymentTypeId();
+        String paymentMethodId = oneTapMetadata.getPaymentMethodId();
         // TODO refactor
         CheckoutStore.getInstance().setSelectedPaymentMethodId(paymentMethodId);
 
@@ -45,7 +45,7 @@ class OneTapPresenter extends MvpPresenter<OneTap.View, ResourcesProvider> imple
         } else if (PaymentTypes.isPlugin(paymentTypeId)) {
             getView().showPaymentFlowPlugin(paymentTypeId, paymentMethodId);
         } else {
-            getView().showPaymentFlow(paymentMethodMapper.map(model.paymentMethods));
+            getView().showPaymentFlow(paymentMethodMapper.map(model.getPaymentMethods()));
         }
     }
 
