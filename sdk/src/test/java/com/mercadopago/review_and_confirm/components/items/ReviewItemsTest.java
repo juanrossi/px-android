@@ -12,23 +12,24 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReviewItemsRendererTest {
+public class ReviewItemsTest {
 
-    public static final int RESOURCE_ID = 1;
+    private static final int RESOURCE_ID = 1;
+
     @Mock ReviewItems.Props props;
 
     @Mock ItemsModel itemsModel;
 
-    private ReviewItemsRenderer renderer;
+    private ReviewItems renderer;
 
     @Before
     public void setUp() {
-        renderer = new ReviewItemsRenderer();
+        renderer = new ReviewItems(props);
         when(props.getItemsModel()).thenReturn(itemsModel);
     }
 
     @Test
-    public void whenIconIsAvailableInPreferenceAndIsUniqueItemThenShowIt() throws Exception {
+    public void whenIconIsAvailableInPreferenceAndIsUniqueItemThenShowIt() {
         when(itemsModel.hasUniqueItem()).thenReturn(true);
         when(props.getCollectorIcon()).thenReturn(RESOURCE_ID);
 
@@ -37,7 +38,7 @@ public class ReviewItemsRendererTest {
     }
 
     @Test
-    public void whenIconIsNotAvailableInPreferenceThenShowDefaultIcon() throws Exception {
+    public void whenIconIsNotAvailableInPreferenceThenShowDefaultIcon() {
         when(itemsModel.hasUniqueItem()).thenReturn(true);
         when(props.getCollectorIcon()).thenReturn(null);
 
@@ -46,7 +47,7 @@ public class ReviewItemsRendererTest {
     }
 
     @Test
-    public void whenModelHasMultipleItemsThenShowDefaultIcon() throws Exception {
+    public void whenModelHasMultipleItemsThenShowDefaultIcon() {
         when(itemsModel.hasUniqueItem()).thenReturn(false);
 
         final int icon = renderer.getIcon(props);

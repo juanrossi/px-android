@@ -177,7 +177,7 @@ public class DiscountRowView implements DiscountView {
 
             mDiscountOffTextView.setText(amount);
         } else if (isPercentOffValid() && mDiscount.getPercentOff().compareTo(BigDecimal.ZERO) > 0) {
-            String discountOff = mContext.getResources().getString(R.string.mpsdk_discount_percent_off,
+            String discountOff = mContext.getResources().getString(R.string.mpsdk_discount_percent_off_percent,
                     String.valueOf(mDiscount.getPercentOff()));
 
             mDiscountOffTextView.setText(discountOff);

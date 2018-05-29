@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.mercadopago.CheckoutActivity;
 import com.mercadopago.callbacks.CallbackHolder;
 import com.mercadopago.hooks.CheckoutHooks;
@@ -24,7 +23,6 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.uicontrollers.FontCache;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,7 +150,7 @@ public class MercadoPagoCheckout implements Serializable {
     }
 
     private boolean isCheckoutTimerAvailable() {
-        return flowPreference != null && flowPreference.isCheckoutTimerEnabled();
+        return flowPreference.isCheckoutTimerEnabled();
     }
 
     private boolean isPaymentDataIntegration(int resultCode) {
@@ -233,19 +231,24 @@ public class MercadoPagoCheckout implements Serializable {
         private final CheckoutPreference checkoutPreference;
         private final List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
         private final Map<String, PaymentProcessor> paymentPlugins = new HashMap<>();
-        private Boolean binaryMode = false;
-        private ServicePreference servicePreference = new ServicePreference.Builder().build();
-        private FlowPreference flowPreference = new FlowPreference.Builder().build();
-        private PaymentResultScreenPreference paymentResultScreenPreference;
-        private PaymentData paymentData;
-        private PaymentResult paymentResult;
-        private Discount discount;
-        private CheckoutHooks checkoutHooks;
-        private DataInitializationTask dataInitializationTask;
-        private String regularFontPath;
-        private String lightFontPath;
-        private String monoFontPath;
-        private ReviewAndConfirmPreferences reviewAndConfirmPreferences;
+        Boolean binaryMode = false;
+
+        @NonNull
+        ServicePreference servicePreference = new ServicePreference.Builder().build();
+
+        @NonNull
+        FlowPreference flowPreference = new FlowPreference.Builder().build();
+
+        PaymentResultScreenPreference paymentResultScreenPreference;
+        PaymentData paymentData;
+        PaymentResult paymentResult;
+        Discount discount;
+        CheckoutHooks checkoutHooks;
+        DataInitializationTask dataInitializationTask;
+        String regularFontPath;
+        String lightFontPath;
+        String monoFontPath;
+        ReviewAndConfirmPreferences reviewAndConfirmPreferences;
 
         /**
          * Checkout builder allow you to create a {@link MercadoPagoCheckout}
@@ -276,12 +279,12 @@ public class MercadoPagoCheckout implements Serializable {
             return this;
         }
 
-        public Builder setServicePreference(ServicePreference servicePreference) {
+        public Builder setServicePreference(@NonNull final ServicePreference servicePreference) {
             this.servicePreference = servicePreference;
             return this;
         }
 
-        public Builder setFlowPreference(FlowPreference flowPreference) {
+        public Builder setFlowPreference(@NonNull final FlowPreference flowPreference) {
             this.flowPreference = flowPreference;
             return this;
         }

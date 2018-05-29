@@ -2,8 +2,8 @@ package com.mercadopago.presenters;
 
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
-import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.PaymentMethod;
@@ -183,11 +183,11 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
     private void createTokenWithESC() throws CardTokenException {
         SavedESCCardToken savedESCCardToken;
         if (mCard != null) {
-            savedESCCardToken = new SavedESCCardToken(mCard.getId(), mSecurityCode, true, "");
+            savedESCCardToken = SavedESCCardToken.createWithSecurityCode(mCard.getId(), mSecurityCode);
             getResourcesProvider().validateSecurityCodeFromToken(savedESCCardToken, mCard);
             createESCToken(savedESCCardToken);
         } else if (mToken != null) {
-            savedESCCardToken = new SavedESCCardToken(mToken.getCardId(), mSecurityCode, true, "");
+            savedESCCardToken = SavedESCCardToken.createWithSecurityCode(mToken.getCardId(), mSecurityCode);
             validateSecurityCodeFromToken();
             createESCToken(savedESCCardToken);
         }

@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.mercadopago.components.CustomComponent;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoCheckout.Builder;
@@ -19,6 +18,7 @@ import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Sites;
 import com.mercadopago.plugins.DataInitializationTask;
 import com.mercadopago.plugins.MainPaymentProcessor;
+import com.mercadopago.plugins.SamplePaymentMethodPlugin;
 import com.mercadopago.plugins.components.SampleCustomComponent;
 import com.mercadopago.plugins.model.BusinessPayment;
 import com.mercadopago.plugins.model.ExitAction;
@@ -29,7 +29,6 @@ import com.mercadopago.tracking.listeners.TracksListener;
 import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -191,7 +190,9 @@ public class ExamplesUtils {
     }
 
     private static Builder customBusinessPayment(final BusinessPayment businessPayment) {
-        return createBase().setPaymentProcessor(new MainPaymentProcessor(businessPayment));
+        MainPaymentProcessor mainPaymentProcessor = new MainPaymentProcessor(businessPayment);
+        return createBase().setPaymentProcessor(mainPaymentProcessor)
+            .addPaymentMethodPlugin(new SamplePaymentMethodPlugin(), mainPaymentProcessor);
     }
 
     private static Builder customExitReviewAndConfirm() {
@@ -205,9 +206,17 @@ public class ExamplesUtils {
         Discount discount = new Discount();
         discount.setCurrencyId("ARS");
         discount.setId("77123");
-        discount.setCouponAmount(new BigDecimal(20));
+        discount.setCouponAmount(new BigDecimal("204.8"));
         discount.setPercentOff(new BigDecimal(20));
-        return createBase().setDiscount(discount);
+        final Item itemSarasa = new Item("Item desc", new BigDecimal("1228.8"));
+        itemSarasa.setId(Sites.ARGENTINA.getId());
+        itemSarasa.setId("12345");
+        itemSarasa.setTitle("Some title");
+        itemSarasa.setCurrencyId(Sites.ARGENTINA.getCurrencyId());
+        final List<Item> items = new ArrayList<>();
+        items.add(itemSarasa);
+        return createBase(new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a", items).build())
+            .setDiscount(discount);
     }
 
     private static Builder startBaseFlowWithTrackListener() {
@@ -227,6 +236,13 @@ public class ExamplesUtils {
         return createBase();
     }
 
+    public static Builder createBase(@NonNull final CheckoutPreference checkoutPreference) {
+        final Map<String, Object> defaultData = new HashMap<>();
+
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, checkoutPreference)
+            .setDataInitializationTask(getDataInitializationTask(defaultData));
+    }
+
     public static Builder createBase() {
         final Map<String, Object> defaultData = new HashMap<>();
 
@@ -239,13 +255,6 @@ public class ExamplesUtils {
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY_MLM, DUMMY_PREFERENCE_ID_MLM)
             .setDataInitializationTask(getDataInitializationTask(defaultData));
-    }
-
-    public static Builder createBase(final CheckoutPreference checkoutPreference) {
-        final Map<String, Object> defaultData = new HashMap<>();
-
-        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, checkoutPreference)
-                .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
     public static Builder createBaseWithDecimals() {

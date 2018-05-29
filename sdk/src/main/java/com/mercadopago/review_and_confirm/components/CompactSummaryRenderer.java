@@ -6,7 +6,6 @@ import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
@@ -55,10 +54,6 @@ public class CompactSummaryRenderer extends Renderer<CompactSummary> {
     }
 
     private String getDisclaimer(CompactSummary component, Context context) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(context.getString(R.string.mpsdk_installments_cft));
-        stringBuilder.append(" ");
-        stringBuilder.append(component.props.getCftPercent());
-        return stringBuilder.toString();
+        return context.getString(R.string.mpsdk_installments_cft, component.props.getCftPercent());
     }
 }

@@ -1,5 +1,6 @@
 package com.mercadopago.model;
 
+import android.support.annotation.Nullable;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -108,6 +109,7 @@ public class PaymentMethodSearch implements Serializable {
         return requiredItem;
     }
 
+    @Nullable
     public PaymentMethod getPaymentMethodById(String paymentMethodId) {
         PaymentMethod foundPaymentMethod = null;
         if (paymentMethods != null) {
@@ -134,7 +136,6 @@ public class PaymentMethodSearch implements Serializable {
         return foundCard;
     }
 
-    @Deprecated
     public List<CustomSearchItem> getCustomSearchItems() {
         return customSearchItems;
     }
@@ -143,12 +144,6 @@ public class PaymentMethodSearch implements Serializable {
         return cards;
     }
 
-    @Deprecated
-    public void setCustomSearchItems(List<CustomSearchItem> customSearchItems) {
-        this.customSearchItems = customSearchItems;
-    }
-
-    @Deprecated
     public boolean hasCustomSearchItems() {
         return customSearchItems != null && !customSearchItems.isEmpty();
     }
@@ -182,11 +177,19 @@ public class PaymentMethodSearch implements Serializable {
         }
     }
 
+    public boolean hasOneTapMetadata() {
+         return oneTapMetadata !=null;
+    }
+
     public void setCards(List<Card> cards) {
         this.cards = cards;
     }
 
     public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
         this.paymentMethods = paymentMethods;
+    }
+
+    public OneTapMetadata getOneTapMetadata() {
+        return oneTapMetadata;
     }
 }

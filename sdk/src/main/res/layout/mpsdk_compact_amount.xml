@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:clickable="true"
+              android:focusable="true"
+              android:foreground="?attr/selectableItemBackground"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/mpsdk_xs_margin"
+              android:paddingTop="@dimen/mpsdk_xs_margin">
+
+    <com.mercadopago.customviews.MPTextView
+        android:id="@+id/amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="$ 870"
+        android:textSize="@dimen/mpsdk_xs_text"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mercadopago.customviews.MPTextView
+            android:id="@+id/amount_with_discount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_alignEnd="@+id/arrow"
+            android:layout_alignRight="@+id/arrow"
+            android:textColor="@color/mpsdk_black"
+            android:textSize="@dimen/mpsdk_xxxxl_text"
+            tools:text="12x $ 20,001"/>
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/mpsdk_arrow_right_blue"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/discount_detail_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mpsdk_xs_margin"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.mercadopago.customviews.MPTextView
+            android:id="@+id/discount_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:text="20 % OFF"
+            android:textSize="@dimen/mpsdk_xs_text"/>
+
+        <com.mercadopago.customviews.MPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/mpsdk_xxxs_margin"
+            android:text="@string/discount_ceil_message"
+            android:textSize="@dimen/mpsdk_xs_text"/>
+
+    </LinearLayout>
+
+</LinearLayout>

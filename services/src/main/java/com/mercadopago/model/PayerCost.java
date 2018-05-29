@@ -3,7 +3,6 @@ package com.mercadopago.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -133,11 +132,36 @@ public class PayerCost implements Parcelable, Serializable {
         }
         labels = in.createStringArrayList();
         recommendedMessage = in.readString();
-        installmentRate = new BigDecimal(in.readString());
-        totalAmount = new BigDecimal(in.readString());
-        minAllowedAmount = new BigDecimal(in.readString());
-        maxAllowedAmount = new BigDecimal(in.readString());
-        installmentAmount = new BigDecimal(in.readString());
+
+        if (in.readByte() == 0) {
+            installmentRate = null;
+        } else {
+            installmentRate = new BigDecimal(in.readString());
+        }
+
+        if (in.readByte() == 0) {
+            totalAmount = null;
+        } else {
+            totalAmount = new BigDecimal(in.readString());
+        }
+
+        if (in.readByte() == 0) {
+            minAllowedAmount = null;
+        } else {
+            minAllowedAmount = new BigDecimal(in.readString());
+        }
+
+        if (in.readByte() == 0) {
+            maxAllowedAmount = null;
+        } else {
+            maxAllowedAmount = new BigDecimal(in.readString());
+        }
+
+        if (in.readByte() == 0) {
+            installmentAmount = null;
+        } else {
+            installmentAmount = new BigDecimal(in.readString());
+        }
     }
 
     @Override
@@ -154,12 +178,42 @@ public class PayerCost implements Parcelable, Serializable {
             dest.writeInt(installments);
         }
         dest.writeStringList(labels);
+
         dest.writeString(recommendedMessage);
 
-        dest.writeString(installmentRate.toString());
-        dest.writeString(totalAmount.toString());
-        dest.writeString(minAllowedAmount.toString());
-        dest.writeString(maxAllowedAmount.toString());
-        dest.writeString(installmentAmount.toString());
+        if (installmentRate == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(installmentRate.toString());
+        }
+
+        if (totalAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(totalAmount.toString());
+        }
+
+        if (minAllowedAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(minAllowedAmount.toString());
+        }
+
+        if (maxAllowedAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(maxAllowedAmount.toString());
+        }
+
+        if (installmentAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(installmentAmount.toString());
+        }
     }
 }

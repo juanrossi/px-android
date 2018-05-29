@@ -60,6 +60,7 @@
     <dimen name="mpsdk_promotion_logo_width">120dp</dimen>
 
     <!-- Text -->
+    <dimen name="mpsdk_xxxxl_text">44dp</dimen>
     <dimen name="mpsdk_xxxl_text">26dp</dimen>
     <dimen name="mpsdk_xxl_text">24dp</dimen>
     <dimen name="mpsdk_xl_text">22dp</dimen>

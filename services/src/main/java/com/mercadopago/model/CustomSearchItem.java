@@ -1,8 +1,9 @@
 package com.mercadopago.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class CustomSearchItem {
+public class CustomSearchItem implements Serializable {
     private String description;
     private String id;
 

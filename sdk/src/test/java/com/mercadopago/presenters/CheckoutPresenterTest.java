@@ -1,7 +1,6 @@
 package com.mercadopago.presenters;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -43,18 +42,18 @@ import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.providers.CheckoutProvider;
 import com.mercadopago.util.TextUtils;
+import com.mercadopago.viewmodel.CheckoutStateModel;
+import com.mercadopago.viewmodel.OneTapModel;
 import com.mercadopago.views.CheckoutView;
-
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE;
 import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_RESULT_CODE;
@@ -127,7 +126,7 @@ public class CheckoutPresenterTest {
 
     @NonNull
     private CheckoutPresenter getBasePresenter(int resultCode, CheckoutView view, CheckoutProvider provider) {
-        CheckoutPresenter.PersistentDataModel model = CheckoutPresenter.PersistentDataModel.createWith(resultCode, mercadoPagoCheckout);
+        CheckoutStateModel model = CheckoutStateModel.from(resultCode, mercadoPagoCheckout);
         CheckoutPresenter presenter = new CheckoutPresenter(model);
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
@@ -163,6 +162,7 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenChoHasPreferenceAndPaymentMethodRetrivedShowPaymentMethodSelection() {
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder().build());
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItemAndPayer());
         CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
         presenter.initialize();
@@ -171,10 +171,6 @@ public class CheckoutPresenterTest {
         verify(checkoutView).showProgress();
         verify(checkoutView).initializeMPTracker();
         verify(checkoutView).trackScreen();
-        // TODO we assume that plugin init ok.
-        // TODO remove, we assume that the request went ok.
-        presenter.startFlow();
-        verify(checkoutView).showPaymentMethodSelection();
         verifyNoMoreInteractions(checkoutView);
     }
 
@@ -633,7 +629,7 @@ public class CheckoutPresenterTest {
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         assertTrue(view.showingReviewAndConfirm);
 
-        presenter.changePaymentMethod();
+        presenter.onChangePaymentMethodFromReviewAndConfirm();
         assertTrue(view.showingPaymentMethodSelection);
 
         presenter.onPaymentMethodSelectionCancel();
@@ -1188,6 +1184,21 @@ public class CheckoutPresenterTest {
         }
 
         @Override
+        public void showOneTap(@NonNull final OneTapModel oneTapModel) {
+            //Do nothing
+        }
+
+        @Override
+        public void hideProgress() {
+            //Do nothing
+        }
+
+        @Override
+        public void exitCheckout(final int resCode) {
+            //Do nothing
+        }
+
+        @Override
         public void showError(MercadoPagoError error) {
             this.showingError = true;
             this.errorShown = error;
@@ -1234,14 +1245,6 @@ public class CheckoutPresenterTest {
         public void backToReviewAndConfirm() {
             showingPaymentMethodSelection = false;
             showingReviewAndConfirm = true;
-            showingPaymentResult = false;
-            showingPaymentRecoveryFlow = false;
-        }
-
-        @Override
-        public void backToPaymentMethodSelection() {
-            showingPaymentMethodSelection = true;
-            showingReviewAndConfirm = false;
             showingPaymentResult = false;
             showingPaymentRecoveryFlow = false;
         }
@@ -1303,11 +1306,6 @@ public class CheckoutPresenterTest {
         @Override
         public void trackScreen() {
             initTracked = true;
-        }
-
-        @Override
-        public void finishFromReviewAndConfirm() {
-
         }
 
         @Override

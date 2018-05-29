@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-
 import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
@@ -17,7 +16,6 @@ import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.review_and_confirm.models.SummaryModel;
 import com.mercadopago.uicontrollers.payercosts.PayerCostColumn;
-
 import java.math.BigDecimal;
 
 import static com.mercadopago.util.TextUtils.isEmpty;
@@ -100,10 +98,6 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
     }
 
     public String getDisclaimer(FullSummary component, Context context) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(context.getString(R.string.mpsdk_installments_cft));
-        stringBuilder.append(" ");
-        stringBuilder.append(component.props.summaryModel.getCftPercent());
-        return stringBuilder.toString();
+        return context.getString(R.string.mpsdk_installments_cft, component.props.summaryModel.getCftPercent());
     }
 }

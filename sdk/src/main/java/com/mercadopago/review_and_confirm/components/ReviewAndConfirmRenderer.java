@@ -6,11 +6,11 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.CustomComponent;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
+import com.mercadopago.components.TermsAndCondition;
 import com.mercadopago.review_and_confirm.components.actions.ChangePaymentMethodAction;
 import com.mercadopago.review_and_confirm.components.items.ReviewItems;
 import com.mercadopago.review_and_confirm.components.payment_method.PaymentMethodComponent;
@@ -86,21 +86,21 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
     }
 
     private void addReviewItems(@NonNull final ReviewAndConfirmContainer component, final ViewGroup parent) {
-        Renderer renderer = RendererFactory.create(parent.getContext(),
-                new ReviewItems(
-                        new ReviewItems.Props(
-                                component.props.itemsModel,
-                                component.props.preferences.getCollectorIcon(),
-                                component.props.preferences.getQuantityLabel(),
-                                component.props.preferences.getUnitPriceLabel())));
-        renderer.render(parent);
+        ReviewItems reviewItems = new ReviewItems(
+            new ReviewItems.Props(
+                component.props.itemsModel,
+                component.props.preferences.getCollectorIcon(),
+                component.props.preferences.getQuantityLabel(),
+                component.props.preferences.getUnitPriceLabel()));
+        View view = reviewItems.render(parent);
+        parent.addView(view);
     }
 
     private void addTermsAndConditions(@NonNull final ReviewAndConfirmContainer component,
                                        final ViewGroup container) {
-        Renderer termsAndConditions = RendererFactory.create(container.getContext(),
-                new TermsAndCondition(component.props.termsAndConditionsModel, component.getDispatcher()));
-        termsAndConditions.render(container);
+        TermsAndCondition termsAndCondition = new TermsAndCondition(component.props.termsAndConditionsModel);
+        View view = termsAndCondition.render(container);
+        container.addView(view);
     }
 
 }

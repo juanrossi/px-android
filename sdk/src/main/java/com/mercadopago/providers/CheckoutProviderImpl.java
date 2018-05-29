@@ -226,7 +226,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         Set<String> excludedPaymentTypesSet = new HashSet<>(excludedPaymentTypes);
         excludedPaymentTypesSet.addAll(getUnsupportedPaymentTypes(site));
 
-        mercadoPagoServicesAdapter.getPaymentMethodSearch(amount, new ArrayList<>(excludedPaymentTypesSet), excludedPaymentMethods, payer, site, new Callback<PaymentMethodSearch>() {
+        mercadoPagoServicesAdapter.getPaymentMethodSearchMock(amount, new ArrayList<>(excludedPaymentTypesSet), excludedPaymentMethods, payer, site, new Callback<PaymentMethodSearch>() {
             @Override
             public void success(final PaymentMethodSearch paymentMethodSearch) {
                 if (servicePreference != null && servicePreference.hasGetCustomerURL()) {

@@ -1,8 +1,8 @@
 package com.mercadopago.util;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -28,7 +28,7 @@ public final class ViewUtils {
         }
     }
 
-    public static void loadOrCallError(final String imgUrl, final ImageView logo, Callback.EmptyCallback callback) {
+    public static void loadOrCallError(final String imgUrl, final ImageView logo, Callback callback) {
         if (!TextUtil.isEmpty(imgUrl)) {
             Picasso.with(logo.getContext())
                     .load(imgUrl)
@@ -46,4 +46,7 @@ public final class ViewUtils {
         }
     }
 
+    public static void showOrGone(final View view, final boolean visible) {
+        view.setVisibility(visible ? View.VISIBLE : GONE);
+    }
 }

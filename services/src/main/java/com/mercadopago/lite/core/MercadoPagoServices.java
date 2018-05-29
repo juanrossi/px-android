@@ -2,11 +2,20 @@ package com.mercadopago.lite.core;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.lite.adapters.ErrorHandlingCallAdapter;
 import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.constants.ProcessingModes;
 import com.mercadopago.lite.controllers.CustomServicesHandler;
+import com.mercadopago.lite.services.BankDealService;
+import com.mercadopago.lite.services.CheckoutService;
+import com.mercadopago.lite.services.CustomService;
+import com.mercadopago.lite.services.DiscountService;
+import com.mercadopago.lite.services.GatewayService;
+import com.mercadopago.lite.services.IdentificationService;
+import com.mercadopago.lite.services.PaymentService;
+import com.mercadopago.lite.util.HttpClientUtil;
+import com.mercadopago.lite.util.JsonUtil;
+import com.mercadopago.lite.util.TextUtil;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CardToken;
@@ -28,21 +37,9 @@ import com.mercadopago.model.requests.PayerIntent;
 import com.mercadopago.model.requests.SecurityCodeIntent;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.ServicePreference;
-import com.mercadopago.lite.services.BankDealService;
-import com.mercadopago.lite.services.CheckoutService;
-import com.mercadopago.lite.services.CustomService;
-import com.mercadopago.lite.services.DiscountService;
-import com.mercadopago.lite.services.GatewayService;
-import com.mercadopago.lite.services.IdentificationService;
-import com.mercadopago.lite.services.PaymentService;
-import com.mercadopago.lite.util.HttpClientUtil;
-import com.mercadopago.lite.util.JsonUtil;
-import com.mercadopago.lite.util.TextUtil;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -94,6 +91,16 @@ public class MercadoPagoServices {
     public void getInstructions(Long paymentId, String paymentTypeId, final Callback<Instructions> callback) {
         CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
         service.getPaymentResult(Settings.servicesVersion, mContext.getResources().getConfiguration().locale.getLanguage(), paymentId, this.mPublicKey, this.mPrivateKey, paymentTypeId, PAYMENT_RESULT_API_VERSION).enqueue(callback);
+    }
+
+    public void getPaymentMethodSearchMock(BigDecimal amount, List<String> excludedPaymentTypes,
+        List<String> excludedPaymentMethods, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {
+        CheckoutService service = getMockClient().create(CheckoutService.class);
+        service.getPaymentMethodSearchOneTapCard().enqueue(callback);
+    }
+
+    public Retrofit getMockClient() {
+        return getRetrofit("http://private-79409a-pxwrapperlucas.apiary-mock.com/", 10, 10, 10);
     }
 
     public void getPaymentMethodSearch(BigDecimal amount, List<String> excludedPaymentTypes, List<String> excludedPaymentMethods, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {

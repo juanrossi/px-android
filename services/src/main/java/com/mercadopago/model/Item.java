@@ -2,9 +2,7 @@ package com.mercadopago.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
-
 import com.mercadopago.lite.util.CurrenciesUtil;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,7 +17,6 @@ public class Item implements Serializable {
     private Integer quantity;
     private String title;
     private BigDecimal unitPrice;
-
 
     public Item(String description, Integer quantity, BigDecimal unitPrice) {
         this.description = description;
@@ -119,10 +116,10 @@ public class Item implements Serializable {
 
     private boolean isValid() {
         return BigDecimal.ZERO.compareTo(getUnitPrice()) < 0
-                && getQuantity() != null
-                && getQuantity() > 0
-                && CurrenciesUtil.isValidCurrency(getCurrencyId())
-                && getId() != null;
+            && getQuantity() != null
+            && getQuantity() > 0
+            && CurrenciesUtil.isValidCurrency(getCurrencyId())
+            && getId() != null;
     }
 
     private static BigDecimal getTotalAmountWith(@NonNull final Item item) {
@@ -156,5 +153,9 @@ public class Item implements Serializable {
             totalAmount = totalAmount.add(getTotalAmountWith(item));
         }
         return totalAmount;
+    }
+
+    public static String getItemsTitle(@NonNull @Size(min = 1) List<Item> items, final String multipleDefault) {
+        return items.size() > 1 ? multipleDefault : items.get(0).getTitle();
     }
 }

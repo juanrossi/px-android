@@ -1,8 +1,10 @@
 package com.mercadopago.core;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import com.google.gson.Gson;
 import com.mercadopago.BankDealsActivity;
 import com.mercadopago.CardVaultActivity;
@@ -35,7 +37,6 @@ import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.util.JsonUtil;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -279,7 +280,6 @@ public class MercadoPagoComponents {
         }
 
         public static class CardVaultActivityBuilder {
-            private Activity activity;
             private String merchantPublicKey;
             private BigDecimal amount;
             private Site site;
@@ -296,11 +296,6 @@ public class MercadoPagoComponents {
             private boolean automaticSelection;
             private String payerEmail;
             private String payerAccessToken;
-
-            public CardVaultActivityBuilder setActivity(Activity activity) {
-                this.activity = activity;
-                return this;
-            }
 
             public CardVaultActivityBuilder setMerchantPublicKey(String merchantPublicKey) {
                 this.merchantPublicKey = merchantPublicKey;
@@ -382,11 +377,16 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public void startActivity() {
+            public CardVaultActivityBuilder setCheckoutPreference(final CheckoutPreference checkoutPreference) {
+                this.setAmount(checkoutPreference.getTotalAmount())
+                    .setSite(checkoutPreference.getSite())
+                    .setPayerEmail(checkoutPreference.getPayer().getEmail())
+                    .setPaymentPreference(checkoutPreference.getPaymentPreference());
+                return this;
+            }
 
-                if (activity == null) {
-                    throw new IllegalStateException("activity is null");
-                }
+            public void startActivity(@NonNull final Activity context, int reqCode) {
+
                 if (merchantPublicKey == null && payerAccessToken == null) {
                     throw new IllegalStateException("key is null");
                 }
@@ -398,11 +398,11 @@ public class MercadoPagoComponents {
                         throw new IllegalStateException("site is null");
                     }
                 }
-                startCardVaultActivity();
+                startCardVaultActivity(context, reqCode);
             }
 
-            private void startCardVaultActivity() {
-                Intent cardVaultIntent = new Intent(activity, CardVaultActivity.class);
+            private Intent getIntent(final Context context) {
+                Intent cardVaultIntent = new Intent(context, CardVaultActivity.class);
                 cardVaultIntent.putExtra("merchantPublicKey", merchantPublicKey);
 
                 if (amount != null) {
@@ -410,34 +410,29 @@ public class MercadoPagoComponents {
                 }
 
                 cardVaultIntent.putExtra("site", JsonUtil.getInstance().toJson(site));
-
                 cardVaultIntent.putExtra("installmentsEnabled", installmentsEnabled);
-
                 cardVaultIntent.putExtra("showBankDeals", showBankDeals);
-
                 cardVaultIntent.putExtra("payerEmail", payerEmail);
-
                 cardVaultIntent.putExtra("payerAccessToken", payerAccessToken);
-
                 cardVaultIntent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
-
                 cardVaultIntent.putExtra("paymentMethodList", JsonUtil.getInstance().toJson(paymentMethodList));
-
                 cardVaultIntent.putExtra("paymentRecovery", JsonUtil.getInstance().toJson(paymentRecovery));
-
                 cardVaultIntent.putExtra("card", JsonUtil.getInstance().toJson(card));
-
                 cardVaultIntent.putExtra("installmentsReviewEnabled", installmentsReviewEnabled);
-
                 cardVaultIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-
                 cardVaultIntent.putExtra("discountEnabled", discountEnabled);
-
                 cardVaultIntent.putExtra("automaticSelection", automaticSelection);
-
                 cardVaultIntent.putExtra("escEnabled", escEnabled);
 
-                activity.startActivityForResult(cardVaultIntent, CARD_VAULT_REQUEST_CODE);
+                return cardVaultIntent;
+            }
+
+            private void startCardVaultActivity(@NonNull Activity context, final int reqCode) {
+                context.startActivityForResult(getIntent(context), reqCode);
+            }
+
+            public void startActivity(final Fragment oneTapFragment, final int reqCode) {
+                oneTapFragment.startActivityForResult(getIntent(oneTapFragment.getActivity()), reqCode);
             }
         }
 

@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PaymentMethodSearchItemAdapter;
@@ -60,7 +59,6 @@ import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.ScaleUtil;
 import com.mercadopago.views.PaymentVaultView;
-
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -372,7 +370,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     @Override
     public void startSavedCardFlow(Card card, BigDecimal amount) {
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
-                .setActivity(this)
                 .setMerchantPublicKey(mPublicKey)
                 .setPayerAccessToken(mPrivateKey)
                 .setAmount(amount)
@@ -386,7 +383,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                 .setInstallmentsReviewEnabled(mPaymentVaultPresenter.getInstallmentsReviewEnabled())
                 .setShowBankDeals(mShowBankDeals)
                 .setESCEnabled(mEscEnabled)
-                .startActivity();
+            .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
         overrideTransitionIn();
     }
 
@@ -493,7 +490,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
             mSelectedIssuer = JsonUtil.getInstance().fromJson(data.getStringExtra("issuer"), Issuer.class);
             mSelectedPayerCost = JsonUtil.getInstance().fromJson(data.getStringExtra("payerCost"), PayerCost.class);
             mSelectedCard = JsonUtil.getInstance().fromJson(data.getStringExtra("card"), Card.class);
-
             Discount discount = JsonUtil.getInstance().fromJson(data.getStringExtra("discount"), Discount.class);
             if (discount != null) {
                 mPaymentVaultPresenter.setDiscount(discount);
@@ -501,7 +497,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
             }
 
             final CheckoutStore store = CheckoutStore.getInstance();
-
             store.reset();
             store.setSelectedPaymentMethodId(mSelectedPaymentMethod.getId());
 
@@ -630,7 +625,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         paymentPreference.setDefaultPaymentTypeId(paymentType);
 
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
-                .setActivity(this)
                 .setMerchantPublicKey(mPublicKey)
                 .setPayerAccessToken(mPrivateKey)
                 .setPaymentPreference(paymentPreference)
@@ -645,7 +639,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                 .setShowBankDeals(mShowBankDeals)
                 .setESCEnabled(mEscEnabled)
                 .setAcceptedPaymentMethods(mPaymentVaultPresenter.getPaymentMethodSearch().getPaymentMethods())
-                .startActivity();
+            .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
         overrideTransitionIn();
     }
 

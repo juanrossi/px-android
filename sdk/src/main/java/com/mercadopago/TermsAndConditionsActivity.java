@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
-
 import com.mercadopago.model.Sites;
 import com.mercadopago.util.ErrorUtil;
 
@@ -38,8 +37,8 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void validateActivityParameters() throws IllegalStateException {
-        if (mBankDealsTermsAndConditions == null && mSiteId == null) {
-            throw new IllegalStateException("bank deal terms or site id required");
+        if (mSiteId == null) {
+            throw new IllegalStateException("Site required");
         }
     }
 
@@ -81,6 +80,7 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void onInvalidStart(String message) {
+        finish();
         ErrorUtil.startErrorActivity(this, getString(R.string.mpsdk_standard_error_message), message, false, "");
     }
 

@@ -22,6 +22,15 @@ public interface CheckoutService {
     @POST("/{version}/checkout/payment_methods/search/options")
     MPCall<PaymentMethodSearch> getPaymentMethodSearch(@Path(value = "version", encoded = true) String version, @Header("Accept-Language") String locale, @Query("public_key") String publicKey, @Query("amount") BigDecimal amount, @Query("excluded_payment_types") String excludedPaymentTypes, @Query("excluded_payment_methods") String excludedPaymentMethods, @Body PayerIntent payerIntent, @Query("site_id") String siteId, @Query("api_version") String apiVersion, @Query("processing_mode") String processingMode);
 
+    @GET("/payment_methods/onetap/plugin")
+    MPCall<PaymentMethodSearch> getPaymentMethodSearchOneTapPlugin();
+
+    @GET("/payment_methods/onetap/card")
+    MPCall<PaymentMethodSearch> getPaymentMethodSearchOneTapCard();
+
+    @GET("/payment_methods/onetap/none")
+    MPCall<PaymentMethodSearch> getPaymentMethodSearchOneTapNone();
+
     @POST("/{version}/checkout/payments")
     MPCall<Payment> createPayment(@Path(value = "version", encoded = true) String version, @Header("X-Idempotency-Key") String transactionId, @Body Map<String, Object> body);
 

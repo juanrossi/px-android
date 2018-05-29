@@ -24,7 +24,6 @@ import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.views.CardVaultView;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -563,7 +562,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     private void createESCToken() {
         if (savedCardAvailable() && !isESCEmpty()) {
 
-            mESCCardToken = new SavedESCCardToken(mCard.getId(), "", true, mESC);
+            mESCCardToken = SavedESCCardToken.createWithEsc(mCard.getId(), mESC);
 
             getResourcesProvider().createESCTokenAsync(mESCCardToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
                 @Override

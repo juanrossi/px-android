@@ -1,5 +1,6 @@
 package com.mercadopago.views;
 
+import android.support.annotation.NonNull;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.model.Payment;
@@ -8,6 +9,7 @@ import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.mvp.MvpView;
 import com.mercadopago.plugins.model.BusinessPaymentModel;
+import com.mercadopago.viewmodel.OneTapModel;
 
 public interface CheckoutView extends MvpView {
 
@@ -24,8 +26,6 @@ public interface CheckoutView extends MvpView {
     void showPaymentResult(PaymentResult paymentResult);
 
     void backToReviewAndConfirm();
-
-    void backToPaymentMethodSelection();
 
     void finishWithPaymentResult();
 
@@ -49,8 +49,6 @@ public interface CheckoutView extends MvpView {
 
     void trackScreen();
 
-    void finishFromReviewAndConfirm();
-
     void showHook(final Hook hook, final int requestCode);
 
     void showPaymentProcessor();
@@ -60,4 +58,10 @@ public interface CheckoutView extends MvpView {
     void fetchImageFromUrl(String url);
 
     void showBusinessResult(BusinessPaymentModel model);
+
+    void showOneTap(@NonNull final OneTapModel oneTapModel);
+
+    void hideProgress();
+
+    void exitCheckout(int resCode);
 }

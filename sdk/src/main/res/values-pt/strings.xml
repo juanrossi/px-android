@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- one tap -->
+    <string name="mpsdk_pay">Pagar</string>
+    <string name="discount_ceil_message">Com um limite de reembolso</string>
+
     <!-- Banks deals -->
     <string name="mpsdk_empty_bank_deals">Você não tem nenhuma promoção disponível</string>
     <string name="mpsdk_bank">banco</string>
@@ -26,9 +30,6 @@
 
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">Em quantas parcelas?</string>
-
-    <string name="mpsdk_installments_by">x</string>
-    <string name="mpsdk_installments_cft" >CFT</string>
 
 
     <!-- Checkout -->
@@ -236,7 +237,6 @@
     <string name="mpsdk_ran_out_of_quantity_uses_quantity">O número de pedidos esgotados</string>
     <string name="mpsdk_amount_doesnt_match">Montante fora do alcance</string>
     <string name="mpsdk_campaign_expired">Campanha expirado</string>
-    <string name="mpsdk_discount_percent_off">%1$s %%</string>
     <string name="mpsdk_total">Total:</string>
     <string name="mpsdk_something_went_wrong">Ops! Algo deu errado…</string>
 
