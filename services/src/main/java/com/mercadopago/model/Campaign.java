@@ -4,9 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.mercadopago.lite.util.ParcelableUtil;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 public class Campaign implements Serializable, Parcelable {
 
@@ -53,7 +53,7 @@ public class Campaign implements Serializable, Parcelable {
 
     private Campaign(Parcel in) {
         id = in.readString();
-        maxCouponAmount = new BigDecimal(in.readString());
+        maxCouponAmount = ParcelableUtil.getBigDecimalReadByte(in);
         codeType = in.readString();
     }
 
@@ -77,7 +77,7 @@ public class Campaign implements Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(maxCouponAmount.toString());
+        ParcelableUtil.writeByte(dest, maxCouponAmount);
         dest.writeString(codeType);
     }
 
@@ -114,5 +114,4 @@ public class Campaign implements Serializable, Parcelable {
             return new Campaign(this);
         }
     }
-
 }
