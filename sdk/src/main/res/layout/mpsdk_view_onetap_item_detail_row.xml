@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:orientation="vertical"
+              android:padding="@dimen/mpsdk_s_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.mercadopago.customviews.MPTextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:textColor="@color/mpsdk_black"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/mpsdk_s_margin"
+            android:layout_marginRight="@dimen/mpsdk_s_margin"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textSize="@dimen/mpsdk_m_text"
+            tools:text="3 Google play"/>
+
+        <com.mercadopago.customviews.MPTextView
+            android:id="@+id/item_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textColor="@color/black"
+            android:lines="1"
+            android:textSize="@dimen/mpsdk_m_text"
+            tools:text="$ 870"/>
+    </LinearLayout>
+
+    <com.mercadopago.customviews.MPTextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:textColor="@color/mpsdk_warm_grey"
+        android:lines="1"
+        android:textSize="@dimen/mpsdk_xs_text"
+        tools:text="Tarjeta"/>
+
+</LinearLayout>

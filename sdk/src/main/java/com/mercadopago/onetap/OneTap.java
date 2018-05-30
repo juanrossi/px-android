@@ -24,7 +24,7 @@ public interface OneTap {
 
         void showPaymentFlowPlugin(@NonNull final String paymentTypeId, @NonNull final String paymentMethodId);
 
-        void showMoreAmount();
+        void showDetailModal(@NonNull final OneTapModel model);
     }
 
     interface Actions {

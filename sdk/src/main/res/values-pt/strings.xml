@@ -4,6 +4,7 @@
     <!-- one tap -->
     <string name="mpsdk_pay">Pagar</string>
     <string name="discount_ceil_message">Com um limite de reembolso</string>
+    <string name="mpsdk_payment_detail_title_modal">Detalhe</string>
 
     <!-- Banks deals -->
     <string name="mpsdk_empty_bank_deals">Você não tem nenhuma promoção disponível</string>

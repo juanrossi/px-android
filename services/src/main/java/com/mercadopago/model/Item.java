@@ -122,7 +122,7 @@ public class Item implements Serializable {
             && getId() != null;
     }
 
-    private static BigDecimal getTotalAmountWith(@NonNull final Item item) {
+    public static BigDecimal getItemTotalAmount(@NonNull final Item item) {
         return item.getUnitPrice().multiply(new BigDecimal(item.getQuantity()));
     }
 
@@ -150,7 +150,7 @@ public class Item implements Serializable {
     public static BigDecimal getTotalAmountWith(@NonNull final List<Item> items) {
         BigDecimal totalAmount = BigDecimal.ZERO;
         for (Item item : items) {
-            totalAmount = totalAmount.add(getTotalAmountWith(item));
+            totalAmount = totalAmount.add(getItemTotalAmount(item));
         }
         return totalAmount;
     }

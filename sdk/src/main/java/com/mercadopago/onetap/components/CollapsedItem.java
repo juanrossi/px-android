@@ -10,7 +10,7 @@ import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
 import javax.annotation.Nonnull;
 
-class Item extends CompactComponent<Item.Props, Void> {
+class CollapsedItem extends CompactComponent<CollapsedItem.Props, Void> {
 
     /* default */ static class Props {
 
@@ -18,13 +18,12 @@ class Item extends CompactComponent<Item.Props, Void> {
         @NonNull final String itemTitle;
 
         /* default */ Props(final int icon, @NonNull final String itemTitle) {
-
             this.icon = icon;
             this.itemTitle = itemTitle;
         }
     }
 
-    /* default */ Item(final Props props) {
+    /* default */ CollapsedItem(final Props props) {
         super(props);
     }
 

@@ -153,10 +153,8 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     @Override
-    public void showMoreAmount() {
-        // TODO
-        PaymentDetailInfoDialog paymentDetailInfoDialog = new PaymentDetailInfoDialog();
-        paymentDetailInfoDialog.show(getChildFragmentManager(), "");
+    public void showDetailModal(@NonNull final OneTapModel model) {
+        PaymentDetailInfoDialog.showDialog(getChildFragmentManager(), model);
     }
 
     @Override

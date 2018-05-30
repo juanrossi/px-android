@@ -124,7 +124,7 @@ public class OneTapPresenterTest {
     @Test
     public void onAmountShowMore() {
         oneTapPresenter.onAmountShowMore();
-        verify(view).showMoreAmount();
+        verify(view).showDetailModal(model);
         verifyNoMoreInteractions(view);
     }
 }

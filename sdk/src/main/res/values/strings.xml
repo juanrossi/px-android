@@ -6,6 +6,7 @@
     <string name="mpsdk_total_amount_holder" translatable="false">(%1$s)</string>
     <string name="mpsdk_string_holder" translatable="false">%1$s</string>
     <string name="discount_ceil_message">With stop reinstatement</string>
+    <string name="mpsdk_payment_detail_title_modal">Detail</string>
 
     <!-- Banks deals -->
     <string name="mpsdk_empty_bank_deals">No promotions available for you</string>

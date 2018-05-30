@@ -35,7 +35,7 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
             props.getCollectorIcon() == null ? R.drawable.mpsdk_review_item_default : props.getCollectorIcon();
         final String itemsTitle = com.mercadopago.model.Item
             .getItemsTitle(props.getCheckoutPreference().getItems(), defaultMultipleTitle);
-        final View render = new Item(new Item.Props(icon, itemsTitle)).render(parent);
+        final View render = new CollapsedItem(new CollapsedItem.Props(icon, itemsTitle)).render(parent);
         parent.addView(render);
     }
 

@@ -61,6 +61,6 @@ class OneTapPresenter extends MvpPresenter<OneTap.View, ResourcesProvider> imple
 
     @Override
     public void onAmountShowMore() {
-        getView().showMoreAmount();
+        getView().showDetailModal(model);
     }
 }

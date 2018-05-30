@@ -68,4 +68,8 @@ public class OneTapModel implements Serializable {
     public Integer getCollectorIcon() {
         return collectorIcon;
     }
+
+    public boolean hasDiscount() {
+        return discount != null;
+    }
 }
