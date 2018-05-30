@@ -207,7 +207,8 @@ public class ExamplesUtils {
         discountBuilder.setPercentOff(new BigDecimal(20));
 
         //TODO refactor campaignId
-        Campaign.Builder campaignBuilder = new Campaign.Builder(77123L, new BigDecimal(200));
+        Campaign.Builder campaignBuilder = new Campaign.Builder(77123L);
+        campaignBuilder.setMaxCouponAmount(new BigDecimal(200));
 
         return createBase().setDiscount(discountBuilder.build(), campaignBuilder.build());
     }
