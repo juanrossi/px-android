@@ -147,7 +147,7 @@ public class SecurityCodePresenterTest {
         mvp.getPresenter().setCardInfo(new CardInfo(Cards.getCard()));
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
         assertEquals(mvp.getView().maxLenght, mockedPaymentMethod.getSettings().get(0).getSecurityCode().getLength());
     }
 
@@ -165,7 +165,7 @@ public class SecurityCodePresenterTest {
         mvp.getPresenter().setCardInfo(new CardInfo(mockedCard));
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
         assertEquals(mvp.getView().maxLenght, SecurityCodePresenter.CARD_DEFAULT_SECURITY_CODE_LENGTH);
     }
 
@@ -182,7 +182,7 @@ public class SecurityCodePresenterTest {
         mvp.getPresenter().setCardInfo(new CardInfo(mockedToken));
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         mvp.getProvider().setCloneTokenResponse(mockedToken);
@@ -205,7 +205,7 @@ public class SecurityCodePresenterTest {
         mvp.getPresenter().setCardInfo(new CardInfo(mockedToken));
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         mvp.getProvider().setCloneTokenResponse(mockedToken);
@@ -230,7 +230,7 @@ public class SecurityCodePresenterTest {
         mvp.getPresenter().setCardInfo(new CardInfo(mockedToken));
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         ApiException apiException = Tokens.getInvalidCloneToken();
@@ -256,7 +256,7 @@ public class SecurityCodePresenterTest {
         mvp.getPresenter().setCardInfo(new CardInfo(mockedToken));
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         mvp.getProvider().setCloneTokenResponse(mockedToken);
@@ -285,7 +285,7 @@ public class SecurityCodePresenterTest {
         mvp.getPresenter().setCardInfo(new CardInfo(mockedToken));
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         mvp.getProvider().shouldFailSecurityCodeValidation = true;
@@ -312,7 +312,7 @@ public class SecurityCodePresenterTest {
         mvp.getProvider().enableESC(true);
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         Token mockedToken = Tokens.getTokenWithESC();
@@ -337,7 +337,7 @@ public class SecurityCodePresenterTest {
         mvp.getProvider().enableESC(true);
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         ApiException apiException = Tokens.getInvalidTokenWithESC();
@@ -370,7 +370,7 @@ public class SecurityCodePresenterTest {
         mvp.getProvider().enableESC(true);
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         mvp.getProvider().setCreateTokenWithEscResponse(mockedToken);
@@ -394,7 +394,7 @@ public class SecurityCodePresenterTest {
         mvp.getProvider().enableESC(false);
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         Token mockedToken = Tokens.getToken();
@@ -419,7 +419,7 @@ public class SecurityCodePresenterTest {
         mvp.getProvider().enableESC(false);
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         ApiException apiException = Tokens.getInvalidCreateToken();
@@ -450,7 +450,7 @@ public class SecurityCodePresenterTest {
         mvp.getProvider().enableESC(true);
 
         mvp.getPresenter().initialize();
-        mvp.getPresenter().initializeSecurityCodeSettings();
+        mvp.getPresenter().initializeSettings();
 
         //Input for security code
         mvp.getProvider().setCreateTokenWithEscResponse(mockedToken);

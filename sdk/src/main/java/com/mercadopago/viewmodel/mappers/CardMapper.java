@@ -11,13 +11,15 @@ public class CardMapper extends Mapper<OneTapModel, Card> {
 
     @Override
     public Card map(@NonNull final OneTapModel val) {
-        OneTapMetadata oneTapMetadata = val.getPaymentMethods().getOneTapMetadata();
-        CardPaymentMetadata oneTapCardMetadata = oneTapMetadata.getCard();
-        PaymentMethod paymentMethod =
+        final OneTapMetadata oneTapMetadata = val.getPaymentMethods().getOneTapMetadata();
+        final CardPaymentMetadata oneTapCardMetadata = oneTapMetadata.getCard();
+        final PaymentMethod paymentMethod =
             val.getPaymentMethods().getPaymentMethodById(oneTapMetadata.getPaymentMethodId());
-        Card card = val.getPaymentMethods().getCardById(oneTapCardMetadata.getId());
+        final Card card = val.getPaymentMethods().getCardById(oneTapCardMetadata.getId());
+        card.setSecurityCode(paymentMethod != null ? paymentMethod.getSecurityCode() : null);
         card.setPaymentMethod(paymentMethod);
         card.setIssuer(oneTapCardMetadata.getIssuer());
+        card.setLastFourDigits(oneTapCardMetadata.getLastFourDigits());
         return card;
     }
 }

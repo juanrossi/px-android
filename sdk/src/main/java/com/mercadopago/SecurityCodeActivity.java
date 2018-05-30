@@ -271,7 +271,7 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
     @Override
     public void initialize() {
         initializeControls();
-        mSecurityCodePresenter.initializeSecurityCodeSettings();
+        mSecurityCodePresenter.initializeSettings();
         loadViews();
     }
 
