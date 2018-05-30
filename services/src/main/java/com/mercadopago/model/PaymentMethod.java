@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
+import com.mercadopago.lite.util.ParcelableUtil;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,8 +31,8 @@ public class PaymentMethod implements Parcelable, Serializable {
     /**
      * Constructor for custom payment methods like plugin implementation
      *
-     * @param id            paymentId
-     * @param name          paymentName
+     * @param id paymentId
+     * @param name paymentName
      * @param paymentTypeId paymentTypeId
      */
     public PaymentMethod(final String id, final String name, final String paymentTypeId) {
@@ -60,7 +61,7 @@ public class PaymentMethod implements Parcelable, Serializable {
     public boolean isSecurityCodeRequired(String bin) {
         Setting setting = Setting.getSettingByBin(settings, bin);
         return (setting != null) && (setting.getSecurityCode() != null) &&
-                (setting.getSecurityCode().getLength() != 0);
+            (setting.getSecurityCode().getLength() != 0);
     }
 
     public boolean isIdentificationTypeRequired() {
@@ -118,7 +119,6 @@ public class PaymentMethod implements Parcelable, Serializable {
     public void setSecureThumbnail(String secureThumbnail) {
         this.secureThumbnail = secureThumbnail;
     }
-
 
     public String getDeferredCapture() {
         return deferredCapture;
@@ -203,11 +203,7 @@ public class PaymentMethod implements Parcelable, Serializable {
         secureThumbnail = in.readString();
         deferredCapture = in.readString();
         settings = in.createTypedArrayList(Setting.CREATOR);
-        if (in.readByte() == 0) {
-            accreditationTime = null;
-        } else {
-            accreditationTime = in.readInt();
-        }
+        accreditationTime = ParcelableUtil.getIntegerReadByte(in);
         merchantAccountId = in.readString();
         financialInstitutions = in.createTypedArrayList(FinancialInstitution.CREATOR);
         String minString = in.readString();
@@ -248,12 +244,7 @@ public class PaymentMethod implements Parcelable, Serializable {
         dest.writeString(secureThumbnail);
         dest.writeString(deferredCapture);
         dest.writeTypedList(settings);
-        if (accreditationTime == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(accreditationTime);
-        }
+        ParcelableUtil.writeByte(dest, accreditationTime);
         dest.writeString(merchantAccountId);
         dest.writeTypedList(financialInstitutions);
         dest.writeString(minAllowedAmount != null ? minAllowedAmount.toString() : null);

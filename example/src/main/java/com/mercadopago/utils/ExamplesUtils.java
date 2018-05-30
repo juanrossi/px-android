@@ -124,7 +124,7 @@ public class ExamplesUtils {
 
     private static Builder startCompleteRejectedBusiness() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.ERROR, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.REJECTED, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
                         .setReceiptId("#123455")
                         .setPaymentMethodVisibility(true)
@@ -136,7 +136,7 @@ public class ExamplesUtils {
     }
 
     private static Builder startCompleteApprovedBusinessWithPaymentMethod() {
-        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.SUCCESS, "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", "Title")
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", "Title")
                 .setHelp("Help description!")
                 .setReceiptId("#123455")
                 .setStatementDescription("PEDRO")
@@ -148,7 +148,7 @@ public class ExamplesUtils {
     }
 
     private static Builder startCompleteApprovedBusinessWithPaymentMethodNoHelp() {
-        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.SUCCESS, R.drawable.mpsdk_icon_card, "Title")
+        BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
                 .setReceiptId("#123455")
                 .setPaymentMethodVisibility(true)
                 .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
@@ -160,7 +160,7 @@ public class ExamplesUtils {
 
     private static Builder startCompleteApprovedBusiness() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.SUCCESS, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
                         .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
                         .build();
@@ -170,7 +170,7 @@ public class ExamplesUtils {
 
     private static Builder startCompletePendingBusiness() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.WARNING, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
                         .setHelp("Help description!")
                         .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                         .build();
@@ -180,7 +180,7 @@ public class ExamplesUtils {
 
     private static Builder startPendingBusinessNoHelp() {
         BusinessPayment payment =
-                new BusinessPayment.Builder(BusinessPayment.Status.WARNING, R.drawable.mpsdk_icon_card, "Title")
+                new BusinessPayment.Builder(BusinessPayment.Status.PENDING, R.drawable.mpsdk_icon_card, "Title")
                         .setReceiptId("#123455")
                         .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                         .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))

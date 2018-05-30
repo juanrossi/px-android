@@ -3,6 +3,8 @@ package com.mercadopago.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
+
+import com.mercadopago.lite.util.ParcelableUtil;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -125,11 +127,7 @@ public class PayerCost implements Parcelable, Serializable {
     }
 
     protected PayerCost(Parcel in) {
-        if (in.readByte() == 0) {
-            installments = null;
-        } else {
-            installments = in.readInt();
-        }
+        installments = ParcelableUtil.getIntegerReadByte(in);
         labels = in.createStringArrayList();
         recommendedMessage = in.readString();
 
@@ -171,12 +169,8 @@ public class PayerCost implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        if (installments == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(installments);
-        }
+        ParcelableUtil.writeByte(dest, installments);
+
         dest.writeStringList(labels);
 
         dest.writeString(recommendedMessage);
