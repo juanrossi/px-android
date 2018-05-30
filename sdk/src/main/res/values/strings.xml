@@ -28,12 +28,15 @@
     <string name="mpsdk_card_installments_title">How many installments?</string>
 
     <string name="mpsdk_installments_by">x</string>
-    <string name="mpsdk_installments_cft" >CFT</string>
+    <string name="mpsdk_installments_cft">CFT</string>
 
-    <!-- Checkout -->
-    <string name="mpsdk_text_terms_and_conditions_start">By paying, I claim to be an adult and that I accept the</string>
-    <string name="mpsdk_text_terms_and_conditions_linked">Terms and conditions</string>
-    <string name="mpsdk_text_terms_and_conditions_end">of Mercado Pago</string>
+    <!-- Terms And Conditions -->
+    <string name="mpsdk_terms_and_conditions_message">By paying, I claim to be an adult and that I accept the</string>
+    <string name="mpsdk_terms_and_conditions_linked_message">Terms and conditions.</string>
+    <string name="mpsdk_terms_and_conditions">Terms and conditions</string>
+    <string name="mpsdk_discount_terms_and_conditions_message">Mercado Pago\'s exclusive discount.</string>
+    <string name="mpsdk_discount_terms_and_conditions_linked_message">See conditions</string>
+
 
     <!-- Card token and guessing -->
     <string name="mpsdk_invalid_card_number_incomplete">Enter all the numbers of the card</string>
@@ -217,7 +220,6 @@
     <string name="mpsdk_review_summary_shipping">Shipping</string>
     <string name="mpsdk_review_summary_arrear">Arrear</string>
     <string name="mpsdk_review_summary_discount">Discount</string>
-    <string name="mpsdk_review_summary_discounts">Discounts</string>
     <string name="mpsdk_ryc_account_money_description">With your account money</string>
 
     <!-- Discount -->

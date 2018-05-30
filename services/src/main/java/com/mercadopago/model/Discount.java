@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 import static com.mercadopago.lite.util.CurrenciesUtil.isValidCurrency;
 
@@ -21,7 +22,7 @@ public class Discount implements Serializable, Parcelable {
     private BigDecimal amountOff;
     private BigDecimal couponAmount;
 
-    public Discount(Builder builder) {
+    protected Discount(Builder builder) {
         this.id = builder.id;
         this.currencyId = builder.currencyId;
         this.couponAmount = builder.couponAmount;
@@ -96,6 +97,12 @@ public class Discount implements Serializable, Parcelable {
         dest.writeString(percentOff.toString());
         dest.writeString(amountOff.toString());
         dest.writeString(couponAmount.toString());
+    }
+
+    public String getDiscountTermsUrl() {
+        return String
+                .format(Locale.US, "https://api.mercadolibre.com/campaigns/%s/terms_and_conditions?format_type=html",
+                        this.id);
     }
 
     public static class Builder {

@@ -27,6 +27,10 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
 
         addSummary(component, linearLayout);
 
+        if (component.hasDiscountTermsAndConditions()) {
+            addDiscountTermsAndConditions(component, linearLayout);
+        }
+
         if (component.hasItemsEnabled()) {
             addReviewItems(component, linearLayout);
         }
@@ -47,7 +51,7 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
             renderer.render(linearLayout);
         }
 
-        if (component.props.termsAndConditionsModel.isActive()) {
+        if (component.hasMercadoPagoTermsAndConditions()) {
             addTermsAndConditions(component, linearLayout);
         }
 
@@ -62,6 +66,14 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
                         component.props.preferences),
                         component.getSummaryProvider()));
         summary.render(linearLayout);
+    }
+
+    private void addDiscountTermsAndConditions(@NonNull ReviewAndConfirmContainer component, final ViewGroup parent) {
+
+        TermsAndConditionsComponent discountTermsAndConditionsComponent = new TermsAndConditionsComponent(component.props.discountTermsAndConditionsModel);
+
+        View discountTermsAndConditionsView = discountTermsAndConditionsComponent.render(parent);
+        parent.addView(discountTermsAndConditionsView);
     }
 
     @NonNull
@@ -97,10 +109,12 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
     }
 
     private void addTermsAndConditions(@NonNull final ReviewAndConfirmContainer component,
-                                       final ViewGroup container) {
-        Renderer termsAndConditions = RendererFactory.create(container.getContext(),
-                new TermsAndCondition(component.props.termsAndConditionsModel, component.getDispatcher()));
-        termsAndConditions.render(container);
+                                       final ViewGroup parent) {
+
+        TermsAndConditionsComponent termsAndConditionsComponent = new TermsAndConditionsComponent(component.props.mercadoPagoTermsAndConditionsModel);
+
+        View discountTermsAndConditionsView = termsAndConditionsComponent.render(parent);
+        parent.addView(discountTermsAndConditionsView);
     }
 
 }

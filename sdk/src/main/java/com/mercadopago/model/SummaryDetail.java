@@ -4,10 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mromar on 9/6/17.
- */
-
 public class SummaryDetail {
 
     private String title;

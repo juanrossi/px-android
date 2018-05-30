@@ -80,6 +80,6 @@ public class DiscountDetailDialog extends MeliDialog {
     @Nullable
     @Override
     public String getSecondaryExitString() {
-        return getString(R.string.mpsdk_text_terms_and_conditions_linked);
+        return getString(R.string.mpsdk_terms_and_conditions);
     }
 }

@@ -18,7 +18,7 @@ public class Campaign implements Serializable, Parcelable {
     private static final String CODE_TYPE_MULTIPLE = "multiple";
     private static final String CODE_TYPE_NONE = "none";
 
-    public Campaign(Builder builder) {
+    private Campaign(Builder builder) {
         this.id = builder.id;
         this.maxCouponAmount = builder.maxCouponAmount;
         this.codeType = builder.codeType;

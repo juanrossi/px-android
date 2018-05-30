@@ -29,12 +29,14 @@
     <string name="mpsdk_card_installments_title">¿En cuántas cuotas?</string>
 
     <string name="mpsdk_installments_by">x</string>
-    <string name="mpsdk_installments_cft" >CFT</string>
+    <string name="mpsdk_installments_cft">CFT</string>
 
-    <!-- Checkout -->
-    <string name="mpsdk_text_terms_and_conditions_start">Al pagar, afirmo que soy mayor de edad y acepto los</string>
-    <string name="mpsdk_text_terms_and_conditions_linked">Términos y condiciones</string>
-    <string name="mpsdk_text_terms_and_conditions_end">de Mercado Pago</string>
+    <!-- Terms And Conditions -->
+    <string name="mpsdk_terms_and_conditions_message">Al pagar, afirmo que soy mayor de edad y acepto los</string>
+    <string name="mpsdk_terms_and_conditions_linked_message">Términos y condiciones.</string>
+    <string name="mpsdk_terms_and_conditions">Términos y condiciones</string>
+    <string name="mpsdk_discount_terms_and_conditions_message">Descuento exclusivo de Mercado Pago.</string>
+    <string name="mpsdk_discount_terms_and_conditions_linked_message">Ver condiciones</string>
 
     <!-- Card token and guessing -->
     <string name="mpsdk_invalid_card_number_incomplete">Ingresa todos los números de la tarjeta</string>
@@ -219,7 +221,6 @@
     <string name="mpsdk_review_summary_total">Total</string>
     <string name="mpsdk_review_summary_subtotal">Subtotal</string>
     <string name="mpsdk_review_summary_discount">Descuento</string>
-    <string name="mpsdk_review_summary_discounts">Descuentos</string>
     <string name="mpsdk_ryc_account_money_description">Con dinero en cuenta</string>
 
     <!-- Discount -->

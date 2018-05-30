@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by mromar on 9/6/17.
- */
-
 public class Summary {
 
     private final String disclaimer;
