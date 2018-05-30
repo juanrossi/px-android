@@ -10,7 +10,7 @@ import java.math.BigInteger;
 
 public class Campaign implements Serializable, Parcelable {
 
-    private Long id;
+    private String id;
     private String codeType;
     private BigDecimal maxCouponAmount;
 
@@ -25,7 +25,7 @@ public class Campaign implements Serializable, Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -52,7 +52,7 @@ public class Campaign implements Serializable, Parcelable {
     }
 
     private Campaign(Parcel in) {
-        id = Long.valueOf(in.readString());
+        id = in.readString();
         maxCouponAmount = new BigDecimal(in.readString());
         codeType = in.readString();
     }
@@ -76,14 +76,14 @@ public class Campaign implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id.toString());
+        dest.writeString(id);
         dest.writeString(maxCouponAmount.toString());
         dest.writeString(codeType);
     }
 
     public static class Builder {
         //region mandatory params
-        private Long id;
+        private String id;
         //endregion mandatory params
         private BigDecimal maxCouponAmount = BigDecimal.ZERO;
         private String codeType;
@@ -94,7 +94,7 @@ public class Campaign implements Serializable, Parcelable {
          * @param id campaign id
          */
         @SuppressWarnings("unused")
-        public Builder(@NonNull Long id) {
+        public Builder(@NonNull String id) {
             this.id = id;
         }
 
