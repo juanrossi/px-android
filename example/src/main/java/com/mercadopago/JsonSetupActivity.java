@@ -130,9 +130,6 @@ public class JsonSetupActivity extends AppCompatActivity {
                 if (servicePreference.hasCreatePaymentURL()) {
                     builder.setCreatePaymentURL(servicePreference.getCreatePaymentURL(), servicePreference.getCreatePaymentURI(), servicePreference.getCreatePaymentAdditionalInfo());
                 }
-                if (servicePreference.hasGetDiscountURL()) {
-                    builder.setDiscountURL(servicePreference.getGetMerchantDiscountBaseURL(), servicePreference.getGetMerchantDiscountURI(), servicePreference.getGetDiscountAdditionalInfo());
-                }
                 if (servicePreference.hasCreateCheckoutPrefURL()) {
                     builder.setCreateCheckoutPreferenceURL(servicePreference.getCreateCheckoutPreferenceURL(), servicePreference.getCreateCheckoutPreferenceURI(), servicePreference.getCreateCheckoutPreferenceAdditionalInfo());
                 }

@@ -1,5 +1,6 @@
 package com.mercadopago.onetap.components;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mercadopago.R;
@@ -7,8 +8,9 @@ import com.mercadopago.components.Action;
 import com.mercadopago.components.Button;
 import com.mercadopago.components.ButtonPrimary;
 import com.mercadopago.components.CompactComponent;
-import com.mercadopago.components.TermsAndCondition;
+import com.mercadopago.components.TermsAndConditionsComponent;
 import com.mercadopago.onetap.OneTap;
+import com.mercadopago.review_and_confirm.models.LineSeparatorType;
 import com.mercadopago.review_and_confirm.models.TermsAndConditionsModel;
 import com.mercadopago.viewmodel.OneTapModel;
 import javax.annotation.Nonnull;
@@ -54,12 +56,16 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
     }
 
     private void addTermsAndConditions(final ViewGroup parent) {
-        //TODO remove true and add depending on ...discount? login? if discount is other view that does not exists yet.
-        final TermsAndConditionsModel model =
-            new TermsAndConditionsModel(props.getCheckoutPreference().getSiteId(), true);
-        final View view = new TermsAndCondition(model)
-            .render(parent);
-        parent.addView(view);
+        if (props.getDiscount() != null) {
+            final Context context = parent.getContext();
+            TermsAndConditionsModel model = new TermsAndConditionsModel(props.getDiscount().getDiscountTermsUrl(),
+                context.getString(R.string.mpsdk_discount_terms_and_conditions_message),
+                context.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message),
+                LineSeparatorType.NONE);
+            final View view = new TermsAndConditionsComponent(model)
+                .render(parent);
+            parent.addView(view);
+        }
     }
 
     private void addConfirmButton(final @Nonnull ViewGroup parent) {

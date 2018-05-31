@@ -4,6 +4,7 @@ import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
@@ -16,7 +17,6 @@ import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.InstallmentsProvider;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.util.InstallmentsUtil;
 import com.mercadopago.views.InstallmentsActivityView;
 
@@ -47,7 +47,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     private Site mSite;
 
     public void initialize() {
-        initializeDiscountRow();
         showSiteRelatedInformation();
         loadPayerCosts();
     }
@@ -117,10 +116,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         });
     }
 
-    public void initializeDiscountRow() {
-        getView().showDiscountRow(mAmount);
-    }
-
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         mPaymentMethod = paymentMethod;
     }
@@ -174,7 +169,7 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     public BigDecimal getAmount() {
         BigDecimal amount;
 
-        if (!mDiscountEnabled || mDiscount == null || !isDiscountValid()) {
+        if (!mDiscountEnabled || mDiscount == null) {
             amount = mAmount;
         } else {
             amount = mDiscount.getAmountWithDiscount(mAmount);
@@ -182,20 +177,8 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         return amount;
     }
 
-    private Boolean isDiscountValid() {
-        return isAmountValid(mDiscount.getCouponAmount()) && isCampaignIdValid() && isDiscountCurrencyIdValid();
-    }
-
-    private Boolean isDiscountCurrencyIdValid() {
-        return mDiscount != null && mDiscount.getCurrencyId() != null && CurrenciesUtil.isValidCurrency(mDiscount.getCurrencyId());
-    }
-
     private Boolean isAmountValid(BigDecimal amount) {
         return amount != null && amount.compareTo(BigDecimal.ZERO) >= 0;
-    }
-
-    private Boolean isCampaignIdValid() {
-        return mDiscount.getId() != null;
     }
 
     public boolean isRequiredCardDrawn() {
@@ -208,7 +191,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
 
     public void onDiscountReceived(Discount discount) {
         setDiscount(discount);
-        initializeDiscountRow();
         getInstallmentsAsync();
     }
 
@@ -284,8 +266,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         if (isInstallmentsReviewEnabled() && isInstallmentsReviewRequired(selectedPayerCost)) {
             getView().hideInstallmentsRecyclerView();
             getView().showInstallmentsReviewView();
-
-            initializeDiscountRow();
             getView().initInstallmentsReviewView(selectedPayerCost);
         } else {
             getView().finishWithResult(selectedPayerCost);

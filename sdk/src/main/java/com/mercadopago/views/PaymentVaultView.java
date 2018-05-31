@@ -1,13 +1,20 @@
 package com.mercadopago.views;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
+import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.CustomSearchItem;
+import com.mercadopago.model.Discount;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearchItem;
+import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpView;
 import com.mercadopago.plugins.PaymentMethodPlugin;
 
@@ -45,7 +52,7 @@ public interface PaymentVaultView extends MvpView {
 
     void finishPaymentMethodSelection(PaymentMethod paymentMethod, Payer payer);
 
-    void showDiscount(BigDecimal transactionAmount);
+    void showAmount(@Nullable Discount discount, @Nullable Campaign campaign, final BigDecimal totalAmount, final Site site);
 
     void startDiscountFlow(BigDecimal transactionAmount);
 
@@ -56,4 +63,10 @@ public interface PaymentVaultView extends MvpView {
     void showHook(final Hook hook, final int code);
 
     void showPaymentMethodPluginConfiguration();
+
+    void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign);
+
+    void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign);
+
+    void showDiscountInputDialog();
 }

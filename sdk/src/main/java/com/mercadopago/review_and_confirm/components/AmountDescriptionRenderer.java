@@ -33,7 +33,6 @@ public class AmountDescriptionRenderer extends Renderer<AmountDescription> {
 
         descriptionTextView.setTextColor(component.props.textColor);
         amountTextView.setTextColor(component.props.textColor);
-
         return bodyView;
     }
 }

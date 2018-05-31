@@ -77,12 +77,4 @@ public class PaymentVaultActivityTest {
         mTestRule.launchActivity(validStartIntent);
         intended(hasComponent(CardVaultActivity.class.getName()));
     }
-
-    private Discount getDirectDiscount() {
-        Discount discount = new Discount();
-        discount.setCouponAmount(new BigDecimal("100"));
-        discount.setId("123");
-        discount.setAmountOff(new BigDecimal("100"));
-        return discount;
-    }
 }

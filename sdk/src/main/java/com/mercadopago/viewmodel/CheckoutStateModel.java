@@ -1,6 +1,7 @@
 package com.mercadopago.viewmodel;
 
 import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
@@ -37,6 +38,7 @@ public final class CheckoutStateModel implements Serializable {
     public ServicePreference servicePreference;
     public PaymentResultScreenPreference paymentResultScreenPreference;
     public Discount discount;
+    public Campaign campaign;
     public PaymentData paymentDataInput;
     public PaymentResult paymentResultInput;
     public boolean binaryMode;
@@ -62,6 +64,7 @@ public final class CheckoutStateModel implements Serializable {
     public static CheckoutStateModel from(final int requestedResult, MercadoPagoCheckout mercadoPagoCheckout) {
         final CheckoutStateModel checkoutStateModel = new CheckoutStateModel();
         checkoutStateModel.checkoutPreferenceId = mercadoPagoCheckout.getPreferenceId();
+        checkoutStateModel.campaign = mercadoPagoCheckout.getCampaign();
         checkoutStateModel.checkoutPreference = mercadoPagoCheckout.getCheckoutPreference();
         checkoutStateModel.discount = mercadoPagoCheckout.getDiscount();
         checkoutStateModel.servicePreference = mercadoPagoCheckout.getServicePreference();

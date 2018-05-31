@@ -10,7 +10,7 @@ import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.CustomComponent;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
-import com.mercadopago.components.TermsAndCondition;
+import com.mercadopago.components.TermsAndConditionsComponent;
 import com.mercadopago.review_and_confirm.components.actions.ChangePaymentMethodAction;
 import com.mercadopago.review_and_confirm.components.items.ReviewItems;
 import com.mercadopago.review_and_confirm.components.payment_method.PaymentMethodComponent;
@@ -26,6 +26,10 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
         LinearLayout linearLayout = createMainLayout(context);
 
         addSummary(component, linearLayout);
+
+        if (component.hasDiscountTermsAndConditions()) {
+            addDiscountTermsAndConditions(component, linearLayout);
+        }
 
         if (component.hasItemsEnabled()) {
             addReviewItems(component, linearLayout);
@@ -47,7 +51,7 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
             renderer.render(linearLayout);
         }
 
-        if (component.props.termsAndConditionsModel.isActive()) {
+        if (component.hasMercadoPagoTermsAndConditions()) {
             addTermsAndConditions(component, linearLayout);
         }
 
@@ -62,6 +66,14 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
                         component.props.preferences),
                         component.getSummaryProvider()));
         summary.render(linearLayout);
+    }
+
+    private void addDiscountTermsAndConditions(@NonNull ReviewAndConfirmContainer component, final ViewGroup parent) {
+
+        TermsAndConditionsComponent discountTermsAndConditionsComponent = new TermsAndConditionsComponent(component.props.discountTermsAndConditionsModel);
+
+        View discountTermsAndConditionsView = discountTermsAndConditionsComponent.render(parent);
+        parent.addView(discountTermsAndConditionsView);
     }
 
     @NonNull
@@ -97,10 +109,12 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
     }
 
     private void addTermsAndConditions(@NonNull final ReviewAndConfirmContainer component,
-                                       final ViewGroup container) {
-        TermsAndCondition termsAndCondition = new TermsAndCondition(component.props.termsAndConditionsModel);
-        View view = termsAndCondition.render(container);
-        container.addView(view);
+                                       final ViewGroup parent) {
+
+        TermsAndConditionsComponent termsAndConditionsComponent = new TermsAndConditionsComponent(component.props.mercadoPagoTermsAndConditionsModel);
+
+        View discountTermsAndConditionsView = termsAndConditionsComponent.render(parent);
+        parent.addView(discountTermsAndConditionsView);
     }
 
 }
