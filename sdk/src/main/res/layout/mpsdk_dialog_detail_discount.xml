@@ -9,29 +9,55 @@
 
     <com.mercadopago.customviews.MPTextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/mpsdk_xxl_text"
-        android:layout_marginTop="@dimen/mpsdk_xxl_text"
+        android:background="@color/mpsdk_very_light_gray"
+        android:gravity="center"
+        android:paddingBottom="@dimen/mpsdk_xxl_text"
+        android:paddingTop="@dimen/mpsdk_xxl_text"
         android:text="@string/mpsdk_review_summary_discount"
-        android:textSize="@dimen/mpsdk_xxl_text"/>
+        android:textColor="@color/mpsdk_base_text"
+        android:textSize="@dimen/mpsdk_xl_text"/>
 
     <com.mercadopago.customviews.MPTextView
         android:id="@+id/subtitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="@dimen/mpsdk_m_margin"
-        tools:text="50 % OFF"
-        android:textSize="@dimen/mpsdk_large_text"/>
+        android:layout_gravity="left"
+        android:paddingLeft="@dimen/mpsdk_m_margin"
+        android:paddingTop="@dimen/mpsdk_m_margin"
+        android:textColor="@color/mpsdk_base_text"
+        android:textSize="@dimen/mpsdk_s_text"
+        tools:text="50 % OFF"/>
 
     <com.mercadopago.customviews.MPTextView
         android:id="@+id/detail"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="@dimen/mpsdk_m_margin"
-        tools:text="Tope de descuento $ 250. Para todas las tarjetas de crédito"/>
+        android:layout_gravity="left"
+        android:paddingLeft="@dimen/mpsdk_m_margin"
+        android:paddingTop="@dimen/mpsdk_xxxs_margin"
+        android:textSize="@dimen/mpsdk_xs_text"
+        tools:text="Tope de descuento $ 250"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/mpsdk_m_margin"
+        android:layout_marginRight="@dimen/mpsdk_m_margin"
+        android:layout_marginTop="@dimen/mpsdk_m_margin"
+        android:background="@color/mpsdk_med_light_gray"/>
+
+    <com.mercadopago.customviews.MPTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:paddingBottom="@dimen/mpsdk_m_margin"
+        android:paddingLeft="@dimen/mpsdk_m_margin"
+        android:paddingTop="@dimen/mpsdk_s_margin"
+        android:text="@string/mpsdk_we_apply_the_best_available_discount"
+        android:textSize="@dimen/mpsdk_xs_text"
+        tools:text="Aplicamos el mejor descuento disponible"/>
 
 </LinearLayout>

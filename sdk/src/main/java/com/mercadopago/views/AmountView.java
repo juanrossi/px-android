@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mercadopago.R;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Site;
@@ -33,9 +34,9 @@ public class AmountView extends LinearLayoutCompat {
 
     public interface OnClick {
 
-        void onDetailClicked(@NonNull final Discount discount);
+        void onDetailClicked(@NonNull final Discount discount, @NonNull final Campaign campaign);
 
-        void onDetailClicked(@NonNull final CouponDiscount discount);
+        void onDetailClicked(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign);
 
         void onInputRequestClicked();
     }
@@ -81,10 +82,11 @@ public class AmountView extends LinearLayoutCompat {
     }
 
     public void show(@NonNull final Discount discount,
-                     @NonNull final BigDecimal totalAmount,
-                     @NonNull final Site site) {
+        @NonNull final Campaign campaign,
+        @NonNull final BigDecimal totalAmount,
+        @NonNull final Site site) {
         discountWording.setText(R.string.mpsdk_discount);
-        showDiscount(discount, totalAmount, site);
+        showDiscount(discount, campaign, totalAmount, site);
         showEffectiveAmount(totalAmount.subtract(discount.getCouponAmount()), site);
     }
 
@@ -108,9 +110,10 @@ public class AmountView extends LinearLayoutCompat {
     }
 
     public void show(@NonNull final CouponDiscount discount,
-                     @NonNull final BigDecimal totalAmount,
-                     @NonNull final Site site) {
-        showDiscount(discount, totalAmount, site);
+        @NonNull final Campaign campaign,
+        @NonNull final BigDecimal totalAmount,
+        @NonNull final Site site) {
+        showDiscount(discount, campaign, totalAmount, site);
         showEffectiveAmount(totalAmount.subtract(discount.getCouponAmount()), site);
         discountWording.setText(R.string.mpsdk_discount_code);
         //TODO change wording
@@ -118,7 +121,7 @@ public class AmountView extends LinearLayoutCompat {
             @Override
             public void onClick(final View v) {
                 if (callback != null) {
-                    callback.onDetailClicked(discount);
+                    callback.onDetailClicked(discount, campaign);
                 }
             }
         });
@@ -126,8 +129,9 @@ public class AmountView extends LinearLayoutCompat {
     }
 
     private void showDiscount(final @NonNull Discount discount,
-                              final @NonNull BigDecimal totalAmount,
-                              final @NonNull Site site) {
+        final @NonNull Campaign campaign,
+        final @NonNull BigDecimal totalAmount,
+        final @NonNull Site site) {
         discountRow.setVisibility(VISIBLE);
         discountAmount.setText(getLocalizedAmountWithCurrencySymbol(discount.getCouponAmount(), site));
         amount.setText(getLocalizedAmountWithCurrencySymbol(totalAmount, site));
@@ -135,7 +139,7 @@ public class AmountView extends LinearLayoutCompat {
             @Override
             public void onClick(final View v) {
                 if (callback != null) {
-                    callback.onDetailClicked(discount);
+                    callback.onDetailClicked(discount, campaign);
                 }
             }
         });

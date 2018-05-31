@@ -34,7 +34,6 @@ import java.util.Map;
 
 import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
 
-
 public class MercadoPagoCheckout implements Serializable {
 
     public static final int CHECKOUT_REQUEST_CODE = 5;
@@ -261,7 +260,7 @@ public class MercadoPagoCheckout implements Serializable {
         /**
          * Checkout builder allow you to create a {@link MercadoPagoCheckout}
          *
-         * @param publicKey          merchant public key.
+         * @param publicKey merchant public key.
          * @param checkoutPreference the preference that represents the payment information.
          */
         public Builder(@NonNull final String publicKey, @NonNull final CheckoutPreference checkoutPreference) {
@@ -273,7 +272,7 @@ public class MercadoPagoCheckout implements Serializable {
         /**
          * Checkout builder allow you to create a {@link MercadoPagoCheckout}
          *
-         * @param publicKey    merchant public key.
+         * @param publicKey merchant public key.
          * @param preferenceId the preference id that represents the payment information.
          */
         public Builder(@NonNull final String publicKey, @NonNull final String preferenceId) {
@@ -350,7 +349,7 @@ public class MercadoPagoCheckout implements Serializable {
 
         @SuppressWarnings("unused")
         public Builder addPaymentMethodPlugin(@NonNull final PaymentMethodPlugin paymentMethodPlugin,
-                                              @NonNull final PaymentProcessor paymentProcessor) {
+            @NonNull final PaymentProcessor paymentProcessor) {
             paymentMethodPluginList.add(paymentMethodPlugin);
             paymentPlugins.put(paymentMethodPlugin.getId(), paymentProcessor);
             return this;
@@ -409,7 +408,7 @@ public class MercadoPagoCheckout implements Serializable {
 
         private boolean hasPaymentResultDiscount() {
             return paymentResult != null && paymentResult.getPaymentData() != null &&
-                    paymentResult.getPaymentData().getDiscount() != null;
+                paymentResult.getPaymentData().getDiscount() != null;
         }
 
         private boolean hasTwoDiscountsSet() {

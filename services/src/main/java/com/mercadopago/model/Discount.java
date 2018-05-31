@@ -67,8 +67,8 @@ public class Discount implements Serializable, Parcelable {
         id = in.readString();
         name = in.readString();
         currencyId = in.readString();
-        percentOff = new BigDecimal(in.readString());
-        amountOff = new BigDecimal(in.readString());
+        percentOff = ParcelableUtil.getBigDecimalReadByte(in);
+        amountOff = ParcelableUtil.getBigDecimalReadByte(in);
         couponAmount = new BigDecimal(in.readString());
     }
 

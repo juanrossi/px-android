@@ -238,9 +238,11 @@
     <string name="mpsdk_ran_out_of_quantity_uses_quantity">O número de pedidos esgotados</string>
     <string name="mpsdk_amount_doesnt_match">Montante fora do alcance</string>
     <string name="mpsdk_campaign_expired">Campanha expirado</string>
-    <string name="mpsdk_discount_percent_off">%1$s %%</string>
+    <string name="mpsdk_discount_percent_off">%1$s%% OFF</string>
+    <string name="mpsdk_discount_amount_off">- %1$s OFF</string>
     <string name="mpsdk_something_went_wrong">Ops! Algo deu errado…</string>
-
+    <string name="mpsdk_we_apply_the_best_available_discount">Nós aplicamos o melhor desconto disponível</string>
+    <string name="mpsdk_max_coupon_amount">Boné de desconto %1$s</string>
     <string name="mpsdk_interest_label">Não inclui juros bancários</string>
 
     <!-- Unlock Card -->

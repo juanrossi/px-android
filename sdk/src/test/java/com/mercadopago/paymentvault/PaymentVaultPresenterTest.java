@@ -8,6 +8,7 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.mocks.PaymentMethodSearchs;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.CustomSearchItem;
@@ -330,7 +331,8 @@ public class PaymentVaultPresenterTest {
         MockedView mockedView = new MockedView();
         MockedProvider provider = new MockedProvider();
 
-        PaymentMethodSearch paymentMethodSearch = PaymentMethodSearchs.getPaymentMethodSearchWithOnlyCreditCardAndOneCardMLA();
+        PaymentMethodSearch paymentMethodSearch =
+            PaymentMethodSearchs.getPaymentMethodSearchWithOnlyCreditCardAndOneCardMLA();
         provider.setResponse(paymentMethodSearch);
 
         PaymentVaultPresenter presenter = new PaymentVaultPresenter();
@@ -374,7 +376,8 @@ public class PaymentVaultPresenterTest {
         MockedView mockedView = new MockedView();
         MockedProvider provider = new MockedProvider();
 
-        PaymentMethodSearch paymentMethodSearch = PaymentMethodSearchs.getPaymentMethodSearchWithOnlyCreditCardAndAccountMoneyMLA();
+        PaymentMethodSearch paymentMethodSearch =
+            PaymentMethodSearchs.getPaymentMethodSearchWithOnlyCreditCardAndAccountMoneyMLA();
         provider.setResponse(paymentMethodSearch);
 
         PaymentVaultPresenter presenter = new PaymentVaultPresenter();
@@ -397,7 +400,8 @@ public class PaymentVaultPresenterTest {
         MockedView mockedView = new MockedView();
         MockedProvider provider = new MockedProvider();
 
-        PaymentMethodSearch paymentMethodSearch = PaymentMethodSearchs.getPaymentMethodSearchWithOnlyOneOffTypeAndAccountMoneyMLA();
+        PaymentMethodSearch paymentMethodSearch =
+            PaymentMethodSearchs.getPaymentMethodSearchWithOnlyOneOffTypeAndAccountMoneyMLA();
         provider.setResponse(paymentMethodSearch);
 
         PaymentVaultPresenter presenter = new PaymentVaultPresenter();
@@ -858,7 +862,8 @@ public class PaymentVaultPresenterTest {
         MockedProvider provider = new MockedProvider();
 
         PaymentMethodSearch paymentMethodSearch = PaymentMethodSearchs.getCompletePaymentMethodSearchMLA();
-        paymentMethodSearch.getGroups().get(1).getChildren().removeAll(paymentMethodSearch.getGroups().get(1).getChildren());
+        paymentMethodSearch.getGroups().get(1).getChildren()
+            .removeAll(paymentMethodSearch.getGroups().get(1).getChildren());
 
         provider.setResponse(paymentMethodSearch);
 
@@ -1165,7 +1170,8 @@ public class PaymentVaultPresenterTest {
         }
 
         @Override
-        public void getPaymentMethodSearch(BigDecimal amount, PaymentPreference paymentPreference, Payer payer, Site site, TaggedCallback<PaymentMethodSearch> taggedCallback) {
+        public void getPaymentMethodSearch(BigDecimal amount, PaymentPreference paymentPreference, Payer payer,
+            Site site, TaggedCallback<PaymentMethodSearch> taggedCallback) {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);
             } else {
@@ -1274,7 +1280,8 @@ public class PaymentVaultPresenterTest {
         }
 
         @Override
-        public void showCustomOptions(List<CustomSearchItem> customSearchItems, OnSelectedCallback<CustomSearchItem> customSearchItemOnSelectedCallback) {
+        public void showCustomOptions(List<CustomSearchItem> customSearchItems,
+            OnSelectedCallback<CustomSearchItem> customSearchItemOnSelectedCallback) {
             this.customOptionsShown = customSearchItems;
             this.customItemSelectionCallback = customSearchItemOnSelectedCallback;
         }
@@ -1285,7 +1292,8 @@ public class PaymentVaultPresenterTest {
         }
 
         @Override
-        public void showSearchItems(List<PaymentMethodSearchItem> searchItems, OnSelectedCallback<PaymentMethodSearchItem> paymentMethodSearchItemSelectionCallback) {
+        public void showSearchItems(List<PaymentMethodSearchItem> searchItems,
+            OnSelectedCallback<PaymentMethodSearchItem> paymentMethodSearchItemSelectionCallback) {
             this.searchItemsShown = searchItems;
             this.itemSelectionCallback = paymentMethodSearchItemSelectionCallback;
         }
@@ -1324,6 +1332,13 @@ public class PaymentVaultPresenterTest {
         }
 
         @Override
+        public void showAmount(@Nullable final Discount discount, @Nullable final Campaign campaign,
+            final BigDecimal totalAmount,
+            final Site site) {
+            this.showedDiscountRow = true;
+        }
+
+        @Override
         public void startDiscountFlow(BigDecimal transactionAmount) {
             discountsFlowStarted = true;
         }
@@ -1344,22 +1359,19 @@ public class PaymentVaultPresenterTest {
         }
 
         @Override
-        public void showAmount(@Nullable final Discount discount, final BigDecimal totalAmount, final Site site) {
-            showedDiscountRow = true;
-        }
-
-        @Override
         public void showPaymentMethodPluginConfiguration() {
             //Do nothing
         }
 
         @Override
-        public void showDetailDialog(@NonNull final Discount discount, @NonNull final Site site) {
+        public void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign,
+            @NonNull final Site site) {
             //Do nothing
         }
 
         @Override
-        public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Site site) {
+        public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign,
+            @NonNull final Site site) {
             //Do nothing
         }
 
@@ -1376,5 +1388,4 @@ public class PaymentVaultPresenterTest {
             customItemSelectionCallback.onSelected(customOptionsShown.get(index));
         }
     }
-
 }

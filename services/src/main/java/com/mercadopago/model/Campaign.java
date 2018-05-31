@@ -39,6 +39,10 @@ public class Campaign implements Serializable, Parcelable {
         return codeType;
     }
 
+    public boolean hasMaxCouponAmount() {
+        return maxCouponAmount != null && BigDecimal.ZERO.compareTo(maxCouponAmount) < 0;
+    }
+
     public boolean isSingleCodeDiscountCampaign() {
         return CODE_TYPE_SINGLE.contains(codeType);
     }

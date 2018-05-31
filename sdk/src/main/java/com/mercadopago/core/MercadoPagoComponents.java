@@ -3,6 +3,7 @@ package com.mercadopago.core;
 import android.app.Activity;
 import android.content.Intent;
 
+import android.os.Parcelable;
 import com.google.gson.Gson;
 import com.mercadopago.BankDealsActivity;
 import com.mercadopago.CardVaultActivity;
@@ -17,6 +18,7 @@ import com.mercadopago.PaymentVaultActivity;
 import com.mercadopago.ReviewPaymentMethodsActivity;
 import com.mercadopago.SecurityCodeActivity;
 import com.mercadopago.model.BankDeal;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
@@ -39,6 +41,9 @@ import com.mercadopago.util.JsonUtil;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
+import static com.mercadopago.PaymentVaultActivity.EXTRA_CAMPAIGN;
+import static com.mercadopago.PaymentVaultActivity.EXTRA_DISCOUNT;
 
 public class MercadoPagoComponents {
 
@@ -99,6 +104,7 @@ public class MercadoPagoComponents {
             private Integer maxSavedCards;
             private String payerEmail;
             private Discount discount;
+            private Campaign campaign;
             private boolean discountEnabled;
             private boolean installmentsReviewEnabled;
             private boolean showAllSavedCardsEnabled;
@@ -200,8 +206,9 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public PaymentVaultActivityBuilder setDiscount(Discount discount) {
+            public PaymentVaultActivityBuilder setDiscount(Discount discount, Campaign campaign) {
                 this.discount = discount;
+                this.campaign = campaign;
                 return this;
             }
 
@@ -247,7 +254,8 @@ public class MercadoPagoComponents {
 
                 //Discounts
                 paymentVaultIntent.putExtra("payerEmail", payerEmail);
-                paymentVaultIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
+                paymentVaultIntent.putExtra(EXTRA_DISCOUNT, (Parcelable) discount);
+                paymentVaultIntent.putExtra(EXTRA_CAMPAIGN, (Parcelable) campaign);
                 paymentVaultIntent.putExtra("discountEnabled", discountEnabled);
                 paymentVaultIntent.putExtra("installmentsReviewEnabled", installmentsReviewEnabled);
 
@@ -914,7 +922,7 @@ public class MercadoPagoComponents {
                 }
                 if (card != null && token != null && paymentRecovery == null) {
                     throw new IllegalStateException(
-                            "can't start with card and token at the same time if it's not recoverable");
+                        "can't start with card and token at the same time if it's not recoverable");
                 }
                 if (card == null && token == null) {
                     throw new IllegalStateException("card and token can't both be null");
@@ -1145,7 +1153,7 @@ public class MercadoPagoComponents {
             }
 
             public PaymentResultActivityBuilder setPaymentResultScreenPreference(
-                    PaymentResultScreenPreference preference) {
+                PaymentResultScreenPreference preference) {
                 paymentResultScreenPreference = preference;
                 return this;
             }
@@ -1189,7 +1197,7 @@ public class MercadoPagoComponents {
                 resultIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(paymentResult));
                 resultIntent.putExtra("site", JsonUtil.getInstance().toJson(site));
                 resultIntent.putExtra("paymentResultScreenPreference",
-                        JsonUtil.getInstance().toJson(paymentResultScreenPreference));
+                    JsonUtil.getInstance().toJson(paymentResultScreenPreference));
                 resultIntent.putExtra("servicePreference", JsonUtil.getInstance().toJson(servicePreference));
                 if (amount != null) {
                     resultIntent.putExtra("amount", amount.toString());
@@ -1292,5 +1300,4 @@ public class MercadoPagoComponents {
             }
         }
     }
-
 }
