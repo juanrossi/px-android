@@ -166,7 +166,7 @@ public class SecurityCodePresenterTest {
 
         mvp.getPresenter().initialize();
         mvp.getPresenter().initializeSettings();
-        assertEquals(mvp.getView().maxLenght, SecurityCodePresenter.CARD_DEFAULT_SECURITY_CODE_LENGTH);
+        assertEquals(mvp.getView().maxLenght, Card.CARD_DEFAULT_SECURITY_CODE_LENGTH);
     }
 
     @Test

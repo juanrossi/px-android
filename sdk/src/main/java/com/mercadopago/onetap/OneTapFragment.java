@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,8 +108,28 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     private void configureView(final View view, final OneTap.Actions actions,
         final OneTapModel model) {
-        ViewGroup container = view.findViewById(R.id.main_container);
+        final ViewGroup container = view.findViewById(R.id.main_container);
+        final Toolbar toolbar = view.findViewById(R.id.toolbar);
+        configureToolbar(toolbar);
         new OneTapContainer(model, actions).render(container);
+    }
+
+    private void configureToolbar(final Toolbar toolbar) {
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null && toolbar != null) {
+            activity.setSupportActionBar(toolbar);
+            if (activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
+            }
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancel();
+                }
+            });
+        }
     }
 
     @Override
