@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mercadopago.customviews.MPTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@color/mpsdk_med_light_gray"
+                                        android:padding="@dimen/mpsdk_xs_margin"
+                                        android:textSize="@dimen/mpsdk_xs_text">
+
+</com.mercadopago.customviews.MPTextView>

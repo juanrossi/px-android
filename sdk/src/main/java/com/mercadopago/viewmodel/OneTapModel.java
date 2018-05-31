@@ -3,6 +3,7 @@ package com.mercadopago.viewmodel;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.preferences.CheckoutPreference;
@@ -12,7 +13,8 @@ import java.io.Serializable;
 public class OneTapModel implements Serializable {
 
     private final CheckoutPreference checkoutPreference;
-    private final Discount discount;
+    @Nullable private final Discount discount;
+    @Nullable private final Campaign campaign;
     private final PaymentMethodSearch paymentMethods;
     private final boolean isEscEnabled;
     private final boolean hasExtraAmount;
@@ -22,12 +24,14 @@ public class OneTapModel implements Serializable {
 
     private OneTapModel(@NonNull final CheckoutPreference checkoutPreference,
         @Nullable final Discount discount,
+        @Nullable final Campaign campaign,
         @NonNull final PaymentMethodSearch paymentMethods,
-        boolean isEscEnabled,
+        final boolean isEscEnabled,
         final boolean hasExtraAmount,
         @Nullable final Integer collectorIcon) {
         this.checkoutPreference = checkoutPreference;
         this.discount = discount;
+        this.campaign = campaign;
         this.paymentMethods = paymentMethods;
         this.isEscEnabled = isEscEnabled;
         this.hasExtraAmount = hasExtraAmount;
@@ -38,16 +42,23 @@ public class OneTapModel implements Serializable {
         final ReviewAndConfirmPreferences reviewAndConfirmPreferences) {
         return new OneTapModel(checkoutStateModel.checkoutPreference,
             checkoutStateModel.discount,
+            checkoutStateModel.campaign,
             checkoutStateModel.paymentMethodSearch,
             checkoutStateModel.flowPreference.isESCEnabled(),
             reviewAndConfirmPreferences.hasExtrasAmount(),
             reviewAndConfirmPreferences.getCollectorIcon());
     }
 
+    @Nullable
+    public Campaign getCampaign() {
+        return campaign;
+    }
+
     public CheckoutPreference getCheckoutPreference() {
         return checkoutPreference;
     }
 
+    @Nullable
     public Discount getDiscount() {
         return discount;
     }
@@ -70,6 +81,6 @@ public class OneTapModel implements Serializable {
     }
 
     public boolean hasDiscount() {
-        return discount != null;
+        return discount != null && campaign != null;
     }
 }
