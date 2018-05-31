@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
-import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.lite.exceptions.CardTokenException;
@@ -64,9 +63,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     private boolean mIdentificationNumberRequired;
     private PaymentPreference mPaymentPreference;
     private String mMerchantBaseUrl;
-    private String mMerchantDiscountUrl;
-    private String mMerchantGetDiscountUri;
-    private Map<String, String> mDiscountAdditionalInfo;
     private Boolean mShowDiscount;
 
     //Card Settings
@@ -398,7 +394,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     }
 
     private void loadDiscount() {
-        initializeDiscountRow();
         loadPaymentMethods();
 
     }
@@ -407,15 +402,8 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         getView().startDiscountActivity(mTransactionAmount);
     }
 
-    private void initializeDiscountRow() {
-        if (CheckoutStore.getInstance().getPaymentMethodPluginList().isEmpty()) {
-            getView().showDiscountRow(mTransactionAmount);
-        }
-    }
-
     public void onDiscountReceived(Discount discount) {
         setDiscount(discount);
-        initializeDiscountRow();
     }
 
     public Discount getDiscount() {
@@ -438,36 +426,12 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         mDiscountEnabled = discountEnabled;
     }
 
-    public void setDiscountAdditionalInfo(Map<String, String> discountAdditionalInfo) {
-        mDiscountAdditionalInfo = discountAdditionalInfo;
-    }
-
-    public Map<String, String> getDiscountAdditionalInfo() {
-        return mDiscountAdditionalInfo;
-    }
-
-    public void setMerchantDiscountBaseUrl(String merchantDiscountUrl) {
-        mMerchantDiscountUrl = merchantDiscountUrl;
-    }
-
-    public String getMerchantDiscountBaseUrl() {
-        return mMerchantDiscountUrl;
-    }
-
     public void setMerchantBaseUrl(String merchantBaseUrl) {
         mMerchantBaseUrl = merchantBaseUrl;
     }
 
     public String getMerchantBaseUrl() {
         return mMerchantBaseUrl;
-    }
-
-    public void setMerchantGetDiscountUri(String merchantGetDiscountUri) {
-        mMerchantGetDiscountUri = merchantGetDiscountUri;
-    }
-
-    public String getMerchantGetDiscountUri() {
-        return mMerchantGetDiscountUri;
     }
 
     public Boolean getDiscountEnabled() {
@@ -489,7 +453,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     public BigDecimal getTransactionAmount() {
         BigDecimal amount;
 
-        if (mDiscount != null && mDiscountEnabled && mDiscount.isValid()) {
+        if (mDiscount != null && mDiscountEnabled) {
             amount = mDiscount.getAmountWithDiscount(mTransactionAmount);
         } else {
             amount = mTransactionAmount;
@@ -982,22 +946,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
             return true;
         }
         return false;
-    }
-
-    private boolean isMerchantServerDiscountsAvailable() {
-        return !TextUtil.isEmpty(getMerchantServerDiscountUrl()) && !TextUtil.isEmpty(mMerchantGetDiscountUri);
-    }
-
-    private String getMerchantServerDiscountUrl() {
-        String merchantBaseUrl;
-
-        if (TextUtil.isEmpty(mMerchantDiscountUrl)) {
-            merchantBaseUrl = mMerchantBaseUrl;
-        } else {
-            merchantBaseUrl = mMerchantDiscountUrl;
-        }
-
-        return merchantBaseUrl;
     }
 
     public void setPrivateKey(String privateKey) {

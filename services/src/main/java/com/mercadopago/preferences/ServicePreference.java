@@ -24,9 +24,6 @@ public class ServicePreference implements Serializable {
     @SerializedName("create_checkout_preference_url")
     private final String createCheckoutPreferenceURL;
 
-    @SerializedName("get_merchant_discount_url")
-    private final String getMerchantDiscountBaseURL;
-
     @SerializedName("get_customer_uri")
     private final String getCustomerURI;
 
@@ -36,16 +33,12 @@ public class ServicePreference implements Serializable {
     @SerializedName("create_checkout_preference_uri")
     private final String createCheckoutPreferenceURI;
 
-    @SerializedName("get_merchant_discount_uri")
-    private final String getMerchantDiscountURI;
-
     @SerializedName("processing_mode")
     private final String processingMode;
 
     private Map<String, String> getCustomerAdditionalInfo;
     private Map<String, Object> createPaymentAdditionalInfo;
     private Map<String, Object> createCheckoutPreferenceAdditionalInfo;
-    private Map<String, String> getDiscountAdditionalInfo;
 
     private ServicePreference(Builder builder) {
 
@@ -55,15 +48,12 @@ public class ServicePreference implements Serializable {
         getCustomerURL = builder.getCustomerURL;
         createPaymentURL = builder.createPaymentURL;
         createCheckoutPreferenceURL = builder.createCheckoutPreferenceURL;
-        getMerchantDiscountBaseURL = builder.getMerchantDiscountBaseURL;
         getCustomerURI = builder.getCustomerURI;
         createPaymentURI = builder.createPaymentURI;
         createCheckoutPreferenceURI = builder.createCheckoutPreferenceURI;
-        getMerchantDiscountURI = builder.getMerchantDiscountURI;
         getCustomerAdditionalInfo = builder.getCustomerAdditionalInfo;
         createPaymentAdditionalInfo = builder.createPaymentAdditionalInfo;
         createCheckoutPreferenceAdditionalInfo = builder.createCheckoutPreferenceAdditionalInfo;
-        getDiscountAdditionalInfo = builder.getDiscountAdditionalInfo;
         processingMode = builder.processingMode;
     }
 
@@ -87,10 +77,6 @@ public class ServicePreference implements Serializable {
         return createCheckoutPreferenceURL;
     }
 
-    public String getGetMerchantDiscountBaseURL() {
-        return getMerchantDiscountBaseURL;
-    }
-
     public String getGetCustomerURI() {
         return getCustomerURI;
     }
@@ -103,11 +89,9 @@ public class ServicePreference implements Serializable {
         return createCheckoutPreferenceURI;
     }
 
-    public String getGetMerchantDiscountURI() {
-        return getMerchantDiscountURI;
+    public String getProcessingModeString() {
+        return processingMode;
     }
-
-    public String getProcessingModeString() { return processingMode; }
 
     public Map<String, String> getGetCustomerAdditionalInfo() {
         if (getCustomerAdditionalInfo == null) {
@@ -130,13 +114,6 @@ public class ServicePreference implements Serializable {
         return createCheckoutPreferenceAdditionalInfo;
     }
 
-    public Map<String, String> getGetDiscountAdditionalInfo() {
-        if (getDiscountAdditionalInfo == null) {
-            getDiscountAdditionalInfo = new HashMap<>();
-        }
-        return getDiscountAdditionalInfo;
-    }
-
     public boolean hasGetCustomerURL() {
         return getCustomerURL != null && getCustomerURI != null;
     }
@@ -147,10 +124,6 @@ public class ServicePreference implements Serializable {
 
     public boolean hasCreateCheckoutPrefURL() {
         return createCheckoutPreferenceURL != null && createCheckoutPreferenceURI != null;
-    }
-
-    public boolean hasGetDiscountURL() {
-        return (getMerchantDiscountBaseURL != null || defaultBaseURL != null) && getMerchantDiscountURI != null;
     }
 
     public boolean shouldShowBankDeals() {
@@ -169,16 +142,13 @@ public class ServicePreference implements Serializable {
         private String getCustomerURL;
         private String createPaymentURL;
         private String createCheckoutPreferenceURL;
-        private String getMerchantDiscountBaseURL;
         private String getCustomerURI;
         private String createPaymentURI;
         private String createCheckoutPreferenceURI;
-        private String getMerchantDiscountURI;
         private String processingMode;
         private Map<String, String> getCustomerAdditionalInfo;
         private Map<String, Object> createPaymentAdditionalInfo;
         private Map<String, Object> createCheckoutPreferenceAdditionalInfo;
-        private Map<String, String> getDiscountAdditionalInfo;
 
         public Builder setGetCustomerURL(String getCustomerURL, String getCustomerURI) {
             this.getCustomerURL = getCustomerURL;
@@ -216,13 +186,6 @@ public class ServicePreference implements Serializable {
             this.createCheckoutPreferenceURL = createCheckoutPreferenceURL;
             this.createCheckoutPreferenceURI = getURI(createCheckoutPreferenceURI);
             createCheckoutPreferenceAdditionalInfo = additionalInfo;
-            return this;
-        }
-
-        public Builder setDiscountURL(String getMerchantDiscountBaseURL, String getMerchantDiscountURI, Map<String, String> additionalInfo) {
-            this.getMerchantDiscountBaseURL = getMerchantDiscountBaseURL;
-            this.getMerchantDiscountURI = getMerchantDiscountURI;
-            getDiscountAdditionalInfo = additionalInfo;
             return this;
         }
 

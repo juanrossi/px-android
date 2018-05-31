@@ -44,11 +44,6 @@
                     android:layout_marginTop="45dp"
                     android:gravity="center_horizontal"/>
 
-                <FrameLayout
-                    android:id="@+id/mpsdkDiscount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"/>
             </FrameLayout>
 
             <FrameLayout

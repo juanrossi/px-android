@@ -33,13 +33,16 @@
 
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">How many installments?</string>
+
     <string name="mpsdk_installments_by" translatable="false">x</string>
     <string name="mpsdk_installments_cft" translatable="false">CFT: %1$s</string>
 
-    <!-- Checkout -->
-    <string name="mpsdk_text_terms_and_conditions_start">By paying, I claim to be an adult and that I accept the</string>
-    <string name="mpsdk_text_terms_and_conditions_linked">Terms and conditions</string>
-    <string name="mpsdk_text_terms_and_conditions_end">of Mercado Pago</string>
+    <!-- Terms And Conditions -->
+    <string name="mpsdk_terms_and_conditions_message">By paying, I claim to be an adult and that I accept the</string>
+    <string name="mpsdk_terms_and_conditions_linked_message">Terms and conditions.</string>
+    <string name="mpsdk_terms_and_conditions">Terms and conditions</string>
+    <string name="mpsdk_discount_terms_and_conditions_message">Mercado Pago\'s exclusive discount.</string>
+    <string name="mpsdk_discount_terms_and_conditions_linked_message">See conditions</string>
 
     <!-- Card token and guessing -->
     <string name="mpsdk_invalid_card_number_incomplete">Enter all the numbers of the card</string>
@@ -224,10 +227,11 @@
     <string name="mpsdk_review_summary_shipping">Shipping</string>
     <string name="mpsdk_review_summary_arrear">Arrear</string>
     <string name="mpsdk_review_summary_discount">Discount</string>
-    <string name="mpsdk_review_summary_discounts">Discounts</string>
     <string name="mpsdk_ryc_account_money_description">With your account money</string>
 
     <!-- Discount -->
+    <string name="mpsdk_discount_percent_off" translatable="false">%1$s%% OFF</string>
+    <string name="mpsdk_discount_amount_off" translatable="false">- %1$s OFF</string>
     <string name="mpsdk_discount">Discount</string>
     <string name="mpsdk_input_button_exchange">Exchange</string>
     <string name="mpsdk_discount_code">Discount code</string>
@@ -240,11 +244,12 @@
     <string name="mpsdk_ran_out_of_quantity_uses_quantity">Ran out of quantity uses of discount </string>
     <string name="mpsdk_amount_doesnt_match">Amount out of reach</string>
     <string name="mpsdk_campaign_expired">Campaign expired</string>
-    <string name="mpsdk_discount_percent_off_percent" translatable="false">%1$s %% OFF</string>
-    <string name="mpsdk_discount_percent_off_amount" translatable="false">%1$s OFF</string>
-    <string name="mpsdk_total">Total:</string>
-    <string name="mpsdk_something_went_wrong">Oops! Something went wrong…</string>
+    <string name="mpsdk_discount_percent_off_percent" translatable="false">%1$s%% OFF</string>
+    <string name="mpsdk_discount_percent_off_amount" translatable="false">- %1$s OFF</string>
 
+    <string name="mpsdk_something_went_wrong">Oops! Something went wrong…</string>
+    <string name="mpsdk_we_apply_the_best_available_discount">We apply the best available discount</string>
+    <string name="mpsdk_max_coupon_amount">Discount cap %1$s</string>
     <string name="mpsdk_interest_label">Does\'t include bank interest</string>
 
     <!-- Unlock Card -->

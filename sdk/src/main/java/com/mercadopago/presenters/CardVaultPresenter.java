@@ -26,11 +26,6 @@ import com.mercadopago.util.TextUtil;
 import com.mercadopago.views.CardVaultView;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-
-/**
- * Created by vaserber on 10/12/16.
- */
 
 public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultProvider> {
 
@@ -47,9 +42,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     protected boolean mAutomaticSelection;
     protected BigDecimal mAmount;
     protected String mMerchantBaseUrl;
-    protected String mMerchantDiscountUrl;
-    protected String mMerchantGetDiscountUri;
-    protected Map<String, String> mDiscountAdditionalInfo;
     protected boolean mInstallmentsListShown;
     protected boolean mIssuersListShown;
 
@@ -223,14 +215,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         return mDiscountEnabled;
     }
 
-    public void setDiscountAdditionalInfo(final Map<String, String> discountAdditionalInfo) {
-        mDiscountAdditionalInfo = discountAdditionalInfo;
-    }
-
-    public Map<String, String> getDiscountAdditionalInfo() {
-        return mDiscountAdditionalInfo;
-    }
-
     public void setInstallmentsReviewEnabled(final boolean installmentReviewEnabled) {
         mInstallmentsReviewEnabled = installmentReviewEnabled;
     }
@@ -253,22 +237,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     public String getMerchantBaseUrl() {
         return mMerchantBaseUrl;
-    }
-
-    public void setMerchantDiscountBaseUrl(final String merchantDiscountUrl) {
-        mMerchantDiscountUrl = merchantDiscountUrl;
-    }
-
-    public String getMerchantDiscountBaseUrl() {
-        return mMerchantDiscountUrl;
-    }
-
-    public void setMerchantGetDiscountUri(final String merchantGetDiscountUri) {
-        mMerchantGetDiscountUri = merchantGetDiscountUri;
-    }
-
-    public String getMerchantGetDiscountUri() {
-        return mMerchantGetDiscountUri;
     }
 
     public void setAutomaticSelection(final boolean automaticSelection) {
@@ -354,27 +322,27 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
         getResourcesProvider().getInstallmentsAsync(bin, issuerId, paymentMethodId, getTotalAmount(),
                 new TaggedCallback<List<Installment>>(ApiUtil.RequestOrigin.GET_INSTALLMENTS) {
-            @Override
-            public void onSuccess(final List<Installment> installments) {
-                if (viewAttached()) {
-                    resolveInstallmentsList(installments);
-                }
-            }
-
-            @Override
-            public void onFailure(final MercadoPagoError error) {
-                if (viewAttached()) {
-                    getView().showError(error, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
-
-                    setFailureRecovery(new FailureRecovery() {
-                        @Override
-                        public void recover() {
-                            getInstallmentsForCardAsync(card);
+                    @Override
+                    public void onSuccess(final List<Installment> installments) {
+                        if (viewAttached()) {
+                            resolveInstallmentsList(installments);
                         }
-                    });
-                }
-            }
-        });
+                    }
+
+                    @Override
+                    public void onFailure(final MercadoPagoError error) {
+                        if (viewAttached()) {
+                            getView().showError(error, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
+
+                            setFailureRecovery(new FailureRecovery() {
+                                @Override
+                                public void recover() {
+                                    getInstallmentsForCardAsync(card);
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     private void resolveInstallmentsList(final List<Installment> installments) {

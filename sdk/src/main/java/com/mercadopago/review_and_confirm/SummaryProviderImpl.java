@@ -59,7 +59,7 @@ public class SummaryProviderImpl implements SummaryProvider {
 
     @Override
     public String getSummaryDiscountsTitle() {
-        return context.getString(R.string.mpsdk_review_summary_discounts);
+        return context.getString(R.string.mpsdk_review_summary_discount);
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.content.Context;
 import com.mercadopago.lite.adapters.ErrorHandlingCallAdapter;
 import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.model.Customer;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.MerchantPayment;
 import com.mercadopago.model.Payment;
 import com.mercadopago.preferences.CheckoutPreference;
@@ -13,7 +12,6 @@ import com.mercadopago.services.MerchantService;
 import com.mercadopago.util.HttpClientUtil;
 import com.mercadopago.util.JsonUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import retrofit2.Retrofit;
@@ -38,18 +36,6 @@ public class MerchantServer {
         service.getCustomer(ripFirstSlash(merchantGetCustomerUri), merchantAccessToken).enqueue(callback);
     }
 
-    public static void getDirectDiscount(String transactionAmount, String payerEmail, Context context, String merchantBaseUrl, String merchantGetDirectDiscountUri, Map<String, String> discountAdditionalInfo, Callback<Discount> callback) {
-
-        MerchantService service = getService(context, merchantBaseUrl);
-        service.getDirectDiscount(ripFirstSlash(merchantGetDirectDiscountUri), transactionAmount, payerEmail, getDiscountAdditionalInfo(discountAdditionalInfo)).enqueue(callback);
-    }
-
-    public static void getCodeDiscount(String discountCode, String transactionAmount, String payerEmail, Context context, String merchantBaseUrl, String merchantGetCodeDiscountUri, Map<String, String> discountAdditionalInfo, Callback<Discount> callback) {
-
-        MerchantService service = getService(context, merchantBaseUrl);
-        service.getCodeDiscount(ripFirstSlash(merchantGetCodeDiscountUri), transactionAmount, payerEmail, discountCode, getDiscountAdditionalInfo(discountAdditionalInfo)).enqueue(callback);
-    }
-
     private static String ripFirstSlash(String uri) {
 
         return uri.startsWith("/") ? uri.substring(1, uri.length()) : uri;
@@ -69,11 +55,5 @@ public class MerchantServer {
 
         Retrofit retrofit = getRetrofit(context, endPoint);
         return retrofit.create(MerchantService.class);
-    }
-
-    private static Map<String, String> getDiscountAdditionalInfo(Map<String, String> discountAdditionalInfo) {
-        Map<String, String> map = new HashMap<>();
-
-        return discountAdditionalInfo == null ? map : discountAdditionalInfo;
     }
 }

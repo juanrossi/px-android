@@ -36,7 +36,6 @@ import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
-import com.mercadopago.core.MercadoPagoUI;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.ExceptionHandler;
@@ -72,7 +71,6 @@ import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.uicontrollers.card.CardView;
 import com.mercadopago.uicontrollers.card.IdentificationCardView;
-import com.mercadopago.uicontrollers.discounts.DiscountRowView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
@@ -85,10 +83,6 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
-/**
- * Created by vaserber on 10/13/16.
- */
 
 public class GuessingCardActivity extends MercadoPagoBaseActivity implements GuessingCardActivityView,
     TimerObserver, CardExpiryDateEditTextCallback, View.OnTouchListener, View.OnClickListener {
@@ -130,9 +124,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     protected boolean mLowResActive;
     protected GuessingCardPresenter mPresenter;
     protected String mDefaultBaseURL;
-    protected String mMerchantDiscountBaseURL;
-    protected String mMerchantGetDiscountURI;
-    protected Map<String, String> mDiscountAdditionalInfo;
     private Activity mActivity;
     //View controls
     private ScrollView mScrollView;
@@ -156,7 +147,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     private FrameLayout mNextButton;
     private FrameLayout mBackButton;
     private FrameLayout mBackInactiveButton;
-    private FrameLayout mDiscountFrameLayout;
+
     private LinearLayout mButtonContainer;
     private MPEditText mCardNumberEditText;
     private MPEditText mCardHolderNameEditText;
@@ -241,18 +232,9 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     private void setMerchantInfo() {
         if (CustomServicesHandler.getInstance().getServicePreference() != null) {
             mDefaultBaseURL = CustomServicesHandler.getInstance().getServicePreference().getDefaultBaseURL();
-            mMerchantDiscountBaseURL =
-                CustomServicesHandler.getInstance().getServicePreference().getGetMerchantDiscountBaseURL();
-            mMerchantGetDiscountURI =
-                CustomServicesHandler.getInstance().getServicePreference().getGetMerchantDiscountURI();
-            mDiscountAdditionalInfo =
-                CustomServicesHandler.getInstance().getServicePreference().getGetDiscountAdditionalInfo();
         }
 
         mPresenter.setMerchantBaseUrl(mDefaultBaseURL);
-        mPresenter.setMerchantDiscountBaseUrl(mMerchantDiscountBaseURL);
-        mPresenter.setMerchantGetDiscountUri(mMerchantGetDiscountURI);
-        mPresenter.setDiscountAdditionalInfo(mDiscountAdditionalInfo);
     }
 
     private void getActivityParameters() {
@@ -607,7 +589,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mInfoTextView = findViewById(R.id.mpsdkBlackInfoTextView);
         mErrorTextView = findViewById(R.id.mpsdkErrorTextView);
         mScrollView = findViewById(R.id.mpsdkScrollViewContainer);
-        mDiscountFrameLayout = findViewById(R.id.mpsdkDiscount);
         mContainerUpAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.mpsdk_slide_bottom_up);
         mContainerDownAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.mpsdk_slide_bottom_down);
 
@@ -1776,35 +1757,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mButtonContainer.setVisibility(View.VISIBLE);
         mInputContainer.setVisibility(View.VISIBLE);
         mProgressLayout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showDiscountRow(BigDecimal transactionAmount) {
-
-        MercadoPagoUI.Views.DiscountRowViewBuilder discountRowBuilder =
-            new MercadoPagoUI.Views.DiscountRowViewBuilder();
-
-        discountRowBuilder.setContext(this)
-            .setDiscount(mPresenter.getDiscount())
-            .setTransactionAmount(transactionAmount)
-            .setShortRowEnabled(true)
-            .setDiscountEnabled(mPresenter.getDiscountEnabled());
-
-        if (mPresenter.getDiscount() != null) {
-            discountRowBuilder.setCurrencyId(mPresenter.getDiscount().getCurrencyId());
-        }
-
-        DiscountRowView discountRowView = discountRowBuilder.build();
-
-        discountRowView.inflateInParent(mDiscountFrameLayout, true);
-        discountRowView.initializeControls();
-        discountRowView.draw();
-        discountRowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initializeDiscountActivity(view);
-            }
-        });
     }
 
     @Override

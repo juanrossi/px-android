@@ -38,22 +38,15 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
     private final String merchantBaseUrl;
     private final String merchantGetCustomerUri;
     private final Map<String, String> merchantGetCustomerAdditionalInfo;
-    private final String merchantDiscountBaseUrl;
-    private final String merchantGetDiscountUri;
-    private final Map<String, String> mDiscountAdditionalInfo;
     private final MercadoPagoESC mercadoPagoESC;
     private final String merchantPublicKey;
 
     public PaymentVaultProviderImpl(Context context, String publicKey, String privateKey, String merchantBaseUrl,
-                                    String merchantGetCustomerUri, Map<String, String> merchantGetCustomerAdditionalInfo,
-                                    String merchantDiscountBaseUrl, String merchantGetDiscountUri, Map<String, String> discountAdditionalInfo, boolean escEnabled) {
+                                    String merchantGetCustomerUri, Map<String, String> merchantGetCustomerAdditionalInfo, boolean escEnabled) {
         this.context = context;
         this.merchantBaseUrl = merchantBaseUrl;
-        this.merchantDiscountBaseUrl = merchantDiscountBaseUrl;
         this.merchantGetCustomerUri = merchantGetCustomerUri;
-        this.merchantGetDiscountUri = merchantGetDiscountUri;
         this.merchantGetCustomerAdditionalInfo = merchantGetCustomerAdditionalInfo;
-        this.mDiscountAdditionalInfo = discountAdditionalInfo;
         this.mercadoPagoESC = new MercadoPagoESCImpl(context, escEnabled);
         this.merchantPublicKey = publicKey;
 
@@ -61,15 +54,8 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
     }
 
     @Override
-    public void getDirectDiscount(String amount, String payerEmail,
-                                  final TaggedCallback<Discount> taggedCallback) {
-        if (isMerchantServerDiscountsAvailable()) {
-            String merchantDiscountUrl = getMerchantServerDiscountUrl();
-            MerchantServer.getDirectDiscount(amount, payerEmail, context, merchantDiscountUrl, merchantGetDiscountUri,
-                    mDiscountAdditionalInfo, taggedCallback);
-        } else {
-            mercadoPago.getDirectDiscount(amount, payerEmail, taggedCallback);
-        }
+    public void getDirectDiscount(String amount, String payerEmail, final TaggedCallback<Discount> taggedCallback) {
+        mercadoPago.getDirectDiscount(amount, payerEmail, taggedCallback);
     }
 
     @Override
@@ -164,22 +150,6 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
 
     private boolean isMerchantServerCustomerAvailable() {
         return !TextUtil.isEmpty(merchantBaseUrl) && !TextUtil.isEmpty(merchantGetCustomerUri);
-    }
-
-    private boolean isMerchantServerDiscountsAvailable() {
-        return !TextUtil.isEmpty(getMerchantServerDiscountUrl()) && !TextUtil.isEmpty(merchantGetDiscountUri);
-    }
-
-    private String getMerchantServerDiscountUrl() {
-        String merchantBaseUrl;
-
-        if (TextUtil.isEmpty(merchantDiscountBaseUrl)) {
-            merchantBaseUrl = this.merchantBaseUrl;
-        } else {
-            merchantBaseUrl = merchantDiscountBaseUrl;
-        }
-
-        return merchantBaseUrl;
     }
 
     public void initializeMPTracker(String siteId) {
