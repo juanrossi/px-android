@@ -624,12 +624,12 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     @Override
     public void onDetailClicked(@NonNull final Discount discount, @NonNull final Campaign campaign) {
-        getView().showDetailDialog(discount, campaign, site);
+        getView().showDetailDialog(discount, campaign);
     }
 
     @Override
     public void onDetailClicked(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign) {
-        getView().showDetailDialog(discount, campaign, site);
+        getView().showDetailDialog(discount, campaign);
     }
 
     @Override

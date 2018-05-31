@@ -64,9 +64,9 @@ public interface PaymentVaultView extends MvpView {
 
     void showPaymentMethodPluginConfiguration();
 
-    void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign, @NonNull final Site site);
+    void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign);
 
-    void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign, @NonNull final Site site);
+    void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign);
 
     void showDiscountInputDialog();
 }

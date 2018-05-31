@@ -14,7 +14,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PaymentMethodSearchItemAdapter;
@@ -64,7 +63,6 @@ import com.mercadopago.util.ScaleUtil;
 import com.mercadopago.views.AmountView;
 import com.mercadopago.views.DiscountDetailDialog;
 import com.mercadopago.views.PaymentVaultView;
-
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -863,22 +861,20 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     }
 
     @Override
-    public void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign,
-        @NonNull final Site site) {
-        DiscountDetailDialog.showDialog(discount, campaign, site, getSupportFragmentManager());
+    public void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign) {
+        DiscountDetailDialog.showDialog(discount, campaign, getSupportFragmentManager());
     }
 
     @Override
-    public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign,
-        @NonNull final Site site) {
+    public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign) {
         //TODO - Other dialog.
-        DiscountDetailDialog.showDialog(null, null, null, getSupportFragmentManager());
+        DiscountDetailDialog.showDialog(null, null, getSupportFragmentManager());
     }
 
     @Override
     public void showDiscountInputDialog() {
         //TODO - Other dialog.
-        DiscountDetailDialog.showDialog(null, null, null, getSupportFragmentManager());
+        DiscountDetailDialog.showDialog(null, null, getSupportFragmentManager());
     }
 
     @Override

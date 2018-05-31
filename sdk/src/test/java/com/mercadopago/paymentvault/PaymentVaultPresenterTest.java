@@ -1364,14 +1364,12 @@ public class PaymentVaultPresenterTest {
         }
 
         @Override
-        public void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign,
-            @NonNull final Site site) {
+        public void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign) {
             //Do nothing
         }
 
         @Override
-        public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign,
-            @NonNull final Site site) {
+        public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign) {
             //Do nothing
         }
 
