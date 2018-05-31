@@ -109,6 +109,10 @@ public class ExamplesUtils {
         options.add(new Pair<>("Two items", createBaseWithTwoItems()));
         options.add(new Pair<>("Two items - Collector icon", createBaseWithTwoItemsAndCollectorIcon()));
         options.add(new Pair<>("One item - Long title", createBaseWithOneItemLongTitle()));
+        options.add(new Pair<>("Account money plugin - Decimals", createBaseWithAccountMoneyAndDecimals()));
+        options.add(new Pair<>("Account money plugin - No decimals", createBaseWithAccountMoneyAndNoDecimals()));
+        options.add(new Pair<>("Account money plugin - Discount percent off", createBaseWithAccountMoneyAndDiscountPercentOff()));
+        options.add(new Pair<>("Account money plugin - Discount amount off", createBaseWithAccountMoneyAndDiscountAmountOff()));
         return options;
     }
 
@@ -240,7 +244,7 @@ public class ExamplesUtils {
         return createBase();
     }
 
-    public static Builder createBase(@NonNull final CheckoutPreference checkoutPreference) {
+    private static Builder createBase(@NonNull final CheckoutPreference checkoutPreference) {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, checkoutPreference)
@@ -261,7 +265,7 @@ public class ExamplesUtils {
             .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
-    public static Builder createBaseWithDecimals() {
+    private static Builder createBaseWithDecimals() {
         final Map<String, Object> defaultData = new HashMap<>();
         defaultData.put("amount", 120f);
 
@@ -269,14 +273,14 @@ public class ExamplesUtils {
             .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
-    public static Builder createBaseWithTwoItems() {
+    private static Builder createBaseWithTwoItems() {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_TWO_ITEMS)
             .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
-    public static Builder createBaseWithTwoItemsAndCollectorIcon() {
+    private static Builder createBaseWithTwoItemsAndCollectorIcon() {
         final Map<String, Object> defaultData = new HashMap<>();
 
         final ReviewAndConfirmPreferences preferences = new ReviewAndConfirmPreferences.Builder()
@@ -288,17 +292,88 @@ public class ExamplesUtils {
             .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
-    public static Builder createBaseWithOneItemLongTitle() {
+    private static Builder createBaseWithOneItemLongTitle() {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_ITEM_LONG_TITLE)
             .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 
-    public static Builder createBaseWithNoDecimals() {
+    private static Builder createBaseWithNoDecimals() {
         final Map<String, Object> defaultData = new HashMap<>();
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_NO_DECIMALS)
             .setDataInitializationTask(getDataInitializationTask(defaultData));
+    }
+
+    private static Builder createBaseWithAccountMoneyAndDecimals() {
+        BusinessPayment payment =
+            new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+                .setHelp("Help description!")
+                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+                .build();
+        MainPaymentProcessor mainPaymentProcessor = new MainPaymentProcessor(payment);
+        return createBaseWithDecimals().setPaymentProcessor(mainPaymentProcessor)
+            .addPaymentMethodPlugin(new SamplePaymentMethodPlugin(), mainPaymentProcessor);
+    }
+
+    private static Builder createBaseWithAccountMoneyAndNoDecimals() {
+        BusinessPayment payment =
+            new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+                .setHelp("Help description!")
+                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+                .build();
+        MainPaymentProcessor mainPaymentProcessor = new MainPaymentProcessor(payment);
+        return createBaseWithNoDecimals().setPaymentProcessor(mainPaymentProcessor)
+            .addPaymentMethodPlugin(new SamplePaymentMethodPlugin(), mainPaymentProcessor);
+    }
+
+    private static Builder createBaseWithAccountMoneyAndDiscountPercentOff() {
+        final Discount.Builder discount = new Discount.Builder("77123", "ARS", new BigDecimal("245.76"))
+            .setPercentOff(new BigDecimal(20));
+        final Campaign.Builder campaignBuilder = new Campaign.Builder("77123");
+        campaignBuilder.setMaxCouponAmount(new BigDecimal(200));
+        // The payer pays $ 983,04
+
+        final BusinessPayment payment =
+            new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+                .setHelp("Help description!")
+                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+                .build();
+        final MainPaymentProcessor mainPaymentProcessor = new MainPaymentProcessor(payment);
+        return createBase(new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a", getItems()).build())
+            .setPaymentProcessor(mainPaymentProcessor)
+            .setDiscount(discount.build(), campaignBuilder.build())
+            .addPaymentMethodPlugin(new SamplePaymentMethodPlugin(), mainPaymentProcessor);
+    }
+
+    private static Builder createBaseWithAccountMoneyAndDiscountAmountOff() {
+        final Discount.Builder discount = new Discount.Builder("77123", "ARS", new BigDecimal("245.76"))
+            .setAmountOff(new BigDecimal("245.76"));
+        final Campaign.Builder campaignBuilder = new Campaign.Builder("77123");
+        campaignBuilder.setMaxCouponAmount(new BigDecimal(200));
+        // The payer pays $ 983,04
+
+        final BusinessPayment payment =
+            new BusinessPayment.Builder(BusinessPayment.Status.APPROVED, R.drawable.mpsdk_icon_card, "Title")
+                .setHelp("Help description!")
+                .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
+                .build();
+        final MainPaymentProcessor mainPaymentProcessor = new MainPaymentProcessor(payment);
+        return createBase(new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a", getItems()).build())
+            .setPaymentProcessor(mainPaymentProcessor)
+            .setDiscount(discount.build(), campaignBuilder.build())
+            .addPaymentMethodPlugin(new SamplePaymentMethodPlugin(), mainPaymentProcessor);
+    }
+
+    private static List<Item> getItems() {
+        final Item itemSarasa = new Item("Item desc", new BigDecimal("1228.8"));
+        itemSarasa.setId(Sites.ARGENTINA.getId());
+        itemSarasa.setId("12345");
+        itemSarasa.setTitle("Some title");
+        itemSarasa.setCurrencyId(Sites.ARGENTINA.getCurrencyId());
+        final List<Item> items = new ArrayList<>();
+        items.add(itemSarasa);
+        return items;
     }
 
     @NonNull

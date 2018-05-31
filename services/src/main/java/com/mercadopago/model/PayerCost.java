@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class PayerCost implements Parcelable, Serializable {
 
+    public static final int NO_INSTALLMENTS = 1;
     private static final String CFT = "CFT";
     private static final String TEA = "TEA";
     private Integer installments;

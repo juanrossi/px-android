@@ -125,6 +125,8 @@
     <color name="mpsdk_red_status_MP">#E5464C</color>
     <color name="mpsdk_orange_status_MP">#E5953D</color>
 
+    <!-- One tap -->
+    <color name="mpsdk_discount_one_tap">#64c574</color>
 
     <!-- Customized colors -->
 

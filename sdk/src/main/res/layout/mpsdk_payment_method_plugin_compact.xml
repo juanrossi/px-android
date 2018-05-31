@@ -21,9 +21,9 @@
             android:layout_height="@dimen/mpsdk_m_height"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|left"
+            android:layout_gravity="center_vertical|start"
             android:layout_marginEnd="@dimen/mpsdk_s_margin"
             android:layout_marginLeft="@dimen/mpsdk_s_margin"
             android:layout_marginRight="@dimen/mpsdk_s_margin"
