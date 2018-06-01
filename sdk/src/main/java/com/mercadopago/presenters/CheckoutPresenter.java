@@ -14,6 +14,7 @@ import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Cause;
+import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
@@ -209,30 +210,21 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void analyzeCampaigns(final List<Campaign> campaigns) {
-        boolean directDiscountFound = false;
-        boolean couponDiscountFound = false;
-
-        if (campaigns == null) {
+        if (campaigns == null || campaigns.size() == 0) {
             retrievePaymentMethodSearch();
         } else {
             for (Campaign campaign : campaigns) {
                 if (campaign.isDirectDiscountCampaign()) {
-                    directDiscountFound = true;
-                } else if (campaign.isSingleCodeDiscountCampaign()) {
-                    couponDiscountFound = true;
+                    state.campaign = campaign;
+                    getDirectDiscount();
                 }
-                state.campaign = campaign;
             }
 
-            if (directDiscountFound) {
-                getDirectDiscount(couponDiscountFound);
-            } else {
-                retrievePaymentMethodSearch();
-            }
+            //TODO set couponDiscount;
         }
     }
 
-    private void getDirectDiscount(final boolean couponDiscountFound) {
+    private void getDirectDiscount() {
         String payerEmail =
             state.checkoutPreference.getPayer() == null ? "" : state.checkoutPreference.getPayer().getEmail();
         getResourcesProvider().getDirectDiscount(state.checkoutPreference.getTotalAmount(), payerEmail,
