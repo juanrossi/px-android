@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mpsdk_homebanking">Banca en línea de</string>
+    <string name="mpsdk_has_a_coupon_discount">¿Tienes un cupón de descuento?</string>
 </resources>

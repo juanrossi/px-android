@@ -1,95 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:tools="http://schemas.android.com/tools"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:gravity="center"
-       android:orientation="vertical"
-       tools:parentTag="android.support.v7.widget.LinearLayoutCompat">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:parentTag="android.support.v7.widget.LinearLayoutCompat">
 
     <View
         android:id="@+id/line"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="@color/mpsdk_light_gray"/>
+        android:background="@color/mpsdk_light_gray" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/mpsdk_s_margin"
-        android:orientation="vertical">
+        android:gravity="center_vertical|right|end">
 
         <LinearLayout
-            android:id="@+id/discount_row"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/amount_container"
+            android:layout_toStartOf="@+id/amount_container"
+            android:orientation="vertical">
 
             <com.mercadopago.customviews.MPTextView
-                android:id="@+id/discount_wording"
-                android:layout_width="0dp"
+                android:id="@+id/amount_description"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="left|start"
-                android:text="@string/mpsdk_discount"/>
+                tools:text="-50 OFF"
+                tools:textColor="@color/mpsdk_discount_description"
+                android:textSize="@dimen/mpsdk_xs_text" />
+
 
             <com.mercadopago.customviews.MPTextView
-                android:id="@+id/discount_amount"
-                android:layout_width="0dp"
+                android:id="@+id/max_coupon_amount"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="end|right"
-                tools:text="- $ 100"/>
+                android:text="@string/mpsdk_with_max_coupon_amount"
+                android:textColor="@color/mpsdk_color_new_card_text"
+                android:textSize="@dimen/mpsdk_xs_text"
+                android:visibility="visible"/>
 
         </LinearLayout>
 
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/amount_container"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@+id/blue_arrow"
+            android:layout_toStartOf="@+id/blue_arrow"
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <com.mercadopago.customviews.MPTextView
-                android:layout_width="0dp"
+                android:id="@+id/amount_before_discount"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/mpsdk_review_summary_total"/>
+                android:layout_gravity="end|right"
+                android:textColor="@color/mpsdk_color_new_card_text"
+                android:textSize="@dimen/mpsdk_xs_text"
+                tools:text="$ 1143" />
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <com.mercadopago.customviews.MPTextView
+                android:id="@+id/final_amount"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
                 android:gravity="right|end"
-                android:orientation="horizontal">
-
-                <com.mercadopago.customviews.MPTextView
-                    android:id="@+id/total_amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="@dimen/mpsdk_xs_margin"
-                    android:layout_marginRight="@dimen/mpsdk_xs_margin"
-                    android:textSize="@dimen/mpsdk_xxs_text"
-                    tools:text="$ 1143"/>
-
-                <com.mercadopago.customviews.MPTextView
-                    android:id="@+id/amount_less_discount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textSize="@dimen/mpsdk_l_text"
-                    tools:text="$ 1043"/>
-
-            </LinearLayout>
-
+                android:textSize="@dimen/mpsdk_xl_text"
+                tools:text="$ 1043" />
         </LinearLayout>
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/blue_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="right|end|center_vertical"
+            android:layout_marginLeft="@dimen/mpsdk_s_margin"
+            android:layout_marginStart="@dimen/mpsdk_s_margin"
+            android:background="@drawable/mpsdk_arrow_right_blue"
+            android:orientation="vertical"
+            android:visibility="visible"/>
 
+    </RelativeLayout>
 
 </merge>

@@ -228,7 +228,6 @@
     <string name="mpsdk_discount">Descuento</string>
     <string name="mpsdk_input_button_exchange">Canjear</string>
     <string name="mpsdk_discount_code">Código de descuento</string>
-    <string name="mpsdk_has_a_discount">Tengo un descuento</string>
     <string name="mpsdk_of_discount">de descuento</string>
     <string name="mpsdk_percent_of_discount">% de descuento</string>
     <string name="mpsdk_do_not_enter_code">No se ingresó código</string>
@@ -240,6 +239,10 @@
     <string name="mpsdk_something_went_wrong">¡Uy! Algo salió mal…</string>
     <string name="mpsdk_we_apply_the_best_available_discount">Aplicamos el mejor descuento disponible</string>
     <string name="mpsdk_max_coupon_amount">Tope de descuento %1$s</string>
+    <string name="mpsdk_total_to_pay">Total a pagar</string>
+    <string name="mpsdk_has_a_coupon_discount">¿Tenés un cupón de descuento?</string>
+    <string name="mpsdk_with_max_coupon_amount">Con tope de descuento</string>
+
     <string name="mpsdk_interest_label">No incluye intereses bancarios</string>
 
     <!-- Unlock Card -->

@@ -86,7 +86,6 @@
         android:layout_gravity="bottom"
         android:background="@color/mpsdk_white"/>
 
-
 </LinearLayout>
 
 

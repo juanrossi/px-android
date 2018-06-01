@@ -235,7 +235,6 @@
     <string name="mpsdk_discount">Discount</string>
     <string name="mpsdk_input_button_exchange">Exchange</string>
     <string name="mpsdk_discount_code">Discount code</string>
-    <string name="mpsdk_has_a_discount">I have a discount</string>
     <string name="mpsdk_of_discount">of discount</string>
     <string name="mpsdk_percent_of_discount">% of discount</string>
     <string name="mpsdk_do_not_enter_code">You did not enter code</string>
@@ -250,6 +249,10 @@
     <string name="mpsdk_something_went_wrong">Oops! Something went wrong…</string>
     <string name="mpsdk_we_apply_the_best_available_discount">We apply the best available discount</string>
     <string name="mpsdk_max_coupon_amount">Discount cap %1$s</string>
+    <string name="mpsdk_with_max_coupon_amount">With max coupon amount</string>
+    <string name="mpsdk_total_to_pay">Total to pay</string>
+    <string name="mpsdk_has_a_coupon_discount">Do you have any discount coupon?</string>
+
     <string name="mpsdk_interest_label">Does\'t include bank interest</string>
 
     <!-- Unlock Card -->
