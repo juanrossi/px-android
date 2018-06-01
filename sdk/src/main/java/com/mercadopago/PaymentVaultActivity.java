@@ -180,7 +180,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
             presenter.setCampaign((Campaign) extras.getParcelable(EXTRA_CAMPAIGN));
         }
 
-        presenter.setDiscountEnabled(intent.getBooleanExtra("discountEnabled", true));
         presenter.setInstallmentsReviewEnabled(
             intent.getBooleanExtra("installmentsReviewEnabled", true));
         presenter
@@ -397,19 +396,18 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     @Override
     public void startSavedCardFlow(Card card, BigDecimal amount) {
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
-                .setMerchantPublicKey(mPublicKey)
-                .setPayerAccessToken(mPrivateKey)
-                .setAmount(amount)
+            .setMerchantPublicKey(mPublicKey)
+            .setPayerAccessToken(mPrivateKey)
+            .setAmount(amount)
             .setSite(presenter.getSite())
-                .setCard(card)
+            .setCard(card)
             .setPaymentPreference(presenter.getPaymentPreference())
-                .setInstallmentsEnabled(mInstallmentsEnabled)
+            .setInstallmentsEnabled(mInstallmentsEnabled)
             .setPayerEmail(presenter.getPayerEmail())
             .setDiscount(presenter.getDiscount())
-            .setDiscountEnabled(presenter.getDiscountEnabled())
             .setInstallmentsReviewEnabled(presenter.getInstallmentsReviewEnabled())
-                .setShowBankDeals(mShowBankDeals)
-                .setESCEnabled(mEscEnabled)
+            .setShowBankDeals(mShowBankDeals)
+            .setESCEnabled(mEscEnabled)
             .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
         overrideTransitionIn();
     }
@@ -421,9 +419,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         intent.putExtra("selectedSearchItem", JsonUtil.getInstance().toJson(item));
         intent.putExtra(EXTRA_DISCOUNT, (Parcelable) presenter.getDiscount());
         intent.putExtra(EXTRA_CAMPAIGN, (Parcelable) presenter.getCampaign());
-        intent.putExtra("paymentMethodSearch",
-            JsonUtil.getInstance().toJson(presenter.getPaymentMethodSearch()));
-        intent.putExtra("discountEnabled", presenter.getDiscountEnabled());
+        intent.putExtra("paymentMethodSearch", JsonUtil.getInstance().toJson(presenter.getPaymentMethodSearch()));
 
         startActivityForResult(intent, MercadoPagoComponents.Activities.PAYMENT_VAULT_REQUEST_CODE);
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
@@ -584,8 +580,8 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
                 (!presenter.getSelectedSearchItem().hasChildren()
                     || (presenter.getSelectedSearchItem().getChildren().size() == 1))
                 || (presenter.getSelectedSearchItem() == null &&
-                presenter.isOnlyOneItemAvailable())
-                || (data != null) && (data.getStringExtra("mercadoPagoError") != null));
+                presenter.isOnlyOneItemAvailable()) ||
+                (data != null) && (data.getStringExtra("mercadoPagoError") != null));
     }
 
     @Override
@@ -609,8 +605,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
         returnIntent.putExtra("payer", JsonUtil.getInstance().toJson(payer));
-        returnIntent.putExtra("paymentMethodSearch",
-            JsonUtil.getInstance().toJson(presenter.getPaymentMethodSearch()));
+        returnIntent.putExtra("paymentMethodSearch", JsonUtil.getInstance().toJson(presenter.getPaymentMethodSearch()));
 
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
@@ -658,19 +653,18 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         paymentPreference.setDefaultPaymentTypeId(paymentType);
 
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
-                .setMerchantPublicKey(mPublicKey)
-                .setPayerAccessToken(mPrivateKey)
-                .setPaymentPreference(paymentPreference)
-                .setAmount(amount)
+            .setMerchantPublicKey(mPublicKey)
+            .setPayerAccessToken(mPrivateKey)
+            .setPaymentPreference(paymentPreference)
+            .setAmount(amount)
             .setSite(presenter.getSite())
-                .setInstallmentsEnabled(mInstallmentsEnabled)
+            .setInstallmentsEnabled(mInstallmentsEnabled)
             .setPayerEmail(presenter.getPayerEmail())
             .setDiscount(presenter.getDiscount())
-                .setAutomaticSelection(automaticSelection)
-            .setDiscountEnabled(presenter.getDiscountEnabled())
+            .setAutomaticSelection(automaticSelection)
             .setInstallmentsReviewEnabled(presenter.getInstallmentsReviewEnabled())
-                .setShowBankDeals(mShowBankDeals)
-                .setESCEnabled(mEscEnabled)
+            .setShowBankDeals(mShowBankDeals)
+            .setESCEnabled(mEscEnabled)
             .setAcceptedPaymentMethods(presenter.getPaymentMethodSearch().getPaymentMethods())
             .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
         overrideTransitionIn();
@@ -736,8 +730,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     public void onBackPressed() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(presenter.getDiscount()));
-        returnIntent.putExtra("paymentMethodSearch",
-            JsonUtil.getInstance().toJson(presenter.getPaymentMethodSearch()));
+        returnIntent.putExtra("paymentMethodSearch", JsonUtil.getInstance().toJson(presenter.getPaymentMethodSearch()));
         setResult(RESULT_CANCELED, returnIntent);
         finish();
 

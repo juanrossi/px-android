@@ -250,7 +250,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
         BigDecimal transactionAmount =
             JsonUtil.getInstance().fromJson(getIntent().getStringExtra("amount"), BigDecimal.class);
-        Boolean discountEnabled = getIntent().getBooleanExtra("discountEnabled", true);
         Discount discount = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("discount"), Discount.class);
         String payerEmail = getIntent().getStringExtra("payerEmail");
 
@@ -286,7 +285,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mPresenter.setPayerEmail(payerEmail);
         mPresenter.setDiscount(discount);
         mPresenter.setTransactionAmount(transactionAmount);
-        mPresenter.setDiscountEnabled(discountEnabled);
         mPresenter.setShowDiscount(showDiscount);
     }
 
@@ -740,7 +738,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             }
 
             mBankDealsTextView.setVisibility(View.VISIBLE);
-
             mBankDealsTextView.setFocusable(true);
             mBankDealsTextView.setOnClickListener(this);
         }
@@ -1665,14 +1662,13 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
-    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean discountEnabled,
+    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount,
         List<Issuer> issuers) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuers", JsonUtil.getInstance().toJson(issuers));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-        returnIntent.putExtra("discountEnabled", discountEnabled);
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
@@ -1680,15 +1676,13 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount,
-        Boolean directDiscountEnabled, Boolean discountEnabled, Issuer issuer, List<PayerCost> payerCosts) {
+        Issuer issuer, List<PayerCost> payerCosts) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuer", JsonUtil.getInstance().toJson(issuer));
         returnIntent.putExtra("payerCosts", JsonUtil.getInstance().toJson(payerCosts));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-        returnIntent.putExtra("directDiscountEnabled", directDiscountEnabled);
-        returnIntent.putExtra("discountEnabled", discountEnabled);
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
@@ -1696,15 +1690,13 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount,
-        Boolean directDiscountEnabled, Boolean discountEnabled, Issuer issuer, PayerCost payerCost) {
+        Issuer issuer, PayerCost payerCost) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuer", JsonUtil.getInstance().toJson(issuer));
         returnIntent.putExtra("payerCost", JsonUtil.getInstance().toJson(payerCost));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-        returnIntent.putExtra("directDiscountEnabled", directDiscountEnabled);
-        returnIntent.putExtra("discountEnabled", discountEnabled);
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
@@ -1715,7 +1707,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         checkFlipCardToFront();
         Intent returnIntent = new Intent();
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
-        returnIntent.putExtra("discountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDiscountEnabled()));
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);
         finish();
@@ -1815,8 +1806,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         } else if (id == R.id.mpsdkTransparentToolbar || id == R.id.mpsdkLowResToolbar) {
             Intent returnIntent = new Intent();
             returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
-            returnIntent
-                .putExtra("discountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDiscountEnabled()));
             setResult(RESULT_CANCELED, returnIntent);
             finish();
         } else if (id == R.id.mpsdkNextButton) {

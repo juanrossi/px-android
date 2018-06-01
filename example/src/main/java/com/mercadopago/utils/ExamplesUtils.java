@@ -94,7 +94,7 @@ public class ExamplesUtils {
 
     public static List<Pair<String, Builder>> getOptions() {
         List<Pair<String, Builder>> options = new ArrayList<>();
-        options.add(new Pair<>("Discount", discountSample()));
+        options.add(new Pair<>("Discount flow - Payment processor", discountSample()));
         options.add(new Pair<>("Review and Confirm - Custom exit", customExitReviewAndConfirm()));
         options.add(new Pair<>("Business - Complete - Rejected", startCompleteRejectedBusiness()));
         options.add(new Pair<>("Business - Secondary And Help - Approved", startCompleteApprovedBusiness()));
@@ -224,7 +224,7 @@ public class ExamplesUtils {
         Campaign.Builder campaignBuilder = new Campaign.Builder("77123");
         campaignBuilder.setMaxCouponAmount(new BigDecimal(200));
 
-        return createBase().setDiscount(discountBuilder.build(), campaignBuilder.build());
+        return startCompleteApprovedBusiness().setDiscount(discountBuilder.build(), campaignBuilder.build());
     }
 
     private static Builder startBaseFlowWithTrackListener() {

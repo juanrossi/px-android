@@ -2,9 +2,6 @@ package com.mercadopago.preferences;
 
 import java.io.Serializable;
 
-/**
- * Created by mreverter on 1/17/17.
- */
 public class FlowPreference implements Serializable {
 
     public static final int DEFAULT_MAX_SAVED_CARDS_TO_SHOW = 3;
@@ -19,7 +16,6 @@ public class FlowPreference implements Serializable {
     private final boolean exitOnPaymentMethodChange;
     private final boolean bankDealsEnabled;
     private final boolean installmentsReviewScreenEnabled;
-    private boolean discountEnabled;
     private final boolean showAllSavedCardsEnabled;
     private final boolean escEnabled;
     private final int maxSavedCardsToShow;
@@ -35,7 +31,6 @@ public class FlowPreference implements Serializable {
         paymentPendingScreenEnabled = builder.paymentPendingScreenEnabled;
         bankDealsEnabled = builder.bankDealsEnabled;
         installmentsReviewScreenEnabled = builder.installmentsReviewScreenEnabled;
-        discountEnabled = builder.discountEnabled;
         showAllSavedCardsEnabled = builder.showAllSavedCardsEnabled;
         escEnabled = builder.escEnabled;
         maxSavedCardsToShow = builder.maxSavedCardsToShow;
@@ -84,14 +79,6 @@ public class FlowPreference implements Serializable {
         return installmentsReviewScreenEnabled && !reviewAndConfirmScreenEnabled;
     }
 
-    public boolean isDiscountEnabled() {
-        return discountEnabled;
-    }
-
-    public void disableDiscount() {
-        discountEnabled = false;
-    }
-
     public boolean isCheckoutTimerEnabled() {
         return checkoutTimer != null;
     }
@@ -122,7 +109,6 @@ public class FlowPreference implements Serializable {
         private boolean paymentRejectedScreenEnabled = true;
         private boolean paymentPendingScreenEnabled = true;
         private boolean installmentsReviewScreenEnabled = true;
-        private boolean discountEnabled = true;
         private boolean showAllSavedCardsEnabled = false;
         private boolean escEnabled = false;
         private int maxSavedCardsToShow = DEFAULT_MAX_SAVED_CARDS_TO_SHOW;
@@ -177,11 +163,6 @@ public class FlowPreference implements Serializable {
 
         public Builder disableInstallmentsReviewScreen() {
             installmentsReviewScreenEnabled = false;
-            return this;
-        }
-
-        public Builder disableDiscount() {
-            discountEnabled = false;
             return this;
         }
 

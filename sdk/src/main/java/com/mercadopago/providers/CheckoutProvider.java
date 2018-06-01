@@ -16,10 +16,6 @@ import com.mercadopago.preferences.CheckoutPreference;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Created by vaserber on 2/2/17.
- */
-
 public interface CheckoutProvider extends ResourcesProvider {
     void getCheckoutPreference(String checkoutPreferenceId, TaggedCallback<CheckoutPreference> taggedCallback);
 

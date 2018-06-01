@@ -56,7 +56,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     protected Card mCard;
 
     //Discount
-    protected boolean mDiscountEnabled;
     protected Discount mDiscount;
     protected String mPayerEmail;
     protected List<PayerCost> mPayerCostsList;
@@ -69,7 +68,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     public CardVaultPresenter() {
         super();
         mInstallmentsEnabled = true;
-        mDiscountEnabled = true;
         mPaymentPreference = new PaymentPreference();
     }
 
@@ -207,14 +205,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         return mDiscount;
     }
 
-    public void setDiscountEnabled(final boolean discountEnabled) {
-        mDiscountEnabled = discountEnabled;
-    }
-
-    public boolean getDiscountEnabled() {
-        return mDiscountEnabled;
-    }
-
     public void setInstallmentsReviewEnabled(final boolean installmentReviewEnabled) {
         mInstallmentsReviewEnabled = installmentReviewEnabled;
     }
@@ -321,28 +311,28 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         String paymentMethodId = card.getPaymentMethod() == null ? "" : card.getPaymentMethod().getId();
 
         getResourcesProvider().getInstallmentsAsync(bin, issuerId, paymentMethodId, getTotalAmount(),
-                new TaggedCallback<List<Installment>>(ApiUtil.RequestOrigin.GET_INSTALLMENTS) {
-                    @Override
-                    public void onSuccess(final List<Installment> installments) {
-                        if (viewAttached()) {
-                            resolveInstallmentsList(installments);
-                        }
+            new TaggedCallback<List<Installment>>(ApiUtil.RequestOrigin.GET_INSTALLMENTS) {
+                @Override
+                public void onSuccess(final List<Installment> installments) {
+                    if (viewAttached()) {
+                        resolveInstallmentsList(installments);
                     }
+                }
 
-                    @Override
-                    public void onFailure(final MercadoPagoError error) {
-                        if (viewAttached()) {
-                            getView().showError(error, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
+                @Override
+                public void onFailure(final MercadoPagoError error) {
+                    if (viewAttached()) {
+                        getView().showError(error, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
 
-                            setFailureRecovery(new FailureRecovery() {
-                                @Override
-                                public void recover() {
-                                    getInstallmentsForCardAsync(card);
-                                }
-                            });
-                        }
+                        setFailureRecovery(new FailureRecovery() {
+                            @Override
+                            public void recover() {
+                                getInstallmentsForCardAsync(card);
+                            }
+                        });
                     }
-                });
+                }
+            });
     }
 
     private void resolveInstallmentsList(final List<Installment> installments) {
@@ -362,7 +352,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     private BigDecimal getTotalAmount() {
         BigDecimal amount;
 
-        if (!mDiscountEnabled || mDiscount == null) {
+        if (mDiscount == null) {
             amount = mAmount;
         } else {
             amount = mDiscount.getAmountWithDiscount(mAmount);
@@ -378,7 +368,8 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
             mPayerCost = defaultPayerCost;
             getView().askForSecurityCodeWithoutInstallments();
         } else if (mPayerCostsList.isEmpty()) {
-            getView().showError(new MercadoPagoError(getResourcesProvider().getMissingPayerCostsErrorMessage(), false), "");
+            getView()
+                .showError(new MercadoPagoError(getResourcesProvider().getMissingPayerCostsErrorMessage(), false), "");
         } else if (mPayerCostsList.size() == 1) {
             mPayerCost = payerCosts.get(0);
             getView().askForSecurityCodeWithoutInstallments();
@@ -424,15 +415,13 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     }
 
     public void resolveNewCardRequest(final PaymentMethod paymentMethod, final Token token,
-                                      final boolean discountEnabled,
-                                      final PayerCost payerCost, final Issuer issuer,
-                                      final List<PayerCost> payerCosts, final List<Issuer> issuers,
-                                      final Discount discount) {
+        final PayerCost payerCost, final Issuer issuer,
+        final List<PayerCost> payerCosts, final List<Issuer> issuers,
+        final Discount discount) {
 
         setPaymentMethod(paymentMethod);
         setToken(token);
         setCardInfo(new CardInfo(token));
-        setDiscountEnabled(discountEnabled);
         setPayerCost(payerCost);
         setIssuer(issuer);
         setPayerCostsList(payerCosts);
@@ -532,39 +521,41 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
             mESCCardToken = SavedESCCardToken.createWithEsc(mCard.getId(), mESC);
 
-            getResourcesProvider().createESCTokenAsync(mESCCardToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
-                @Override
-                public void onSuccess(final Token token) {
-                    mToken = token;
-                    mToken.setLastFourDigits(mCard.getLastFourDigits());
-                    getView().finishWithResult();
-                }
+            getResourcesProvider()
+                .createESCTokenAsync(mESCCardToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
+                    @Override
+                    public void onSuccess(final Token token) {
+                        mToken = token;
+                        mToken.setLastFourDigits(mCard.getLastFourDigits());
+                        getView().finishWithResult();
+                    }
 
-                @Override
-                public void onFailure(final MercadoPagoError error) {
+                    @Override
+                    public void onFailure(final MercadoPagoError error) {
 
-                    if (error.isApiException() && error.getApiException().getStatus() == ApiUtil.StatusCodes.BAD_REQUEST) {
-                        List<Cause> causes = error.getApiException().getCause();
-                        if (causes != null && !causes.isEmpty()) {
-                            Cause cause = causes.get(0);
-                            if (ApiException.ErrorCodes.INVALID_ESC.equals(cause.getCode()) ||
+                        if (error.isApiException() &&
+                            error.getApiException().getStatus() == ApiUtil.StatusCodes.BAD_REQUEST) {
+                            List<Cause> causes = error.getApiException().getCause();
+                            if (causes != null && !causes.isEmpty()) {
+                                Cause cause = causes.get(0);
+                                if (ApiException.ErrorCodes.INVALID_ESC.equals(cause.getCode()) ||
                                     ApiException.ErrorCodes.INVALID_FINGERPRINT.equals(cause.getCode())) {
 
-                                getResourcesProvider().deleteESC(mESCCardToken.getCardId());
+                                    getResourcesProvider().deleteESC(mESCCardToken.getCardId());
 
-                                mESC = null;
-                                if (viewAttached()) {
-                                    getView().startSecurityCodeActivity(TrackingUtil.SECURITY_CODE_REASON_ESC);
+                                    mESC = null;
+                                    if (viewAttached()) {
+                                        getView().startSecurityCodeActivity(TrackingUtil.SECURITY_CODE_REASON_ESC);
+                                    }
+                                } else {
+                                    recoverCreateESCToken(error);
                                 }
-                            } else {
-                                recoverCreateESCToken(error);
                             }
+                        } else {
+                            recoverCreateESCToken(error);
                         }
-                    } else {
-                        recoverCreateESCToken(error);
                     }
-                }
-            });
+                });
         }
     }
 

@@ -152,27 +152,15 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             if (shouldRetrieveDiscount()) {
                 getDiscountCampaigns();
             } else {
-                resolveDiscount();
                 retrievePaymentMethodSearch();
             }
-        }
-    }
-
-    private void resolveDiscount() {
-        if (isDiscountEnabled() && state.discount == null) {
-            state.flowPreference.disableDiscount();
         }
     }
 
     @VisibleForTesting
     boolean shouldRetrieveDiscount() {
         CheckoutStore store = CheckoutStore.getInstance();
-        return isDiscountEnabled() && state.discount == null && !store.hasEnabledPaymentMethodPlugin() &&
-            !store.hasPaymentProcessor();
-    }
-
-    public boolean isDiscountEnabled() {
-        return state.flowPreference.isDiscountEnabled();
+        return !store.hasEnabledPaymentMethodPlugin() && !store.hasPaymentProcessor();
     }
 
     private void resolvePreSelectedData() {
@@ -210,8 +198,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
             @Override
             public void onFailure(final MercadoPagoError error) {
+                state.campaign = null;
+                state.discount = null;
+
                 if (isViewAttached()) {
-                    state.flowPreference.disableDiscount();
                     retrievePaymentMethodSearch();
                 }
             }
@@ -223,7 +213,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         boolean couponDiscountFound = false;
 
         if (campaigns == null) {
-            state.flowPreference.disableDiscount();
             retrievePaymentMethodSearch();
         } else {
             for (Campaign campaign : campaigns) {
@@ -238,9 +227,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             if (directDiscountFound) {
                 getDirectDiscount(couponDiscountFound);
             } else {
-                if (!couponDiscountFound) {
-                    state.flowPreference.disableDiscount();
-                }
                 retrievePaymentMethodSearch();
             }
         }
@@ -251,45 +237,42 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             state.checkoutPreference.getPayer() == null ? "" : state.checkoutPreference.getPayer().getEmail();
         getResourcesProvider().getDirectDiscount(state.checkoutPreference.getTotalAmount(), payerEmail,
             new TaggedCallback<Discount>(ApiUtil.RequestOrigin.GET_DIRECT_DISCOUNT) {
-            @Override
-            public void onSuccess(final Discount discount) {
-                if (isViewAttached()) {
-                    CheckoutPresenter.this.state.discount = discount;
-                    retrievePaymentMethodSearch();
-                }
-            }
-            @Override
-            public void onFailure(final MercadoPagoError error) {
-                if (isViewAttached()) {
-                    if (couponDiscountFound) {
-                        retrievePaymentMethodSearch();
-                    } else {
-                        state.flowPreference.disableDiscount();
+                @Override
+                public void onSuccess(final Discount discount) {
+                    if (isViewAttached()) {
+                        CheckoutPresenter.this.state.discount = discount;
                         retrievePaymentMethodSearch();
                     }
                 }
-            }
-        });
+
+                @Override
+                public void onFailure(final MercadoPagoError error) {
+                    CheckoutPresenter.this.state.discount = null;
+                    if (isViewAttached()) {
+                        retrievePaymentMethodSearch();
+                    }
+                }
+            });
     }
 
     private void retrievePaymentMethodSearch() {
         Payer payer = new Payer();
         payer.setAccessToken(state.checkoutPreference.getPayer().getAccessToken());
         getResourcesProvider().getPaymentMethodSearch(
-                getTransactionAmount(),
+            getTransactionAmount(),
             state.checkoutPreference.getExcludedPaymentTypes(),
             state.checkoutPreference.getExcludedPaymentMethods(),
-                payer,
+            payer,
             state.checkoutPreference.getSite(),
-                onPaymentMethodSearchRetrieved(),
-                onCustomerRetrieved()
+            onPaymentMethodSearchRetrieved(),
+            onCustomerRetrieved()
         );
     }
 
     public BigDecimal getTransactionAmount() {
         BigDecimal amount;
 
-        if (state.discount != null && state.flowPreference.isDiscountEnabled()) {
+        if (state.discount != null) {
             amount = state.discount.getAmountWithDiscount(state.checkoutPreference.getTotalAmount());
         } else {
             amount = state.checkoutPreference.getTotalAmount();
@@ -442,13 +425,13 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         getResourcesProvider().getCheckoutPreference(checkoutPreferenceId,
             new TaggedCallback<CheckoutPreference>(ApiUtil.RequestOrigin.GET_PREFERENCE) {
 
-            @Override
-            public void onSuccess(final CheckoutPreference checkoutPreference) {
-                CheckoutPresenter.this.state.checkoutPreference = checkoutPreference;
-                if (isViewAttached()) {
-                    startCheckoutForPreference();
+                @Override
+                public void onSuccess(final CheckoutPreference checkoutPreference) {
+                    CheckoutPresenter.this.state.checkoutPreference = checkoutPreference;
+                    if (isViewAttached()) {
+                        startCheckoutForPreference();
+                    }
                 }
-            }
 
                 @Override
                 public void onFailure(final MercadoPagoError error) {
@@ -488,12 +471,12 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void onPaymentMethodSelectionResponse(final PaymentMethod paymentMethod,
-                                                 final Issuer issuer,
-                                                 final PayerCost payerCost,
-                                                 final Token token,
-                                                 final Discount discount,
-                                                 final Card card,
-                                                 final Payer payer) {
+        final Issuer issuer,
+        final PayerCost payerCost,
+        final Token token,
+        final Discount discount,
+        final Card card,
+        final Payer payer) {
         state.selectedPaymentMethod = paymentMethod;
         state.selectedIssuer = issuer;
         state.selectedPayerCost = payerCost;
@@ -532,17 +515,17 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             final String transactionId = getTransactionID();
             getResourcesProvider().createPayment(transactionId,
                 state.checkoutPreference,
-                    paymentData,
+                paymentData,
                 state.binaryMode,
                 state.customerId,
-                    new TaggedCallback<Payment>(ApiUtil.RequestOrigin.CREATE_PAYMENT) {
-                        @Override
-                        public void onSuccess(final Payment payment) {
-                            state.createdPayment = payment;
-                            PaymentResult paymentResult = createPaymentResult(payment, paymentData);
-                            checkStartPaymentResultActivity(paymentResult);
-                            cleanTransactionId();
-                        }
+                new TaggedCallback<Payment>(ApiUtil.RequestOrigin.CREATE_PAYMENT) {
+                    @Override
+                    public void onSuccess(final Payment payment) {
+                        state.createdPayment = payment;
+                        PaymentResult paymentResult = createPaymentResult(payment, paymentData);
+                        checkStartPaymentResultActivity(paymentResult);
+                        cleanTransactionId();
+                    }
 
                     @Override
                     public void onFailure(final MercadoPagoError error) {
@@ -576,7 +559,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     private void continuePaymentWithoutESC() {
         state.paymentRecovery = new PaymentRecovery(state.createdToken, state.selectedPaymentMethod,
             state.selectedPayerCost, state.selectedIssuer, Payment.StatusCodes.STATUS_REJECTED,
-                Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC);
+            Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC);
 
         getView().startPaymentRecoveryFlow(state.paymentRecovery);
     }
@@ -763,13 +746,13 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private PaymentResult createPaymentResult(final Payment payment, final PaymentData paymentData) {
         return new PaymentResult.Builder()
-                .setPaymentData(paymentData)
-                .setPaymentId(payment.getId())
-                .setPaymentStatus(payment.getStatus())
-                .setPaymentStatusDetail(payment.getStatusDetail())
+            .setPaymentData(paymentData)
+            .setPaymentId(payment.getId())
+            .setPaymentStatus(payment.getStatus())
+            .setPaymentStatusDetail(payment.getStatusDetail())
             .setPayerEmail(state.checkoutPreference.getPayer().getEmail())
-                .setStatementDescription(payment.getStatementDescriptor())
-                .build();
+            .setStatementDescription(payment.getStatementDescriptor())
+            .build();
     }
 
     private PaymentData createPaymentData() {
@@ -971,7 +954,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         //TODO look for a better option than singleton, it make it not testeable.
         PaymentData paymentData = CheckoutStore.getInstance().getPaymentData();
 
-        final String lastFourDigits = paymentData.getToken() != null ? paymentData.getToken().getLastFourDigits() : null;
+        final String lastFourDigits =
+            paymentData.getToken() != null ? paymentData.getToken().getLastFourDigits() : null;
         BusinessPaymentModel model =
             new BusinessPaymentModel(businessPayment, state.discount, paymentData.getPaymentMethod(),
                 paymentData.getPayerCost(),

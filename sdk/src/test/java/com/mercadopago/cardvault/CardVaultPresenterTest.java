@@ -210,7 +210,6 @@ public class CardVaultPresenterTest {
         MercadoPagoError mpException = new MercadoPagoError(apiException, "");
         provider.setResponse(mpException);
 
-
         CardVaultPresenter presenter = new CardVaultPresenter();
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
@@ -222,7 +221,6 @@ public class CardVaultPresenterTest {
         presenter.initialize();
 
         assertTrue(provider.failedResponse.getApiException().getError().equals(provider.INSTALLMENTS_NOT_FOUND_ERROR));
-
     }
 
     @Test
@@ -357,7 +355,9 @@ public class CardVaultPresenterTest {
         String mockedPaymentStatus = Payment.StatusCodes.STATUS_REJECTED;
         String mockedPaymentStatusDeatil = Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE;
 
-        PaymentRecovery mockedPaymentRecovery = new PaymentRecovery(mockedToken, mockedPaymentMethod, mockedPayerCost, mockedIssuer, mockedPaymentStatus, mockedPaymentStatusDeatil);
+        PaymentRecovery mockedPaymentRecovery =
+            new PaymentRecovery(mockedToken, mockedPaymentMethod, mockedPayerCost, mockedIssuer, mockedPaymentStatus,
+                mockedPaymentStatusDeatil);
 
         CardVaultPresenter presenter = new CardVaultPresenter();
         presenter.attachView(mockedView);
@@ -380,7 +380,6 @@ public class CardVaultPresenterTest {
     public void ifNothingIsSetThenStartNewCardFlow() {
         MockedView mockedView = new MockedView();
         MockedProvider provider = new MockedProvider();
-
 
         CardVaultPresenter presenter = new CardVaultPresenter();
         presenter.attachView(mockedView);
@@ -415,10 +414,11 @@ public class CardVaultPresenterTest {
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
         List<Issuer> mockedIssuerList = Issuers.getIssuersListMLA();
         Discount mockedDiscount = null;
-        Boolean discountEnabled = false;
 
         //Response from GuessingCardActivity, without an issuer selected
-        presenter.resolveNewCardRequest(mockedPaymentMethod, mockedToken, discountEnabled, mockedPayerCost, mockedIssuer, mockedPayerCostList, mockedIssuerList, mockedDiscount);
+        presenter
+            .resolveNewCardRequest(mockedPaymentMethod, mockedToken, mockedPayerCost, mockedIssuer,
+                mockedPayerCostList, mockedIssuerList, mockedDiscount);
 
         assertTrue(mockedView.issuerFlowStarted);
     }
@@ -444,10 +444,11 @@ public class CardVaultPresenterTest {
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
         List<Issuer> mockedIssuerList = Issuers.getIssuersListMLA();
         Discount mockedDiscount = null;
-        Boolean directDiscountEnabled = false;
 
         //Response from GuessingCardActivity, with an issuer selected
-        presenter.resolveNewCardRequest(mockedPaymentMethod, mockedToken, directDiscountEnabled, mockedPayerCost, mockedIssuer, mockedPayerCostList, mockedIssuerList, mockedDiscount);
+        presenter
+            .resolveNewCardRequest(mockedPaymentMethod, mockedToken, mockedPayerCost, mockedIssuer,
+                mockedPayerCostList, mockedIssuerList, mockedDiscount);
 
         assertFalse(mockedView.issuerFlowStarted);
         assertTrue(mockedView.installmentsFlowStarted);
@@ -474,10 +475,11 @@ public class CardVaultPresenterTest {
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
         List<Issuer> mockedIssuerList = Issuers.getIssuersListMLA();
         Discount mockedDiscount = null;
-        Boolean discountEnabled = false;
 
         //Response from GuessingCardActivity, with an issuer selected
-        presenter.resolveNewCardRequest(mockedPaymentMethod, mockedToken, discountEnabled, mockedPayerCost, mockedIssuer, mockedPayerCostList, mockedIssuerList, mockedDiscount);
+        presenter
+            .resolveNewCardRequest(mockedPaymentMethod, mockedToken, mockedPayerCost, mockedIssuer,
+                mockedPayerCostList, mockedIssuerList, mockedDiscount);
 
         assertFalse(mockedView.issuerFlowStarted);
         assertFalse(mockedView.installmentsFlowStarted);
@@ -532,7 +534,6 @@ public class CardVaultPresenterTest {
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
         Issuer mockedIssuer = Issuers.getIssuerMLA();
         Discount mockedDiscount = null;
-        Boolean directDiscountEnabled = false;
 
         presenter.setToken(mockedToken);
         presenter.setPaymentMethod(mockedPaymentMethod);
@@ -634,7 +635,9 @@ public class CardVaultPresenterTest {
         String mockedPaymentStatus = Payment.StatusCodes.STATUS_REJECTED;
         String mockedPaymentStatusDetail = Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE;
 
-        PaymentRecovery mockedPaymentRecovery = new PaymentRecovery(mockedToken, mockedPaymentMethod, mockedPayerCost, mockedIssuer, mockedPaymentStatus, mockedPaymentStatusDetail);
+        PaymentRecovery mockedPaymentRecovery =
+            new PaymentRecovery(mockedToken, mockedPaymentMethod, mockedPayerCost, mockedIssuer, mockedPaymentStatus,
+                mockedPaymentStatusDetail);
 
         CardVaultPresenter presenter = new CardVaultPresenter();
         presenter.attachView(mockedView);
@@ -664,7 +667,6 @@ public class CardVaultPresenterTest {
         MercadoPagoError mpException = new MercadoPagoError(apiException, "");
         provider.setResponse(mpException);
 
-
         CardVaultPresenter presenter = new CardVaultPresenter();
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
@@ -682,7 +684,6 @@ public class CardVaultPresenterTest {
         provider.setResponse(installmentsList);
 
         assertNotNull(installmentsList);
-
     }
 
     @Test
@@ -786,7 +787,6 @@ public class CardVaultPresenterTest {
 
         assertTrue(provider.deleteRequested);
         assertEquals(provider.cardIdDeleted, "12345");
-
     }
 
     @Test
@@ -825,7 +825,6 @@ public class CardVaultPresenterTest {
 
         assertTrue(provider.deleteRequested);
         assertEquals(provider.cardIdDeleted, "12345");
-
     }
 
     @Test
@@ -970,7 +969,8 @@ public class CardVaultPresenterTest {
         }
 
         @Override
-        public void getInstallmentsAsync(String bin, Long issuerId, String paymentMethodId, BigDecimal amount, TaggedCallback<List<Installment>> taggedCallback) {
+        public void getInstallmentsAsync(String bin, Long issuerId, String paymentMethodId, BigDecimal amount,
+            TaggedCallback<List<Installment>> taggedCallback) {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);
             } else {

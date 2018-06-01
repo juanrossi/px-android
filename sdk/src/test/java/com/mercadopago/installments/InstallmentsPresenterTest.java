@@ -53,7 +53,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -83,7 +82,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -112,7 +110,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -140,7 +137,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -170,7 +166,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -203,7 +198,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -235,7 +229,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -268,7 +261,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -300,7 +292,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -328,7 +319,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -370,7 +360,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPayerCosts(payerCosts);
@@ -399,7 +388,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -427,7 +415,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPayerCosts(payerCosts);
@@ -437,7 +424,8 @@ public class InstallmentsPresenterTest {
         presenter.initialize();
 
         assertTrue(mockedView.finishWithResult);
-        assertEquals(mockedView.selectedPayerCost, getPayerCost(payerCosts, paymentPreference.getDefaultInstallments()));
+        assertEquals(mockedView.selectedPayerCost,
+            getPayerCost(payerCosts, paymentPreference.getDefaultInstallments()));
     }
 
     @Test
@@ -513,7 +501,6 @@ public class InstallmentsPresenterTest {
 
         InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.setAmount(amount);
-        presenter.setDiscountEnabled(true);
 
         presenter.setDiscount(discount);
 
@@ -532,7 +519,6 @@ public class InstallmentsPresenterTest {
         InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
-
 
         presenter.setSite(Sites.COLOMBIA);
         presenter.setAmount(new BigDecimal(1000));
@@ -557,7 +543,6 @@ public class InstallmentsPresenterTest {
         InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
-
 
         presenter.setSite(Sites.ARGENTINA);
         presenter.setAmount(new BigDecimal(1000));
@@ -627,7 +612,8 @@ public class InstallmentsPresenterTest {
         }
 
         @Override
-        public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId, TaggedCallback<List<Installment>> taggedCallback) {
+        public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId,
+            TaggedCallback<List<Installment>> taggedCallback) {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);
             } else {
@@ -705,8 +691,6 @@ public class InstallmentsPresenterTest {
         public void showHeader() {
             this.headerShown = true;
         }
-
-        //this.discountRowShown = true;
 
         @Override
         public void initInstallmentsReviewView(PayerCost payerCost) {

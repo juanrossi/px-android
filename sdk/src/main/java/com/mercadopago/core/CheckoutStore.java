@@ -241,4 +241,9 @@ public class CheckoutStore {
         paymentData = null;
         payment = null;
     }
+
+    public void resetPlugins() {
+        paymentPlugins = new HashMap<>();
+        paymentMethodPluginList = new ArrayList<>();
+    }
 }

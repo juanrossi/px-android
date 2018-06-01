@@ -51,7 +51,6 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     private PaymentPreference paymentPreference;
     private BigDecimal amount;
     private Boolean installmentsReviewEnabled;
-    private Boolean discountEnabled = true;
     private Boolean showAllSavedCardsEnabled = false;
     private Integer maxSavedCards;
 
@@ -197,7 +196,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     public BigDecimal getTransactionAmount() {
         BigDecimal amount;
 
-        if (discount != null && discountEnabled) {
+        if (discount != null) {
             amount = discount.getAmountWithDiscount(this.amount);
         } else {
             amount = this.amount;
@@ -528,14 +527,6 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     public Boolean getInstallmentsReviewEnabled() {
         return installmentsReviewEnabled;
-    }
-
-    public void setDiscountEnabled(Boolean discountEnabled) {
-        this.discountEnabled = discountEnabled;
-    }
-
-    public Boolean getDiscountEnabled() {
-        return discountEnabled;
     }
 
     public void setMaxSavedCards(int maxSavedCards) {

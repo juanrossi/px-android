@@ -4,7 +4,6 @@ import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
@@ -23,7 +22,6 @@ import com.mercadopago.views.InstallmentsActivityView;
 import java.math.BigDecimal;
 import java.util.List;
 
-
 public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView, InstallmentsProvider> {
 
     private FailureRecovery mFailureRecovery;
@@ -41,8 +39,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     private PaymentPreference mPaymentPreference;
     private CardInfo mCardInfo;
     private Discount mDiscount;
-    private Boolean mDiscountEnabled = true;
-    private Boolean mDirectDiscountEnabled = true;
     private Boolean mInstallmentsReviewEnabled;
     private Site mSite;
 
@@ -70,7 +66,8 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     }
 
     private void resolvePayerCosts(List<PayerCost> payerCosts) {
-        PayerCost defaultPayerCost = mPaymentPreference == null ? null : mPaymentPreference.getDefaultInstallments(payerCosts);
+        PayerCost defaultPayerCost =
+            mPaymentPreference == null ? null : mPaymentPreference.getDefaultInstallments(payerCosts);
         mPayerCosts = mPaymentPreference == null ? payerCosts : mPaymentPreference.getInstallmentsBelowMax(payerCosts);
 
         if (defaultPayerCost != null) {
@@ -89,31 +86,32 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     private void getInstallmentsAsync() {
         getView().showLoadingView();
 
-        getResourcesProvider().getInstallments(mBin, getAmount(), mIssuerId, mPaymentMethod.getId(), new TaggedCallback<List<Installment>>(ApiUtil.RequestOrigin.GET_INSTALLMENTS) {
-            @Override
-            public void onSuccess(List<Installment> installments) {
-                if (installments.size() == 0) {
-                    getView().showError(getResourcesProvider().getNoInstallmentsFoundError(), "");
-                } else if (installments.size() == 1) {
-                    resolvePayerCosts(installments.get(0).getPayerCosts());
-                } else {
-                    getView().showError(getResourcesProvider().getMultipleInstallmentsFoundForAnIssuerError(), "");
-                }
-            }
-
-            @Override
-            public void onFailure(MercadoPagoError mercadoPagoError) {
-                getView().hideLoadingView();
-
-                setFailureRecovery(new FailureRecovery() {
-                    @Override
-                    public void recover() {
-                        getInstallmentsAsync();
+        getResourcesProvider().getInstallments(mBin, getAmount(), mIssuerId, mPaymentMethod.getId(),
+            new TaggedCallback<List<Installment>>(ApiUtil.RequestOrigin.GET_INSTALLMENTS) {
+                @Override
+                public void onSuccess(List<Installment> installments) {
+                    if (installments.size() == 0) {
+                        getView().showError(getResourcesProvider().getNoInstallmentsFoundError(), "");
+                    } else if (installments.size() == 1) {
+                        resolvePayerCosts(installments.get(0).getPayerCosts());
+                    } else {
+                        getView().showError(getResourcesProvider().getMultipleInstallmentsFoundForAnIssuerError(), "");
                     }
-                });
-                getView().showError(mercadoPagoError, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
-            }
-        });
+                }
+
+                @Override
+                public void onFailure(MercadoPagoError mercadoPagoError) {
+                    getView().hideLoadingView();
+
+                    setFailureRecovery(new FailureRecovery() {
+                        @Override
+                        public void recover() {
+                            getInstallmentsAsync();
+                        }
+                    });
+                    getView().showError(mercadoPagoError, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
+                }
+            });
     }
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
@@ -169,7 +167,7 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     public BigDecimal getAmount() {
         BigDecimal amount;
 
-        if (!mDiscountEnabled || mDiscount == null) {
+        if (mDiscount == null) {
             amount = mAmount;
         } else {
             amount = mDiscount.getAmountWithDiscount(mAmount);
@@ -219,24 +217,8 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         return mPayerEmail;
     }
 
-    public void setDiscountEnabled(Boolean discountEnabled) {
-        mDiscountEnabled = discountEnabled;
-    }
-
-    public Boolean getDiscountEnabled() {
-        return mDiscountEnabled;
-    }
-
     public void setInstallmentsReviewEnabled(Boolean installmentReviewEnabled) {
         mInstallmentsReviewEnabled = installmentReviewEnabled;
-    }
-
-    public void setDirectDiscountEnabled(Boolean directDiscountEnabled) {
-        mDirectDiscountEnabled = directDiscountEnabled;
-    }
-
-    public Boolean getDirectDiscountEnabled() {
-        return mDirectDiscountEnabled;
     }
 
     public String getBin() {

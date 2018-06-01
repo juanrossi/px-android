@@ -88,7 +88,6 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
     private MPTextView mNoInstallmentsRateTextView;
     private LinearLayout mNoInstallmentsRate;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +117,8 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
         mPrivateKey = getIntent().getStringExtra("payerAccessToken");
 
         mPresenter.setSite(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("site"), Site.class));
-        mPresenter.setPaymentMethod(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentMethod"), PaymentMethod.class));
+        mPresenter.setPaymentMethod(
+            JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentMethod"), PaymentMethod.class));
         mPresenter.setIssuer(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("issuer"), Issuer.class));
         mPresenter.setCardInfo(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("cardInfo"), CardInfo.class));
 
@@ -139,10 +139,9 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
         }
 
         mPresenter.setPayerCosts(payerCosts);
-        mPresenter.setPaymentPreference(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentPreference"), PaymentPreference.class));
+        mPresenter.setPaymentPreference(
+            JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentPreference"), PaymentPreference.class));
         mPresenter.setDiscount(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("discount"), Discount.class));
-        mPresenter.setDiscountEnabled(getIntent().getBooleanExtra("discountEnabled", true));
-        mPresenter.setDirectDiscountEnabled(getIntent().getBooleanExtra("directDiscountEnabled", true));
         mPresenter.setInstallmentsReviewEnabled(getIntent().getBooleanExtra("installmentsReviewEnabled", true));
         mPresenter.setPayerEmail(getIntent().getStringExtra("payerEmail"));
     }
@@ -195,7 +194,8 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
         mLowResTitleToolbar = findViewById(R.id.mpsdkTitle);
 
         if (CheckoutTimer.getInstance().isTimerEnabled()) {
-            Toolbar.LayoutParams marginParams = new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            Toolbar.LayoutParams marginParams =
+                new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             marginParams.setMargins(0, 0, 0, 6);
             mLowResTitleToolbar.setLayoutParams(marginParams);
             mLowResTitleToolbar.setTextSize(19);
@@ -221,15 +221,15 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
 
     protected void trackScreen() {
         MPTrackingContext mTrackingContext = new MPTrackingContext.Builder(this, mPublicKey)
-                .setVersion(BuildConfig.VERSION_NAME)
-                .build();
+            .setVersion(BuildConfig.VERSION_NAME)
+            .build();
 
         ScreenViewEvent event = new ScreenViewEvent.Builder()
-                .setFlowId(FlowHandler.getInstance().getFlowId())
-                .setScreenId(TrackingUtil.SCREEN_ID_INSTALLMENTS)
-                .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_INSTALLMENTS)
-                .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, mPresenter.getPaymentMethod().getId())
-                .build();
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setScreenId(TrackingUtil.SCREEN_ID_INSTALLMENTS)
+            .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_INSTALLMENTS)
+            .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, mPresenter.getPaymentMethod().getId())
+            .build();
 
         mTrackingContext.trackEvent(event);
     }
@@ -295,8 +295,6 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
                     } else {
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
-                        returnIntent.putExtra("discountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDiscountEnabled()));
-                        returnIntent.putExtra("directDiscountEnabled", mPresenter.getDirectDiscountEnabled());
                         setResult(RESULT_CANCELED, returnIntent);
                         finish();
                     }
@@ -347,12 +345,12 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
         view.setAdapter(adapter);
         view.setLayoutManager(new LinearLayoutManager(this));
         view.addOnItemTouchListener(new RecyclerItemClickListener(this,
-                new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        mPresenter.onItemSelected(position);
-                    }
-                }));
+            new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    mPresenter.onItemSelected(position);
+                }
+            }));
     }
 
     @Override
@@ -406,8 +404,6 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
         Intent returnIntent = new Intent();
         returnIntent.putExtra("payerCost", JsonUtil.getInstance().toJson(payerCost));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
-        returnIntent.putExtra("discountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDiscountEnabled()));
-        returnIntent.putExtra("directDiscountEnabled", mPresenter.getDirectDiscountEnabled());
         setResult(RESULT_OK, returnIntent);
         finish();
         animateTransitionSlideInSlideOut();
@@ -426,8 +422,6 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
             Intent returnIntent = new Intent();
             returnIntent.putExtra("backButtonPressed", true);
             returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
-            returnIntent.putExtra("discountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDiscountEnabled()));
-            returnIntent.putExtra("directDiscountEnabled", mPresenter.getDirectDiscountEnabled());
             setResult(RESULT_CANCELED, returnIntent);
             finish();
         }
@@ -462,13 +456,14 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
 
     @Override
     public void startDiscountFlow(BigDecimal transactionAmount) {
-        MercadoPagoComponents.Activities.DiscountsActivityBuilder mercadoPagoBuilder = new MercadoPagoComponents.Activities.DiscountsActivityBuilder();
+        MercadoPagoComponents.Activities.DiscountsActivityBuilder mercadoPagoBuilder =
+            new MercadoPagoComponents.Activities.DiscountsActivityBuilder();
 
         mercadoPagoBuilder.setActivity(this)
-                .setMerchantPublicKey(mPublicKey)
-                .setPayerEmail(mPresenter.getPayerEmail())
-                .setAmount(transactionAmount)
-                .setDiscount(mPresenter.getDiscount());
+            .setMerchantPublicKey(mPublicKey)
+            .setPayerEmail(mPresenter.getPayerEmail())
+            .setAmount(transactionAmount)
+            .setDiscount(mPresenter.getDiscount());
 
         mercadoPagoBuilder.setDiscount(mPresenter.getDiscount());
         mercadoPagoBuilder.startActivity();
@@ -477,10 +472,10 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
     @Override
     public void initInstallmentsReviewView(final PayerCost payerCost) {
         InstallmentsReviewView installmentsReviewView = new MercadoPagoUI.Views.InstallmentsReviewViewBuilder()
-                .setContext(this)
-                .setCurrencyId(mPresenter.getSite().getCurrencyId())
-                .setPayerCost(payerCost)
-                .build();
+            .setContext(this)
+            .setCurrencyId(mPresenter.getSite().getCurrencyId())
+            .setPayerCost(payerCost)
+            .build();
 
         installmentsReviewView.inflateInParent(mInstallmentsReview, true);
         installmentsReviewView.initializeControls();
