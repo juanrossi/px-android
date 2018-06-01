@@ -10,6 +10,7 @@ import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
 import com.mercadopago.onetap.OneTap;
 import com.mercadopago.util.ResourceUtil;
+import com.mercadopago.util.ViewUtils;
 import javax.annotation.Nonnull;
 
 class MethodPlugin extends CompactComponent<MethodPlugin.Props, OneTap.Actions> {
@@ -44,4 +45,5 @@ class MethodPlugin extends CompactComponent<MethodPlugin.Props, OneTap.Actions> 
         name.setText(resName);
         return main;
     }
+
 }

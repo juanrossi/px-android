@@ -13,6 +13,7 @@ import com.mercadopago.model.Discount;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.onetap.OneTap;
 import com.mercadopago.util.ResourceUtil;
+import com.mercadopago.util.ViewUtils;
 import com.mercadopago.util.textformatter.TextFormatter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

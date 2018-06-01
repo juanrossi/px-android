@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import com.mercadopago.R;
 import com.mercadopago.paymentresult.components.LineSeparator;
 
+import com.mercadopago.util.ViewUtils;
 import javax.annotation.Nonnull;
 
 public class Footer extends CompactComponent<Footer.Props, ActionDispatcher> {
@@ -55,7 +56,7 @@ public class Footer extends CompactComponent<Footer.Props, ActionDispatcher> {
                         }
                     });
             final View buttonView = buttonPrimary.render(linearContainer);
-            setMarginInView(buttonView, padding);
+            ViewUtils.setMarginBottomInView(buttonView, padding);
             linearContainer.addView(buttonView);
         }
 
@@ -70,20 +71,11 @@ public class Footer extends CompactComponent<Footer.Props, ActionDispatcher> {
                     }
                 });
             final View buttonLinkView = buttonLink.render(linearContainer);
-            setMarginInView(buttonLinkView, padding);
+            ViewUtils.setMarginBottomInView(buttonLinkView, padding);
             linearContainer.addView(buttonLinkView);
         }
 
         return linearContainer;
     }
 
-    private void setMarginInView(@NonNull final View button, final int margin) {
-        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.gravity = Gravity.CENTER_HORIZONTAL;
-        params.setMargins(margin, margin, margin, 0);
-        button.setLayoutParams(params);
-    }
 }

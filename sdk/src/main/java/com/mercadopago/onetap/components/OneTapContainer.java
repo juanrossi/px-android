@@ -3,6 +3,7 @@ package com.mercadopago.onetap.components;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import com.mercadopago.R;
 import com.mercadopago.components.Action;
 import com.mercadopago.components.Button;

@@ -75,7 +75,7 @@
     <string name="mpsdk_name_and_lastname_identification_label">NAME AND SURNAME</string>
     <string name="mpsdk_card_identification_number">Number</string>
     <string name="mpsdk_card_identification_type">Type</string>
-    <string name="mpsdk_card_hint" translatable="false">%1$s ••• %2$s</string>
+    <string name="mpsdk_card_hint" translatable="false">%1$s ···· %2$s</string>
     <string name="mpsdk_identification_card_holder_hint" translatable="false">•• ••• •••</string>
     <string name="mpsdk_cardholder_name_short">NAME SURNAME</string>
 

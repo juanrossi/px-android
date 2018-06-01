@@ -48,7 +48,8 @@ public class ExamplesUtils {
     private static final String RESULT_CODE_MESSAGE = " Result code: ";
     private static final String DUMMY_PREFERENCE_ID = "243962506-0bb62e22-5c7b-425e-a0a6-c22d0f4758a9";
     private static final String DUMMY_PREFERENCE_ID_WITH_TWO_ITEMS = "243962506-b6476e8b-a1a4-40cb-bfec-9954bff4a143";
-    private static final String DUMMY_PREFERENCE_ID_WITH_ITEM_LONG_TITLE = "243962506-4ddac80d-af86-4a4f-80e3-c4e4735ba200";
+    private static final String DUMMY_PREFERENCE_ID_WITH_ITEM_LONG_TITLE =
+        "243962506-4ddac80d-af86-4a4f-80e3-c4e4735ba200";
     private static final String DUMMY_PREFERENCE_ID_WITH_DECIMALS = "243962506-ad5df092-f5a2-4b99-bcc4-7578d6e71849";
     private static final String DUMMY_PREFERENCE_ID_WITH_NO_DECIMALS = "243966003-3db6717c-371a-4660-8d01-ebf63f588fd8";
     private static final String DUMMY_PREFERENCE_ID_MLM = "253812950-1f347959-4ed9-4fee-9189-0eb84fe8f049";
@@ -111,8 +112,10 @@ public class ExamplesUtils {
         options.add(new Pair<>("One item - Long title", createBaseWithOneItemLongTitle()));
         options.add(new Pair<>("Account money plugin - Decimals", createBaseWithAccountMoneyAndDecimals()));
         options.add(new Pair<>("Account money plugin - No decimals", createBaseWithAccountMoneyAndNoDecimals()));
-        options.add(new Pair<>("Account money plugin - Discount percent off", createBaseWithAccountMoneyAndDiscountPercentOff()));
-        options.add(new Pair<>("Account money plugin - Discount amount off", createBaseWithAccountMoneyAndDiscountAmountOff()));
+        options.add(new Pair<>("Account money plugin - Discount percent off",
+            createBaseWithAccountMoneyAndDiscountPercentOff()));
+        options.add(
+            new Pair<>("Account money plugin - Discount amount off", createBaseWithAccountMoneyAndDiscountAmountOff()));
         return options;
     }
 
@@ -350,7 +353,6 @@ public class ExamplesUtils {
         final Discount.Builder discount = new Discount.Builder("77123", "ARS", new BigDecimal("245.76"))
             .setAmountOff(new BigDecimal("245.76"));
         final Campaign.Builder campaignBuilder = new Campaign.Builder("77123");
-        campaignBuilder.setMaxCouponAmount(new BigDecimal(200));
         // The payer pays $ 983,04
 
         final BusinessPayment payment =

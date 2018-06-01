@@ -85,7 +85,6 @@ public class OneTapModel implements Serializable {
     }
 
     public boolean hasMaxDiscountLabel() {
-        //TODO on discount refactor change to actual value
-        return true;
+        return campaign != null && campaign.hasMaxCouponAmount();
     }
 }
