@@ -242,7 +242,6 @@
     <string name="mpsdk_total_to_pay">Total a pagar</string>
     <string name="mpsdk_has_a_coupon_discount">¿Tenés un cupón de descuento?</string>
     <string name="mpsdk_with_max_coupon_amount">Con tope de descuento</string>
-
     <string name="mpsdk_interest_label">No incluye intereses bancarios</string>
 
     <!-- Unlock Card -->

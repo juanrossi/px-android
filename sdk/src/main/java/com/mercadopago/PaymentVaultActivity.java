@@ -72,12 +72,12 @@ import java.util.Map;
 public class PaymentVaultActivity extends MercadoPagoBaseActivity
     implements PaymentVaultView, TimerObserver {
 
-    private static final String PUBLIC_KEY_BUNDLE = "mPublicKey";
+    private static final String PUBLIC_KEY_BUNDLE = "publicKey";
     private static final String MERCHANT_BASE_URL_BUNDLE = "mMerchantBaseUrl";
     private static final String MERCHANT_GET_CUSTOMER_URI_BUNDLE = "mMerchantGetCustomerUri";
     private static final String MERCHANT_GET_CUSTOMER_ADDITIONAL_INFO = "mMerchantGetCustomerAdditionalInfo";
     private static final String SHOW_BANK_DEALS_BUNDLE = "mShowBankDeals";
-    private static final String PRESENTER_BUNDLE = "mPresenter";
+    private static final String PRESENTER_BUNDLE = "presenter";
 
     private static final String PAYMENT_METHOD = "payment_method";
 
@@ -404,7 +404,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
             .setPaymentPreference(presenter.getPaymentPreference())
             .setInstallmentsEnabled(mInstallmentsEnabled)
             .setPayerEmail(presenter.getPayerEmail())
-            .setDiscount(presenter.getDiscount())
+            .setDiscount(presenter.getDiscount(), presenter.getCampaign())
             .setInstallmentsReviewEnabled(presenter.getInstallmentsReviewEnabled())
             .setShowBankDeals(mShowBankDeals)
             .setESCEnabled(mEscEnabled)
@@ -660,7 +660,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
             .setSite(presenter.getSite())
             .setInstallmentsEnabled(mInstallmentsEnabled)
             .setPayerEmail(presenter.getPayerEmail())
-            .setDiscount(presenter.getDiscount())
+            .setDiscount(presenter.getDiscount(), presenter.getCampaign())
             .setAutomaticSelection(automaticSelection)
             .setInstallmentsReviewEnabled(presenter.getInstallmentsReviewEnabled())
             .setShowBankDeals(mShowBankDeals)

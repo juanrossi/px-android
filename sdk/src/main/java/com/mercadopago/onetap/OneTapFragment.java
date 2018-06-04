@@ -185,7 +185,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
             .setMerchantPublicKey(publicKey)
             .setPayerAccessToken(privateKey)
             .setCheckoutPreference(model.getCheckoutPreference())
-            .setDiscount(model.getDiscount())
+            .setDiscount(model.getDiscount(),model.getCampaign())
             .setESCEnabled(model.isEscEnabled())
             .setInstallmentsEnabled(false)
             .setCard(card)

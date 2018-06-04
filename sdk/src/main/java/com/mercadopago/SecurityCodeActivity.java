@@ -56,7 +56,7 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
 
     private static final String PRESENTER_BUNDLE = "mSecurityCodePresenter";
     private static final String PUBLIC_KEY_BUNDLE = "mMerchantPublicKey";
-    private static final String PRIVATE_KEY_BUNDLE = "mPrivateKey";
+    private static final String PRIVATE_KEY_BUNDLE = "privateKey";
     private static final String ESC_ENABLED_BUNDLE = "mEscEnabled";
     private static final String REASON_BUNDLE = "mReason";
 

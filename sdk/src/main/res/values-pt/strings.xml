@@ -123,7 +123,6 @@
     <string name="mpsdk_error_secondary_title_call">Não conseguiu autorizá-lo?</string>
     <string name="mpsdk_text_card_enabled">Eu já habilitei meu cartão</string>
 
-
     <!-- Error messages -->
     <string name="mpsdk_error_message_invalid_amount">Valor inválido</string>
     <string name="mpsdk_error_message_invalid_item">Item inválido</string>
@@ -146,7 +145,6 @@
     <string name="mpsdk_error_message_missing_identification_types">Nenhum tipo de identificação encontrado</string>
     <string name="mpsdk_error_message_missing_setting_for_bin">Nenhuma configuração encontrada para esse bin</string>
 
-
     <!-- API exception messages -->
     <string name="mpsdk_empty_card_expiration_month">O mês da data de validade do cartão não foi digitado</string>
     <string name="mpsdk_empty_card_expiration_year">O ano da data de validade do cartão não foi digitado</string>
@@ -168,7 +166,6 @@
     <string name="mpsdk_security_code_required">Código de segurança obrigatório</string>
     <string name="mpsdk_invalid_card_number">Número do cartão inválido</string>
     <string name="mpsdk_api_invalid_identification_number">O número de identificação é inválido</string>
-
 
     <!-- Utils -->
     <string name="mpsdk_continue_shopping">Pronto!</string>
@@ -245,7 +242,6 @@
     <string name="mpsdk_total_to_pay">Total a pagar</string>
     <string name="mpsdk_has_a_coupon_discount">Você tem um cupom de desconto?</string>
     <string name="mpsdk_with_max_coupon_amount">Com limite de desconto</string>
-
     <string name="mpsdk_interest_label">Não inclui juros bancários</string>
 
     <!-- Unlock Card -->

@@ -98,7 +98,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     public static final String NORMAL_STATE = "textview_normal";
 
     public static final String CARD_SIDE_STATE_BUNDLE = "mCardSideState";
-    public static final String PAYMENT_METHOD_BUNDLE = "mPaymentMethod";
+    public static final String PAYMENT_METHOD_BUNDLE = "paymentMethod";
     public static final String ID_REQUIRED_BUNDLE = "mIdentificationNumberRequired";
     public static final String SEC_CODE_REQUIRED_BUNDLE = "mIsSecurityCodeRequired";
     public static final String SEC_CODE_LENGTH_BUNDLE = "mCardSecurityCodeLength";

@@ -1,18 +1,23 @@
 package com.mercadopago.installments;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.mocks.Installments;
 import com.mercadopago.mocks.Issuers;
 import com.mercadopago.mocks.PayerCosts;
 import com.mercadopago.mocks.PaymentMethods;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
+import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.Site;
 import com.mercadopago.model.Sites;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.PaymentPreference;
@@ -720,6 +725,28 @@ public class InstallmentsPresenterTest {
         @Override
         public void warnAboutBankInterests() {
             bankInterestsWarningShown = true;
+        }
+
+        @Override
+        public void showAmount(@Nullable final Discount discount, @Nullable final Campaign campaign,
+            final BigDecimal totalAmount,
+            final Site site) {
+
+        }
+
+        @Override
+        public void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign) {
+
+        }
+
+        @Override
+        public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign) {
+
+        }
+
+        @Override
+        public void showDiscountInputDialog() {
+
         }
 
         private void simulateInstallmentSelection(int index) {
