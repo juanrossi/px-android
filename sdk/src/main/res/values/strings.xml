@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- one tap -->
+    <!-- One tap -->
     <string name="mpsdk_pay">Pay</string>
     <string name="mpsdk_total_amount_holder" translatable="false">(%1$s)</string>
     <string name="mpsdk_string_holder" translatable="false">%1$s</string>
-    <string name="discount_ceil_message">With stop reinstatement</string>
+    <string name="mpsdk_discount_ceil_message">With stop reinstatement</string>
     <string name="mpsdk_payment_detail_title_modal">Detail</string>
+    <string name="mpsdk_quantity_modal" translatable="false">%1$d %2$s</string>
 
     <!-- Banks deals -->
     <string name="mpsdk_empty_bank_deals">No promotions available for you</string>

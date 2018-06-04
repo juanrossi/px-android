@@ -98,25 +98,12 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
     }
 
     private void resolveArrow(@NonNull final View content) {
-        final View arrow = content.findViewById(R.id.arrow);
-        boolean hasExtraDialog = hasExtraInfo();
-        if (hasExtraDialog) {
-            arrow.setVisibility(View.VISIBLE);
-            content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-                    getActions().onAmountShowMore();
-                }
-            });
-        } else {
-            arrow.setVisibility(View.GONE);
-            content.setClickable(false);
-        }
-    }
-
-    private boolean hasExtraInfo() {
-        return props.hasDiscount() || props.hasMultipleInstallments() ||
-            props.hasExtrasAmount();
+        content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                getActions().onAmountShowMore();
+            }
+        });
     }
 
     private void resolveOffAmount(@NonNull final ViewGroup discountLayout) {

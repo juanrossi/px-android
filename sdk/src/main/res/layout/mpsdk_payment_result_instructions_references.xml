@@ -17,7 +17,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:layout_marginTop="@dimen/mpsdk_l_alternative_margin"
-        android:textColor="@color/mpsdk_black"
+        android:textColor="@color/ui_meli_black"
         android:textSize="@dimen/mpsdk_l_text"
         tools:text="Title" />
 

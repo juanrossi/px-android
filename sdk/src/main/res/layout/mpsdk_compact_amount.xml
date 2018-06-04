@@ -10,9 +10,9 @@
     android:foreground="?attr/selectableItemBackground"
     android:gravity="center"
     android:orientation="vertical"
+    android:paddingBottom="@dimen/mpsdk_xs_margin"
     android:paddingLeft="@dimen/mpsdk_s_margin"
     android:paddingRight="@dimen/mpsdk_s_margin"
-    android:paddingBottom="@dimen/mpsdk_xs_margin"
     android:paddingTop="@dimen/mpsdk_xs_margin">
 
     <com.mercadopago.customviews.MPTextView
@@ -20,7 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="@color/mpsdk_warm_grey"
+        android:textAppearance="@style/MLFont.Regular"
+        android:textColor="@color/ui_meli_grey"
         android:textSize="@dimen/mpsdk_xs_text"
         tools:text="$ 870"/>
 
@@ -38,7 +39,8 @@
             android:gravity="center"
             android:paddingEnd="@dimen/mpsdk_s_margin"
             android:paddingStart="@dimen/mpsdk_s_margin"
-            android:textColor="@color/mpsdk_black"
+            android:textAppearance="@style/MLFont.Light"
+            android:textColor="@color/ui_meli_black"
             app:autoSizeMaxTextSize="@dimen/mpsdk_xxxxl_text"
             app:autoSizeMinTextSize="10dp"
             app:autoSizeStepGranularity="1dp"
@@ -68,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textAppearance="@style/MLFont.Regular"
             android:textColor="@color/mpsdk_discount_one_tap"
             android:textSize="@dimen/mpsdk_xs_text"
             tools:text="20 % OFF"/>
@@ -78,8 +81,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/mpsdk_xxxs_margin"
-            android:text="@string/discount_ceil_message"
-            android:textColor="@color/mpsdk_warm_grey"
+            android:text="@string/mpsdk_discount_ceil_message"
+            android:textAppearance="@style/MLFont.Regular"
+            android:textColor="@color/ui_meli_grey"
             android:textSize="@dimen/mpsdk_xs_text"/>
 
     </LinearLayout>

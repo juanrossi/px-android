@@ -32,12 +32,21 @@ public class MPTextView extends AppCompatTextView {
         readAttr(context, attrs);
 
         if (!isInEditMode()) {
-            final Typeface tf = getCustomTypeface();
-            final int style = getStyle();
+            configureStyle();
+        }
+    }
 
-            if (tf != null) {
-                setTypeface(tf, style);
-            }
+    public void setFontStyle(final String fontStyle) {
+        mFontStyle = fontStyle;
+        configureStyle();
+    }
+
+    private void configureStyle() {
+        final Typeface tf = getCustomTypeface();
+        final int style = getStyle();
+
+        if (tf != null) {
+            setTypeface(tf, style);
         }
     }
 

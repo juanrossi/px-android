@@ -1343,7 +1343,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void restoreBlackInfoContainerView() {
-        mBlackInfoContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.mpsdk_black_info_background));
+        mBlackInfoContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.ui_meli_black));
     }
 
     @Override

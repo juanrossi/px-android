@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.mercadolibre.android.ui.widgets.MeliDialog;
 import com.mercadopago.R;
 import com.mercadopago.onetap.components.PaymentDetailContainer;
@@ -44,4 +45,5 @@ public class PaymentDetailInfoDialog extends MeliDialog {
     public String getTitle() {
         return getContext().getString(R.string.mpsdk_payment_detail_title_modal);
     }
+
 }

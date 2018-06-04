@@ -11,7 +11,7 @@
         android:id="@+id/mpsdkAmountTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/mpsdk_black"
+        android:textColor="@color/ui_meli_black"
         android:textSize="@dimen/mpsdk_l_text"
         tools:text="2x $786"/>
 
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/mpsdk_xxs_margin"
-            android:textColor="@color/mpsdk_brownish_grey"
+            android:textColor="@color/ui_meli_dark_grey"
             android:textSize="@dimen/mpsdk_xs_text"
             tools:text="($1459,00)"/>
 
@@ -34,7 +34,7 @@
             android:id="@+id/mpsdkTotalAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/mpsdk_brownish_grey"
+            android:textColor="@color/ui_meli_dark_grey"
             android:textSize="@dimen/mpsdk_xs_text"
             tools:text="$ 2020"/>
     </LinearLayout>

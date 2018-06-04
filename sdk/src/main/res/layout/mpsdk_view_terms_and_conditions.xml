@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/mpsdk_white"
     android:clickable="true"
     android:focusable="true"
@@ -18,20 +19,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        tools:text="Terms and conditions Message"
+        android:textAppearance="@style/MLFont.Regular"
         android:textColor="@color/mpsdk_color_payer_costs"
         android:textSize="@dimen/ui_fontsize_xxsmall"
-        app:font_style="regular" />
+        tools:text="Terms and conditions Message"/>
 
     <com.mercadopago.customviews.MPTextView
         android:id="@+id/terms_and_conditions_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        tools:text="Terms and conditions link"
+        android:textAppearance="@style/MLFont.Regular"
         android:textColor="@color/ui_components_primary_color"
         android:textSize="@dimen/ui_fontsize_xxsmall"
-        app:font_style="regular" />
+        tools:text="Terms and conditions link"/>
 </LinearLayout>
 
 

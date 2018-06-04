@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/mpsdk_s_margin">
 
 
@@ -16,10 +16,10 @@
         android:orientation="horizontal">
 
         <include
-            android:layout_gravity="top"
             layout="@layout/mpsdk_view_rounded_icon"
             android:layout_width="@dimen/mpsdk_m_height"
-            android:layout_height="@dimen/mpsdk_m_height" />
+            android:layout_height="@dimen/mpsdk_m_height"
+            android:layout_gravity="top"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,9 +35,10 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/mpsdk_black"
-                android:maxLines="2"
                 android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/MLFont.Regular"
+                android:textColor="@color/ui_meli_black"
                 android:textSize="@dimen/mpsdk_s_text"
                 tools:text="Mercado Pago + Banco patagonia •••• 3263"/>
 
@@ -51,7 +52,8 @@
                     android:id="@+id/amount_less_discount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/mpsdk_warm_grey"
+                    android:textAppearance="@style/MLFont.Regular"
+                    android:textColor="@color/ui_meli_grey"
                     android:textSize="@dimen/mpsdk_xs_text"
                     tools:text="$ 2222222222222"/>
 
@@ -60,25 +62,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/mpsdk_xxs_margin"
-                    android:textColor="@color/mpsdk_warm_grey"
+                    android:textAppearance="@style/MLFont.Regular"
+                    android:textColor="@color/ui_meli_grey"
                     android:textSize="@dimen/mpsdk_xs_text"
                     tools:text="$ 333333333333"/>
 
-
             </LinearLayout>
-
 
             <com.mercadopago.customviews.MPTextView
                 android:id="@+id/cft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/mpsdk_warm_grey"
+                android:textAppearance="@style/MLFont.Light"
+                android:textColor="@color/ui_meli_grey"
                 android:textSize="@dimen/mpsdk_l_text"
                 app:font_style="light"
                 tools:text="CFT: 0,00%"/>
 
         </LinearLayout>
-
 
     </LinearLayout>
 

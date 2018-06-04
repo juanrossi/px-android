@@ -1,5 +1,6 @@
 package com.mercadopago.onetap.components;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ class DetailItem extends CompactComponent<Item, Void> {
     public View render(@Nonnull final ViewGroup parent) {
         final View row = inflate(parent, R.layout.mpsdk_view_onetap_item_detail_row);
         final TextView title = row.findViewById(R.id.title);
-        ViewUtils.loadOrGone(props.getTitle(), title);
+        ViewUtils.loadOrGone(resolveItemTitle(parent.getContext()), title);
         final TextView description = row.findViewById(R.id.description);
         ViewUtils.loadOrGone(props.getDescription(), description);
 
@@ -29,10 +30,16 @@ class DetailItem extends CompactComponent<Item, Void> {
         TextFormatter.withCurrencyId(props.getCurrencyId())
             .withSpace()
             .amount(Item.getItemTotalAmount(props))
-            .smallDecimals()
+            .normalDecimals()
             .into(itemAmount)
             .normal();
 
         return row;
+    }
+
+    private String resolveItemTitle(final Context context) {
+        return props.hasCardinality() ? context
+            .getString(R.string.mpsdk_quantity_modal, props.getQuantity(), props.getTitle()) :
+            props.getTitle();
     }
 }

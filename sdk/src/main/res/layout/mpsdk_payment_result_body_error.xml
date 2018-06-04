@@ -26,7 +26,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/mpsdk_l_margin"
             android:gravity="center_horizontal"
-            android:textColor="@color/mpsdk_black"
+            android:textColor="@color/ui_meli_black"
             android:textSize="@dimen/mpsdk_l_text"
             tools:text="Title" />
 
@@ -37,7 +37,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/mpsdk_s_margin"
             android:gravity="center_horizontal"
-            android:textColor="@color/mpsdk_brownish_grey"
+            android:textColor="@color/ui_meli_dark_grey"
             android:textSize="@dimen/mpsdk_s_text"
             tools:text="Description" />
 
@@ -48,7 +48,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/mpsdk_xs_margin"
             android:gravity="center_horizontal"
-            android:textColor="@color/mpsdk_brownish_grey"
+            android:textColor="@color/ui_meli_dark_grey"
             android:textSize="@dimen/mpsdk_s_text"
             tools:text="Description" />
 
@@ -85,7 +85,7 @@
         android:paddingRight="@dimen/mpsdk_xl_margin"
         android:paddingStart="@dimen/mpsdk_xl_margin"
         android:paddingTop="@dimen/mpsdk_l_margin"
-        android:textColor="@color/mpsdk_black"
+        android:textColor="@color/ui_meli_black"
         android:textSize="@dimen/mpsdk_l_text"
         android:visibility="gone"
         tools:text="¿No pudiste autorizarlo?" />

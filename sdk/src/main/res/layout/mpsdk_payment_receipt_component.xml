@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/mpsdk_brownish_grey"
+            android:textColor="@color/ui_meli_dark_grey"
             android:textSize="14dp"
             tools:text="4 de diciembre de 2017" />
 
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/mpsdk_brownish_grey"
+            android:textColor="@color/ui_meli_dark_grey"
             android:textSize="14dp"
             tools:text="Numero de operacion 1234" />
 

@@ -48,6 +48,7 @@ public class ExamplesUtils {
     private static final String RESULT_CODE_MESSAGE = " Result code: ";
     private static final String DUMMY_PREFERENCE_ID = "243962506-0bb62e22-5c7b-425e-a0a6-c22d0f4758a9";
     private static final String DUMMY_PREFERENCE_ID_WITH_TWO_ITEMS = "243962506-b6476e8b-a1a4-40cb-bfec-9954bff4a143";
+    private static final String DUMMY_PREFERENCE_ID_ONE_ITEM_WITH_QUANTITY = "243962506-ad5df092-f5a2-4b99-bcc4-7578d6e71849";
     private static final String DUMMY_PREFERENCE_ID_WITH_ITEM_LONG_TITLE =
         "243962506-4ddac80d-af86-4a4f-80e3-c4e4735ba200";
     private static final String DUMMY_PREFERENCE_ID_WITH_DECIMALS = "243962506-ad5df092-f5a2-4b99-bcc4-7578d6e71849";
@@ -108,6 +109,7 @@ public class ExamplesUtils {
         options.add(new Pair<>("Base flow - Tracks with listener", startBaseFlowWithTrackListener()));
         options.add(new Pair<>("All but debit card", allButDebitCard()));
         options.add(new Pair<>("Two items", createBaseWithTwoItems()));
+        options.add(new Pair<>("One item with quantity", createBaseWithOneItemWithQuantity()));
         options.add(new Pair<>("Two items - Collector icon", createBaseWithTwoItemsAndCollectorIcon()));
         options.add(new Pair<>("One item - Long title", createBaseWithOneItemLongTitle()));
         options.add(new Pair<>("Account money plugin - Decimals", createBaseWithAccountMoneyAndDecimals()));
@@ -280,6 +282,13 @@ public class ExamplesUtils {
         final Map<String, Object> defaultData = new HashMap<>();
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_TWO_ITEMS)
+            .setDataInitializationTask(getDataInitializationTask(defaultData));
+    }
+
+    private static Builder createBaseWithOneItemWithQuantity() {
+        final Map<String, Object> defaultData = new HashMap<>();
+
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_ONE_ITEM_WITH_QUANTITY)
             .setDataInitializationTask(getDataInitializationTask(defaultData));
     }
 

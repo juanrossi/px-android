@@ -1,50 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/main_container"
               xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
               android:gravity="center"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:padding="@dimen/mpsdk_m_margin">
 
     <com.mercadopago.customviews.MPTextView
         android:id="@+id/subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:paddingLeft="@dimen/mpsdk_m_margin"
-        android:paddingTop="@dimen/mpsdk_m_margin"
-        android:textColor="@color/mpsdk_base_text"
+        android:textColor="@color/ui_meli_black"
         android:textSize="@dimen/mpsdk_s_text"
+        app:font_style="bold"
+        android:textAppearance="@style/MLFont.Bold.Semi"
         tools:text="50 % OFF"/>
 
     <com.mercadopago.customviews.MPTextView
         android:id="@+id/detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:paddingLeft="@dimen/mpsdk_m_margin"
-        android:paddingTop="@dimen/mpsdk_xxxs_margin"
+        android:layout_gravity="start"
+        android:paddingTop="@dimen/mpsdk_xxs_margin"
+        android:textColor="@color/ui_meli_grey"
         android:textSize="@dimen/mpsdk_xs_text"
+        app:font_style="light"
+        android:textAppearance="@style/MLFont.Light"
         tools:text="Tope de descuento $ 250"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="@dimen/mpsdk_m_margin"
-        android:layout_marginRight="@dimen/mpsdk_m_margin"
         android:layout_marginTop="@dimen/mpsdk_m_margin"
         android:background="@color/mpsdk_med_light_gray"/>
 
     <com.mercadopago.customviews.MPTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:paddingBottom="@dimen/mpsdk_m_margin"
-        android:paddingLeft="@dimen/mpsdk_m_margin"
+        android:gravity="center_horizontal"
         android:paddingTop="@dimen/mpsdk_s_margin"
         android:text="@string/mpsdk_we_apply_the_best_available_discount"
+        android:textColor="@color/ui_meli_grey"
         android:textSize="@dimen/mpsdk_xs_text"
+        android:textAppearance="@style/MLFont.Light"
+        app:font_style="light"
         tools:text="Aplicamos el mejor descuento disponible"/>
 </LinearLayout>

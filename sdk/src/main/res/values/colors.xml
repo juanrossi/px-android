@@ -21,7 +21,6 @@
     <color name="mpsdk_active_button">@color/mpsdk_input</color>
     <color name="mpsdk_inactive_button">#84b4fc</color>
     <color name="mpsdk_error_red_pink">#F04449</color>
-    <color name="mpsdk_black_info_background">#333333</color>
     <color name="mpsdk_color_congrats_background">#0DB478</color>
     <color name="mpsdk_color_new_card_form_background_light_alpha">#4DFFFFFF</color>
     <color name="mpsdk_color_new_card_form_background_dark_alpha">#B3FFFFFF</color>
@@ -113,9 +112,6 @@
 
     <!-- Payment Result components -->
 
-    <color name="mpsdk_black">#333333</color>
-    <color name="mpsdk_brownish_grey">#666666</color>
-    <color name="mpsdk_warm_grey">#999999</color>
     <color name="mpsdk_med_light_gray">#EEEEEE</color>
     <color name="mpsdk_light_gray">#F7F7F7</color>
     <color name="mpsdk_white">#FFFFFF</color>
