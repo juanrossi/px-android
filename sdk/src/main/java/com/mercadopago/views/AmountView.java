@@ -10,14 +10,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.mercadopago.R;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Site;
 import com.mercadopago.util.textformatter.TextFormatter;
-
 import java.math.BigDecimal;
 
 import static com.mercadopago.lite.util.CurrenciesUtil.getLocalizedAmountWithCurrencySymbol;
@@ -216,7 +214,7 @@ public class AmountView extends LinearLayoutCompat {
                 .holder(R.string.mpsdk_discount_percent_off_percent);
         } else {
             TextFormatter.withCurrencyId(discount.getCurrencyId())
-                .noSpace().noSymbol()
+                .withSpace()
                 .amount(discount.getAmountOff())
                 .normalDecimals()
                 .into(amountDescription)

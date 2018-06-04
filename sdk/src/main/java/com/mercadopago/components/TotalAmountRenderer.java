@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.util.textformatter.TextFormatter;
@@ -25,10 +24,18 @@ public class TotalAmountRenderer extends Renderer<TotalAmount> {
         totalAmountTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
         if (component.props.discount != null && component.hasPayerCostWithMultipleInstallments()) {
-            TextFormatter.withCurrencyId(component.props.currencyId).amount(component.props.payerCost.getTotalAmount())
-                .add(component.props.discount.getCouponAmount()).normalDecimals().into(totalAmountTextView);
+            TextFormatter.withCurrencyId(component.props.currencyId)
+                .withSpace()
+                .amount(component.props.payerCost.getTotalAmount())
+                .add(component.props.discount.getCouponAmount())
+                .normalDecimals()
+                .into(totalAmountTextView);
+
         } else if (component.props.discount != null) {
-            TextFormatter.withCurrencyId(component.props.currencyId).amount(component.props.amount).normalDecimals()
+            TextFormatter.withCurrencyId(component.props.currencyId)
+                .withSpace()
+                .amount(component.props.amount)
+                .normalDecimals()
                 .into(totalAmountTextView);
         }
 

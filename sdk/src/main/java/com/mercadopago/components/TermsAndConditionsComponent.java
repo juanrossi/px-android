@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.mercadopago.R;
 import com.mercadopago.TermsAndConditionsActivity;
-import com.mercadopago.components.CompactComponent;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.paymentresult.components.LineSeparator;
 import com.mercadopago.review_and_confirm.models.TermsAndConditionsModel;
@@ -30,7 +29,7 @@ public class TermsAndConditionsComponent extends CompactComponent<TermsAndCondit
         mTermsAndConditionsMessageView.setText(props.getMessage());
         mTermsAndConditionsLinkView.setText(props.getMessageLinked());
 
-        mTermsAndConditionsLinkView.setOnClickListener(new View.OnClickListener() {
+        discountTermsAndConditionsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 TermsAndConditionsActivity.start(context,props.getUrl());
