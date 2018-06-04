@@ -23,22 +23,22 @@ public class TotalAmountRenderer extends Renderer<TotalAmount> {
 
         totalAmountTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
-        if (component.props.discount != null && component.hasPayerCostWithMultipleInstallments()) {
-            TextFormatter.withCurrencyId(component.props.currencyId)
-                .withSpace()
-                .amount(component.props.payerCost.getTotalAmount())
-                .add(component.props.discount.getCouponAmount())
-                .normalDecimals()
-                .into(totalAmountTextView);
-
-        } else if (component.props.discount != null) {
-            TextFormatter.withCurrencyId(component.props.currencyId)
-                .withSpace()
-                .amount(component.props.amount)
-                .normalDecimals()
-                .into(totalAmountTextView);
+        if (component.props.discount != null) {
+            if (component.hasPayerCostWithMultipleInstallments()) {
+                TextFormatter.withCurrencyId(component.props.currencyId)
+                    .withSpace()
+                    .amount(component.props.payerCost.getTotalAmount())
+                    .add(component.props.discount.getCouponAmount())
+                    .normalDecimals()
+                    .into(totalAmountTextView);
+            } else {
+                TextFormatter.withCurrencyId(component.props.currencyId)
+                    .withSpace()
+                    .amount(component.props.amount)
+                    .normalDecimals()
+                    .into(totalAmountTextView);
+            }
         }
-
         return bodyView;
     }
 }
