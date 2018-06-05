@@ -101,7 +101,7 @@ public class Fingerprint {
 
     @SuppressLint("MissingPermission")
     private void registerLocationUpdate(Context context) {
-        if (isLocationPermissionGranted(context)) {
+        if (isLocationPermissionGranted(context) && mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                     0, 0, mLocationListener, Looper.getMainLooper());
         }

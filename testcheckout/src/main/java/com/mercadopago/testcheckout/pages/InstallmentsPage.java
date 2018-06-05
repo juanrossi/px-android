@@ -5,7 +5,8 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.view.View;
 
 import com.mercadopago.R;
-import com.mercadopago.testcheckout.assertions.Validator;
+import com.mercadopago.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.testlib.pages.PageObject;
 
 import org.hamcrest.Matcher;
 
@@ -13,19 +14,20 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public class InstallmentsPage extends PageObject {
+public class InstallmentsPage extends PageObject<CheckoutValidator> {
 
     public InstallmentsPage() {
         // This constructor is intentionally empty. Nothing special is needed here.
     }
 
-    public InstallmentsPage(Validator validator) {
+    protected InstallmentsPage(CheckoutValidator validator) {
         super(validator);
     }
 
     @Override
-    protected void validate() {
+    public InstallmentsPage validate(CheckoutValidator validator) {
         validator.validate(this);
+        return this;
     }
 
     public ReviewAndConfirmPage selectInstallments(int installmentsOption) {
@@ -37,4 +39,5 @@ public class InstallmentsPage extends PageObject {
 
         return new ReviewAndConfirmPage(validator);
     }
+
 }

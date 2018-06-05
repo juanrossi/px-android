@@ -12,11 +12,13 @@ import com.mercadopago.testcheckout.pages.IdentificationPage;
 import com.mercadopago.testcheckout.pages.InstallmentsPage;
 import com.mercadopago.testcheckout.pages.IssuerPage;
 import com.mercadopago.testcheckout.pages.NamePage;
+import com.mercadopago.testcheckout.pages.NoCheckoutPage;
 import com.mercadopago.testcheckout.pages.PaymentMethodPage;
 import com.mercadopago.testcheckout.pages.ReviewAndConfirmPage;
+import com.mercadopago.testcheckout.pages.ReviewPaymentMethodsPage;
 import com.mercadopago.testcheckout.pages.SecurityCodePage;
 
-public class DefaultValidator implements Validator {
+public class DefaultValidator implements CheckoutValidator {
     @Override
     public void validate(@NonNull final IssuerPage issuerPage) {
         //TODO implement default PX Validations
@@ -39,6 +41,11 @@ public class DefaultValidator implements Validator {
 
     @Override
     public void validate(@NonNull final SecurityCodePage securityCodePage) {
+        //TODO implement default PX Validations
+    }
+
+    @Override
+    public void validate(@NonNull final NoCheckoutPage noCheckoutPage) {
         //TODO implement default PX Validations
     }
 
@@ -79,6 +86,11 @@ public class DefaultValidator implements Validator {
 
     @Override
     public void validate(@NonNull final InstallmentsPage installmentsPage) {
+        //TODO implement default PX Validations
+    }
+
+    @Override
+    public void validate(@NonNull final ReviewPaymentMethodsPage reviewPaymentMethodsPage) {
         //TODO implement default PX Validations
     }
 }

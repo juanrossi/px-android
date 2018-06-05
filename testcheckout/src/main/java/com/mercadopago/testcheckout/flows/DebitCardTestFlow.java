@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.mercadopago.core.MercadoPagoCheckout;
-import com.mercadopago.testcheckout.assertions.Validator;
+import com.mercadopago.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testcheckout.input.Card;
 import com.mercadopago.testcheckout.pages.CongratsPage;
 import com.mercadopago.testcheckout.pages.PaymentMethodPage;
@@ -20,19 +20,19 @@ public class DebitCardTestFlow extends TestFlow {
     }
 
     @NonNull
-    public CongratsPage runDebitCardPaymentFlow(@NonNull final Card card, final Validator validator) {
+    public CongratsPage runDebitCardPaymentFlow(@NonNull final Card card, final CheckoutValidator validator) {
         PaymentMethodPage paymentMethodPage = new PaymentMethodPage(validator);
 
-        super.startCheckout();
+        startCheckout();
 
         return paymentMethodPage.selectCard()
-                .selectDebitCard()
-                .enterCreditCardNumber(card.cardNumber())
-                .enterCardholderName(card.cardHolderName())
-                .enterExpiryDate(card.expDate())
-                .enterSecurityCode(card.escNumber())
-                .enterIdentificationNumberToReviewAndConfirm(card.cardHolderIdentityNumber())
-                .pressConfirmButton();
+            .selectDebitCard()
+            .enterCreditCardNumber(card.cardNumber())
+            .enterCardholderName(card.cardHolderName())
+            .enterExpiryDate(card.expDate())
+            .enterSecurityCode(card.escNumber())
+            .enterIdentificationNumberToReviewAndConfirm(card.cardHolderIdentityNumber())
+            .pressConfirmButton();
     }
 
     @NonNull
@@ -40,5 +40,23 @@ public class DebitCardTestFlow extends TestFlow {
         return runDebitCardPaymentFlow(card, null);
     }
 
+    @NonNull
+    public CongratsPage runDebitCardFlowFromPaymentMethod(@NonNull final Card card,
+        @NonNull final PaymentMethodPage paymentMethodPage, final CheckoutValidator validator) {
+        return paymentMethodPage
+            .selectCard()
+            .selectDebitCard()
+            .enterCreditCardNumber(card.cardNumber())
+            .enterCardholderName(card.cardHolderName())
+            .enterExpiryDate(card.expDate())
+            .enterSecurityCode(card.escNumber())
+            .enterIdentificationNumberToReviewAndConfirm(card.cardHolderIdentityNumber())
+            .pressConfirmButton();
+    }
 
+    @NonNull
+    public CongratsPage runDebitCardFlowFromPaymentMethod(@NonNull final Card card,
+        @NonNull final PaymentMethodPage paymentMethodPage) {
+        return runDebitCardFlowFromPaymentMethod(card, paymentMethodPage, null);
+    }
 }

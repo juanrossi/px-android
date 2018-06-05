@@ -3,9 +3,8 @@ package com.mercadopago.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
-
 import com.mercadopago.lite.util.CurrenciesUtil;
-
+import com.mercadopago.lite.util.ParcelableUtil;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -117,7 +116,6 @@ public class Discount implements Parcelable, Serializable {
         this.campaignId = campaignId;
     }
 
-
     protected Discount(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -125,8 +123,8 @@ public class Discount implements Parcelable, Serializable {
         couponCode = in.readString();
         concept = in.readString();
         campaignId = in.readString();
-        percentOff = new BigDecimal(in.readString());
-        amountOff = new BigDecimal(in.readString());
+        percentOff = ParcelableUtil.getBigDecimalReadByte(in);
+        amountOff = ParcelableUtil.getBigDecimalReadByte(in);
         couponAmount = new BigDecimal(in.readString());
     }
 
@@ -155,8 +153,8 @@ public class Discount implements Parcelable, Serializable {
         dest.writeString(couponCode);
         dest.writeString(concept);
         dest.writeString(campaignId);
-        dest.writeString(percentOff.toString());
-        dest.writeString(amountOff.toString());
+        ParcelableUtil.writeByte(dest, percentOff);
+        ParcelableUtil.writeByte(dest, amountOff);
         dest.writeString(couponAmount.toString());
     }
 }

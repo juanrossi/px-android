@@ -1,5 +1,6 @@
 package com.mercadopago.testcheckout.input;
 
+import javax.annotation.Nullable;
 
 public class Master extends FakeCard {
 
@@ -7,7 +8,8 @@ public class Master extends FakeCard {
         super(cardState, getNumber(country));
     }
 
-    private static String getNumber(Country country) {
+    @Nullable
+    private static String getNumber(final Country country) {
         switch (country) {
             case ARGENTINA:
                 return "5031755734530604";
@@ -27,4 +29,5 @@ public class Master extends FakeCard {
                 return null;
         }
     }
+
 }
