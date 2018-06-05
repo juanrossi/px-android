@@ -225,7 +225,6 @@ public class ExamplesUtils {
     private static Builder discountSample() {
         Discount.Builder discountBuilder = new Discount.Builder("77123", "ARS", new BigDecimal(20));
         discountBuilder.setPercentOff(new BigDecimal(20));
-
         Campaign.Builder campaignBuilder = new Campaign.Builder("77123");
         campaignBuilder.setMaxCouponAmount(new BigDecimal(200));
 

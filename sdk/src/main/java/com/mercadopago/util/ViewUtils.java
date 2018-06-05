@@ -57,6 +57,11 @@ public final class ViewUtils {
         setMarginInView(view, 0, 0, 0, marginBottom);
     }
 
+    public static void setMarginTopInView(@NonNull final View view, final int marginTop) {
+        setMarginInView(view, 0, marginTop, 0, 0);
+    }
+
+
     private static void setMarginInView(@NonNull final View button, final int leftMargin, final int topMargin,
         final int rightMargin, final int bottomMargin) {
         final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(

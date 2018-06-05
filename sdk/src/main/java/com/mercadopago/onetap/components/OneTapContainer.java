@@ -3,7 +3,6 @@ package com.mercadopago.onetap.components;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import com.mercadopago.R;
 import com.mercadopago.components.Action;
 import com.mercadopago.components.Button;
@@ -13,6 +12,7 @@ import com.mercadopago.components.TermsAndConditionsComponent;
 import com.mercadopago.onetap.OneTap;
 import com.mercadopago.review_and_confirm.models.LineSeparatorType;
 import com.mercadopago.review_and_confirm.models.TermsAndConditionsModel;
+import com.mercadopago.util.ViewUtils;
 import com.mercadopago.viewmodel.OneTapModel;
 import javax.annotation.Nonnull;
 
@@ -78,6 +78,9 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
             }
         };
         final Button button = new ButtonPrimary(new Button.Props(confirm), actions);
-        parent.addView(button.render(parent));
+        final View view = button.render(parent);
+        int resMargin = props.hasDiscount() ? R.dimen.mpsdk_s_margin : R.dimen.mpsdk_m_margin;
+        ViewUtils.setMarginTopInView(view, parent.getContext().getResources().getDimensionPixelSize(resMargin));
+        parent.addView(view);
     }
 }

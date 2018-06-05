@@ -78,6 +78,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="right|end"
                 android:textSize="@dimen/mpsdk_xl_text"
+                android:textColor="@color/mpsdk_base_text"
                 tools:text="$ 1043" />
         </LinearLayout>
 

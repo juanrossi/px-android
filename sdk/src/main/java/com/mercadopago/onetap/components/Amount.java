@@ -9,7 +9,6 @@ import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
 import com.mercadopago.model.CardPaymentMetadata;
 import com.mercadopago.model.Discount;
-import com.mercadopago.model.Installment;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.onetap.OneTap;
 import com.mercadopago.util.ViewUtils;
@@ -121,7 +120,7 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
         } else if (props.hasDiscount()) {
             TextFormatter.withCurrencyId(props.currencyId)
                 .withSpace()
-                .amount(props.discount.getCouponAmount())
+                .amount(props.discount.getAmountOff())
                 .normalDecimals()
                 .into(discountMessage)
                 .holder(R.string.mpsdk_discount_percent_off_amount);

@@ -59,8 +59,8 @@ public class Discount implements Serializable, Parcelable {
         return amount.subtract(couponAmount);
     }
 
-    public Boolean hasPercentOff() {
-        return percentOff != null && !percentOff.equals(new BigDecimal(0));
+    public boolean hasPercentOff() {
+        return percentOff != null && !BigDecimal.ZERO.equals(percentOff);
     }
 
     private Discount(Parcel in) {
@@ -126,6 +126,8 @@ public class Discount implements Serializable, Parcelable {
             this.id = id;
             this.currencyId = currencyId;
             this.couponAmount = couponAmount;
+            setPercentOff(BigDecimal.ZERO);
+            setAmountOff(BigDecimal.ZERO);
         }
 
         @SuppressWarnings("unused")

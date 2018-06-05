@@ -107,7 +107,7 @@ public class AmountView extends LinearLayoutCompat {
     public void show(@NonNull final BigDecimal totalAmount, @NonNull final Site site) {
         configureViewsVisibilityDefault();
         amountDescription.setText(R.string.mpsdk_total_to_pay);
-        amountDescription.setTextColor(getResources().getColor(R.color.mpsdk_summary_text_color));
+        amountDescription.setTextColor(getResources().getColor(R.color.default_primary_color));
         showEffectiveAmount(totalAmount, site);
     }
 

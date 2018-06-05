@@ -1,6 +1,5 @@
 package com.mercadopago.onetap.components;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.view.View;
@@ -12,7 +11,6 @@ import com.mercadopago.model.Discount;
 import com.mercadopago.model.OneTapMetadata;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.onetap.OneTap;
-import com.mercadopago.util.ViewUtils;
 import com.mercadopago.viewmodel.OneTapModel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,10 +61,6 @@ class PaymentMethod extends CompactComponent<PaymentMethod.Props, OneTap.Actions
             return new Props(oneTapMetadata.getPaymentTypeId(), oneTapMetadata.getPaymentMethodId(), oneTapMetadata.getCard(),
                 props.getCheckoutPreference().getSite().getCurrencyId(), props.getDiscount());
         }
-
-        private boolean hasDiscount() {
-            return discount != null;
-        }
     }
 
     /* default */ PaymentMethod(final Props props, final OneTap.Actions callBack) {
@@ -96,12 +90,6 @@ class PaymentMethod extends CompactComponent<PaymentMethod.Props, OneTap.Actions
                 getActions().changePaymentMethod();
             }
         });
-        resolveMargin(main, parent.getContext());
         return main;
-    }
-
-    private void resolveMargin(final View main, final Context context) {
-        final int margin = context.getResources().getDimensionPixelSize(R.dimen.mpsdk_m_margin);
-        ViewUtils.setMarginBottomInView(main, props.hasDiscount() ? 0 : margin);
     }
 }

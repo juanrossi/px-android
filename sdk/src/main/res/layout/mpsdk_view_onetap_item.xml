@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/mpsdk_xxs_margin">
+    android:paddingBottom="@dimen/mpsdk_s_margin">
 
     <FrameLayout
         android:layout_width="wrap_content"
