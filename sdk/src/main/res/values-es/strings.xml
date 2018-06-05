@@ -237,12 +237,13 @@
     <string name="mpsdk_amount_doesnt_match">Importe fuera del alcance</string>
     <string name="mpsdk_campaign_expired">La campaña expiró</string>
     <string name="mpsdk_something_went_wrong">¡Uy! Algo salió mal…</string>
-    <string name="mpsdk_we_apply_the_best_available_discount">Aplicamos el mejor descuento disponible</string>
+    <string name="mpsdk_we_apply_the_best_available_discount">Los descuentos no son acumulables. Te damos el más alto para este pago.</string>
     <string name="mpsdk_max_coupon_amount">Tope de descuento %1$s</string>
     <string name="mpsdk_total_to_pay">Total a pagar</string>
     <string name="mpsdk_has_a_coupon_discount">¿Tenés un cupón de descuento?</string>
     <string name="mpsdk_with_max_coupon_amount">Con tope de descuento</string>
     <string name="mpsdk_interest_label">No incluye intereses bancarios</string>
+    <string name="mpsdk_discount_dialog_title">Mi Discount</string>
 
     <!-- Unlock Card -->
     <string name="mpsdk_text_unlock_card_start">Recuerda</string>

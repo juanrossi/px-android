@@ -54,7 +54,7 @@ public class DiscountDetailDialog extends MeliDialog {
     @Nullable
     @Override
     public String getTitle() {
-        return getContext().getString(R.string.mpsdk_review_summary_discount);
+        return getContext().getString(R.string.mpsdk_discount_dialog_title);
     }
 
     @Nullable
