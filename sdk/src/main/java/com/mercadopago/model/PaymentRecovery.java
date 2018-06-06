@@ -1,6 +1,8 @@
 package com.mercadopago.model;
 
-public class PaymentRecovery {
+import java.io.Serializable;
+
+public class PaymentRecovery implements Serializable {
     private final Token mToken;
     private final String mStatusDetail;
     private final PaymentMethod mPaymentMethod;
