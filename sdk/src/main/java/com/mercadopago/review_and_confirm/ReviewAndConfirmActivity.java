@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-
 import com.mercadopago.MercadoPagoBaseActivity;
 import com.mercadopago.R;
 import com.mercadopago.components.Action;
@@ -89,7 +88,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelPayment();
+                onBackPressed();
             }
         });
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
@@ -213,6 +212,12 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
 
         setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
     }
 
     private void cancelPayment() {
