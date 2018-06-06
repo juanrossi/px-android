@@ -62,7 +62,7 @@ public final class ViewUtils {
     }
 
 
-    private static void setMarginInView(@NonNull final View button, final int leftMargin, final int topMargin,
+    public static void setMarginInView(@NonNull final View button, final int leftMargin, final int topMargin,
         final int rightMargin, final int bottomMargin) {
         final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,

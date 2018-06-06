@@ -56,7 +56,7 @@ public class Footer extends CompactComponent<Footer.Props, ActionDispatcher> {
                         }
                     });
             final View buttonView = buttonPrimary.render(linearContainer);
-            ViewUtils.setMarginBottomInView(buttonView, padding);
+            ViewUtils.setMarginInView(buttonView, padding, padding, padding, 0);
             linearContainer.addView(buttonView);
         }
 
@@ -71,7 +71,7 @@ public class Footer extends CompactComponent<Footer.Props, ActionDispatcher> {
                     }
                 });
             final View buttonLinkView = buttonLink.render(linearContainer);
-            ViewUtils.setMarginBottomInView(buttonLinkView, padding);
+            ViewUtils.setMarginInView(buttonLinkView, padding, padding, padding, 0);
             linearContainer.addView(buttonLinkView);
         }
 
