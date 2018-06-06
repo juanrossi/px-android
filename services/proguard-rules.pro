@@ -23,3 +23,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.mercadopago.model.** { *; } #dtos
+-keep class com.mercadopago.preferences.** { *; } #dtos
+-keep class com.mercadopago.lite.exceptions.** { *; } #dtos
+
+-dontnote com.mercadopago.model.**
+-dontnote com.mercadopago.preferences.**
+-dontnote com.mercadopago.lite.exceptions.**
