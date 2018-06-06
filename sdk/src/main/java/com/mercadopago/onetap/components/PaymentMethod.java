@@ -9,6 +9,7 @@ import com.mercadopago.components.CompactComponent;
 import com.mercadopago.model.CardPaymentMetadata;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.OneTapMetadata;
+import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.onetap.OneTap;
 import com.mercadopago.viewmodel.OneTapModel;
@@ -20,19 +21,22 @@ class PaymentMethod extends CompactComponent<PaymentMethod.Props, OneTap.Actions
     static class Props {
         /* default */ @NonNull final String paymentMethodType;
         /* default */ @NonNull final String paymentMethodId;
-        /* default */ @NonNull final CardPaymentMetadata card;
+        /* default */ @Nullable final CardPaymentMetadata cardPaymentMetadata;
+        /* default */ @Nonnull final PaymentMethodSearch paymentMethodSearch;
         /* default */ @NonNull final String currencyId;
         /* default */ @Nullable final Discount discount;
 
         /* default */ Props(@NonNull final String paymentMethodType,
             @NonNull final String paymentMethodId,
-            @NonNull final CardPaymentMetadata card,
+            @Nullable final CardPaymentMetadata cardPaymentMetadata,
+            @Nonnull final PaymentMethodSearch paymentMethodSearch,
             @NonNull final String currencyId,
             @Nullable final Discount discount) {
 
             this.paymentMethodType = paymentMethodType;
             this.paymentMethodId = paymentMethodId;
-            this.card = card;
+            this.cardPaymentMetadata = cardPaymentMetadata;
+            this.paymentMethodSearch = paymentMethodSearch;
             this.currencyId = currencyId;
             this.discount = discount;
         }
@@ -50,15 +54,23 @@ class PaymentMethod extends CompactComponent<PaymentMethod.Props, OneTap.Actions
         }
 
         /* default */
-        @NonNull
+        @Nullable
         public CardPaymentMetadata getCard() {
-            return card;
+            return cardPaymentMetadata;
+        }
+
+        /* default */
+        @Nonnull
+        public PaymentMethodSearch getPaymentMethodSearch() {
+            return paymentMethodSearch;
         }
 
         /* default */
         static Props createFrom(final OneTapModel props) {
             final OneTapMetadata oneTapMetadata = props.getPaymentMethods().getOneTapMetadata();
-            return new Props(oneTapMetadata.getPaymentTypeId(), oneTapMetadata.getPaymentMethodId(), oneTapMetadata.getCard(),
+
+            return new Props(oneTapMetadata.getPaymentTypeId(), oneTapMetadata.getPaymentMethodId(),
+                oneTapMetadata.getCard(), props.getPaymentMethods(),
                 props.getCheckoutPreference().getSite().getCurrencyId(), props.getDiscount());
         }
     }

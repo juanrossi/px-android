@@ -8,12 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
-import com.mercadopago.model.CardPaymentMetadata;
+import com.mercadopago.model.Card;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.onetap.OneTap;
 import com.mercadopago.util.ResourceUtil;
-import com.mercadopago.util.ViewUtils;
 import com.mercadopago.util.textformatter.TextFormatter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,16 +21,19 @@ class MethodCard extends CompactComponent<MethodCard.Props, OneTap.Actions> {
 
     static class Props {
 
-        /* default */ @NonNull final CardPaymentMetadata card;
+        /* default */ @NonNull final Card card;
+        /* default */ @Nonnull final PayerCost payerCost;
         /* default */ @NonNull final String paymentMethodId;
         /* default */ @NonNull final String currencyId;
         /* default */ @Nullable final Discount discount;
 
-        /* default */ Props(@NonNull final CardPaymentMetadata card,
+        /* default */ Props(@NonNull final Card card,
+            @Nonnull final PayerCost payerCost,
             @NonNull final String paymentMethodId,
             @NonNull final String currencyId,
             @Nullable final Discount discount) {
             this.card = card;
+            this.payerCost = payerCost;
             this.paymentMethodId = paymentMethodId;
             this.currencyId = currencyId;
             this.discount = discount;
@@ -39,7 +41,10 @@ class MethodCard extends CompactComponent<MethodCard.Props, OneTap.Actions> {
 
         /* default */
         static Props createFrom(final PaymentMethod.Props props) {
-            return new Props(props.card, props.paymentMethodId, props.currencyId, props.discount);
+            final Card card = props.getPaymentMethodSearch().getCardById(props.getCard().getId());
+            final PayerCost payerCost = props.getCard().getAutoSelectedInstallment();
+
+            return new Props(card, payerCost, props.paymentMethodId, props.currencyId, props.discount);
         }
     }
 
@@ -64,10 +69,9 @@ class MethodCard extends CompactComponent<MethodCard.Props, OneTap.Actions> {
 
     private void resolveAmount(final View main) {
         final ViewGroup row = main.findViewById(R.id.installments_row);
-        final PayerCost autoSelectedInstallment = props.card.getAutoSelectedInstallment();
-        if (autoSelectedInstallment.hasMultipleInstallments()) {
+        if (props.payerCost.hasMultipleInstallments()) {
             row.setVisibility(View.VISIBLE);
-            showAmount(row, autoSelectedInstallment);
+            showAmount(row, props.payerCost);
         } else {
             row.setVisibility(View.GONE);
         }
@@ -98,11 +102,10 @@ class MethodCard extends CompactComponent<MethodCard.Props, OneTap.Actions> {
     }
 
     private void resolveCft(@NonNull final View main) {
-        final PayerCost autoSelectedInstallment = props.card.getAutoSelectedInstallment();
         final TextView cft = main.findViewById(R.id.cft);
         final Context context = main.getContext();
-        cft.setVisibility(autoSelectedInstallment.hasCFT() ? View.VISIBLE : View.GONE);
-        cft.setText(autoSelectedInstallment.hasCFT() ? context
-            .getString(R.string.mpsdk_installments_cft, autoSelectedInstallment.getCFTPercent()) : "");
+        cft.setVisibility(props.payerCost.hasCFT() ? View.VISIBLE : View.GONE);
+        cft.setText(props.payerCost.hasCFT() ? context
+            .getString(R.string.mpsdk_installments_cft, props.payerCost.getCFTPercent()) : "");
     }
 }

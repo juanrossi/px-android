@@ -5,41 +5,23 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
-import java.util.List;
 
 public class CardPaymentMetadata implements Parcelable, Serializable {
 
     private String id;
 
-    private String description;
-
-    private Issuer issuer;
-
-    @SerializedName("last_four_digits")
-    private String lastFourDigits;
-
-    private int installments;
-
-    @SerializedName("payer_costs")
-    private List<PayerCost> payerCosts;
+    @SerializedName("selected_payer_cost")
+    private PayerCost payerCost;
 
     protected CardPaymentMetadata(Parcel in) {
         id = in.readString();
-        description = in.readString();
-        issuer = in.readParcelable(Issuer.class.getClassLoader());
-        lastFourDigits = in.readString();
-        installments = in.readInt();
-        payerCosts = in.createTypedArrayList(PayerCost.CREATOR);
+        payerCost = in.readParcelable(PayerCost.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(description);
-        dest.writeParcelable(issuer, flags);
-        dest.writeString(lastFourDigits);
-        dest.writeInt(installments);
-        dest.writeTypedList(payerCosts);
+        dest.writeParcelable(payerCost, flags);
     }
 
     @Override
@@ -61,31 +43,11 @@ public class CardPaymentMetadata implements Parcelable, Serializable {
 
     @Nullable
     public PayerCost getAutoSelectedInstallment() {
-        for (PayerCost payerCost : payerCosts) {
-            if (payerCost.getInstallments() == installments) {
-                return payerCost;
-            }
-        }
-        return null;
+        return payerCost;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public Issuer getIssuer() {
-        return issuer;
-    }
-
-    public String getLastFourDigits() {
-        return lastFourDigits;
-    }
-
-    public int getInstallments() {
-        return installments;
-    }
 }

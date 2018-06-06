@@ -100,7 +100,7 @@ public class MercadoPagoServices {
     }
 
     public Retrofit getMockClient() {
-        return getRetrofit("http://private-79409a-pxwrapperlucas.apiary-mock.com/", 10, 10, 10);
+        return getRetrofit("http://private-b75452-onetapgrupos.apiary-mock.com/", 10, 10, 10);
     }
 
     public void getPaymentMethodSearch(BigDecimal amount, List<String> excludedPaymentTypes, List<String> excludedPaymentMethods, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {

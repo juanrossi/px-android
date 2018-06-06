@@ -2,6 +2,7 @@ package com.mercadopago.viewmodel.mappers;
 
 import android.support.annotation.NonNull;
 import com.mercadopago.model.Issuer;
+import com.mercadopago.model.OneTapMetadata;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.Token;
 import com.mercadopago.viewmodel.CardPaymentModel;
@@ -20,8 +21,10 @@ public class CardPaymentMapper extends Mapper<OneTapModel, CardPaymentModel> {
 
     @Override
     public CardPaymentModel map(@NonNull final OneTapModel val) {
-        Issuer issuer = val.getPaymentMethods().getOneTapMetadata().getCard().getIssuer();
-        PayerCost installment = val.getPaymentMethods().getOneTapMetadata().getCard().getAutoSelectedInstallment();
-        return new CardPaymentModel(cardMapper.map(val), token, installment, issuer);
+        final OneTapMetadata metadata = val.getPaymentMethods().getOneTapMetadata();
+        final Issuer issuer = val.getPaymentMethods().getIssuer(metadata.getCard().getId());
+        final PayerCost payerCost = metadata.getCard().getAutoSelectedInstallment();
+
+        return new CardPaymentModel(cardMapper.map(val), token, payerCost, issuer);
     }
 }

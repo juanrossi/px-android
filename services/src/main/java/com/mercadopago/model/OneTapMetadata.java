@@ -12,14 +12,6 @@ public class OneTapMetadata implements Parcelable, Serializable {
     private String paymentTypeId;
     private CardPaymentMetadata card;
 
-    public OneTapMetadata(final String paymentMethodId,
-        final String paymentTypeId,
-        final CardPaymentMetadata card) {
-        this.paymentMethodId = paymentMethodId;
-        this.paymentTypeId = paymentTypeId;
-        this.card = card;
-    }
-
     protected OneTapMetadata(Parcel in) {
         paymentMethodId = in.readString();
         paymentTypeId = in.readString();
@@ -61,4 +53,9 @@ public class OneTapMetadata implements Parcelable, Serializable {
     public CardPaymentMetadata getCard() {
         return card;
     }
+
+    public boolean hasCard() {
+        return card != null;
+    }
+
 }

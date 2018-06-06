@@ -1,5 +1,6 @@
 package com.mercadopago.model;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
@@ -191,5 +192,17 @@ public class PaymentMethodSearch implements Serializable {
 
     public OneTapMetadata getOneTapMetadata() {
         return oneTapMetadata;
+    }
+
+    @Nullable
+    public Issuer getIssuer(@NonNull final String cardId) {
+        final Card foundCard = getCardById(cardId);
+        return foundCard == null ? null : foundCard.getIssuer();
+    }
+
+    @Nullable
+    public String getLastFourDigits(@NonNull final String cardId) {
+        final Card foundCard = getCardById(cardId);
+        return foundCard == null ? null : foundCard.getLastFourDigits();
     }
 }

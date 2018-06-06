@@ -101,10 +101,10 @@ public class OneTapPresenterTest {
         when(metadata.getPaymentTypeId()).thenReturn(PaymentTypes.CREDIT_CARD);
         when(metadata.getPaymentMethodId()).thenReturn(CARD_ID);
 
-        // TODO ver - info redundante de backend.
         when(paymentMethodSearch.getCardById(CARD_ID)).thenReturn(card);
         when(cardMetadata.getId()).thenReturn(CARD_ID);
-        when(cardMetadata.getIssuer()).thenReturn(mock(Issuer.class));
+
+        when(paymentMethodSearch.getIssuer(CARD_ID)).thenReturn(mock(Issuer.class));
     }
 
     @Test

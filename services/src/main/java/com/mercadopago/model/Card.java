@@ -90,20 +90,22 @@ public class Card implements CardInformation {
         this.id = id;
     }
 
+    @Nullable
     public Issuer getIssuer() {
         return issuer;
     }
 
-    public void setIssuer(Issuer issuer) {
+    public void setIssuer(@Nullable final Issuer issuer) {
         this.issuer = issuer;
     }
 
+    @Nullable
     @Override
     public String getLastFourDigits() {
         return lastFourDigits;
     }
 
-    public void setLastFourDigits(String lastFourDigits) {
+    public void setLastFourDigits(@Nullable final String lastFourDigits) {
         this.lastFourDigits = lastFourDigits;
     }
 
@@ -139,4 +141,5 @@ public class Card implements CardInformation {
     public String getSecurityCodeLocation() {
         return securityCode != null ? securityCode.getCardLocation() : CARD_DEFAULT_SECURITY_CODE_LOCATION;
     }
+
 }

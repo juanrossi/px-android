@@ -1,5 +1,9 @@
 package com.mercadopago.onetap.components;
 
+import com.mercadopago.mocks.Cards;
+import com.mercadopago.mocks.PaymentMethodSearchs;
+import com.mercadopago.model.CardPaymentMetadata;
+import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.onetap.OneTap;
 import org.junit.Before;
@@ -18,6 +22,12 @@ public class PaymentMethodTest {
     PaymentMethod.Props mock;
 
     @Mock
+    CardPaymentMetadata cardPaymentMetadata;
+
+    @Mock
+    PaymentMethodSearch paymentMethodSearch;
+
+    @Mock
     OneTap.Actions actions;
 
     private PaymentMethod paymentMethod;
@@ -30,6 +40,8 @@ public class PaymentMethodTest {
     @Test
     public void whenPaymentTypeCardThenRenderMethodCard() {
         when(mock.getPaymentMethodType()).thenReturn(PaymentTypes.DEBIT_CARD);
+        when(mock.getPaymentMethodSearch()).thenReturn(paymentMethodSearch);
+        when(mock.getCard()).thenReturn(cardPaymentMetadata);
         assertTrue(paymentMethod.resolveComponent() instanceof MethodCard);
     }
 
@@ -44,4 +56,5 @@ public class PaymentMethodTest {
         when(mock.getPaymentMethodType()).thenReturn(PaymentTypes.ATM);
         paymentMethod.resolveComponent();
     }
+
 }
