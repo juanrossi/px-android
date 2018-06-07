@@ -179,7 +179,7 @@ public class PaymentMethodSearch implements Serializable {
     }
 
     public boolean hasOneTapMetadata() {
-         return oneTapMetadata !=null;
+        return oneTapMetadata != null && getOneTapMetadata().isValidOneTapType();
     }
 
     public void setCards(List<Card> cards) {

@@ -14,7 +14,6 @@ import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Cause;
-import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
@@ -977,7 +976,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private boolean hasOneTapInfo() {
-        return (state.paymentMethodSearch != null && state.paymentMethodSearch.hasOneTapMetadata());
+        return (state.paymentMethodSearch != null
+            && state.paymentMethodSearch.hasOneTapMetadata());
     }
 
     /**
