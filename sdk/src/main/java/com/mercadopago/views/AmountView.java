@@ -18,8 +18,6 @@ import com.mercadopago.model.Site;
 import com.mercadopago.util.textformatter.TextFormatter;
 import java.math.BigDecimal;
 
-import static com.mercadopago.lite.util.CurrenciesUtil.getLocalizedAmountWithCurrencySymbol;
-
 public class AmountView extends LinearLayoutCompat {
 
     @Nullable
@@ -181,7 +179,11 @@ public class AmountView extends LinearLayoutCompat {
         final @NonNull Site site) {
         arrow.setVisibility(VISIBLE);
         amountBeforeDiscount.setVisibility(VISIBLE);
-        amountBeforeDiscount.setText(getLocalizedAmountWithCurrencySymbol(totalAmount, site));
+        TextFormatter.withCurrencyId(site.getCurrencyId())
+            .withSpace()
+            .amount(totalAmount)
+            .normalDecimals()
+            .into(amountBeforeDiscount);
     }
 
     private void configureDiscountAmountDescription(final Discount discount, final Campaign campaign) {
@@ -192,7 +194,11 @@ public class AmountView extends LinearLayoutCompat {
     }
 
     private void showEffectiveAmount(final @NonNull BigDecimal totalAmount, final @NonNull Site site) {
-        finalAmount.setText(getLocalizedAmountWithCurrencySymbol(totalAmount, site));
+        TextFormatter.withCurrencyId(site.getCurrencyId())
+            .withSpace()
+            .amount(totalAmount)
+            .normalDecimals()
+            .into(finalAmount);
     }
 
     private void configureMaxCouponAmountMessage(final Campaign campaign) {
