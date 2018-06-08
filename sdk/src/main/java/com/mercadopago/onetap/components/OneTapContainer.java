@@ -62,6 +62,7 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
             TermsAndConditionsModel model = new TermsAndConditionsModel(props.getDiscount().getDiscountTermsUrl(),
                 context.getString(R.string.mpsdk_discount_terms_and_conditions_message),
                 context.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message),
+                props.getPublicKey(),
                 LineSeparatorType.NONE);
             final View view = new TermsAndConditionsComponent(model)
                 .render(parent);

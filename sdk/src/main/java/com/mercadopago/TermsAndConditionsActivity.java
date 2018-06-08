@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
+import com.mercadopago.tracker.Tracker;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.TextUtil;
 
 public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     public static final String EXTRA_URL = "extra_url";
+    public static final String EXTRA_PUBLIC_KEY = "extra_public_key";
 
     protected View mMPTermsAndConditionsView;
     protected WebView mTermsAndConditionsWebView;
@@ -22,16 +24,19 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
     protected TextView mTitle;
 
     private String url;
+    private String publicKey;
 
-    public static void start(final Context context, final String url) {
+    public static void start(final Context context, final String url, final String publicKey) {
         Intent intent = new Intent(context, TermsAndConditionsActivity.class);
         intent.putExtra(EXTRA_URL, url);
+        intent.putExtra(EXTRA_PUBLIC_KEY, publicKey);
         context.startActivity(intent);
     }
 
     @Override
     protected void getActivityParameters() {
         url = getIntent().getStringExtra(EXTRA_URL);
+        publicKey = getIntent().getStringExtra(EXTRA_PUBLIC_KEY);
     }
 
     @Override
@@ -74,6 +79,7 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void onValidStart() {
+        Tracker.trackDiscountTermsAndConditions(getApplicationContext(), publicKey);
         showMPTermsAndConditions();
     }
 

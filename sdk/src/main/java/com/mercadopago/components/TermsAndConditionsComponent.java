@@ -32,7 +32,7 @@ public class TermsAndConditionsComponent extends CompactComponent<TermsAndCondit
         discountTermsAndConditionsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                TermsAndConditionsActivity.start(context,props.getUrl());
+                TermsAndConditionsActivity.start(context,props.getUrl(), props.getPublicKey());
             }
         });
 

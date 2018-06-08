@@ -19,9 +19,12 @@ import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Token;
 import com.mercadopago.onetap.components.OneTapContainer;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
+import com.mercadopago.tracker.Tracker;
+import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.viewmodel.CardPaymentModel;
 import com.mercadopago.viewmodel.OneTapModel;
+import java.math.BigDecimal;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -94,13 +97,20 @@ public class OneTapFragment extends Fragment implements OneTap.View {
             presenter = new OneTapPresenter(model);
             configureView(view, presenter, model);
             presenter.attachView(this);
+            trackScreen(model);
         } else {
             cancel();
         }
     }
 
+    private void trackScreen(final OneTapModel model) {
+        Tracker.trackOneTapScreen(getActivity().getApplicationContext(), publicKey,
+            model.getPaymentMethods().getOneTapMetadata(), model.getTransactionAmount());
+    }
+
     @Override
     public void cancel() {
+        Tracker.trackOneTapCancel(getActivity().getApplicationContext(), publicKey);
         if (callback != null) {
             callback.onOneTapCanceled();
         }
@@ -165,7 +175,12 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     @Override
-    public void showPaymentFlowPlugin(@NonNull final String paymentTypeId, @NonNull final String paymentMethodId) {
+    public void showPaymentFlowPlugin(@NonNull final String paymentTypeId, @NonNull final String paymentMethodId,
+        @NonNull final BigDecimal transactionAmount) {
+
+        Tracker.trackOneTapConfirm(getActivity().getApplicationContext(), publicKey,
+            paymentMethodId, paymentTypeId, transactionAmount);
+
         //TODO refactor - horrible way to get it but depends on context
         if (callback != null && getActivity() != null) {
             PaymentMethodInfo pluginInfo =
@@ -176,11 +191,18 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     @Override
     public void showDetailModal(@NonNull final OneTapModel model) {
+        Tracker.trackOneTapSummaryDetail(getActivity().getApplicationContext(), publicKey, model.hasDiscount(),
+            model.getPaymentMethods().getOneTapMetadata().getCard());
+
         PaymentDetailInfoDialog.showDialog(getChildFragmentManager(), model);
     }
 
     @Override
     public void showCardFlow(@NonNull OneTapModel model, @NonNull final Card card) {
+
+        Tracker.trackOneTapConfirm(getActivity().getApplicationContext(), publicKey,
+            model.getPaymentMethods().getOneTapMetadata(), model.getTransactionAmount());
+
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
             .setMerchantPublicKey(publicKey)
             .setPayerAccessToken(privateKey)

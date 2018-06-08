@@ -19,6 +19,7 @@ import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ServicePreference;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public final class CheckoutStateModel implements Serializable {
 
@@ -57,6 +58,7 @@ public final class CheckoutStateModel implements Serializable {
     public String customerId;
     public String idempotencyKeySeed;
     public String currentPaymentIdempotencyKey;
+    public String merchantPublicKey;
 
     private CheckoutStateModel() {
     }
@@ -75,6 +77,19 @@ public final class CheckoutStateModel implements Serializable {
         checkoutStateModel.paymentResultScreenPreference = mercadoPagoCheckout.getPaymentResultScreenPreference();
         checkoutStateModel.requestedResult = requestedResult;
         checkoutStateModel.idempotencyKeySeed = mercadoPagoCheckout.getMerchantPublicKey();
+        checkoutStateModel.merchantPublicKey = mercadoPagoCheckout.getMerchantPublicKey();
         return checkoutStateModel;
+    }
+
+    public BigDecimal getTransactionAmount() {
+        BigDecimal amount;
+
+        if (discount != null) {
+            amount = discount.getAmountWithDiscount(checkoutPreference.getTotalAmount());
+        } else {
+            amount = checkoutPreference.getTotalAmount();
+        }
+
+        return amount;
     }
 }

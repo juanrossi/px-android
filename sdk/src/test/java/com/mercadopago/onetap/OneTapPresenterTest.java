@@ -10,6 +10,7 @@ import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Token;
 import com.mercadopago.viewmodel.CardPaymentModel;
 import com.mercadopago.viewmodel.OneTapModel;
+import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +51,9 @@ public class OneTapPresenterTest {
     @Mock
     private CardPaymentMetadata cardMetadata;
 
+    @Mock
+    private BigDecimal transactionAmount;
+
     private OneTapPresenter oneTapPresenter;
 
     @Before
@@ -57,6 +61,7 @@ public class OneTapPresenterTest {
         when(metadata.getCard()).thenReturn(cardMetadata);
         when(model.getPaymentMethods()).thenReturn(paymentMethodSearch);
         when(paymentMethodSearch.getOneTapMetadata()).thenReturn(metadata);
+        when(model.getTransactionAmount()).thenReturn(transactionAmount);
 
         oneTapPresenter = new OneTapPresenter(model);
         oneTapPresenter.attachView(view);
@@ -74,7 +79,7 @@ public class OneTapPresenterTest {
     public void whenConfirmPaymentPluginShowPaymentPluginFlow() {
         configPlugin();
         oneTapPresenter.confirmPayment();
-        verify(view).showPaymentFlowPlugin(PaymentTypes.PLUGIN, PLUGIN_ID);
+        verify(view).showPaymentFlowPlugin(PaymentTypes.PLUGIN, PLUGIN_ID, transactionAmount);
         verifyNoMoreInteractions(view);
     }
 

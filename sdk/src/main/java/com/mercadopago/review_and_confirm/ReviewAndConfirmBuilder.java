@@ -108,10 +108,18 @@ public class ReviewAndConfirmBuilder {
                 activity.getResources().getString(R.string.mpsdk_review_summary_products));
 
         TermsAndConditionsModel mercadoPagoTermsAndConditions =
-                termsAndConditionsEnabled ? new TermsAndConditionsModel(site.getTermsAndConditionsUrl(), activity.getString(R.string.mpsdk_terms_and_conditions_message), activity.getString(R.string.mpsdk_terms_and_conditions_linked_message), LineSeparatorType.TOP_LINE_SEPARATOR) : null;
+                termsAndConditionsEnabled ? new TermsAndConditionsModel(site.getTermsAndConditionsUrl(),
+                    activity.getString(R.string.mpsdk_terms_and_conditions_message),
+                    activity.getString(R.string.mpsdk_terms_and_conditions_linked_message),
+                    merchantPublicKey,
+                    LineSeparatorType.TOP_LINE_SEPARATOR) : null;
 
         TermsAndConditionsModel discountTermsAndConditions =
-                discount != null ? new TermsAndConditionsModel(discount.getDiscountTermsUrl(), activity.getString(R.string.mpsdk_discount_terms_and_conditions_message), activity.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message), LineSeparatorType.BOTTOM_LINE_SEPARATOR) : null;
+                discount != null ? new TermsAndConditionsModel(discount.getDiscountTermsUrl(),
+                    activity.getString(R.string.mpsdk_discount_terms_and_conditions_message),
+                    activity.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message),
+                    merchantPublicKey,
+                    LineSeparatorType.BOTTOM_LINE_SEPARATOR) : null;
 
         PaymentModel paymentModel = new PaymentModel(paymentMethod, token, issuer, hasExtraPaymentMethods);
         SummaryModel summaryModel = new SummaryModel(amount, paymentMethod, site, payerCost, discount, title);

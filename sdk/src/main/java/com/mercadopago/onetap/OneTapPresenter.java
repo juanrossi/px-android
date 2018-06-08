@@ -7,6 +7,7 @@ import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.ResourcesProvider;
+import com.mercadopago.tracker.Tracker;
 import com.mercadopago.viewmodel.OneTapModel;
 import com.mercadopago.viewmodel.mappers.CardMapper;
 import com.mercadopago.viewmodel.mappers.CardPaymentMapper;
@@ -43,7 +44,7 @@ class OneTapPresenter extends MvpPresenter<OneTap.View, ResourcesProvider> imple
         if (PaymentTypes.isCardPaymentMethod(paymentTypeId)) {
             getView().showCardFlow(model, cardMapper.map(model));
         } else if (PaymentTypes.isPlugin(paymentTypeId)) {
-            getView().showPaymentFlowPlugin(paymentTypeId, paymentMethodId);
+            getView().showPaymentFlowPlugin(paymentTypeId, paymentMethodId, model.getTransactionAmount());
         } else {
             getView().showPaymentFlow(paymentMethodMapper.map(model.getPaymentMethods()));
         }

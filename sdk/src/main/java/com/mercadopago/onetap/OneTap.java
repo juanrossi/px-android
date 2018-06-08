@@ -7,6 +7,7 @@ import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpView;
 import com.mercadopago.viewmodel.CardPaymentModel;
 import com.mercadopago.viewmodel.OneTapModel;
+import java.math.BigDecimal;
 
 public interface OneTap {
 
@@ -22,7 +23,8 @@ public interface OneTap {
 
         void showPaymentFlow(@NonNull final CardPaymentModel cardPaymentModel);
 
-        void showPaymentFlowPlugin(@NonNull final String paymentTypeId, @NonNull final String paymentMethodId);
+        void showPaymentFlowPlugin(@NonNull final String paymentTypeId, @NonNull final String paymentMethodId,
+            @NonNull final BigDecimal transactionAmount);
 
         void showDetailModal(@NonNull final OneTapModel model);
     }

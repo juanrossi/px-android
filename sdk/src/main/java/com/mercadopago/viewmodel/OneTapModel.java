@@ -9,6 +9,7 @@ import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class OneTapModel implements Serializable {
 
@@ -18,15 +19,19 @@ public class OneTapModel implements Serializable {
     private final PaymentMethodSearch paymentMethods;
     private final boolean isEscEnabled;
     private final boolean hasExtraAmount;
+    private final BigDecimal transactionAmount;
     @DrawableRes
     @Nullable
     private final Integer collectorIcon;
+    @NonNull final String publicKey;
 
     private OneTapModel(@NonNull final CheckoutPreference checkoutPreference,
         @Nullable final Discount discount,
         @Nullable final Campaign campaign,
         @NonNull final PaymentMethodSearch paymentMethods,
         final boolean isEscEnabled,
+        final BigDecimal transactionAmount,
+        @NonNull final String publicKey,
         final boolean hasExtraAmount,
         @Nullable final Integer collectorIcon) {
         this.checkoutPreference = checkoutPreference;
@@ -34,8 +39,10 @@ public class OneTapModel implements Serializable {
         this.campaign = campaign;
         this.paymentMethods = paymentMethods;
         this.isEscEnabled = isEscEnabled;
+        this.transactionAmount = transactionAmount;
         this.hasExtraAmount = hasExtraAmount;
         this.collectorIcon = collectorIcon;
+        this.publicKey = publicKey;
     }
 
     public static OneTapModel from(CheckoutStateModel checkoutStateModel,
@@ -45,6 +52,8 @@ public class OneTapModel implements Serializable {
             checkoutStateModel.campaign,
             checkoutStateModel.paymentMethodSearch,
             checkoutStateModel.flowPreference.isESCEnabled(),
+            checkoutStateModel.getTransactionAmount(),
+            checkoutStateModel.merchantPublicKey,
             reviewAndConfirmPreferences.hasExtrasAmount(),
             reviewAndConfirmPreferences.getCollectorIcon());
     }
@@ -88,4 +97,12 @@ public class OneTapModel implements Serializable {
         return campaign != null && campaign.hasMaxCouponAmount();
     }
 
+    public BigDecimal getTransactionAmount() {
+        return transactionAmount;
+    }
+
+    @NonNull
+    public String getPublicKey() {
+        return publicKey;
+    }
 }
