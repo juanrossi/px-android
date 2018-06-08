@@ -1336,10 +1336,12 @@ public class CheckoutPresenterTest {
         }
 
         @Override
-        public void getPaymentMethodSearch(BigDecimal amount, List<String> excludedPaymentTypes,
-            List<String> excludedPaymentMethods, Payer payer, Site site,
-            TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback,
-            TaggedCallback<Customer> onCustomerRetrievedCallback) {
+        public void getPaymentMethodSearch(final BigDecimal amount, final List<String> excludedPaymentTypes,
+            final List<String> excludedPaymentMethods, final List<String> cardsWithEsc,
+            final List<String> supportedPlugins,
+            final Payer payer, final Site site,
+            final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback,
+            final TaggedCallback<Customer> onCustomerRetrievedCallback) {
             this.paymentMethodSearchRequested = true;
             onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearchResponse);
             if (customerResponse != null) {
@@ -1406,6 +1408,11 @@ public class CheckoutPresenterTest {
         public void setPaymentResponse(MercadoPagoError error) {
             this.shouldFail = true;
             this.failedResponse = error;
+        }
+
+        @Override
+        public List<String> getCardsWithEsc() {
+            return new ArrayList<>();
         }
     }
 }

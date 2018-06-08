@@ -3,6 +3,7 @@ package com.mercadopago.util;
 import android.content.Context;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -157,6 +158,8 @@ public class MercadoPagoESCImpl implements MercadoPagoESC {
 
     @Override
     public Set<String> getESCCardIds() {
+        Set<String> cardIds = new HashSet<>();
+
         if (escEnabled) {
             try {
 
@@ -165,18 +168,18 @@ public class MercadoPagoESCImpl implements MercadoPagoESC {
                 if (actualClass != null) {
                     getAllMethod = actualClass.getClass().getMethod(METHOD_GET_SAVED_CARD_IDS);
                     Object objects = getAllMethod.invoke(actualClass);
-                    Set<String> cardIds = (Set<String>) objects;
+                    cardIds = (Set<String>) objects;
                     return cardIds;
                 }
             } catch (IllegalAccessException e) {
-                return null;
+                return cardIds;
             } catch (InvocationTargetException e) {
-                return null;
+                return cardIds;
             } catch (NoSuchMethodException e) {
-                return null;
+                return cardIds;
             }
         }
-        return null;
+        return cardIds;
     }
 
     private boolean isESCAvailable() {

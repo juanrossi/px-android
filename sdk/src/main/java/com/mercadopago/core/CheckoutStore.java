@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
 
@@ -92,7 +93,6 @@ public class CheckoutStore {
         return paymentMethodPluginList;
     }
 
-
     public PaymentMethodPlugin getPaymentMethodPluginById(@NonNull final String id) {
         for (PaymentMethodPlugin plugin : paymentMethodPluginList) {
             if (plugin.getId().equalsIgnoreCase(id)) {
@@ -139,6 +139,17 @@ public class CheckoutStore {
             }
         }
         return result;
+    }
+
+    @Nonnull
+    public List<String> getEnabledPaymentMethodPluginsIds() {
+        final List<String> pluginIds = new ArrayList<>();
+        for (final PaymentMethodPlugin plugin : paymentMethodPluginList) {
+            if (plugin.isEnabled(CheckoutStore.getInstance().getData())) {
+                pluginIds.add(plugin.getId());
+            }
+        }
+        return pluginIds;
     }
 
     public String getFirstEnabledPluginId() {

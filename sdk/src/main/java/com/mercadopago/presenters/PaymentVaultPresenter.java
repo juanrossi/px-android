@@ -212,6 +212,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             payer.setAccessToken(payerAccessToken);
 
             getResourcesProvider().getPaymentMethodSearch(getTransactionAmount(), paymentPreference, payer, site,
+                getResourcesProvider().getCardsWithEsc(), CheckoutStore.getInstance().getEnabledPaymentMethodPluginsIds(),
                 new TaggedCallback<PaymentMethodSearch>(ApiUtil.RequestOrigin.GET_PAYMENT_METHODS) {
 
                     @Override

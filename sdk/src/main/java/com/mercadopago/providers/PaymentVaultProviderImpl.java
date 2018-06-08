@@ -7,7 +7,6 @@ import com.mercadopago.BuildConfig;
 import com.mercadopago.R;
 import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
-import com.mercadopago.core.MerchantServer;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.exceptions.ApiException;
@@ -28,6 +27,7 @@ import com.mercadopago.util.MercadoPagoESCImpl;
 import com.mercadopago.util.TextUtil;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,32 +59,34 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
     }
 
     @Override
-    public void getPaymentMethodSearch(BigDecimal amount, final PaymentPreference paymentPreference, final Payer payer,
-                                       Site site, final TaggedCallback<PaymentMethodSearch> taggedCallback) {
+    public void getPaymentMethodSearch(final BigDecimal amount, final PaymentPreference paymentPreference,
+        final Payer payer, final Site site, final List<String> cardsWithEsc, final List<String> supportedPlugins,
+        final TaggedCallback<PaymentMethodSearch> taggedCallback) {
 
         final List<String> excludedPaymentTypes =
-                paymentPreference == null ? null : paymentPreference.getExcludedPaymentTypes();
+            paymentPreference == null ? null : paymentPreference.getExcludedPaymentTypes();
         final List<String> excludedPaymentMethodIds =
-                paymentPreference == null ? null : paymentPreference.getExcludedPaymentMethodIds();
+            paymentPreference == null ? null : paymentPreference.getExcludedPaymentMethodIds();
 
-        mercadoPago.getPaymentMethodSearch(amount, excludedPaymentTypes, excludedPaymentMethodIds, payer, site,
-                new Callback<PaymentMethodSearch>() {
-                    @Override
-                    public void success(@NonNull final PaymentMethodSearch paymentMethodSearch) {
-                        if (!paymentMethodSearch.hasSavedCards() && isMerchantServerCustomerAvailable()) {
-                            addCustomerCardsFromMerchantServer(paymentMethodSearch, paymentPreference,
-                                    taggedCallback);
-                        } else {
-                            taggedCallback.onSuccess(paymentMethodSearch);
-                        }
+        mercadoPago.getPaymentMethodSearch(amount, excludedPaymentTypes, excludedPaymentMethodIds, cardsWithEsc,
+            supportedPlugins, payer, site,
+            new Callback<PaymentMethodSearch>() {
+                @Override
+                public void success(@NonNull final PaymentMethodSearch paymentMethodSearch) {
+                    if (!paymentMethodSearch.hasSavedCards() && isMerchantServerCustomerAvailable()) {
+                        addCustomerCardsFromMerchantServer(paymentMethodSearch, paymentPreference,
+                            taggedCallback);
+                    } else {
+                        taggedCallback.onSuccess(paymentMethodSearch);
                     }
+                }
 
-                    @Override
-                    public void failure(ApiException apiException) {
-                        taggedCallback
-                                .onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_PAYMENT_METHODS));
-                    }
-                });
+                @Override
+                public void failure(ApiException apiException) {
+                    taggedCallback
+                        .onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_PAYMENT_METHODS));
+                }
+            });
     }
 
     private void addCustomerCardsFromMerchantServer(final PaymentMethodSearch paymentMethodSearch,
@@ -166,5 +168,8 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
         Tracker.trackPaymentVaultChildrenScreen(context, merchantPublicKey, paymentMethodSearchItem);
     }
 
-
+    @Override
+    public List<String> getCardsWithEsc() {
+        return new ArrayList<>(mercadoPagoESC.getESCCardIds());
+    }
 }

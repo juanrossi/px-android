@@ -48,7 +48,7 @@ public class MercadoPagoServices {
     private static final String MP_API_BASE_URL = "https://api.mercadopago.com";
 
     private static final String PAYMENT_RESULT_API_VERSION = "1.4";
-    private static final String PAYMENT_METHODS_OPTIONS_API_VERSION = "1.5";
+    private static final String PAYMENT_METHODS_OPTIONS_API_VERSION = "1.6";
 
     public static final int DEFAULT_CONNECT_TIMEOUT = 10;
     public static final int DEFAULT_READ_TIMEOUT = 20;
@@ -94,7 +94,7 @@ public class MercadoPagoServices {
     }
 
     public void getPaymentMethodSearchMock(BigDecimal amount, List<String> excludedPaymentTypes,
-        List<String> excludedPaymentMethods, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {
+        List<String> excludedPaymentMethods, List<String> cardsWithEsc, List<String> supportedPlugins, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {
         CheckoutService service = getMockClient().create(CheckoutService.class);
         service.getPaymentMethodSearchOneTapCard().enqueue(callback);
     }
@@ -103,15 +103,23 @@ public class MercadoPagoServices {
         return getRetrofit("http://private-b75452-onetapgrupos.apiary-mock.com/", 10, 10, 10);
     }
 
-    public void getPaymentMethodSearch(BigDecimal amount, List<String> excludedPaymentTypes, List<String> excludedPaymentMethods, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {
-        PayerIntent payerIntent = new PayerIntent(payer);
-        CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
+    public void getPaymentMethodSearch(final BigDecimal amount, final List<String> excludedPaymentTypes,
+        final List<String> excludedPaymentMethods, final List<String> cardsWithEsc, final List<String> supportedPlugins,
+        final Payer payer, final Site site, final Callback<PaymentMethodSearch> callback) {
+        final PayerIntent payerIntent = new PayerIntent(payer);
+        final CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
 
-        String separator = ",";
-        String excludedPaymentTypesAppended = getListAsString(excludedPaymentTypes, separator);
-        String excludedPaymentMethodsAppended = getListAsString(excludedPaymentMethods, separator);
-        String siteId = site == null ? "" : site.getId();
-        service.getPaymentMethodSearch(Settings.servicesVersion, mContext.getResources().getConfiguration().locale.getLanguage(), this.mPublicKey, amount, excludedPaymentTypesAppended, excludedPaymentMethodsAppended, payerIntent, siteId, PAYMENT_METHODS_OPTIONS_API_VERSION, mProcessingMode).enqueue(callback);
+        final String separator = ",";
+        final String excludedPaymentTypesAppended = getListAsString(excludedPaymentTypes, separator);
+        final String excludedPaymentMethodsAppended = getListAsString(excludedPaymentMethods, separator);
+        final String cardsWithEscAppended = getListAsString(cardsWithEsc, separator);
+        final String supportedPluginsAppended = getListAsString(supportedPlugins, separator);
+        final String siteId = site == null ? "" : site.getId();
+        service.getPaymentMethodSearch(Settings.servicesVersion,
+            mContext.getResources().getConfiguration().locale.getLanguage(), this.mPublicKey, amount,
+            excludedPaymentTypesAppended, excludedPaymentMethodsAppended, payerIntent, siteId,
+            PAYMENT_METHODS_OPTIONS_API_VERSION, mProcessingMode, cardsWithEscAppended, supportedPluginsAppended).
+            enqueue(callback);
     }
 
     public void createToken(final SavedCardToken savedCardToken, final Callback<Token> callback) {

@@ -1169,8 +1169,9 @@ public class PaymentVaultPresenterTest {
         }
 
         @Override
-        public void getPaymentMethodSearch(BigDecimal amount, PaymentPreference paymentPreference, Payer payer,
-            Site site, TaggedCallback<PaymentMethodSearch> taggedCallback) {
+        public void getPaymentMethodSearch(final BigDecimal amount, final PaymentPreference paymentPreference,
+            final Payer payer, final Site site, final List<String> cardsWithEsc, final List<String> supportedPlugins,
+            final TaggedCallback<PaymentMethodSearch> taggedCallback) {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);
             } else {
@@ -1230,6 +1231,11 @@ public class PaymentVaultPresenterTest {
         @Override
         public void trackChildrenScreen(PaymentMethodSearchItem paymentMethodSearchItem, String siteId) {
 
+        }
+
+        @Override
+        public List<String> getCardsWithEsc() {
+            return new ArrayList<>();
         }
     }
 

@@ -20,7 +20,7 @@ import retrofit2.http.Query;
 public interface CheckoutService {
 
     @POST("/{version}/checkout/payment_methods/search/options")
-    MPCall<PaymentMethodSearch> getPaymentMethodSearch(@Path(value = "version", encoded = true) String version, @Header("Accept-Language") String locale, @Query("public_key") String publicKey, @Query("amount") BigDecimal amount, @Query("excluded_payment_types") String excludedPaymentTypes, @Query("excluded_payment_methods") String excludedPaymentMethods, @Body PayerIntent payerIntent, @Query("site_id") String siteId, @Query("api_version") String apiVersion, @Query("processing_mode") String processingMode);
+    MPCall<PaymentMethodSearch> getPaymentMethodSearch(@Path(value = "version", encoded = true) String version, @Header("Accept-Language") String locale, @Query("public_key") String publicKey, @Query("amount") BigDecimal amount, @Query("excluded_payment_types") String excludedPaymentTypes, @Query("excluded_payment_methods") String excludedPaymentMethods, @Body PayerIntent payerIntent, @Query("site_id") String siteId, @Query("api_version") String apiVersion, @Query("processing_mode") String processingMode, @Query("cards_esc") String cardsWithEsc, @Query("support_plugins") String supportedPlugins);
 
     @GET("/payment_methods/onetap/plugin")
     MPCall<PaymentMethodSearch> getPaymentMethodSearchOneTapPlugin();

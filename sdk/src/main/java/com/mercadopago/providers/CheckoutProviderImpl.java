@@ -215,12 +215,22 @@ public class CheckoutProviderImpl implements CheckoutProvider {
     }
 
     @Override
-    public void getPaymentMethodSearch(BigDecimal amount, final List<String> excludedPaymentTypes, final List<String> excludedPaymentMethods, Payer payer, Site site, final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback, final TaggedCallback<Customer> onCustomerRetrievedCallback) {
+    public void getPaymentMethodSearch(BigDecimal amount, final List<String> excludedPaymentTypes,
+        final List<String> excludedPaymentMethods, final List<String> cardsWithEsc,
+        final List<String> supportedPlugins, final Payer payer, final Site site,
+        final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback,
+        final TaggedCallback<Customer> onCustomerRetrievedCallback) {
 
-        Set<String> excludedPaymentTypesSet = new HashSet<>(excludedPaymentTypes);
+        final Set<String> excludedPaymentTypesSet = new HashSet<>(excludedPaymentTypes);
         excludedPaymentTypesSet.addAll(getUnsupportedPaymentTypes(site));
 
-        mercadoPagoServicesAdapter.getPaymentMethodSearchMock(amount, new ArrayList<>(excludedPaymentTypesSet), excludedPaymentMethods, payer, site, new Callback<PaymentMethodSearch>() {
+        //TODO descomentar cuando dejemos de mockear respuesta
+//        mercadoPagoServicesAdapter.getPaymentMethodSearch(amount, new ArrayList<>(excludedPaymentTypesSet),
+//            excludedPaymentMethods, cardsWithEsc, supportedPlugins, payer, site,
+//            new Callback<PaymentMethodSearch>() {
+
+        mercadoPagoServicesAdapter.getPaymentMethodSearchMock(amount, new ArrayList<>(excludedPaymentTypesSet),
+            excludedPaymentMethods, cardsWithEsc, supportedPlugins, payer, site, new Callback<PaymentMethodSearch>() {
             @Override
             public void success(final PaymentMethodSearch paymentMethodSearch) {
                 if (servicePreference != null && servicePreference.hasGetCustomerURL()) {
@@ -371,5 +381,10 @@ public class CheckoutProviderImpl implements CheckoutProvider {
     @Override
     public boolean saveESC(String cardId, String value) {
         return mercadoPagoESC.saveESC(cardId, value);
+    }
+
+    @Override
+    public List<String> getCardsWithEsc() {
+        return new ArrayList<>(mercadoPagoESC.getESCCardIds());
     }
 }
