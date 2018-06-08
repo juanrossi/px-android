@@ -427,6 +427,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                 .setESCEnabled(presenter.isESCEnabled())
                 .setCheckoutPreference(presenter.getCheckoutPreference())
                 .startActivity();
+            overrideTransitionIn();
         }
     }
 

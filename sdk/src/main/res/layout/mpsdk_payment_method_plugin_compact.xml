@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|start"
+            android:textAppearance="@style/MLFont.Regular"
             android:layout_marginEnd="@dimen/mpsdk_s_margin"
             android:layout_marginLeft="@dimen/mpsdk_s_margin"
             android:layout_marginRight="@dimen/mpsdk_s_margin"

@@ -71,7 +71,7 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
     }
 
     private void addConfirmButton(final @Nonnull ViewGroup parent) {
-        final String confirm = parent.getContext().getString(R.string.mpsdk_pay);
+        final String confirm = parent.getContext().getString(R.string.mpsdk_confirm);
         final Button.Actions actions = new Button.Actions() {
             @Override
             public void onClick(final Action action) {
@@ -80,7 +80,7 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
         };
         final Button button = new ButtonPrimary(new Button.Props(confirm), actions);
         final View view = button.render(parent);
-        int resMargin = props.hasDiscount() ? R.dimen.mpsdk_s_margin : R.dimen.mpsdk_m_margin;
+        final int resMargin = props.hasDiscount() ? R.dimen.mpsdk_zero_height : R.dimen.mpsdk_m_margin;
         ViewUtils.setMarginTopInView(view, parent.getContext().getResources().getDimensionPixelSize(resMargin));
         parent.addView(view);
     }

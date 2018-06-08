@@ -31,7 +31,7 @@
         <com.mercadopago.customviews.MPTextView
             android:id="@+id/amount_with_discount"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/mpsdk_l_height"
+            android:layout_height="@dimen/mpsdk_mm_height"
             android:layout_alignEnd="@+id/arrow"
             android:layout_alignRight="@+id/arrow"
             android:layout_centerHorizontal="true"
@@ -42,12 +42,13 @@
             android:paddingRight="@dimen/mpsdk_s_margin"
             android:textAppearance="@style/MLFont.Light"
             android:textColor="@color/ui_meli_black"
+            android:maxLines="1"
             app:autoSizeMaxTextSize="@dimen/mpsdk_xxxxl_text"
             app:autoSizeMinTextSize="10dp"
             app:autoSizeStepGranularity="1dp"
             app:autoSizeTextType="uniform"
             app:font_style="light"
-            tools:text="12x $ 2999,001"/>
+            tools:text="3x $1232,23"/>
 
         <ImageView
             android:id="@+id/arrow"

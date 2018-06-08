@@ -264,7 +264,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     }
 
-
     private TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrieved() {
         return new TaggedCallback<PaymentMethodSearch>(ApiUtil.RequestOrigin.PAYMENT_METHOD_SEARCH) {
             @Override

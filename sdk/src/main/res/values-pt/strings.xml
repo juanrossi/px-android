@@ -4,7 +4,7 @@
     <!-- one tap -->
     <string name="mpsdk_pay">Pagar</string>
     <string name="mpsdk_discount_ceil_message">Com um limite de reembolso</string>
-    <string name="mpsdk_payment_detail_title_modal">Detalhe</string>
+    <string name="mpsdk_payment_detail_title_modal">Detalhes</string>
 
     <!-- Banks deals -->
     <string name="mpsdk_empty_bank_deals">Você não tem nenhuma promoção disponível</string>
@@ -37,7 +37,7 @@
     <string name="mpsdk_terms_and_conditions_message">Ao pagar, declaro que sou maior de idade e aceito os</string>
     <string name="mpsdk_terms_and_conditions_linked_message">Termos e condições.</string>
     <string name="mpsdk_terms_and_conditions">Termos e condições</string>
-    <string name="mpsdk_discount_terms_and_conditions_message">Desconto exclusivo do Mercado Pago.</string>
+    <string name="mpsdk_discount_terms_and_conditions_message">Desconto exclusivo do Mercado Livre e Mercado Pago.</string>
     <string name="mpsdk_discount_terms_and_conditions_linked_message">Ver condições</string>
 
 

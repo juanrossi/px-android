@@ -35,18 +35,22 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
+                android:gravity="center_vertical"
                 android:maxLines="2"
                 android:textAppearance="@style/MLFont.Regular"
                 android:textColor="@color/ui_meli_black"
-                android:textSize="@dimen/mpsdk_s_text"
-                tools:text="Mercado Pago + Banco patagonia •••• 3263"/>
+                app:autoSizeMaxTextSize="@dimen/mpsdk_s_text"
+                app:autoSizeMinTextSize="10dp"
+                app:autoSizeStepGranularity="1dp"
+                app:autoSizeTextType="uniform"
+                tools:text="Mercado Pago + Banco Patagonia •••• 3263"/>
 
             <LinearLayout
                 android:id="@+id/installments_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/mpsdk_xxxs_margin">
 
                 <com.mercadopago.customviews.MPTextView
                     android:id="@+id/amount_less_discount"
@@ -54,7 +58,11 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/MLFont.Regular"
                     android:textColor="@color/ui_meli_grey"
-                    android:textSize="@dimen/mpsdk_xs_text"
+                    android:gravity="center_vertical"
+                    app:autoSizeMaxTextSize="@dimen/mpsdk_xs_text"
+                    app:autoSizeMinTextSize="10dp"
+                    app:autoSizeStepGranularity="1dp"
+                    app:autoSizeTextType="uniform"
                     tools:text="$ 2222222222222"/>
 
                 <com.mercadopago.customviews.MPTextView
@@ -64,7 +72,11 @@
                     android:layout_marginLeft="@dimen/mpsdk_xxs_margin"
                     android:textAppearance="@style/MLFont.Regular"
                     android:textColor="@color/ui_meli_grey"
-                    android:textSize="@dimen/mpsdk_xs_text"
+                    android:gravity="center_vertical"
+                    app:autoSizeMaxTextSize="@dimen/mpsdk_xs_text"
+                    app:autoSizeMinTextSize="10dp"
+                    app:autoSizeStepGranularity="1dp"
+                    app:autoSizeTextType="uniform"
                     tools:text="$ 333333333333"/>
 
             </LinearLayout>

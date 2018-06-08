@@ -36,7 +36,7 @@
     <string name="mpsdk_terms_and_conditions_message">Al pagar, afirmo que soy mayor de edad y acepto los</string>
     <string name="mpsdk_terms_and_conditions_linked_message">Términos y condiciones.</string>
     <string name="mpsdk_terms_and_conditions">Términos y condiciones</string>
-    <string name="mpsdk_discount_terms_and_conditions_message">Descuento exclusivo de Mercado Pago.</string>
+    <string name="mpsdk_discount_terms_and_conditions_message">Descuento exclusivo de Mercado Libre y Mercado Pago.</string>
     <string name="mpsdk_discount_terms_and_conditions_linked_message">Ver condiciones</string>
 
     <!-- Card token and guessing -->

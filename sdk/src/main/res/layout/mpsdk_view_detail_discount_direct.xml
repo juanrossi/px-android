@@ -42,7 +42,7 @@
     <com.mercadopago.customviews.MPTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:gravity="start"
         android:layout_marginTop="@dimen/mpsdk_s_margin"
         android:text="@string/mpsdk_we_apply_the_best_available_discount"
         android:textColor="@color/ui_meli_grey"

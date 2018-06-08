@@ -3,7 +3,9 @@
     <item>
         <shape>
             <corners android:radius="@dimen/mpsdk_xxxs_margin"/>
-            <stroke android:width="@dimen/mpsdk_xxxs_height" android:color="@color/mpsdk_med_light_gray"/>
+            <stroke android:width="@dimen/mpsdk_xxxs_height"
+                    android:color="@color/mpsdk_med_light_gray"/>
+            <solid android:color="@color/mpsdk_transparent"/>
         </shape>
     </item>
 </selector>

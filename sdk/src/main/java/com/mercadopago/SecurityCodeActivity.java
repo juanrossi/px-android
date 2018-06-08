@@ -215,6 +215,14 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        final Intent returnIntent = new Intent();
+        setResult(RESULT_CANCELED, returnIntent);
+        finish();
+        overrideTransitionOut();
+    }
+
     private void setListeners() {
         setSecurityCodeListeners();
         setButtonsListeners();
@@ -375,9 +383,7 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent returnIntent = new Intent();
-                setResult(RESULT_CANCELED, returnIntent);
-                finish();
+                onBackPressed();
             }
         });
     }

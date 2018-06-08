@@ -733,10 +733,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         returnIntent.putExtra("paymentMethodSearch", JsonUtil.getInstance().toJson(presenter.getPaymentMethodSearch()));
         setResult(RESULT_CANCELED, returnIntent);
         finish();
-
-        if (presenter.isItemSelected()) {
-            overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
-        }
+        overrideTransitionOut();
     }
 
     @Override

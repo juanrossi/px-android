@@ -207,10 +207,12 @@ public class OneTapFragment extends Fragment implements OneTap.View {
             .setMerchantPublicKey(publicKey)
             .setPayerAccessToken(privateKey)
             .setCheckoutPreference(model.getCheckoutPreference())
-            .setDiscount(model.getDiscount(),model.getCampaign())
+            .setDiscount(model.getDiscount(), model.getCampaign())
             .setESCEnabled(model.isEscEnabled())
             .setInstallmentsEnabled(false)
             .setCard(card)
             .startActivity(this, REQ_CODE_CARD_VAULT);
+        getActivity()
+            .overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 }
