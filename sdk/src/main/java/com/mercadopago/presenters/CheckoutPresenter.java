@@ -251,7 +251,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         payer.setAccessToken(state.checkoutPreference.getPayer().getAccessToken());
 
         getResourcesProvider().getPaymentMethodSearch(
-            state.getTransactionAmount(),
+            getTransactionAmount(),
             state.checkoutPreference.getExcludedPaymentTypes(),
             state.checkoutPreference.getExcludedPaymentMethods(),
             getResourcesProvider().getCardsWithEsc(),
@@ -400,8 +400,9 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         return state.selectedCard;
     }
 
-    public BigDecimal getTransactionAmount() {
-        return state.getTransactionAmount();
+    private BigDecimal getTransactionAmount() {
+        return state.discount != null ? state.checkoutPreference.getTotalAmount()
+            .subtract(state.discount.getCouponAmount()) : state.checkoutPreference.getTotalAmount();
     }
 
     public ServicePreference getServicePreference() {

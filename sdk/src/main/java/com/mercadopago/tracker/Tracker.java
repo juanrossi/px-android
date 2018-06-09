@@ -2,9 +2,7 @@ package com.mercadopago.tracker;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
-
 import com.mercadopago.BuildConfig;
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.model.CardPaymentMetadata;
@@ -18,7 +16,6 @@ import com.mercadopago.review_and_confirm.models.SummaryModel;
 import com.mercadopago.tracking.model.ActionEvent;
 import com.mercadopago.tracking.model.ScreenViewEvent;
 import com.mercadopago.tracking.utils.TrackingUtil;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,23 +114,10 @@ public class Tracker {
         mpTrackingContext.trackEvent(builder.build());
     }
 
-    public static void trackOneTapConfirm(@NonNull final Context context, @NonNull final String merchantPublicKey,
-        @NonNull final OneTapMetadata oneTapMetadata, @NonNull final BigDecimal transactionAmount) {
-
-        trackOneTapConfirm(context, merchantPublicKey, oneTapMetadata.getPaymentMethodId(),
-            oneTapMetadata.getPaymentTypeId(), transactionAmount, oneTapMetadata.getCard());
-    }
-
-    public static void trackOneTapConfirm(@NonNull final Context context, @NonNull final String merchantPublicKey,
-        @NonNull final String paymentMethodId, @NonNull final String paymentTypeId,
-        @NonNull final BigDecimal transactionAmount) {
-
-        trackOneTapConfirm(context, merchantPublicKey, paymentMethodId, paymentTypeId, transactionAmount, null);
-    }
-
-    private static void trackOneTapConfirm(@NonNull final Context context, @NonNull final String merchantPublicKey,
-        @NonNull final String paymentMethodId, @NonNull final String paymentTypeId,
-        @NonNull final BigDecimal transactionAmount, @Nullable final CardPaymentMetadata card) {
+    public static void trackOneTapConfirm(@NonNull final Context context,
+        @NonNull final String merchantPublicKey,
+        @NonNull final OneTapMetadata oneTapMetadata,
+        @NonNull final BigDecimal totalAmount) {
         trackingStrategy = TrackingUtil.REALTIME_STRATEGY;
 
         final MPTrackingContext mpTrackingContext = getTrackerContext(merchantPublicKey, context);
@@ -143,9 +127,11 @@ public class Tracker {
             .setAction(TrackingUtil.ACTION_CHECKOUT_CONFIRMED)
             .setScreenId(TrackingUtil.SCREEN_ID_ONE_TAP)
             .setScreenName(TrackingUtil.SCREEN_ID_ONE_TAP)
-            .addProperty(TrackingUtil.PROPERTY_PAYMENT_TYPE_ID, paymentTypeId)
-            .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, paymentMethodId)
-            .addProperty(TrackingUtil.PROPERTY_PURCHASE_AMOUNT, transactionAmount.toString());
+            .addProperty(TrackingUtil.PROPERTY_PAYMENT_TYPE_ID, oneTapMetadata.getPaymentTypeId())
+            .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, oneTapMetadata.getPaymentMethodId())
+            .addProperty(TrackingUtil.PROPERTY_PURCHASE_AMOUNT, totalAmount.toString());
+
+        final CardPaymentMetadata card = oneTapMetadata.getCard();
 
         if (card != null) {
             builder.addProperty(TrackingUtil.PROPERTY_INSTALLMENTS,

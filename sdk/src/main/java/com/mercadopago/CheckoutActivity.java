@@ -173,10 +173,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     @Override
     public void showOneTap(@NonNull final OneTapModel oneTapModel) {
-        OneTapFragment instance =
-            OneTapFragment.getInstance(merchantPublicKey,
-                privateKey,
-                oneTapModel);
+        OneTapFragment instance = OneTapFragment.getInstance(oneTapModel);
 
         getSupportFragmentManager()
             .beginTransaction()

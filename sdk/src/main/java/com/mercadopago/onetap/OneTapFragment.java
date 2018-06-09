@@ -20,35 +20,26 @@ import com.mercadopago.model.Token;
 import com.mercadopago.onetap.components.OneTapContainer;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.tracker.Tracker;
-import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.viewmodel.CardPaymentModel;
 import com.mercadopago.viewmodel.OneTapModel;
-import java.math.BigDecimal;
 
 import static android.app.Activity.RESULT_OK;
 
 public class OneTapFragment extends Fragment implements OneTap.View {
 
     private static final String ARG_ONE_TAP_MODEL = "arg_onetap_model";
-    private static final String ARG_PUBLIC_KEY = "arg_public_key";
-    private static final String ARG_PRIVATE_KEY = "arg_private_key";
     private static final int REQ_CODE_CARD_VAULT = 0x999;
+
     //TODO move to CardValueActivity
     private static final String BUNDLE_TOKEN = "token";
 
     private CallBack callback;
-    private String privateKey;
-    private String publicKey;
     private OneTapPresenter presenter;
 
-    public static OneTapFragment getInstance(@NonNull final String publicKey,
-        @Nullable final String privateKey,
-        @NonNull final OneTapModel oneTapModel) {
+    public static OneTapFragment getInstance(@NonNull final OneTapModel oneTapModel) {
         OneTapFragment oneTapFragment = new OneTapFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(ARG_PUBLIC_KEY, publicKey);
-        bundle.putString(ARG_PRIVATE_KEY, privateKey);
         bundle.putSerializable(ARG_ONE_TAP_MODEL, oneTapModel);
         oneTapFragment.setArguments(bundle);
         return oneTapFragment;
@@ -91,26 +82,25 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         if (arguments != null) {
-            privateKey = arguments.getString(ARG_PRIVATE_KEY);
-            publicKey = arguments.getString(ARG_PUBLIC_KEY);
             OneTapModel model = (OneTapModel) arguments.getSerializable(ARG_ONE_TAP_MODEL);
             presenter = new OneTapPresenter(model);
             configureView(view, presenter, model);
             presenter.attachView(this);
             trackScreen(model);
-        } else {
-            cancel();
         }
     }
 
     private void trackScreen(final OneTapModel model) {
-        Tracker.trackOneTapScreen(getActivity().getApplicationContext(), publicKey,
-            model.getPaymentMethods().getOneTapMetadata(), model.getTransactionAmount());
+        Tracker.trackOneTapScreen(getActivity().getApplicationContext(), model.getPublicKey(),
+            model.getPaymentMethods().getOneTapMetadata(),
+            model.hasDiscount() ? model.getCheckoutPreference().getTotalAmount()
+                .subtract(model.getDiscount().getCouponAmount()) :
+                model.getCheckoutPreference().getTotalAmount());
     }
 
     @Override
     public void cancel() {
-        Tracker.trackOneTapCancel(getActivity().getApplicationContext(), publicKey);
+
         if (callback != null) {
             callback.onOneTapCanceled();
         }
@@ -136,7 +126,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cancel();
+                    presenter.cancel();
                 }
             });
         }
@@ -175,12 +165,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     @Override
-    public void showPaymentFlowPlugin(@NonNull final String paymentTypeId, @NonNull final String paymentMethodId,
-        @NonNull final BigDecimal transactionAmount) {
-
-        Tracker.trackOneTapConfirm(getActivity().getApplicationContext(), publicKey,
-            paymentMethodId, paymentTypeId, transactionAmount);
-
+    public void showPaymentFlowPlugin(@NonNull final String paymentTypeId, @NonNull final String paymentMethodId) {
         //TODO refactor - horrible way to get it but depends on context
         if (callback != null && getActivity() != null) {
             PaymentMethodInfo pluginInfo =
@@ -191,21 +176,35 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     @Override
     public void showDetailModal(@NonNull final OneTapModel model) {
-        Tracker.trackOneTapSummaryDetail(getActivity().getApplicationContext(), publicKey, model.hasDiscount(),
-            model.getPaymentMethods().getOneTapMetadata().getCard());
-
         PaymentDetailInfoDialog.showDialog(getChildFragmentManager(), model);
     }
 
     @Override
+    public void trackConfirm(final OneTapModel model) {
+        Tracker.trackOneTapConfirm(getActivity().getApplicationContext(), model.getPublicKey(),
+            model.getPaymentMethods().getOneTapMetadata(),
+            model.hasDiscount() ? model.getCheckoutPreference().getTotalAmount()
+                .subtract(model.getDiscount().getCouponAmount()) :
+                model.getCheckoutPreference().getTotalAmount());
+    }
+
+    @Override
+    public void trackCancel(final String publicKey) {
+        Tracker.trackOneTapCancel(getActivity().getApplicationContext(), publicKey);
+    }
+
+    @Override
+    public void trackModal(final OneTapModel model) {
+        Tracker
+            .trackOneTapSummaryDetail(getActivity().getApplicationContext(), model.getPublicKey(), model.hasDiscount(),
+                model.getPaymentMethods().getOneTapMetadata().getCard());
+    }
+
+    @Override
     public void showCardFlow(@NonNull OneTapModel model, @NonNull final Card card) {
-
-        Tracker.trackOneTapConfirm(getActivity().getApplicationContext(), publicKey,
-            model.getPaymentMethods().getOneTapMetadata(), model.getTransactionAmount());
-
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
-            .setMerchantPublicKey(publicKey)
-            .setPayerAccessToken(privateKey)
+            .setMerchantPublicKey(model.getPublicKey())
+            .setPayerAccessToken(model.getCheckoutPreference().getPayer().getAccessToken())
             .setCheckoutPreference(model.getCheckoutPreference())
             .setDiscount(model.getDiscount(), model.getCampaign())
             .setESCEnabled(model.isEscEnabled())

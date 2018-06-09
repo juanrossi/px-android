@@ -7,7 +7,6 @@ import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.ResourcesProvider;
-import com.mercadopago.tracker.Tracker;
 import com.mercadopago.viewmodel.OneTapModel;
 import com.mercadopago.viewmodel.mappers.CardMapper;
 import com.mercadopago.viewmodel.mappers.CardPaymentMapper;
@@ -40,11 +39,11 @@ class OneTapPresenter extends MvpPresenter<OneTap.View, ResourcesProvider> imple
         String paymentMethodId = oneTapMetadata.getPaymentMethodId();
         // TODO refactor
         CheckoutStore.getInstance().setSelectedPaymentMethodId(paymentMethodId);
-
+        getView().trackConfirm(model);
         if (PaymentTypes.isCardPaymentMethod(paymentTypeId)) {
             getView().showCardFlow(model, cardMapper.map(model));
         } else if (PaymentTypes.isPlugin(paymentTypeId)) {
-            getView().showPaymentFlowPlugin(paymentTypeId, paymentMethodId, model.getTransactionAmount());
+            getView().showPaymentFlowPlugin(paymentTypeId, paymentMethodId);
         } else {
             getView().showPaymentFlow(paymentMethodMapper.map(model.getPaymentMethods()));
         }
@@ -62,6 +61,12 @@ class OneTapPresenter extends MvpPresenter<OneTap.View, ResourcesProvider> imple
 
     @Override
     public void onAmountShowMore() {
+        getView().trackModal(model);
         getView().showDetailModal(model);
+    }
+
+    public void cancel() {
+        getView().cancel();
+        getView().trackCancel(model.getPublicKey());
     }
 }
