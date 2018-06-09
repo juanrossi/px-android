@@ -93,16 +93,6 @@ public class MercadoPagoServices {
         service.getPaymentResult(Settings.servicesVersion, mContext.getResources().getConfiguration().locale.getLanguage(), paymentId, this.mPublicKey, this.mPrivateKey, paymentTypeId, PAYMENT_RESULT_API_VERSION).enqueue(callback);
     }
 
-    public void getPaymentMethodSearchMock(BigDecimal amount, List<String> excludedPaymentTypes,
-        List<String> excludedPaymentMethods, List<String> cardsWithEsc, List<String> supportedPlugins, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {
-        CheckoutService service = getMockClient().create(CheckoutService.class);
-        service.getPaymentMethodSearchOneTapCard().enqueue(callback);
-    }
-
-    public Retrofit getMockClient() {
-        return getRetrofit("http://private-b75452-onetapgrupos.apiary-mock.com/", 10, 10, 10);
-    }
-
     public void getPaymentMethodSearch(final BigDecimal amount, final List<String> excludedPaymentTypes,
         final List<String> excludedPaymentMethods, final List<String> cardsWithEsc, final List<String> supportedPlugins,
         final Payer payer, final Site site, final Callback<PaymentMethodSearch> callback) {
