@@ -17,7 +17,7 @@
         android:paddingTop="@dimen/mpsdk_s_margin"
         android:paddingBottom="@dimen/mpsdk_s_margin"
         android:gravity="center"
-        android:textColor="@color/mpsdk_brownish_grey"
+        android:textColor="@color/ui_meli_dark_grey"
         android:textSize="@dimen/mpsdk_xxs_text"
         tools:text="Secondary info"/>
 

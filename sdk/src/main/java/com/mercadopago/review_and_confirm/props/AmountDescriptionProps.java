@@ -14,10 +14,10 @@ public class AmountDescriptionProps {
     public final String descriptionType;
 
     public AmountDescriptionProps(@NonNull final BigDecimal amount,
-        @NonNull final String description,
-        @NonNull final String currencyId,
-        @NonNull final Integer textColor,
-        @Nullable final String descriptionType) {
+                                  @NonNull final String description,
+                                  @NonNull final String currencyId,
+                                  @NonNull final Integer textColor,
+                                  @Nullable final String descriptionType) {
 
         this.amount = amount;
         this.description = description;

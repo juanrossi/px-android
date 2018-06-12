@@ -27,6 +27,10 @@
     <color name="ui_components_spinner_primary_color">#3483FA</color>
     <color name="ui_components_spinner_secondary_color">#3483FA</color>
 
+    <!-- Modal -->
+    <color name="ui_components_melidialog_background">#E6FFDB15</color>
+    <color name="ui_components_melidialog_tint">#333333</color>
+
     <!-- Snackbar success -->
     <!-- Background success -->
     <color name="ui_components_success_color">#64C574</color>

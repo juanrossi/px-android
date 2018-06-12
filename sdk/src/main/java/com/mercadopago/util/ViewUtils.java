@@ -1,8 +1,11 @@
 package com.mercadopago.util;
 
+import android.support.annotation.NonNull;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -28,7 +31,7 @@ public final class ViewUtils {
         }
     }
 
-    public static void loadOrCallError(final String imgUrl, final ImageView logo, Callback.EmptyCallback callback) {
+    public static void loadOrCallError(final String imgUrl, final ImageView logo, Callback callback) {
         if (!TextUtil.isEmpty(imgUrl)) {
             Picasso.with(logo.getContext())
                     .load(imgUrl)
@@ -46,4 +49,27 @@ public final class ViewUtils {
         }
     }
 
+    public static void showOrGone(final View view, final boolean visible) {
+        view.setVisibility(visible ? View.VISIBLE : GONE);
+    }
+
+    public static void setMarginBottomInView(@NonNull final View view, final int marginBottom) {
+        setMarginInView(view, 0, 0, 0, marginBottom);
+    }
+
+    public static void setMarginTopInView(@NonNull final View view, final int marginTop) {
+        setMarginInView(view, 0, marginTop, 0, 0);
+    }
+
+
+    public static void setMarginInView(@NonNull final View button, final int leftMargin, final int topMargin,
+        final int rightMargin, final int bottomMargin) {
+        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+        params.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+        button.setLayoutParams(params);
+    }
 }

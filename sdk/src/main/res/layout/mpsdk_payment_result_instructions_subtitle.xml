@@ -14,7 +14,7 @@
         android:paddingBottom="@dimen/mpsdk_xxs_alternative_margin"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textColor="@color/mpsdk_brownish_grey"
+        android:textColor="@color/ui_meli_dark_grey"
         android:textSize="@dimen/mpsdk_xl_text"
         tools:text="subtitle"/>
 

@@ -67,7 +67,6 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
     public static final String PAYMENT_RESULT_BUNDLE = "paymentResult";
     public static final String AMOUNT_BUNDLE = "amount";
     public static final String SITE_BUNDLE = "site";
-    public static final String DISCOUNT_ENABLED_BUNDLE = "discountEnabled";
 
     private static final String EXTRA_NEXT_ACTION = "nextAction";
 
@@ -88,12 +87,12 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
 
         getActivityParameters();
 
-        final PaymentResultProvider paymentResultProvider = new PaymentResultProviderImpl(this, merchantPublicKey, payerAccessToken);
+        final PaymentResultProvider paymentResultProvider =
+            new PaymentResultProviderImpl(this, merchantPublicKey, payerAccessToken);
 
         presenter.attachResourcesProvider(paymentResultProvider);
 
         final ComponentManager componentManager = new ComponentManager(this);
-
 
         RendererFactory.register(Body.class, BodyRenderer.class);
         RendererFactory.register(LoadingComponent.class, LoadingRenderer.class);
@@ -144,37 +143,40 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         if (presenter != null) {
-            outState.putBoolean(DISCOUNT_ENABLED_BUNDLE, presenter.getDiscountEnabled());
             outState.putString(PAYMENT_RESULT_BUNDLE, JsonUtil.getInstance().toJson(presenter.getPaymentResult()));
             outState.putString(SITE_BUNDLE, JsonUtil.getInstance().toJson(presenter.getSite()));
             outState.putString(AMOUNT_BUNDLE, JsonUtil.getInstance().toJson(presenter.getAmount()));
-            outState.putString(SERVICE_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(presenter.getServicePreference()));
-
+            outState
+                .putString(SERVICE_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(presenter.getServicePreference()));
         }
         outState.putString(MERCHANT_PUBLIC_KEY_BUNDLE, merchantPublicKey);
         outState.putString(PAYER_ACCESS_TOKEN_BUNDLE, payerAccessToken);
 
         outState.putInt(CONGRATS_DISPLAY_BUNDLE, congratsDisplay);
-        outState.putString(PAYMENT_RESULT_SCREEN_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(paymentResultScreenPreference));
+        outState.putString(PAYMENT_RESULT_SCREEN_PREFERENCE_BUNDLE,
+            JsonUtil.getInstance().toJson(paymentResultScreenPreference));
     }
 
     @Override
     protected void onRestoreInstanceState(final Bundle savedInstanceState) {
-        final boolean discountEnabled = savedInstanceState.getBoolean(DISCOUNT_ENABLED_BUNDLE);
-        final PaymentResult paymentResult = JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_RESULT_BUNDLE), PaymentResult.class);
+        final PaymentResult paymentResult =
+            JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_RESULT_BUNDLE), PaymentResult.class);
         final Site site = JsonUtil.getInstance().fromJson(savedInstanceState.getString(SITE_BUNDLE), Site.class);
-        final BigDecimal amount = JsonUtil.getInstance().fromJson(savedInstanceState.getString(AMOUNT_BUNDLE), BigDecimal.class);
-        final ServicePreference servicePreference = JsonUtil.getInstance().fromJson(savedInstanceState.getString(SERVICE_PREFERENCE_BUNDLE), ServicePreference.class);
+        final BigDecimal amount =
+            JsonUtil.getInstance().fromJson(savedInstanceState.getString(AMOUNT_BUNDLE), BigDecimal.class);
+        final ServicePreference servicePreference = JsonUtil.getInstance()
+            .fromJson(savedInstanceState.getString(SERVICE_PREFERENCE_BUNDLE), ServicePreference.class);
 
         merchantPublicKey = savedInstanceState.getString(MERCHANT_PUBLIC_KEY_BUNDLE);
         payerAccessToken = savedInstanceState.getString(PAYER_ACCESS_TOKEN_BUNDLE);
 
         congratsDisplay = savedInstanceState.getInt(CONGRATS_DISPLAY_BUNDLE, -1);
 
-        paymentResultScreenPreference = JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_RESULT_SCREEN_PREFERENCE_BUNDLE), PaymentResultScreenPreference.class);
+        paymentResultScreenPreference = JsonUtil.getInstance()
+            .fromJson(savedInstanceState.getString(PAYMENT_RESULT_SCREEN_PREFERENCE_BUNDLE),
+                PaymentResultScreenPreference.class);
 
         presenter = new PaymentResultPresenter(this);
-        presenter.setDiscountEnabled(discountEnabled);
         presenter.setPaymentResult(paymentResult);
         presenter.setSite(site);
         presenter.setAmount(amount);
@@ -190,15 +192,14 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
 
         Intent intent = getIntent();
 
-        Boolean discountEnabled = intent.getExtras().getBoolean("discountEnabled", true);
         Site site = JsonUtil.getInstance().fromJson(intent.getExtras().getString("site"), Site.class);
         BigDecimal amount = null;
         if (intent.getStringExtra("amount") != null) {
             amount = new BigDecimal(intent.getStringExtra("amount"));
         }
-        PaymentResult paymentResult = JsonUtil.getInstance().fromJson(intent.getExtras().getString("paymentResult"), PaymentResult.class);
+        PaymentResult paymentResult =
+            JsonUtil.getInstance().fromJson(intent.getExtras().getString("paymentResult"), PaymentResult.class);
 
-        presenter.setDiscountEnabled(discountEnabled);
         presenter.setSite(site);
         presenter.setAmount(amount);
         presenter.setPaymentResult(paymentResult);
@@ -206,8 +207,11 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
         merchantPublicKey = intent.getStringExtra("merchantPublicKey");
         payerAccessToken = intent.getStringExtra("payerAccessToken");
         congratsDisplay = intent.getIntExtra("congratsDisplay", -1);
-        final ServicePreference servicePreference = JsonUtil.getInstance().fromJson(intent.getExtras().getString("servicePreference"), ServicePreference.class);
-        paymentResultScreenPreference = JsonUtil.getInstance().fromJson(intent.getExtras().getString("paymentResultScreenPreference"), PaymentResultScreenPreference.class);
+        final ServicePreference servicePreference =
+            JsonUtil.getInstance().fromJson(intent.getExtras().getString("servicePreference"), ServicePreference.class);
+        paymentResultScreenPreference = JsonUtil.getInstance()
+            .fromJson(intent.getExtras().getString("paymentResultScreenPreference"),
+                PaymentResultScreenPreference.class);
 
         presenter.setServicePreference(servicePreference);
     }
@@ -291,8 +295,8 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
     @Override
     public void trackScreen(ScreenViewEvent event) {
         MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder(this, merchantPublicKey)
-                .setVersion(BuildConfig.VERSION_NAME)
-                .build();
+            .setVersion(BuildConfig.VERSION_NAME)
+            .build();
 
         mpTrackingContext.trackEvent(event);
     }

@@ -2,11 +2,20 @@ package com.mercadopago.lite.core;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.lite.adapters.ErrorHandlingCallAdapter;
 import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.constants.ProcessingModes;
 import com.mercadopago.lite.controllers.CustomServicesHandler;
+import com.mercadopago.lite.services.BankDealService;
+import com.mercadopago.lite.services.CheckoutService;
+import com.mercadopago.lite.services.CustomService;
+import com.mercadopago.lite.services.DiscountService;
+import com.mercadopago.lite.services.GatewayService;
+import com.mercadopago.lite.services.IdentificationService;
+import com.mercadopago.lite.services.PaymentService;
+import com.mercadopago.lite.util.HttpClientUtil;
+import com.mercadopago.lite.util.JsonUtil;
+import com.mercadopago.lite.util.TextUtil;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CardToken;
@@ -28,21 +37,9 @@ import com.mercadopago.model.requests.PayerIntent;
 import com.mercadopago.model.requests.SecurityCodeIntent;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.ServicePreference;
-import com.mercadopago.lite.services.BankDealService;
-import com.mercadopago.lite.services.CheckoutService;
-import com.mercadopago.lite.services.CustomService;
-import com.mercadopago.lite.services.DiscountService;
-import com.mercadopago.lite.services.GatewayService;
-import com.mercadopago.lite.services.IdentificationService;
-import com.mercadopago.lite.services.PaymentService;
-import com.mercadopago.lite.util.HttpClientUtil;
-import com.mercadopago.lite.util.JsonUtil;
-import com.mercadopago.lite.util.TextUtil;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -51,7 +48,7 @@ public class MercadoPagoServices {
     private static final String MP_API_BASE_URL = "https://api.mercadopago.com";
 
     private static final String PAYMENT_RESULT_API_VERSION = "1.4";
-    private static final String PAYMENT_METHODS_OPTIONS_API_VERSION = "1.5";
+    private static final String PAYMENT_METHODS_OPTIONS_API_VERSION = "1.6";
 
     public static final int DEFAULT_CONNECT_TIMEOUT = 10;
     public static final int DEFAULT_READ_TIMEOUT = 20;
@@ -96,15 +93,23 @@ public class MercadoPagoServices {
         service.getPaymentResult(Settings.servicesVersion, mContext.getResources().getConfiguration().locale.getLanguage(), paymentId, this.mPublicKey, this.mPrivateKey, paymentTypeId, PAYMENT_RESULT_API_VERSION).enqueue(callback);
     }
 
-    public void getPaymentMethodSearch(BigDecimal amount, List<String> excludedPaymentTypes, List<String> excludedPaymentMethods, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {
-        PayerIntent payerIntent = new PayerIntent(payer);
-        CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
+    public void getPaymentMethodSearch(final BigDecimal amount, final List<String> excludedPaymentTypes,
+        final List<String> excludedPaymentMethods, final List<String> cardsWithEsc, final List<String> supportedPlugins,
+        final Payer payer, final Site site, final Callback<PaymentMethodSearch> callback) {
+        final PayerIntent payerIntent = new PayerIntent(payer);
+        final CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
 
-        String separator = ",";
-        String excludedPaymentTypesAppended = getListAsString(excludedPaymentTypes, separator);
-        String excludedPaymentMethodsAppended = getListAsString(excludedPaymentMethods, separator);
-        String siteId = site == null ? "" : site.getId();
-        service.getPaymentMethodSearch(Settings.servicesVersion, mContext.getResources().getConfiguration().locale.getLanguage(), this.mPublicKey, amount, excludedPaymentTypesAppended, excludedPaymentMethodsAppended, payerIntent, siteId, PAYMENT_METHODS_OPTIONS_API_VERSION, mProcessingMode).enqueue(callback);
+        final String separator = ",";
+        final String excludedPaymentTypesAppended = getListAsString(excludedPaymentTypes, separator);
+        final String excludedPaymentMethodsAppended = getListAsString(excludedPaymentMethods, separator);
+        final String cardsWithEscAppended = getListAsString(cardsWithEsc, separator);
+        final String supportedPluginsAppended = getListAsString(supportedPlugins, separator);
+        final String siteId = site == null ? "" : site.getId();
+        service.getPaymentMethodSearch(Settings.servicesVersion,
+            mContext.getResources().getConfiguration().locale.getLanguage(), this.mPublicKey, amount,
+            excludedPaymentTypesAppended, excludedPaymentMethodsAppended, payerIntent, siteId,
+            PAYMENT_METHODS_OPTIONS_API_VERSION, mProcessingMode, cardsWithEscAppended, supportedPluginsAppended).
+            enqueue(callback);
     }
 
     public void createToken(final SavedCardToken savedCardToken, final Callback<Token> callback) {

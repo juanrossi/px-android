@@ -9,6 +9,7 @@ ext {
 
 buildscript {
     repositories {
+        google()
         jcenter()
     }
 

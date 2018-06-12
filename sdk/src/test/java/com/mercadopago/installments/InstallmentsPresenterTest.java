@@ -1,40 +1,43 @@
 package com.mercadopago.installments;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.mercadopago.callbacks.OnSelectedCallback;
-import com.mercadopago.model.Sites;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.mocks.Installments;
 import com.mercadopago.mocks.Issuers;
 import com.mercadopago.mocks.PayerCosts;
 import com.mercadopago.mocks.PaymentMethods;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
+import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.Site;
+import com.mercadopago.model.Sites;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.InstallmentsPresenter;
 import com.mercadopago.providers.InstallmentsProvider;
 import com.mercadopago.views.InstallmentsActivityView;
 
-import org.junit.Test;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
 
 import static com.mercadopago.util.TextUtil.isEmpty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-
-/**
- * Created by mromar on 5/4/17.
- */
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class InstallmentsPresenterTest {
 
@@ -55,7 +58,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -85,7 +87,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -114,7 +115,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -142,7 +142,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -172,7 +171,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -186,7 +184,6 @@ public class InstallmentsPresenterTest {
 
         assertFalse(mockedView.installmentRecyclerViewShown);
         assertTrue(mockedView.installmentsReviewViewShown);
-        assertTrue(mockedView.discountRowShown);
         assertTrue(mockedView.installmentsReviewViewInitialized);
     }
 
@@ -206,7 +203,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -238,7 +234,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -271,7 +266,6 @@ public class InstallmentsPresenterTest {
         presenter.attachResourcesProvider(provider);
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -303,7 +297,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -331,7 +324,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -373,7 +365,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPayerCosts(payerCosts);
@@ -402,7 +393,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
@@ -430,7 +420,6 @@ public class InstallmentsPresenterTest {
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setDiscountEnabled(false);
         presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPayerCosts(payerCosts);
@@ -440,7 +429,8 @@ public class InstallmentsPresenterTest {
         presenter.initialize();
 
         assertTrue(mockedView.finishWithResult);
-        assertEquals(mockedView.selectedPayerCost, getPayerCost(payerCosts, paymentPreference.getDefaultInstallments()));
+        assertEquals(mockedView.selectedPayerCost,
+            getPayerCost(payerCosts, paymentPreference.getDefaultInstallments()));
     }
 
     @Test
@@ -497,83 +487,16 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenHasDiscountThenGetAmountWithDiscount() {
-        Discount discount = getDiscount();
         BigDecimal amount = new BigDecimal(500);
+
+        Discount discount = mock(Discount.class);
+        when(discount.getAmountWithDiscount(amount)).thenReturn(amount.subtract(new BigDecimal(20)));
 
         InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.setAmount(amount);
-        presenter.setDiscountEnabled(true);
-
         presenter.setDiscount(discount);
 
-        assertEquals(presenter.getAmount(), discount.getAmountWithDiscount(amount));
-    }
-
-    @Test
-    public void whenHasDiscountWithoutCurrencyThenGetAmountWithoutDiscount() {
-        Discount discount = getDiscountWithoutCurrency();
-        BigDecimal amount = new BigDecimal(500);
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.setAmount(amount);
-        presenter.setDiscountEnabled(true);
-        presenter.setDiscount(discount);
-
-        assertEquals(presenter.getAmount(), amount);
-    }
-
-    @Test
-    public void whenHasDiscountWithoutIdThenGetAmountWithoutDiscount() {
-        Discount discount = getDiscountWithoutId();
-        BigDecimal amount = new BigDecimal(500);
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.setAmount(amount);
-        presenter.setDiscountEnabled(true);
-        presenter.setDiscount(discount);
-
-        assertEquals(presenter.getAmount(), amount);
-    }
-
-    @Test
-    public void whenHasDiscountWithoutCouponAmountThenGetAmountWithoutDiscount() {
-        Discount discount = getDiscountWithoutCouponAmount();
-        BigDecimal amount = new BigDecimal(500);
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.setAmount(amount);
-        presenter.setDiscountEnabled(true);
-        presenter.setDiscount(discount);
-
-        assertEquals(presenter.getAmount(), amount);
-    }
-
-    @Test
-    public void whenDiscountHasEmptyCurrencyThenGetAmountWithoutDiscount() {
-        Discount discount = getDiscountWithEmptyCurrency();
-        BigDecimal amount = new BigDecimal(500);
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.setAmount(amount);
-        presenter.setDiscountEnabled(true);
-
-        presenter.setDiscount(discount);
-
-        assertEquals(presenter.getAmount(), amount);
-    }
-
-    @Test
-    public void whenDiscountHasNegativeCouponAmountThenGetAmountWithoutDiscount() {
-        Discount discount = getDiscountWithoutNegativeCouponAmount();
-        BigDecimal amount = new BigDecimal(500);
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.setAmount(amount);
-        presenter.setDiscountEnabled(true);
-
-        presenter.setDiscount(discount);
-
-        assertEquals(presenter.getAmount(), amount);
+        assertEquals(presenter.getAmount(), presenter.getDiscount().getAmountWithDiscount(amount));
     }
 
     @Test
@@ -583,7 +506,6 @@ public class InstallmentsPresenterTest {
 
         InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.setAmount(amount);
-        presenter.setDiscountEnabled(true);
 
         presenter.setDiscount(discount);
 
@@ -602,7 +524,6 @@ public class InstallmentsPresenterTest {
         InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
-
 
         presenter.setSite(Sites.COLOMBIA);
         presenter.setAmount(new BigDecimal(1000));
@@ -627,7 +548,6 @@ public class InstallmentsPresenterTest {
         InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
-
 
         presenter.setSite(Sites.ARGENTINA);
         presenter.setAmount(new BigDecimal(1000));
@@ -671,62 +591,6 @@ public class InstallmentsPresenterTest {
         return payerCost;
     }
 
-    private Discount getDiscount() {
-        Discount discount = new Discount();
-
-        discount.setId("77");
-        discount.setCurrencyId("ARS");
-        discount.setCouponAmount(new BigDecimal(50));
-
-        return discount;
-    }
-
-    private Discount getDiscountWithoutCurrency() {
-        Discount discount = new Discount();
-
-        discount.setId("77");
-        discount.setCouponAmount(new BigDecimal(50));
-
-        return discount;
-    }
-
-    private Discount getDiscountWithEmptyCurrency() {
-        Discount discount = new Discount();
-
-        discount.setId("77");
-        discount.setCurrencyId("");
-        discount.setCouponAmount(new BigDecimal(50));
-
-        return discount;
-    }
-
-    private Discount getDiscountWithoutId() {
-        Discount discount = new Discount();
-
-        discount.setCurrencyId("ARS");
-        discount.setCouponAmount(new BigDecimal(50));
-
-        return discount;
-    }
-
-    private Discount getDiscountWithoutNegativeCouponAmount() {
-        Discount discount = new Discount();
-
-        discount.setCurrencyId("ARS");
-        discount.setCouponAmount(new BigDecimal(-50));
-
-        return discount;
-    }
-
-    private Discount getDiscountWithoutCouponAmount() {
-        Discount discount = new Discount();
-
-        discount.setCurrencyId("ARS");
-        discount.setCouponAmount(new BigDecimal(50));
-
-        return discount;
-    }
-
     private class MockedProvider implements InstallmentsProvider {
 
         private boolean shouldFail;
@@ -753,7 +617,8 @@ public class InstallmentsPresenterTest {
         }
 
         @Override
-        public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId, TaggedCallback<List<Installment>> taggedCallback) {
+        public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId,
+            TaggedCallback<List<Installment>> taggedCallback) {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);
             } else {
@@ -833,11 +698,6 @@ public class InstallmentsPresenterTest {
         }
 
         @Override
-        public void showDiscountRow(BigDecimal transactionAmount) {
-            this.discountRowShown = true;
-        }
-
-        @Override
         public void initInstallmentsReviewView(PayerCost payerCost) {
             this.installmentsReviewViewInitialized = true;
         }
@@ -865,6 +725,28 @@ public class InstallmentsPresenterTest {
         @Override
         public void warnAboutBankInterests() {
             bankInterestsWarningShown = true;
+        }
+
+        @Override
+        public void showAmount(@Nullable final Discount discount, @Nullable final Campaign campaign,
+            final BigDecimal totalAmount,
+            final Site site) {
+
+        }
+
+        @Override
+        public void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign) {
+
+        }
+
+        @Override
+        public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign) {
+
+        }
+
+        @Override
+        public void showDiscountInputDialog() {
+
         }
 
         private void simulateInstallmentSelection(int index) {

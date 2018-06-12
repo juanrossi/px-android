@@ -1,7 +1,8 @@
 package com.mercadopago.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +12,11 @@ public class PaymentMethodSearch implements Serializable {
 
     private List<PaymentMethodSearchItem> groups;
 
-    @Deprecated
     @SerializedName("custom_options")
     private List<CustomSearchItem> customSearchItems;
+
+    @SerializedName("one_tap")
+    private OneTapMetadata oneTapMetadata;
 
     private List<PaymentMethod> paymentMethods;
 
@@ -107,6 +110,7 @@ public class PaymentMethodSearch implements Serializable {
         return requiredItem;
     }
 
+    @Nullable
     public PaymentMethod getPaymentMethodById(String paymentMethodId) {
         PaymentMethod foundPaymentMethod = null;
         if (paymentMethods != null) {
@@ -133,7 +137,6 @@ public class PaymentMethodSearch implements Serializable {
         return foundCard;
     }
 
-    @Deprecated
     public List<CustomSearchItem> getCustomSearchItems() {
         return customSearchItems;
     }
@@ -142,12 +145,6 @@ public class PaymentMethodSearch implements Serializable {
         return cards;
     }
 
-    @Deprecated
-    public void setCustomSearchItems(List<CustomSearchItem> customSearchItems) {
-        this.customSearchItems = customSearchItems;
-    }
-
-    @Deprecated
     public boolean hasCustomSearchItems() {
         return customSearchItems != null && !customSearchItems.isEmpty();
     }
@@ -181,11 +178,31 @@ public class PaymentMethodSearch implements Serializable {
         }
     }
 
+    public boolean hasOneTapMetadata() {
+        return oneTapMetadata != null && getOneTapMetadata().isValidOneTapType();
+    }
+
     public void setCards(List<Card> cards) {
         this.cards = cards;
     }
 
     public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
         this.paymentMethods = paymentMethods;
+    }
+
+    public OneTapMetadata getOneTapMetadata() {
+        return oneTapMetadata;
+    }
+
+    @Nullable
+    public Issuer getIssuer(@NonNull final String cardId) {
+        final Card foundCard = getCardById(cardId);
+        return foundCard == null ? null : foundCard.getIssuer();
+    }
+
+    @Nullable
+    public String getLastFourDigits(@NonNull final String cardId) {
+        final Card foundCard = getCardById(cardId);
+        return foundCard == null ? null : foundCard.getLastFourDigits();
     }
 }

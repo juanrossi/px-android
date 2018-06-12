@@ -16,10 +16,6 @@ import com.mercadopago.preferences.CheckoutPreference;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Created by vaserber on 2/2/17.
- */
-
 public interface CheckoutProvider extends ResourcesProvider {
     void getCheckoutPreference(String checkoutPreferenceId, TaggedCallback<CheckoutPreference> taggedCallback);
 
@@ -27,7 +23,11 @@ public interface CheckoutProvider extends ResourcesProvider {
 
     void getDirectDiscount(BigDecimal amount, String payerEmail, TaggedCallback<Discount> taggedCallback);
 
-    void getPaymentMethodSearch(BigDecimal amount, List<String> excludedPaymentTypes, List<String> excludedPaymentMethods, Payer payer, Site site, TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback, TaggedCallback<Customer> onCustomerRetrievedCallback);
+    void getPaymentMethodSearch(BigDecimal amount, final List<String> excludedPaymentTypes,
+        final List<String> excludedPaymentMethods, final List<String> cardsWithEsc,
+        final List<String> supportedPlugins, final Payer payer, final Site site,
+        final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback,
+        final TaggedCallback<Customer> onCustomerRetrievedCallback);
 
     String getCheckoutExceptionMessage(CheckoutPreferenceException exception);
 
@@ -43,6 +43,8 @@ public interface CheckoutProvider extends ResourcesProvider {
     void deleteESC(String cardId);
 
     boolean saveESC(String cardId, String value);
+
+    List<String> getCardsWithEsc();
 
     void fetchFonts();
 }

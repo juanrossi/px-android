@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.mercadopago.CheckoutActivity;
 import com.mercadopago.callbacks.CallbackHolder;
 import com.mercadopago.hooks.CheckoutHooks;
 import com.mercadopago.lite.controllers.CustomServicesHandler;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
@@ -24,7 +24,6 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.uicontrollers.FontCache;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
-
 
 public class MercadoPagoCheckout implements Serializable {
 
@@ -69,6 +67,9 @@ public class MercadoPagoCheckout implements Serializable {
     @Nullable
     private final Discount discount;
 
+    @Nullable
+    private final Campaign campaign;
+
     private final boolean binaryMode;
 
     private MercadoPagoCheckout(Builder builder) {
@@ -79,6 +80,7 @@ public class MercadoPagoCheckout implements Serializable {
         paymentResultScreenPreference = builder.paymentResultScreenPreference;
         binaryMode = builder.binaryMode;
         discount = builder.discount;
+        campaign = builder.campaign;
         paymentResult = builder.paymentResult;
         paymentData = builder.paymentData;
         preferenceId = builder.preferenceId;
@@ -152,7 +154,7 @@ public class MercadoPagoCheckout implements Serializable {
     }
 
     private boolean isCheckoutTimerAvailable() {
-        return flowPreference != null && flowPreference.isCheckoutTimerEnabled();
+        return flowPreference.isCheckoutTimerEnabled();
     }
 
     private boolean isPaymentDataIntegration(int resultCode) {
@@ -197,6 +199,11 @@ public class MercadoPagoCheckout implements Serializable {
     }
 
     @Nullable
+    public Campaign getCampaign() {
+        return campaign;
+    }
+
+    @Nullable
     public PaymentData getPaymentData() {
         return paymentData;
     }
@@ -233,19 +240,25 @@ public class MercadoPagoCheckout implements Serializable {
         private final CheckoutPreference checkoutPreference;
         private final List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
         private final Map<String, PaymentProcessor> paymentPlugins = new HashMap<>();
-        private Boolean binaryMode = false;
-        private ServicePreference servicePreference = new ServicePreference.Builder().build();
-        private FlowPreference flowPreference = new FlowPreference.Builder().build();
-        private PaymentResultScreenPreference paymentResultScreenPreference;
-        private PaymentData paymentData;
-        private PaymentResult paymentResult;
-        private Discount discount;
-        private CheckoutHooks checkoutHooks;
-        private DataInitializationTask dataInitializationTask;
-        private String regularFontPath;
-        private String lightFontPath;
-        private String monoFontPath;
-        private ReviewAndConfirmPreferences reviewAndConfirmPreferences;
+        Boolean binaryMode = false;
+
+        @NonNull
+        ServicePreference servicePreference = new ServicePreference.Builder().build();
+
+        @NonNull
+        FlowPreference flowPreference = new FlowPreference.Builder().build();
+
+        PaymentResultScreenPreference paymentResultScreenPreference;
+        PaymentData paymentData;
+        PaymentResult paymentResult;
+        Discount discount;
+        Campaign campaign;
+        CheckoutHooks checkoutHooks;
+        DataInitializationTask dataInitializationTask;
+        String regularFontPath;
+        String lightFontPath;
+        String monoFontPath;
+        ReviewAndConfirmPreferences reviewAndConfirmPreferences;
 
         /**
          * Checkout builder allow you to create a {@link MercadoPagoCheckout}
@@ -262,7 +275,7 @@ public class MercadoPagoCheckout implements Serializable {
         /**
          * Checkout builder allow you to create a {@link MercadoPagoCheckout}
          *
-         * @param publicKey    merchant public key.
+         * @param publicKey merchant public key.
          * @param preferenceId the preference id that represents the payment information.
          */
         public Builder(@NonNull final String publicKey, @NonNull final String preferenceId) {
@@ -271,17 +284,26 @@ public class MercadoPagoCheckout implements Serializable {
             this.checkoutPreference = null;
         }
 
-        public Builder setDiscount(Discount discount) {
+        /**
+         * Set Mercado Pago discount that will be applied to total amount.
+         * When you set a discount with its campaign, we do not check in discount service.
+         * You have to set a payment processor for discount be applied.
+         *
+         * @param discount Mercado Pago discount.
+         * @param campaign Discount campaign with discount data.
+         */
+        public Builder setDiscount(@NonNull final Discount discount, @NonNull final Campaign campaign) {
             this.discount = discount;
+            this.campaign = campaign;
             return this;
         }
 
-        public Builder setServicePreference(ServicePreference servicePreference) {
+        public Builder setServicePreference(@NonNull final ServicePreference servicePreference) {
             this.servicePreference = servicePreference;
             return this;
         }
 
-        public Builder setFlowPreference(FlowPreference flowPreference) {
+        public Builder setFlowPreference(@NonNull final FlowPreference flowPreference) {
             this.flowPreference = flowPreference;
             return this;
         }
@@ -330,7 +352,7 @@ public class MercadoPagoCheckout implements Serializable {
 
         @SuppressWarnings("unused")
         public Builder addPaymentMethodPlugin(@NonNull final PaymentMethodPlugin paymentMethodPlugin,
-                                              @NonNull final PaymentProcessor paymentProcessor) {
+            @NonNull final PaymentProcessor paymentProcessor) {
             paymentMethodPluginList.add(paymentMethodPlugin);
             paymentPlugins.put(paymentMethodPlugin.getId(), paymentProcessor);
             return this;
@@ -389,7 +411,7 @@ public class MercadoPagoCheckout implements Serializable {
 
         private boolean hasPaymentResultDiscount() {
             return paymentResult != null && paymentResult.getPaymentData() != null &&
-                    paymentResult.getPaymentData().getDiscount() != null;
+                paymentResult.getPaymentData().getDiscount() != null;
         }
 
         private boolean hasTwoDiscountsSet() {

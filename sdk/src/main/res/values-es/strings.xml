@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- one tap -->
+    <string name="mpsdk_discount_ceil_message">Con tope de reintegro</string>
+    <string name="mpsdk_payment_detail_title_modal">Detalle</string>
 
     <!-- Banks deals -->
     <string name="mpsdk_empty_bank_deals">No tienes ninguna promoción disponible</string>
@@ -28,13 +31,12 @@
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">¿En cuántas cuotas?</string>
 
-    <string name="mpsdk_installments_by">x</string>
-    <string name="mpsdk_installments_cft" >CFT</string>
-
-    <!-- Checkout -->
-    <string name="mpsdk_text_terms_and_conditions_start">Al pagar, afirmo que soy mayor de edad y acepto los</string>
-    <string name="mpsdk_text_terms_and_conditions_linked">Términos y condiciones</string>
-    <string name="mpsdk_text_terms_and_conditions_end">de Mercado Pago</string>
+    <!-- Terms And Conditions -->
+    <string name="mpsdk_terms_and_conditions_message">Al pagar, afirmo que soy mayor de edad y acepto los</string>
+    <string name="mpsdk_terms_and_conditions_linked_message">Términos y condiciones.</string>
+    <string name="mpsdk_terms_and_conditions">Términos y condiciones</string>
+    <string name="mpsdk_discount_terms_and_conditions_message">Descuento exclusivo de Mercado Libre y Mercado Pago.</string>
+    <string name="mpsdk_discount_terms_and_conditions_linked_message">Ver condiciones</string>
 
     <!-- Card token and guessing -->
     <string name="mpsdk_invalid_card_number_incomplete">Ingresa todos los números de la tarjeta</string>
@@ -219,14 +221,12 @@
     <string name="mpsdk_review_summary_total">Total</string>
     <string name="mpsdk_review_summary_subtotal">Subtotal</string>
     <string name="mpsdk_review_summary_discount">Descuento</string>
-    <string name="mpsdk_review_summary_discounts">Descuentos</string>
     <string name="mpsdk_ryc_account_money_description">Con dinero en cuenta</string>
 
     <!-- Discount -->
     <string name="mpsdk_discount">Descuento</string>
     <string name="mpsdk_input_button_exchange">Canjear</string>
     <string name="mpsdk_discount_code">Código de descuento</string>
-    <string name="mpsdk_has_a_discount">Tengo un descuento</string>
     <string name="mpsdk_of_discount">de descuento</string>
     <string name="mpsdk_percent_of_discount">% de descuento</string>
     <string name="mpsdk_do_not_enter_code">No se ingresó código</string>
@@ -235,11 +235,14 @@
     <string name="mpsdk_ran_out_of_quantity_uses_quantity">Se agotó la cantidad de usos</string>
     <string name="mpsdk_amount_doesnt_match">Importe fuera del alcance</string>
     <string name="mpsdk_campaign_expired">La campaña expiró</string>
-    <string name="mpsdk_discount_percent_off">%1$s %%</string>
-    <string name="mpsdk_total">Total:</string>
     <string name="mpsdk_something_went_wrong">¡Uy! Algo salió mal…</string>
-
+    <string name="mpsdk_we_apply_the_best_available_discount">Los descuentos no son acumulables. Te damos el más alto para este pago.</string>
+    <string name="mpsdk_max_coupon_amount">Tope de descuento %1$s</string>
+    <string name="mpsdk_total_to_pay">Total a pagar</string>
+    <string name="mpsdk_has_a_coupon_discount">¿Tenés un cupón de descuento?</string>
+    <string name="mpsdk_with_max_coupon_amount">Con tope de descuento</string>
     <string name="mpsdk_interest_label">No incluye intereses bancarios</string>
+    <string name="mpsdk_discount_dialog_title">Mi descuento</string>
 
     <!-- Unlock Card -->
     <string name="mpsdk_text_unlock_card_start">Recuerda</string>

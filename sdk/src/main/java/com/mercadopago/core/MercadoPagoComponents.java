@@ -1,8 +1,11 @@
 package com.mercadopago.core;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.os.Parcelable;
 import com.google.gson.Gson;
 import com.mercadopago.BankDealsActivity;
 import com.mercadopago.CardVaultActivity;
@@ -17,6 +20,7 @@ import com.mercadopago.PaymentVaultActivity;
 import com.mercadopago.ReviewPaymentMethodsActivity;
 import com.mercadopago.SecurityCodeActivity;
 import com.mercadopago.model.BankDeal;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
@@ -35,10 +39,12 @@ import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.util.JsonUtil;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
+import static com.mercadopago.PaymentVaultActivity.EXTRA_CAMPAIGN;
+import static com.mercadopago.PaymentVaultActivity.EXTRA_DISCOUNT;
 
 public class MercadoPagoComponents {
 
@@ -99,13 +105,10 @@ public class MercadoPagoComponents {
             private Integer maxSavedCards;
             private String payerEmail;
             private Discount discount;
-            private boolean discountEnabled;
+            private Campaign campaign;
             private boolean installmentsReviewEnabled;
             private boolean showAllSavedCardsEnabled;
             private boolean escEnabled;
-            private String merchantDiscountBaseUrl;
-            private String merchantGetDiscountUri;
-            private Map<String, String> discountAdditionalInfo;
             private CheckoutPreference checkoutPreference;
 
             public PaymentVaultActivityBuilder setActivity(Activity activity) {
@@ -198,28 +201,9 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public PaymentVaultActivityBuilder setDiscountEnabled(boolean discountEnabled) {
-                this.discountEnabled = discountEnabled;
-                return this;
-            }
-
-            public PaymentVaultActivityBuilder setDiscount(Discount discount) {
+            public PaymentVaultActivityBuilder setDiscount(Discount discount, Campaign campaign) {
                 this.discount = discount;
-                return this;
-            }
-
-            public PaymentVaultActivityBuilder setMerchantDiscountBaseUrl(String merchantDiscountBaseUrl) {
-                this.merchantDiscountBaseUrl = merchantDiscountBaseUrl;
-                return this;
-            }
-
-            public PaymentVaultActivityBuilder setMerchantGetDiscountUri(String merchantGetDiscountUri) {
-                this.merchantGetDiscountUri = merchantGetDiscountUri;
-                return this;
-            }
-
-            public PaymentVaultActivityBuilder setDiscountAdditionalInfo(Map<String, String> discountAdditionalInfo) {
-                this.discountAdditionalInfo = discountAdditionalInfo;
+                this.campaign = campaign;
                 return this;
             }
 
@@ -240,46 +224,40 @@ public class MercadoPagoComponents {
             }
 
             private void startPaymentVaultActivity() {
-                Intent paymentVaultIntent = new Intent(activity, PaymentVaultActivity.class);
-                paymentVaultIntent.putExtra("merchantPublicKey", merchantPublicKey);
-                paymentVaultIntent.putExtra("merchantBaseUrl", merchantBaseUrl);
-                paymentVaultIntent.putExtra("merchantGetCustomerUri", merchantGetCustomerUri);
-                paymentVaultIntent.putExtra("merchantAccessToken", merchantAccessToken);
-                paymentVaultIntent.putExtra("amount", amount.toString());
-                paymentVaultIntent.putExtra("site", JsonUtil.getInstance().toJson(site));
-                paymentVaultIntent.putExtra("installmentsEnabled", installmentsEnabled);
-                paymentVaultIntent.putExtra("showBankDeals", showBankDeals);
-                paymentVaultIntent.putExtra("merchantBaseUrl", merchantBaseUrl);
-                paymentVaultIntent.putExtra("merchantGetCustomerUri", merchantGetCustomerUri);
-                paymentVaultIntent.putExtra("merchantAccessToken", merchantAccessToken);
-                paymentVaultIntent.putExtra("paymentMethodSearch", JsonUtil.getInstance().toJson(paymentMethodSearch));
-                paymentVaultIntent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
-                paymentVaultIntent.putExtra("checkoutPreference", JsonUtil.getInstance().toJson(checkoutPreference));
+                Intent intent = new Intent(activity, PaymentVaultActivity.class);
+                intent.putExtra("merchantPublicKey", merchantPublicKey);
+                intent.putExtra("merchantBaseUrl", merchantBaseUrl);
+                intent.putExtra("merchantGetCustomerUri", merchantGetCustomerUri);
+                intent.putExtra("merchantAccessToken", merchantAccessToken);
+                intent.putExtra("amount", amount.toString());
+                intent.putExtra("site", JsonUtil.getInstance().toJson(site));
+                intent.putExtra("installmentsEnabled", installmentsEnabled);
+                intent.putExtra("showBankDeals", showBankDeals);
+                intent.putExtra("merchantBaseUrl", merchantBaseUrl);
+                intent.putExtra("merchantGetCustomerUri", merchantGetCustomerUri);
+                intent.putExtra("merchantAccessToken", merchantAccessToken);
+                intent.putExtra("paymentMethodSearch", JsonUtil.getInstance().toJson(paymentMethodSearch));
+                intent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
+                intent.putExtra("checkoutPreference", JsonUtil.getInstance().toJson(checkoutPreference));
 
                 Gson gson = new Gson();
-                paymentVaultIntent.putExtra("cards", gson.toJson(cards));
-                paymentVaultIntent.putExtra("payerAccessToken", payerAccessToken);
-                paymentVaultIntent.putExtra("maxSavedCards", maxSavedCards);
-                paymentVaultIntent.putExtra("showAllSavedCardsEnabled", showAllSavedCardsEnabled);
-                paymentVaultIntent.putExtra("escEnabled", escEnabled);
+                intent.putExtra("cards", gson.toJson(cards));
+                intent.putExtra("payerAccessToken", payerAccessToken);
+                intent.putExtra("maxSavedCards", maxSavedCards);
+                intent.putExtra("showAllSavedCardsEnabled", showAllSavedCardsEnabled);
+                intent.putExtra("escEnabled", escEnabled);
 
                 //Discounts
-                paymentVaultIntent.putExtra("payerEmail", payerEmail);
-                paymentVaultIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-                paymentVaultIntent.putExtra("discountEnabled", discountEnabled);
+                intent.putExtra("payerEmail", payerEmail);
+                intent.putExtra(EXTRA_DISCOUNT, (Parcelable) discount);
+                intent.putExtra(EXTRA_CAMPAIGN, (Parcelable) campaign);
+                intent.putExtra("installmentsReviewEnabled", installmentsReviewEnabled);
 
-                paymentVaultIntent.putExtra("installmentsReviewEnabled", installmentsReviewEnabled);
-                paymentVaultIntent.putExtra("merchantDiscountBaseUrl", merchantDiscountBaseUrl);
-                paymentVaultIntent.putExtra("merchantGetDiscountUri", merchantGetDiscountUri);
-                paymentVaultIntent
-                    .putExtra("discountAdditionalInfo", JsonUtil.getInstance().toJson(discountAdditionalInfo));
-
-                activity.startActivityForResult(paymentVaultIntent, PAYMENT_VAULT_REQUEST_CODE);
+                activity.startActivityForResult(intent, PAYMENT_VAULT_REQUEST_CODE);
             }
         }
 
         public static class CardVaultActivityBuilder {
-            private Activity activity;
             private String merchantPublicKey;
             private BigDecimal amount;
             private Site site;
@@ -291,16 +269,11 @@ public class MercadoPagoComponents {
             private Card card;
             private PaymentRecovery paymentRecovery;
             private Discount discount;
-            private boolean discountEnabled;
+            private Campaign campaign;
             private boolean installmentsReviewEnabled;
             private boolean automaticSelection;
             private String payerEmail;
             private String payerAccessToken;
-
-            public CardVaultActivityBuilder setActivity(Activity activity) {
-                this.activity = activity;
-                return this;
-            }
 
             public CardVaultActivityBuilder setMerchantPublicKey(String merchantPublicKey) {
                 this.merchantPublicKey = merchantPublicKey;
@@ -337,13 +310,9 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public CardVaultActivityBuilder setDiscountEnabled(boolean discountEnabled) {
-                this.discountEnabled = discountEnabled;
-                return this;
-            }
-
-            public CardVaultActivityBuilder setDiscount(Discount discount) {
+            public CardVaultActivityBuilder setDiscount(Discount discount, Campaign campaign) {
                 this.discount = discount;
+                this.campaign = campaign;
                 return this;
             }
 
@@ -382,11 +351,16 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public void startActivity() {
+            public CardVaultActivityBuilder setCheckoutPreference(final CheckoutPreference checkoutPreference) {
+                this.setAmount(checkoutPreference.getTotalAmount())
+                    .setSite(checkoutPreference.getSite())
+                    .setPayerEmail(checkoutPreference.getPayer().getEmail())
+                    .setPaymentPreference(checkoutPreference.getPaymentPreference());
+                return this;
+            }
 
-                if (activity == null) {
-                    throw new IllegalStateException("activity is null");
-                }
+            public void startActivity(@NonNull final Activity context, int reqCode) {
+
                 if (merchantPublicKey == null && payerAccessToken == null) {
                     throw new IllegalStateException("key is null");
                 }
@@ -398,11 +372,11 @@ public class MercadoPagoComponents {
                         throw new IllegalStateException("site is null");
                     }
                 }
-                startCardVaultActivity();
+                startCardVaultActivity(context, reqCode);
             }
 
-            private void startCardVaultActivity() {
-                Intent cardVaultIntent = new Intent(activity, CardVaultActivity.class);
+            private Intent getIntent(final Context context) {
+                Intent cardVaultIntent = new Intent(context, CardVaultActivity.class);
                 cardVaultIntent.putExtra("merchantPublicKey", merchantPublicKey);
 
                 if (amount != null) {
@@ -410,34 +384,30 @@ public class MercadoPagoComponents {
                 }
 
                 cardVaultIntent.putExtra("site", JsonUtil.getInstance().toJson(site));
-
                 cardVaultIntent.putExtra("installmentsEnabled", installmentsEnabled);
-
                 cardVaultIntent.putExtra("showBankDeals", showBankDeals);
-
                 cardVaultIntent.putExtra("payerEmail", payerEmail);
-
                 cardVaultIntent.putExtra("payerAccessToken", payerAccessToken);
-
                 cardVaultIntent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
-
                 cardVaultIntent.putExtra("paymentMethodList", JsonUtil.getInstance().toJson(paymentMethodList));
-
                 cardVaultIntent.putExtra("paymentRecovery", JsonUtil.getInstance().toJson(paymentRecovery));
-
                 cardVaultIntent.putExtra("card", JsonUtil.getInstance().toJson(card));
-
                 cardVaultIntent.putExtra("installmentsReviewEnabled", installmentsReviewEnabled);
-
-                cardVaultIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-
-                cardVaultIntent.putExtra("discountEnabled", discountEnabled);
-
                 cardVaultIntent.putExtra("automaticSelection", automaticSelection);
-
                 cardVaultIntent.putExtra("escEnabled", escEnabled);
 
-                activity.startActivityForResult(cardVaultIntent, CARD_VAULT_REQUEST_CODE);
+                cardVaultIntent.putExtra(EXTRA_DISCOUNT, (Parcelable) discount);
+                cardVaultIntent.putExtra(EXTRA_CAMPAIGN, (Parcelable) campaign);
+
+                return cardVaultIntent;
+            }
+
+            private void startCardVaultActivity(@NonNull Activity context, final int reqCode) {
+                context.startActivityForResult(getIntent(context), reqCode);
+            }
+
+            public void startActivity(final Fragment oneTapFragment, final int reqCode) {
+                oneTapFragment.startActivityForResult(getIntent(oneTapFragment.getActivity()), reqCode);
             }
         }
 
@@ -455,7 +425,6 @@ public class MercadoPagoComponents {
             private BigDecimal amount;
             private String payerEmail;
             private Discount discount;
-            private Boolean discountEnabled;
             private Boolean showDiscount;
             private String payerAccessToken;
 
@@ -529,11 +498,6 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public GuessingCardActivityBuilder setDiscountEnabled(Boolean discountEnabled) {
-                this.discountEnabled = discountEnabled;
-                return this;
-            }
-
             public GuessingCardActivityBuilder setShowDiscount(Boolean showDiscount) {
                 this.showDiscount = showDiscount;
                 return this;
@@ -586,8 +550,6 @@ public class MercadoPagoComponents {
                 guessingCardIntent.putExtra("payerAccessToken", payerAccessToken);
 
                 guessingCardIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-
-                guessingCardIntent.putExtra("discountEnabled", discountEnabled);
 
                 guessingCardIntent.putExtra("showDiscount", showDiscount);
 
@@ -705,7 +667,6 @@ public class MercadoPagoComponents {
         }
 
         public static class InstallmentsActivityBuilder {
-
             private Activity activity;
             private BigDecimal amount;
             private Site site;
@@ -717,7 +678,7 @@ public class MercadoPagoComponents {
             private PaymentPreference paymentPreference;
             private String payerEmail;
             private Discount discount;
-            private Boolean discountEnabled;
+            private Campaign campaign;
             private Boolean installmentsEnabled;
             private Boolean installmentsReviewEnabled;
             private String payerAccessToken;
@@ -777,13 +738,9 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public InstallmentsActivityBuilder setDiscount(Discount discount) {
+            public InstallmentsActivityBuilder setDiscount(Discount discount, Campaign campaign) {
                 this.discount = discount;
-                return this;
-            }
-
-            public InstallmentsActivityBuilder setDiscountEnabled(Boolean discountEnabled) {
-                this.discountEnabled = discountEnabled;
+                this.campaign = campaign;
                 return this;
             }
 
@@ -836,10 +793,10 @@ public class MercadoPagoComponents {
                 intent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
                 intent.putExtra("cardInfo", JsonUtil.getInstance().toJson(cardInfo));
                 intent.putExtra("payerEmail", payerEmail);
-                intent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-                intent.putExtra("discountEnabled", discountEnabled);
                 intent.putExtra("installmentsEnabled", installmentsEnabled);
                 intent.putExtra("installmentsReviewEnabled", installmentsReviewEnabled);
+                intent.putExtra(EXTRA_DISCOUNT, (Parcelable) discount);
+                intent.putExtra(EXTRA_CAMPAIGN, (Parcelable) campaign);
 
                 activity.startActivityForResult(intent, INSTALLMENTS_REQUEST_CODE);
             }
@@ -854,7 +811,6 @@ public class MercadoPagoComponents {
             private PaymentMethod paymentMethod;
             private Integer congratsDisplay;
             private Discount discount;
-            private boolean discountEnabled;
             private List<Issuer> issuers;
             private Card card;
             private Token token;
@@ -1125,7 +1081,6 @@ public class MercadoPagoComponents {
             private String payerAccessToken;
             private Integer congratsDisplay;
             private Discount discount;
-            private boolean discountEnabled;
             private PaymentResult paymentResult;
             private Site site;
             private BigDecimal amount;
@@ -1178,11 +1133,6 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public PaymentResultActivityBuilder setDiscountEnabled(boolean discountEnabled) {
-                this.discountEnabled = discountEnabled;
-                return this;
-            }
-
             public PaymentResultActivityBuilder setServicePreference(ServicePreference servicePreference) {
                 this.servicePreference = servicePreference;
                 return this;
@@ -1207,7 +1157,6 @@ public class MercadoPagoComponents {
                 resultIntent.putExtra("merchantPublicKey", merchantPublicKey);
                 resultIntent.putExtra("payerAccessToken", payerAccessToken);
                 resultIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-                resultIntent.putExtra("discountEnabled", discountEnabled);
                 resultIntent.putExtra("congratsDisplay", congratsDisplay);
                 resultIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(paymentResult));
                 resultIntent.putExtra("site", JsonUtil.getInstance().toJson(site));
@@ -1315,5 +1264,4 @@ public class MercadoPagoComponents {
             }
         }
     }
-
 }

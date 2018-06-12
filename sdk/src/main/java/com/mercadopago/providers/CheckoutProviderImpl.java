@@ -211,22 +211,22 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
     @Override
     public void getDirectDiscount(BigDecimal amount, String payerEmail, TaggedCallback<Discount> taggedCallback) {
-        if (servicePreference != null && servicePreference.hasGetDiscountURL()) {
-            Map<String, Object> discountInfoMap = new HashMap<>();
-            discountInfoMap.putAll(servicePreference.getGetDiscountAdditionalInfo());
-            CustomServer.getDirectDiscount(context, amount.toString(), payerEmail, servicePreference.getGetMerchantDiscountBaseURL(), servicePreference.getGetMerchantDiscountURI(), servicePreference.getGetDiscountAdditionalInfo(), taggedCallback);
-        } else {
-            mercadoPagoServicesAdapter.getDirectDiscount(amount.toString(), payerEmail, taggedCallback);
-        }
+        mercadoPagoServicesAdapter.getDirectDiscount(amount.toString(), payerEmail, taggedCallback);
     }
 
     @Override
-    public void getPaymentMethodSearch(BigDecimal amount, final List<String> excludedPaymentTypes, final List<String> excludedPaymentMethods, Payer payer, Site site, final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback, final TaggedCallback<Customer> onCustomerRetrievedCallback) {
+    public void getPaymentMethodSearch(BigDecimal amount, final List<String> excludedPaymentTypes,
+        final List<String> excludedPaymentMethods, final List<String> cardsWithEsc,
+        final List<String> supportedPlugins, final Payer payer, final Site site,
+        final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback,
+        final TaggedCallback<Customer> onCustomerRetrievedCallback) {
 
-        Set<String> excludedPaymentTypesSet = new HashSet<>(excludedPaymentTypes);
+        final Set<String> excludedPaymentTypesSet = new HashSet<>(excludedPaymentTypes);
         excludedPaymentTypesSet.addAll(getUnsupportedPaymentTypes(site));
 
-        mercadoPagoServicesAdapter.getPaymentMethodSearch(amount, new ArrayList<>(excludedPaymentTypesSet), excludedPaymentMethods, payer, site, new Callback<PaymentMethodSearch>() {
+        mercadoPagoServicesAdapter.getPaymentMethodSearch(amount, new ArrayList<>(excludedPaymentTypesSet),
+            excludedPaymentMethods, cardsWithEsc, supportedPlugins, payer, site,
+            new Callback<PaymentMethodSearch>() {
             @Override
             public void success(final PaymentMethodSearch paymentMethodSearch) {
                 if (servicePreference != null && servicePreference.hasGetCustomerURL()) {
@@ -349,7 +349,6 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         if (discount != null) {
             paymentBody.setCampaignId(discount.getId());
             paymentBody.setCouponAmount(discount.getCouponAmount().floatValue());
-            paymentBody.setCouponCode(paymentData.getDiscount().getCouponCode());
         }
 
         paymentBody.setTransactionId(transactionId);
@@ -378,5 +377,10 @@ public class CheckoutProviderImpl implements CheckoutProvider {
     @Override
     public boolean saveESC(String cardId, String value) {
         return mercadoPagoESC.saveESC(cardId, value);
+    }
+
+    @Override
+    public List<String> getCardsWithEsc() {
+        return new ArrayList<>(mercadoPagoESC.getESCCardIds());
     }
 }

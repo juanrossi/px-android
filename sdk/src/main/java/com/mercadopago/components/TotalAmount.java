@@ -6,6 +6,7 @@ import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PayerCost;
 
+import com.mercadopago.util.textformatter.TextFormatter;
 import java.math.BigDecimal;
 import java.util.Locale;
 
@@ -23,9 +24,9 @@ public class TotalAmount extends Component<TotalAmount.TotalAmountProps, Void> {
         public final BigDecimal amount;
 
         public TotalAmountProps(final String currencyId,
-                                final BigDecimal amount,
-                                final PayerCost payerCost,
-                                final Discount discount) {
+            final BigDecimal amount,
+            final PayerCost payerCost,
+            final Discount discount) {
             this.payerCost = payerCost;
             this.discount = discount;
             this.currencyId = currencyId;
@@ -41,11 +42,12 @@ public class TotalAmount extends Component<TotalAmount.TotalAmountProps, Void> {
         String amountTitle;
 
         if (hasPayerCostWithMultipleInstallments()) {
-            String installmentsAmount = CurrenciesUtil.getLocalizedAmountWithoutZeroDecimals(props.currencyId, props.payerCost.getInstallmentAmount());
+            String installmentsAmount = CurrenciesUtil
+                .getLocalizedAmountWithoutZeroDecimals(props.currencyId, props.payerCost.getInstallmentAmount());
             amountTitle = String.format(Locale.getDefault(),
-                    "%dx %s",
-                    props.payerCost.getInstallments(),
-                    installmentsAmount);
+                "%dx %s",
+                props.payerCost.getInstallments(),
+                installmentsAmount);
         } else {
             amountTitle = CurrenciesUtil.getLocalizedAmountWithoutZeroDecimals(props.currencyId, getAmount());
         }
@@ -57,40 +59,27 @@ public class TotalAmount extends Component<TotalAmount.TotalAmountProps, Void> {
         String amountDetail = "";
 
         if (hasPayerCostWithMultipleInstallments()) {
-            amountDetail = String.format(Locale.getDefault(),
-                    "(%s)",
-                    CurrenciesUtil.getLocalizedAmountWithoutZeroDecimals(props.currencyId, props.payerCost.getTotalAmount()));
+            amountDetail = String.format(Locale.getDefault(), "(%s)", CurrenciesUtil
+                .getLocalizedAmountWithoutZeroDecimals(props.currencyId, props.payerCost.getTotalAmount()));
         }
 
         return amountDetail;
     }
 
-    private boolean hasPayerCostWithMultipleInstallments() {
+    public boolean hasPayerCostWithMultipleInstallments() {
         return props.payerCost != null && props.payerCost.hasMultipleInstallments();
     }
 
     private BigDecimal getAmount() {
         BigDecimal amount;
 
-        if (isValidDiscount()) {
+        if (props.discount != null) {
             amount = getAmountWithDiscount();
         } else {
             amount = props.amount;
         }
 
         return amount;
-    }
-
-    private boolean isValidDiscount() {
-        boolean isValidDiscount = false;
-        if (props.discount != null && isValidCouponAmount()) {
-            isValidDiscount = true;
-        }
-        return isValidDiscount;
-    }
-
-    private boolean isValidCouponAmount() {
-        return props.discount.getCouponAmount() != null && props.discount.getCouponAmount().compareTo(BigDecimal.ZERO) >= 0;
     }
 
     private BigDecimal getAmountWithDiscount() {

@@ -31,14 +31,13 @@ public class PaymentResultTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
-                .setPaymentData(paymentData)
-                .build();
+            .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
+            .setPaymentData(paymentData)
+            .build();
 
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -61,15 +60,14 @@ public class PaymentResultTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
-                .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_OTHER_REASON)
-                .setPaymentData(paymentData)
-                .build();
+            .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
+            .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_OTHER_REASON)
+            .setPaymentData(paymentData)
+            .build();
 
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -92,15 +90,14 @@ public class PaymentResultTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
-                .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE)
-                .setPaymentData(paymentData)
-                .build();
+            .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
+            .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE)
+            .setPaymentData(paymentData)
+            .build();
 
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -123,15 +120,14 @@ public class PaymentResultTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentStatus(Payment.StatusCodes.STATUS_PENDING)
-                .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT)
-                .setPaymentData(paymentData)
-                .build();
+            .setPaymentStatus(Payment.StatusCodes.STATUS_PENDING)
+            .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT)
+            .setPaymentData(paymentData)
+            .build();
 
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -154,14 +150,13 @@ public class PaymentResultTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentStatus(Payment.StatusCodes.STATUS_IN_PROCESS)
-                .setPaymentData(paymentData)
-                .build();
+            .setPaymentStatus(Payment.StatusCodes.STATUS_IN_PROCESS)
+            .setPaymentData(paymentData)
+            .build();
 
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -185,14 +180,13 @@ public class PaymentResultTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
-                .setPaymentData(paymentData)
-                .build();
+            .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
+            .setPaymentData(paymentData)
+            .build();
 
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -214,14 +208,13 @@ public class PaymentResultTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentStatus("UNKNOWN")
-                .setPaymentData(paymentData)
-                .build();
+            .setPaymentStatus("UNKNOWN")
+            .setPaymentData(paymentData)
+            .build();
 
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -243,14 +236,13 @@ public class PaymentResultTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentStatus("UNKNOWN")
-                .setPaymentData(null)
-                .build();
+            .setPaymentStatus("UNKNOWN")
+            .setPaymentData(null)
+            .build();
 
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -271,7 +263,6 @@ public class PaymentResultTest {
         presenter.setPaymentResult(null);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -293,14 +284,13 @@ public class PaymentResultTest {
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentStatus(null)
-                .setPaymentData(null)
-                .build();
+            .setPaymentStatus(null)
+            .setPaymentData(null)
+            .build();
 
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(new BigDecimal("100"));
         presenter.setSite(Sites.ARGENTINA);
-        presenter.setDiscountEnabled(Boolean.TRUE);
 
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
@@ -317,15 +307,15 @@ public class PaymentResultTest {
 
         @Override
         public void setPropPaymentResult(@NonNull final String currencyId,
-                                         @NonNull final PaymentResult paymentResult,
-                                         final boolean showLoading) {
+            @NonNull final PaymentResult paymentResult,
+            final boolean showLoading) {
             //Do nothing
         }
 
         @Override
         public void setPropInstruction(@NonNull final Instruction instruction,
-                                       @NonNull final String processingModeString,
-                                       final boolean showLoading) {
+            @NonNull final String processingModeString,
+            final boolean showLoading) {
             //Do nothing
         }
 
@@ -333,7 +323,6 @@ public class PaymentResultTest {
         public void notifyPropsChanged() {
             //Do nothing
         }
-
     }
 
     private class MockedProvider implements PaymentResultProvider {
@@ -341,7 +330,8 @@ public class PaymentResultTest {
         private String STANDARD_ERROR_MESSAGE = "Algo salió mal";
 
         @Override
-        public void getInstructionsAsync(Long paymentId, String paymentTypeId, TaggedCallback<Instructions> taggedCallback) {
+        public void getInstructionsAsync(Long paymentId, String paymentTypeId,
+            TaggedCallback<Instructions> taggedCallback) {
 
         }
 
@@ -577,7 +567,7 @@ public class PaymentResultTest {
 
         @Override
         public void trackScreen(ScreenViewEvent event) {
-            
+
         }
     }
 }

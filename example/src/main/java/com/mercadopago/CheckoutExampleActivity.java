@@ -25,7 +25,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
-                .build());
+            .build());
 
         Settings.setTrackingEnvironment(TrackingEnvironments.STAGING);
 
@@ -63,7 +63,6 @@ public class CheckoutExampleActivity extends AppCompatActivity {
         MercadoPagoCheckout.Builder builder = ExamplesUtils.createBase();
         builder.build().startForPayment(this);
     }
-
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {

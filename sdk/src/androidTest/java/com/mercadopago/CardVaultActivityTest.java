@@ -104,86 +104,77 @@ public class CardVaultActivityTest {
 
     @Test
     public void ifNoCardSetThenStartCardFlow() {
-
         PaymentMethod paymentMethod = StaticMock.getPaymentMethodOn();
         Token mockedToken = StaticMock.getToken();
         String issuers = StaticMock.getIssuersJson();
         String payerCosts = StaticMock.getPayerCostsJson();
         Discount mockedDiscount = null;
-        Boolean discountEnabled = false;
 
         //Guessing response
         Intent guessingResultIntent = new Intent();
         guessingResultIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         guessingResultIntent.putExtra("token", JsonUtil.getInstance().toJson(mockedToken));
         guessingResultIntent.putExtra("discount", JsonUtil.getInstance().toJson(mockedDiscount));
-        guessingResultIntent.putExtra("directDiscountEnabled", discountEnabled);
         guessingResultIntent.putExtra("issuers", issuers);
         guessingResultIntent.putExtra("payerCosts", payerCosts);
 
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, guessingResultIntent);
+        Instrumentation.ActivityResult result =
+            new Instrumentation.ActivityResult(Activity.RESULT_OK, guessingResultIntent);
         intending(hasComponent(GuessingCardActivity.class.getName())).respondWith(result);
 
         mTestRule.launchActivity(validStartIntent);
 
         intended((hasComponent(GuessingCardActivity.class.getName())), times(1));
-
     }
 
     @Test
     public void ifIssuerNotResolvedInCardFlowThenStartIssuerActivity() {
-
         PaymentMethod paymentMethod = StaticMock.getPaymentMethodOn();
         Token mockedToken = StaticMock.getToken();
         String issuers = StaticMock.getIssuersJson();
         String payerCosts = StaticMock.getPayerCostsJson();
         Discount mockedDiscount = null;
-        Boolean discountEnabled = false;
 
         //Guessing response
         Intent guessingResultIntent = new Intent();
         guessingResultIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         guessingResultIntent.putExtra("token", JsonUtil.getInstance().toJson(mockedToken));
         guessingResultIntent.putExtra("discount", JsonUtil.getInstance().toJson(mockedDiscount));
-        guessingResultIntent.putExtra("directDiscountEnabled", discountEnabled);
         guessingResultIntent.putExtra("issuers", issuers);
         guessingResultIntent.putExtra("payerCosts", payerCosts);
 
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, guessingResultIntent);
+        Instrumentation.ActivityResult result =
+            new Instrumentation.ActivityResult(Activity.RESULT_OK, guessingResultIntent);
         intending(hasComponent(GuessingCardActivity.class.getName())).respondWith(result);
 
         mTestRule.launchActivity(validStartIntent);
 
         intended((hasComponent(IssuersActivity.class.getName())), times(1));
-
     }
 
     @Test
     public void ifIssuerResolvedBuPayerCostNotResolvedInCardFlowThenStartInstallmentsctivity() {
-
         PaymentMethod paymentMethod = StaticMock.getPaymentMethodOn();
         Token mockedToken = StaticMock.getToken();
         String payerCosts = StaticMock.getPayerCostsJson();
         Issuer mockedIssuer = StaticMock.getIssuer();
         Discount mockedDiscount = null;
-        Boolean discountEnabled = false;
 
         //Guessing response
         Intent guessingResultIntent = new Intent();
         guessingResultIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         guessingResultIntent.putExtra("token", JsonUtil.getInstance().toJson(mockedToken));
         guessingResultIntent.putExtra("discount", JsonUtil.getInstance().toJson(mockedDiscount));
-        guessingResultIntent.putExtra("directDiscountEnabled", discountEnabled);
         guessingResultIntent.putExtra("issuer", JsonUtil.getInstance().toJson(mockedIssuer));
         guessingResultIntent.putExtra("payerCosts", payerCosts);
 
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, guessingResultIntent);
+        Instrumentation.ActivityResult result =
+            new Instrumentation.ActivityResult(Activity.RESULT_OK, guessingResultIntent);
         intending(hasComponent(GuessingCardActivity.class.getName())).respondWith(result);
 
         mTestRule.launchActivity(validStartIntent);
 
         intended((hasComponent(InstallmentsActivity.class.getName())), times(1));
-
     }
 
     @Ignore
@@ -218,32 +209,33 @@ public class CardVaultActivityTest {
         Issuer mockedIssuer = StaticMock.getIssuer();
         PayerCost mockedPayerCost = StaticMock.getPayerCostWithInterests();
         Discount mockedDiscount = null;
-        Boolean discountEnabled = false;
 
         //Guessing response
         Intent guessingResultIntent = new Intent();
         guessingResultIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         guessingResultIntent.putExtra("token", JsonUtil.getInstance().toJson(mockedToken));
         guessingResultIntent.putExtra("discount", JsonUtil.getInstance().toJson(mockedDiscount));
-        guessingResultIntent.putExtra("directDiscountEnabled", discountEnabled);
         guessingResultIntent.putExtra("issuers", issuers);
         guessingResultIntent.putExtra("payerCosts", payerCosts);
 
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, guessingResultIntent);
+        Instrumentation.ActivityResult result =
+            new Instrumentation.ActivityResult(Activity.RESULT_OK, guessingResultIntent);
         intending(hasComponent(GuessingCardActivity.class.getName())).respondWith(result);
 
         //Issuer response
         Intent issuerResultIntent = new Intent();
         issuerResultIntent.putExtra("issuer", JsonUtil.getInstance().toJson(mockedIssuer));
 
-        Instrumentation.ActivityResult issuerResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, issuerResultIntent);
+        Instrumentation.ActivityResult issuerResult =
+            new Instrumentation.ActivityResult(Activity.RESULT_OK, issuerResultIntent);
         intending(hasComponent(IssuersActivity.class.getName())).respondWith(issuerResult);
 
         //Installments response
         Intent installmentsResultIntent = new Intent();
         installmentsResultIntent.putExtra("payerCost", JsonUtil.getInstance().toJson(mockedPayerCost));
 
-        Instrumentation.ActivityResult installmentsResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, installmentsResultIntent);
+        Instrumentation.ActivityResult installmentsResult =
+            new Instrumentation.ActivityResult(Activity.RESULT_OK, installmentsResultIntent);
         intending(hasComponent(InstallmentsActivity.class.getName())).respondWith(installmentsResult);
 
         CardVaultActivity cardVaultActivity = mTestRule.launchActivity(validStartIntent);

@@ -3,9 +3,10 @@ package com.mercadopago.tracker;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
-
 import com.mercadopago.BuildConfig;
 import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.model.CardPaymentMetadata;
+import com.mercadopago.model.OneTapMetadata;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.plugins.PaymentMethodPlugin;
@@ -15,7 +16,7 @@ import com.mercadopago.review_and_confirm.models.SummaryModel;
 import com.mercadopago.tracking.model.ActionEvent;
 import com.mercadopago.tracking.model.ScreenViewEvent;
 import com.mercadopago.tracking.utils.TrackingUtil;
-
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -90,6 +91,103 @@ public class Tracker {
 
     }
 
+    public static void trackOneTapScreen(@NonNull final Context context, @NonNull final String merchantPublicKey,
+        @NonNull final OneTapMetadata oneTapMetadata, @NonNull final BigDecimal transactionAmount) {
+        trackingStrategy = TrackingUtil.REALTIME_STRATEGY;
+
+        final MPTrackingContext mpTrackingContext = getTrackerContext(merchantPublicKey, context);
+
+        final ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setScreenId(TrackingUtil.SCREEN_ID_ONE_TAP)
+            .setScreenName(TrackingUtil.SCREEN_ID_ONE_TAP)
+            .addProperty(TrackingUtil.PROPERTY_PAYMENT_TYPE_ID, oneTapMetadata.getPaymentTypeId())
+            .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, oneTapMetadata.getPaymentMethodId())
+            .addProperty(TrackingUtil.PROPERTY_PURCHASE_AMOUNT, transactionAmount.toString());
+
+        if (oneTapMetadata.getCard() != null) {
+            builder.addProperty(TrackingUtil.PROPERTY_INSTALLMENTS,
+                oneTapMetadata.getCard().getAutoSelectedInstallment().getInstallments().toString());
+            builder.addProperty(TrackingUtil.PROPERTY_CARD_ID, oneTapMetadata.getCard().getId());
+        }
+
+        mpTrackingContext.trackEvent(builder.build());
+    }
+
+    public static void trackOneTapConfirm(@NonNull final Context context,
+        @NonNull final String merchantPublicKey,
+        @NonNull final OneTapMetadata oneTapMetadata,
+        @NonNull final BigDecimal totalAmount) {
+        trackingStrategy = TrackingUtil.REALTIME_STRATEGY;
+
+        final MPTrackingContext mpTrackingContext = getTrackerContext(merchantPublicKey, context);
+
+        final ActionEvent.Builder builder = new ActionEvent.Builder()
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setAction(TrackingUtil.ACTION_CHECKOUT_CONFIRMED)
+            .setScreenId(TrackingUtil.SCREEN_ID_ONE_TAP)
+            .setScreenName(TrackingUtil.SCREEN_ID_ONE_TAP)
+            .addProperty(TrackingUtil.PROPERTY_PAYMENT_TYPE_ID, oneTapMetadata.getPaymentTypeId())
+            .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, oneTapMetadata.getPaymentMethodId())
+            .addProperty(TrackingUtil.PROPERTY_PURCHASE_AMOUNT, totalAmount.toString());
+
+        final CardPaymentMetadata card = oneTapMetadata.getCard();
+
+        if (card != null) {
+            builder.addProperty(TrackingUtil.PROPERTY_INSTALLMENTS,
+                card.getAutoSelectedInstallment().getInstallments().toString());
+            builder.addProperty(TrackingUtil.PROPERTY_CARD_ID, card.getId());
+        }
+
+        mpTrackingContext.trackEvent(builder.build());
+    }
+
+    public static void trackOneTapCancel(@NonNull final Context context, @NonNull final String merchantPublicKey) {
+        trackingStrategy = TrackingUtil.REALTIME_STRATEGY;
+
+        final MPTrackingContext mpTrackingContext = getTrackerContext(merchantPublicKey, context);
+
+        final ActionEvent.Builder builder = new ActionEvent.Builder()
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setAction(TrackingUtil.ACTION_CANCEL_ONE_TAP)
+            .setScreenId(TrackingUtil.SCREEN_ID_ONE_TAP)
+            .setScreenName(TrackingUtil.SCREEN_ID_ONE_TAP);
+
+        mpTrackingContext.trackEvent(builder.build());
+    }
+
+    public static void trackOneTapSummaryDetail(@NonNull final Context context,
+        @NonNull final String merchantPublicKey, final boolean hasDiscount, final CardPaymentMetadata card) {
+        trackingStrategy = TrackingUtil.REALTIME_STRATEGY;
+
+        final MPTrackingContext mpTrackingContext = getTrackerContext(merchantPublicKey, context);
+        final ActionEvent.Builder builder = new ActionEvent.Builder()
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setAction(TrackingUtil.ACTION_OPEN_SUMMARY_ONE_TAP)
+            .setScreenId(TrackingUtil.SCREEN_ID_ONE_TAP)
+            .setScreenName(TrackingUtil.SCREEN_ID_ONE_TAP)
+            .addProperty(TrackingUtil.PROPERTY_HAS_DISCOUNT, String.valueOf(hasDiscount));
+
+        if (card != null) {
+            builder.addProperty(TrackingUtil.PROPERTY_INSTALLMENTS,
+                card.getAutoSelectedInstallment().getInstallments().toString());
+        }
+
+        mpTrackingContext.trackEvent(builder.build());
+    }
+
+    public static void trackDiscountTermsAndConditions(@NonNull final Context context,
+        @NonNull final String merchantPublicKey) {
+        trackingStrategy = TrackingUtil.REALTIME_STRATEGY;
+
+        final MPTrackingContext mpTrackingContext = getTrackerContext(merchantPublicKey, context);
+        final ActionEvent.Builder builder = new ActionEvent.Builder()
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setScreenId(TrackingUtil.SCREEN_ID_DISCOUNT_TERMS)
+            .setScreenName(TrackingUtil.SCREEN_ID_DISCOUNT_TERMS);
+
+        mpTrackingContext.trackEvent(builder.build());
+    }
 
     public static void trackCheckoutConfirm(final Context context, final String merchantPublicKey, final PaymentModel paymentModel, final SummaryModel summaryModel) {
 
@@ -162,4 +260,5 @@ public class Tracker {
 
         return TrackingFormatter.getFormattedPaymentMethodsForTracking(paymentMethodSearch, pluginsPaymentMethodInfo, escCardIds);
     }
+
 }

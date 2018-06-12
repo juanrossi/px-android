@@ -1,11 +1,18 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mpsdk_white"
-    android:fitsSystemWindows="true"
-    tools:context=".PaymentVaultActivity">
+    android:layout_width="match_parent"
+    android:layout_weight="2"
+    android:orientation="vertical">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fitsSystemWindows="true"
+        tools:context=".PaymentVaultActivity">
 
     <include layout="@layout/mpsdk_view_progress_bar" />
 
@@ -53,33 +60,35 @@
                     tools:text="10.123123" />
 
             </android.support.v7.widget.Toolbar>
+
         </android.support.design.widget.CollapsingToolbarLayout>
+
     </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout
-        android:id="@+id/mpsdkContentLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/mpsdk_white"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <FrameLayout
-            android:id="@+id/mpsdkDiscount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/mpsdkGroupsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingStart="10dp"
             android:background="@color/mpsdk_white"
             android:divider="@null"
             android:listSelector="@android:color/transparent"
-            android:paddingEnd="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingStart="10dp" />
-    </LinearLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <com.mercadopago.views.AmountView
+        android:id="@+id/amount_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/mpsdk_white"/>
+
+</LinearLayout>
+
+
+
+
+

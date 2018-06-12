@@ -13,14 +13,16 @@ import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.util.ViewUtils;
 import com.squareup.picasso.Callback;
 
-public class BankDealDetailActivity extends AppCompatActivity {
+public class BankDealDetailActivity extends AppCompatActivity implements Callback {
 
     private static final String EXTRA_MODEL = "extra_model";
+
+    private ImageView logo;
+    private TextView logoName;
 
     private static class BankDealDetailModel implements Parcelable {
 
@@ -106,28 +108,26 @@ public class BankDealDetailActivity extends AppCompatActivity {
 
     private void initView(final BankDealDetailModel model) {
         initToolbar();
-        final ImageView logo = findViewById(R.id.logo);
+        logo = findViewById(R.id.logo);
         final TextView title = findViewById(R.id.title);
-        final TextView logoName = findViewById(R.id.logo_name);
+        logoName = findViewById(R.id.logo_name);
         final TextView expDate = findViewById(R.id.exp_date);
         final TextView legals = findViewById(R.id.legals);
         expDate.setText(getString(R.string.bank_deal_details_date_format, model.formattedExpirationDate));
         ViewUtils.loadOrGone(Html.fromHtml(model.dealTitle), title);
         ViewUtils.loadOrGone(model.legal, legals);
-
         logoName.setText(model.issuerName);
+        ViewUtils.loadOrCallError(model.imgUrl, logo, this);
+    }
 
-        ViewUtils.loadOrCallError(model.imgUrl, logo, new Callback.EmptyCallback() {
-            @Override
-            public void onSuccess() {
-                logoName.setVisibility(View.GONE);
-            }
+    @Override
+    public void onSuccess() {
+        logoName.setVisibility(View.GONE);
+    }
 
-            @Override
-            public void onError() {
-                logo.setVisibility(View.GONE);
-            }
-        });
+    @Override
+    public void onError() {
+        logo.setVisibility(View.GONE);
     }
 
     private void initToolbar() {

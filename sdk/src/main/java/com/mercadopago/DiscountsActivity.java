@@ -46,9 +46,6 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
 
     // Local vars
     protected MPTextView mTimerTextView;
-    private String mMerchantBaseURL;
-    private String mMerchantDiscountBaseURL;
-    private String mMerchantGetDiscountURI;
 
     //View
     protected ViewGroup mProgressLayout;
@@ -83,26 +80,17 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         initializePresenter();
 
         setContentView();
-        setMerchantInfo();
         initializeControls();
         onValidStart();
     }
 
     private void initializePresenter() {
         try {
-            DiscountProviderImpl discountProvider = new DiscountProviderImpl(this, mPresenter.getPublicKey(), mMerchantBaseURL, mMerchantDiscountBaseURL, mMerchantGetDiscountURI);
+            DiscountProviderImpl discountProvider = new DiscountProviderImpl(this, mPresenter.getPublicKey());
             mPresenter.attachResourcesProvider(discountProvider);
             mPresenter.attachView(this);
         } catch (IllegalStateException exception) {
             finishWithCancelResult();
-        }
-    }
-
-    private void setMerchantInfo() {
-        if (CustomServicesHandler.getInstance().getServicePreference() != null) {
-            mMerchantBaseURL = CustomServicesHandler.getInstance().getServicePreference().getDefaultBaseURL();
-            mMerchantDiscountBaseURL = CustomServicesHandler.getInstance().getServicePreference().getGetMerchantDiscountBaseURL();
-            mMerchantGetDiscountURI = CustomServicesHandler.getInstance().getServicePreference().getGetMerchantDiscountURI();
         }
     }
 
@@ -279,12 +267,9 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
 
             discountAmountBuilder.append("-");
             discountAmount = CurrenciesUtil.getSpannedString(mPresenter.getCouponAmount(),
-                mPresenter.getCurrencyId(), false, true);
+                    mPresenter.getCurrencyId(), false, true);
 
             mReviewSummaryDiscountAmount.setText(TextUtils.concat(discountAmountBuilder, discountAmount));
-            if (!TextUtil.isEmpty(mPresenter.getDiscount().getConcept())) {
-                mReviewSummaryDiscountLabel.setText(mPresenter.getDiscount().getConcept());
-            }
         } else {
             finishWithCancelResult();
         }
