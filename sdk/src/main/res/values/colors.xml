@@ -164,4 +164,7 @@
     <color name="mpsdk_background_loading">#FFFFFF</color>
     <color name="mpsdk_tint_loading">@color/mpsdk_main_color</color>
 
+
+    <color name="mpsdk_ui_components_warning_color">#FBAB60</color>
+
 </resources>

@@ -74,7 +74,7 @@ dependencies {
 
     implementation "com.google.code.gson:gson:$gson"
     implementation "com.squareup.picasso:picasso:$picasso"
-    api "com.mercadolibre.android:ui:$meli_ui_lib"
+    implementation "com.mercadolibre.android:ui:$meli_ui_lib"
 }
 
 apply from: "$rootDir/gradle/jacoco.gradle"

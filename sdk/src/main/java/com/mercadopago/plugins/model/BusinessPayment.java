@@ -167,7 +167,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
     public enum Status {
         APPROVED("APPROVED", R.color.ui_components_success_color, R.drawable.mpsdk_badge_check, 0),
         REJECTED("REJECTED", R.color.ui_components_error_color, R.drawable.mpsdk_badge_error, R.string.mpsdk_rejection_label),
-        PENDING("PENDING", R.color.ui_components_warning_color, R.drawable.mpsdk_badge_pending_orange, 0);
+        PENDING("PENDING", R.color.mpsdk_ui_components_warning_color, R.drawable.mpsdk_badge_pending_orange, 0);
 
         public final String name;
         public final int resColor;
