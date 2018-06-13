@@ -2,7 +2,6 @@
 <resources>
 
     <!-- one tap -->
-    <string name="mpsdk_discount_ceil_message">Com um limite de reembolso</string>
     <string name="mpsdk_payment_detail_title_modal">Detalhes</string>
 
     <!-- Banks deals -->
@@ -237,7 +236,7 @@
     <string name="mpsdk_campaign_expired">Campanha expirado</string>
     <string name="mpsdk_something_went_wrong">Ops! Algo deu errado…</string>
     <string name="mpsdk_we_apply_the_best_available_discount">Os descontos não são acumulativos. Aplicamos o mais alto para este pagamento.</string>
-    <string name="mpsdk_max_coupon_amount">Boné de desconto %1$s</string>
+    <string name="mpsdk_max_coupon_amount">Limite de desconto %1$s</string>
     <string name="mpsdk_total_to_pay">Total a pagar</string>
     <string name="mpsdk_has_a_coupon_discount">Você tem um cupom de desconto?</string>
     <string name="mpsdk_with_max_coupon_amount">Com limite de desconto</string>

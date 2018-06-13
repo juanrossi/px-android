@@ -1000,7 +1000,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             //TODO remove when navigation is corrected and works with stack.
             state.editPaymentMethodFromReviewAndConfirm = fromReviewAndConfirm;
             state.paymentMethodEdited = true;
-            getView().showProgress();
             getView().showPaymentMethodSelection();
         }
     }

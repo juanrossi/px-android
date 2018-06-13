@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +83,6 @@ import com.mercadopago.views.GuessingCardActivityView;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 public class GuessingCardActivity extends MercadoPagoBaseActivity implements GuessingCardActivityView,
     TimerObserver, CardExpiryDateEditTextCallback, View.OnTouchListener, View.OnClickListener {
@@ -682,7 +682,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(this);
+            toolbar.setOnClickListener(this);
         }
     }
 
@@ -1803,11 +1803,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 .setPayerAccessToken(mPresenter.getPrivateKey())
                 .setBankDeals(mPresenter.getBankDealsList())
                 .startActivity();
-        } else if (id == R.id.mpsdkTransparentToolbar || id == R.id.mpsdkLowResToolbar) {
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
-            setResult(RESULT_CANCELED, returnIntent);
-            finish();
         } else if (id == R.id.mpsdkNextButton) {
             validateCurrentEditText();
         } else if (id == R.id.mpsdkBackButton && !mCurrentEditingEditText.equals(CARD_NUMBER_INPUT)) {
@@ -1818,6 +1813,15 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 startReviewPaymentMethodsActivity(supportedPaymentMethods);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        final int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

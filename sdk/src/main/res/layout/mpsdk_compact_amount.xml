@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/mpsdk_xxxs_margin"
-            android:text="@string/mpsdk_discount_ceil_message"
+            android:text="@string/mpsdk_with_max_coupon_amount"
             android:textAppearance="@style/MLFont.Regular"
             android:textColor="@color/ui_meli_grey"
             android:textSize="@dimen/mpsdk_xs_text"/>
