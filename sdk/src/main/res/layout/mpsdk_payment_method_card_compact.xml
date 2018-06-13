@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/mpsdk_s_margin">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/arrow"
+        android:layout_alignRight="@+id/arrow"
+        android:orientation="horizontal">
+
+        <include
+            layout="@layout/mpsdk_view_rounded_icon"
+            android:layout_width="@dimen/mpsdk_m_height"
+            android:layout_height="@dimen/mpsdk_m_height"
+            android:layout_gravity="top"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:layout_marginEnd="@dimen/mpsdk_s_margin"
+            android:layout_marginLeft="@dimen/mpsdk_s_margin"
+            android:layout_marginRight="@dimen/mpsdk_s_margin"
+            android:layout_marginStart="@dimen/mpsdk_s_margin"
+            android:orientation="vertical">
+
+            <com.mercadopago.customviews.MPTextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textAppearance="@style/MLFont.Regular"
+                android:textColor="@color/ui_meli_black"
+                app:autoSizeMaxTextSize="@dimen/mpsdk_s_text"
+                app:autoSizeMinTextSize="10dp"
+                app:autoSizeStepGranularity="1dp"
+                app:autoSizeTextType="uniform"
+                tools:text="Mercado Pago + Banco Patagonia •••• 3263"/>
+
+            <LinearLayout
+                android:id="@+id/installments_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/mpsdk_xxxs_margin">
+
+                <com.mercadopago.customviews.MPTextView
+                    android:id="@+id/amount_less_discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/MLFont.Regular"
+                    android:textColor="@color/ui_meli_grey"
+                    android:gravity="center_vertical"
+                    app:autoSizeMaxTextSize="@dimen/mpsdk_xs_text"
+                    app:autoSizeMinTextSize="10dp"
+                    app:autoSizeStepGranularity="1dp"
+                    app:autoSizeTextType="uniform"
+                    tools:text="$ 2222222222222"/>
+
+                <com.mercadopago.customviews.MPTextView
+                    android:id="@+id/total_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/mpsdk_xxs_margin"
+                    android:textAppearance="@style/MLFont.Regular"
+                    android:textColor="@color/ui_meli_grey"
+                    android:gravity="center_vertical"
+                    app:autoSizeMaxTextSize="@dimen/mpsdk_xs_text"
+                    app:autoSizeMinTextSize="10dp"
+                    app:autoSizeStepGranularity="1dp"
+                    app:autoSizeTextType="uniform"
+                    tools:text="$ 333333333333"/>
+
+            </LinearLayout>
+
+            <com.mercadopago.customviews.MPTextView
+                android:id="@+id/cft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/MLFont.Light"
+                android:textColor="@color/ui_meli_grey"
+                android:textSize="@dimen/mpsdk_l_text"
+                app:font_style="light"
+                tools:text="CFT: 0,00%"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/mpsdk_arrow_right_blue"/>
+
+</RelativeLayout>

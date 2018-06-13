@@ -3,17 +3,9 @@ package com.mercadopago.providers;
 import android.content.Context;
 
 import com.mercadopago.R;
-import com.mercadopago.lite.controllers.CustomServicesHandler;
-import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.lite.callbacks.Callback;
-import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.Discount;
 import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.preferences.ServicePreference;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.TextUtil;
 
 public class DiscountProviderImpl implements DiscountsProvider {
 
@@ -26,51 +18,21 @@ public class DiscountProviderImpl implements DiscountsProvider {
     private final MercadoPagoServicesAdapter mercadoPago;
 
     private final Context context;
-    private final String merchantBaseUrl;
-    private final String merchantDiscountUrl;
-    private final String merchantGetDiscountUri;
 
-    private final ServicePreference servicePreference;
 
-    public DiscountProviderImpl(Context context, String publicKey, String merchantBaseUrl, String merchantDiscountUrl, String merchantGetDiscountUri) {
+    public DiscountProviderImpl(Context context, String publicKey) {
         this.context = context;
-        this.merchantBaseUrl = merchantBaseUrl;
-        this.merchantDiscountUrl = merchantDiscountUrl;
-        this.merchantGetDiscountUri = merchantGetDiscountUri;
-        servicePreference = CustomServicesHandler.getInstance().getServicePreference();
         mercadoPago = new MercadoPagoServicesAdapter(context, publicKey);
     }
 
     @Override
     public void getDirectDiscount(String amount, String payerEmail, final TaggedCallback<Discount> taggedCallback) {
-        if (isMerchantServerDiscountsAvailable()) {
-            getMerchantDirectDiscount(amount, payerEmail, taggedCallback);
-        } else {
-            mercadoPago.getDirectDiscount(amount, payerEmail, taggedCallback);
-        }
-    }
-
-    private void getMerchantDirectDiscount(String amount, String payerEmail, final TaggedCallback<Discount> taggedCallback) {
-        CustomServer.getDirectDiscount(context, amount, payerEmail, servicePreference.getGetMerchantDiscountBaseURL(), servicePreference.getGetMerchantDiscountURI(), servicePreference.getGetDiscountAdditionalInfo(), new Callback<Discount>() {
-            @Override
-            public void success(Discount discount) {
-                taggedCallback.onSuccess(discount);
-            }
-
-            @Override
-            public void failure(ApiException apiException) {
-                taggedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_DIRECT_DISCOUNT));
-            }
-        });
+        mercadoPago.getDirectDiscount(amount, payerEmail, taggedCallback);
     }
 
     @Override
     public void getCodeDiscount(String transactionAmount, String payerEmail, String discountCode, final TaggedCallback<Discount> taggedCallback) {
-        if (isMerchantServerDiscountsAvailable()) {
-            CustomServer.getCodeDiscount(discountCode, transactionAmount, payerEmail, context, servicePreference.getGetMerchantDiscountBaseURL(), servicePreference.getGetMerchantDiscountURI(), servicePreference.getGetDiscountAdditionalInfo(), taggedCallback);
-        } else {
-            mercadoPago.getCodeDiscount(transactionAmount, payerEmail, discountCode, taggedCallback);
-        }
+        mercadoPago.getCodeDiscount(transactionAmount, payerEmail, discountCode, taggedCallback);
     }
 
 
@@ -98,21 +60,5 @@ public class DiscountProviderImpl implements DiscountsProvider {
     @Override
     public String getStandardErrorMessage() {
         return context.getString(R.string.mpsdk_standard_error_message);
-    }
-
-    private boolean isMerchantServerDiscountsAvailable() {
-        return !TextUtil.isEmpty(getMerchantServerDiscountUrl()) && !TextUtil.isEmpty(merchantGetDiscountUri);
-    }
-
-    private String getMerchantServerDiscountUrl() {
-        String merchantBaseUrl;
-
-        if (TextUtil.isEmpty(merchantDiscountUrl)) {
-            merchantBaseUrl = this.merchantBaseUrl;
-        } else {
-            merchantBaseUrl = merchantDiscountUrl;
-        }
-
-        return merchantBaseUrl;
     }
 }

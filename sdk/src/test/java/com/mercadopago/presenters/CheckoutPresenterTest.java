@@ -1,7 +1,6 @@
 package com.mercadopago.presenters;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -38,23 +37,24 @@ import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.plugins.DataInitializationTask;
 import com.mercadopago.plugins.PaymentMethodPlugin;
 import com.mercadopago.plugins.PaymentProcessor;
+import com.mercadopago.plugins.model.BusinessPayment;
 import com.mercadopago.plugins.model.BusinessPaymentModel;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.providers.CheckoutProvider;
 import com.mercadopago.util.TextUtils;
+import com.mercadopago.viewmodel.CheckoutStateModel;
+import com.mercadopago.viewmodel.OneTapModel;
 import com.mercadopago.views.CheckoutView;
-
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE;
 import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_RESULT_CODE;
@@ -100,15 +100,15 @@ public class CheckoutPresenterTest {
     }
 
     @NonNull
-    private CheckoutPresenter getPresenter(int resultCode) {
+    private CheckoutPresenter getPresenter(final int resultCode) {
         return getBasePresenter(resultCode, checkoutView, checkoutProvider);
     }
 
     @NonNull
     private CheckoutPresenter getPaymentPresenterWithDefaultFlowPreferenceMla() {
-        CheckoutPreference preference = stubPreferenceOneItem();
-        FlowPreference flowPreference = new FlowPreference.Builder()
-                .build();
+        final CheckoutPreference preference = stubPreferenceOneItem();
+        final FlowPreference flowPreference = new FlowPreference.Builder()
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -119,19 +119,194 @@ public class CheckoutPresenterTest {
 
     @NonNull
     private CheckoutPresenter getPaymentPresenter(final FlowPreference flowPreference) {
-        CheckoutPreference preference = stubPreferenceOneItem();
+        final CheckoutPreference preference = stubPreferenceOneItem();
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
         return getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
     }
 
     @NonNull
-    private CheckoutPresenter getBasePresenter(int resultCode, CheckoutView view, CheckoutProvider provider) {
-        CheckoutPresenter.PersistentDataModel model = CheckoutPresenter.PersistentDataModel.createWith(resultCode, mercadoPagoCheckout);
-        CheckoutPresenter presenter = new CheckoutPresenter(model);
+    private CheckoutPresenter getBasePresenter(final int resultCode, final CheckoutView view,
+        final CheckoutProvider provider) {
+        final CheckoutStateModel model = CheckoutStateModel.from(resultCode, mercadoPagoCheckout);
+        final CheckoutPresenter presenter = new CheckoutPresenter(model);
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
         return presenter;
+    }
+
+    @Test
+    public void whenResolvePaymentErrorVerifyEscManagerCalled() {
+        final PaymentData paymentData = mock(PaymentData.class);
+        final MercadoPagoError error = mock(MercadoPagoError.class);
+        when(checkoutProvider.manageEscForError(error, paymentData)).thenReturn(false);
+        final CheckoutPresenter presenter = getPresenter(PAYMENT_RESULT_CODE);
+        presenter.resolvePaymentError(error, paymentData);
+        verify(checkoutProvider).manageEscForError(error, paymentData);
+    }
+
+    @Test
+    public void whenResolvePaymentErrorEscWasInvalidatedVerifyEscManagerCalledAndRecoveryFlowStarted() {
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder().build());
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItem());
+        final PaymentData paymentData = mock(PaymentData.class);
+        final MercadoPagoError error = mock(MercadoPagoError.class);
+        final Token token = mock(Token.class);
+        final Issuer issuer = mock(Issuer.class);
+        final PayerCost payerCost = mock(PayerCost.class);
+        final PaymentMethod paymentMethod = mock(PaymentMethod.class);
+        when(checkoutProvider.manageEscForError(error, paymentData)).thenReturn(true);
+        final CheckoutPresenter presenter = getPresenter(PAYMENT_RESULT_CODE);
+
+
+        presenter.onCardFlowResponse(paymentMethod, issuer, payerCost, token, null);
+
+        verify(checkoutView).showReviewAndConfirm();
+
+        presenter.resolvePaymentError(error, paymentData);
+
+        verify(checkoutProvider).manageEscForError(error, paymentData);
+
+        verify(checkoutView).startPaymentRecoveryFlow(any(PaymentRecovery.class));
+
+        verifyNoMoreInteractions(checkoutProvider);
+        verifyNoMoreInteractions(checkoutView);
+    }
+
+    @Test
+    public void whenShouldShowPaymentResultVerifyEscManagerCalled() {
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder().build());
+        final CheckoutPresenter presenter = getPresenter(PAYMENT_RESULT_CODE);
+        final PaymentResult paymentResult = mock(PaymentResult.class);
+        final PaymentData paymentData = mock(PaymentData.class);
+        when(paymentResult.getPaymentData()).thenReturn(paymentData);
+        when(paymentResult.getPaymentStatus()).thenReturn(Payment.StatusCodes.STATUS_APPROVED);
+        when(paymentResult.getPaymentStatusDetail()).thenReturn(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED);
+
+        when(checkoutProvider.manageEscForPayment(paymentData,
+            paymentResult.getPaymentStatus(),
+            paymentResult.getPaymentStatusDetail())).thenReturn(false);
+
+        presenter.checkStartPaymentResultActivity(paymentResult);
+
+        verify(checkoutProvider).manageEscForPayment(paymentData,
+            paymentResult.getPaymentStatus(),
+            paymentResult.getPaymentStatusDetail());
+
+        verifyNoMoreInteractions(checkoutProvider);
+    }
+
+    @Test
+    public void whenShouldShowBusinessPaymentVerifyEscManagerCalled() {
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder().build());
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItem());
+        final CheckoutPresenter presenter = getPresenter(PAYMENT_RESULT_CODE);
+        final BusinessPayment paymentResult = mock(BusinessPayment.class);
+        final PaymentData paymentData = mock(PaymentData.class);
+        CheckoutStore.getInstance().setPaymentData(paymentData);
+        when(paymentResult.getPaymentStatus()).thenReturn(Payment.StatusCodes.STATUS_APPROVED);
+        when(paymentResult.getPaymentStatusDetail()).thenReturn(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED);
+
+        when(checkoutProvider.manageEscForPayment(paymentData,
+            paymentResult.getPaymentStatus(),
+            paymentResult.getPaymentStatusDetail())).thenReturn(false);
+
+        presenter.onBusinessResult(paymentResult);
+
+        verify(checkoutProvider).manageEscForPayment(paymentData,
+            paymentResult.getPaymentStatus(),
+            paymentResult.getPaymentStatusDetail());
+
+        verifyNoMoreInteractions(checkoutProvider);
+    }
+
+    @Ignore
+    @Test
+    public void onCreatePaymentWithESCTokenErrorThenRequestSecurityCode() {
+
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
+
+        ApiException apiException = Payments.getInvalidESCPayment();
+        MercadoPagoError mpException = new MercadoPagoError(apiException, "");
+        provider.setPaymentResponse(mpException);
+
+        FlowPreference flowPreference = new FlowPreference.Builder()
+            .enableESC()
+            .disableReviewAndConfirmScreen()
+            .build();
+
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+
+        presenter.initialize();
+
+        PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
+        Issuer issuer = Issuers.getIssuers().get(0);
+        PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
+        Token token = Tokens.getTokenWithESC();
+
+        //Response from payment method selection
+        presenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, null, null, null);
+
+        //Response from Review And confirm
+        presenter.onPaymentConfirmation();
+        assertTrue(provider.paymentRequested);
+
+        provider.paymentRequested = false;
+
+        assertTrue(view.showingPaymentRecoveryFlow);
+        PaymentRecovery paymentRecovery = view.paymentRecoveryRequested;
+        assertTrue(paymentRecovery.isStatusDetailInvalidESC());
+        assertTrue(paymentRecovery.isTokenRecoverable());
+
+        //Response from Card Vault with new Token
+        presenter.onCardFlowResponse(paymentMethod, issuer, payerCost, token, null);
+        assertTrue(provider.paymentRequested);
+
+        provider.setPaymentResponse(Payments.getApprovedPayment());
+        assertNotNull(provider.paymentResponse);
+    }
+
+    @Ignore
+    @Test
+    public void onCreatePaymentWithESCTokenErrorThenDeleteESC() {
+        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
+
+        provider.setCheckoutPreferenceResponse(checkoutPreference);
+        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
+
+        ApiException apiException = Payments.getInvalidESCPayment();
+        MercadoPagoError mpException = new MercadoPagoError(apiException, "");
+
+        FlowPreference flowPreference = new FlowPreference.Builder()
+            .enableESC()
+            .disableReviewAndConfirmScreen()
+            .build();
+
+        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
+        provider.setPaymentResponse(mpException);
+
+        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
+
+        presenter.initialize();
+
+        PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
+        Issuer issuer = Issuers.getIssuers().get(0);
+        PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
+        Token token = Tokens.getTokenWithESC();
+
+        //Response from payment method selection
+        presenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, null, null, null);
+
+        //Response from Review And confirm
+        presenter.onPaymentConfirmation();
+        assertTrue(provider.paymentRequested);
+
+        Cause cause = provider.failedResponse.getApiException().getCause().get(0);
+        assertEquals(cause.getCode(), ApiException.ErrorCodes.INVALID_PAYMENT_WITH_ESC);
+        assertTrue(provider.manageEscRequested);
     }
 
     @Test
@@ -163,6 +338,7 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenChoHasPreferenceAndPaymentMethodRetrivedShowPaymentMethodSelection() {
+        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder().build());
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItemAndPayer());
         CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
         presenter.initialize();
@@ -171,20 +347,16 @@ public class CheckoutPresenterTest {
         verify(checkoutView).showProgress();
         verify(checkoutView).initializeMPTracker();
         verify(checkoutView).trackScreen();
-        // TODO we assume that plugin init ok.
-        // TODO remove, we assume that the request went ok.
-        presenter.startFlow();
-        verify(checkoutView).showPaymentMethodSelection();
         verifyNoMoreInteractions(checkoutView);
     }
-
 
     @Test
     public void whenAPaymentMethodIsSelectedThenShowReviewAndConfirm() {
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItemAndPayer());
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder().build());
         CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
-        presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
+        presenter
+            .onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         verify(checkoutView).showReviewAndConfirm();
         verifyNoMoreInteractions(checkoutView);
     }
@@ -200,8 +372,8 @@ public class CheckoutPresenterTest {
     @Test
     public void whenChoFlowPrefDisableReviewAndConfirmAndPaymentMethodIsSelectedThenFinishWithDataResult() {
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disableReviewAndConfirmScreen()
-                .build();
+            .disableReviewAndConfirmScreen()
+            .build();
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItem());
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
         CheckoutPresenter presenter = getPresenter(PAYMENT_DATA_RESULT_CODE);
@@ -215,8 +387,8 @@ public class CheckoutPresenterTest {
     public void ifPaymentRequestedAndReviewConfirmDisabledThenStartPaymentResultScreen() {
         CheckoutPreference preference = stubPreferenceOneItem();
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disableReviewAndConfirmScreen()
-                .build();
+            .disableReviewAndConfirmScreen()
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -225,8 +397,8 @@ public class CheckoutPresenterTest {
         CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
 
         presenter.onPaymentMethodSelectionResponse(null,
-                null, null, null,
-                null, null, null);
+            null, null, null,
+            null, null, null);
         assertTrue(view.showingPaymentResult);
     }
 
@@ -234,8 +406,8 @@ public class CheckoutPresenterTest {
     @Test
     public void whenPaymentRequestedAndOnReviewAndConfirmOkResponseThenCreatePayment() {
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disableReviewAndConfirmScreen()
-                .build();
+            .disableReviewAndConfirmScreen()
+            .build();
 
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(stubPreferenceOneItem());
@@ -246,7 +418,6 @@ public class CheckoutPresenterTest {
         provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getApprovedPayment());
-
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
@@ -305,31 +476,11 @@ public class CheckoutPresenterTest {
         assertEquals(view.paymentFinalResponse.getId(), payment.getId());
     }
 
-
-    @Test
-    public void whenDiscountDisabledThenDoNotMakeDiscountsAPICall() {
-        FlowPreference flowPreference = new FlowPreference.Builder()
-                .disableDiscount()
-                .build();
-        CheckoutPreference preference = stubPreferenceOneItem();
-        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
-        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
-        provider.setCheckoutPreferenceResponse(preference);
-        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
-
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-        Payment payment = Payments.getApprovedPayment();
-        provider.setPaymentResponse(payment);
-        presenter.initialize();
-
-        assertFalse(provider.campaignsRequested);
-    }
-
     @Test
     public void whenPaymentCreatedAndResultScreenDisabledThenFinishWithPaymentResponse() {
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disablePaymentResultScreen()
-                .build();
+            .disablePaymentResultScreen()
+            .build();
 
         CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
 
@@ -351,12 +502,11 @@ public class CheckoutPresenterTest {
         assertEquals(view.paymentFinalResponse.getId(), payment.getId());
     }
 
-
     @Test
     public void whenApprovedPaymentCreatedAndApprovedResultScreenDisabledThenFinishWithPaymentResponse() {
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disablePaymentApprovedScreen()
-                .build();
+            .disablePaymentApprovedScreen()
+            .build();
         CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
 
         Payment payment = Payments.getApprovedPayment();
@@ -381,8 +531,8 @@ public class CheckoutPresenterTest {
     @Test
     public void whenApprovedPaymentCreatedAndCongratsDisplayIsZeroThenFinishWithPaymentResponse() {
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .setCongratsDisplayTime(0)
-                .build();
+            .setCongratsDisplayTime(0)
+            .build();
         CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
         Payment payment = Payments.getApprovedPayment();
         provider.setPaymentResponse(payment);
@@ -404,8 +554,8 @@ public class CheckoutPresenterTest {
     public void whenRejectedPaymentCreatedAndRejectedResultScreenDisabledThenFinishWithPaymentResponse() {
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disablePaymentRejectedScreen()
-                .build();
+            .disablePaymentRejectedScreen()
+            .build();
 
         CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
         Payment rejectedPayment = Payments.getRejectedPayment();
@@ -429,8 +579,8 @@ public class CheckoutPresenterTest {
     @Test
     public void whenPendingPaymentCreatedAndPendingResultScreenDisabledThenFinishWithPaymentResponse() {
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disablePaymentPendingScreen()
-                .build();
+            .disablePaymentPendingScreen()
+            .build();
 
         CheckoutPresenter presenter = getPaymentPresenter(flowPreference);
 
@@ -451,7 +601,6 @@ public class CheckoutPresenterTest {
         presenter.onPaymentConfirmation();
         assertEquals(view.paymentFinalResponse.getId(), pendingPayment.getId());
     }
-
 
     // Forwarded flows
     @Test
@@ -475,15 +624,14 @@ public class CheckoutPresenterTest {
         assertTrue(view.showingReviewAndConfirm);
     }
 
-
     @Test
     public void whenPaymentResultSetThenStartResultScreen() {
         CheckoutPreference preference = stubPreferenceOneItemAndPayer();
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
         when(mercadoPagoCheckout.getPaymentResult()).thenReturn(stubApprovedOffPaymentResult());
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder()
-                .disableReviewAndConfirmScreen()
-                .build());
+            .disableReviewAndConfirmScreen()
+            .build());
 
         provider.setCampaignsResponse(Discounts.getCampaigns());
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -503,7 +651,7 @@ public class CheckoutPresenterTest {
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
         when(mercadoPagoCheckout.getPaymentResult()).thenReturn(stubApprovedOffPaymentResult());
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(new FlowPreference.Builder()
-                .build());
+            .build());
 
         provider.setCampaignsResponse(Discounts.getCampaigns());
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
@@ -574,7 +722,7 @@ public class CheckoutPresenterTest {
         presenter.initialize();
 
         presenter.onPaymentMethodSelectionResponse(PaymentMethods
-                .getPaymentMethodOff(), null, null, null, null, null, null);
+            .getPaymentMethodOff(), null, null, null, null, null, null);
         assertTrue(view.showingReviewAndConfirm);
         presenter.onPaymentConfirmation();
         assertTrue(view.showingPaymentResult);
@@ -599,7 +747,8 @@ public class CheckoutPresenterTest {
         CheckoutPresenter presenter = getPaymentPresenterWithDefaultFlowPreferenceMla();
         presenter.initialize();
         assertTrue(view.showingPaymentMethodSelection);
-        presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
+        presenter
+            .onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         assertTrue(view.showingReviewAndConfirm);
         presenter.onReviewAndConfirmCancel();
         assertTrue(view.showingPaymentMethodSelection);
@@ -612,8 +761,8 @@ public class CheckoutPresenterTest {
         presenter.initialize();
         assertTrue(view.showingPaymentMethodSelection);
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOnVisa(),
-                Issuers.getIssuers().get(0),
-                Installments.getInstallments().getPayerCosts().get(0), Tokens.getVisaToken(), null, null, null);
+            Issuers.getIssuers().get(0),
+            Installments.getInstallments().getPayerCosts().get(0), Tokens.getVisaToken(), null, null, null);
         assertTrue(view.showingReviewAndConfirm);
         presenter.onPaymentConfirmation();
         assertTrue(view.showingPaymentResult);
@@ -630,10 +779,11 @@ public class CheckoutPresenterTest {
         presenter.initialize();
         assertTrue(view.showingPaymentMethodSelection);
 
-        presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
+        presenter
+            .onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         assertTrue(view.showingReviewAndConfirm);
 
-        presenter.changePaymentMethod();
+        presenter.onChangePaymentMethodFromReviewAndConfirm();
         assertTrue(view.showingPaymentMethodSelection);
 
         presenter.onPaymentMethodSelectionCancel();
@@ -656,7 +806,8 @@ public class CheckoutPresenterTest {
         presenter.initialize();
 
         //Payment method off, no issuer, installments or token
-        presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
+        presenter
+            .onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         assertTrue(view.showingReviewAndConfirm);
         presenter.onPaymentConfirmation();
 
@@ -672,14 +823,14 @@ public class CheckoutPresenterTest {
         presenter.initialize();
 
         //Payment method off, no issuer, installments or token
-        presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
+        presenter
+            .onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         assertTrue(view.showingReviewAndConfirm);
         presenter.onPaymentConfirmation();
 
         assertTrue(provider.paymentRequested);
         assertFalse(TextUtils.isEmpty(provider.paymentCustomerId));
     }
-
 
     @Test
     public void ifPaymentResultApprovedSetAndTokenWithESCAndESCEnabledThenSaveESC() {
@@ -698,15 +849,15 @@ public class CheckoutPresenterTest {
         CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .enableESC()
-                .build();
+            .enableESC()
+            .build();
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentData(paymentData)
-                .setPaymentId(1234L)
-                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
-                .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED)
-                .build();
+            .setPaymentData(paymentData)
+            .setPaymentId(1234L)
+            .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
+            .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED)
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -715,7 +866,7 @@ public class CheckoutPresenterTest {
 
         presenter.initialize();
 
-        assertTrue(provider.saveESCRequested);
+        assertTrue(provider.manageEscRequested);
     }
 
     @Test
@@ -736,15 +887,15 @@ public class CheckoutPresenterTest {
         paymentData.setToken(token);
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .enableESC()
-                .build();
+            .enableESC()
+            .build();
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentData(paymentData)
-                .setPaymentId(1234L)
-                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
-                .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED)
-                .build();
+            .setPaymentData(paymentData)
+            .setPaymentId(1234L)
+            .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
+            .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED)
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -753,8 +904,7 @@ public class CheckoutPresenterTest {
 
         presenter.initialize();
 
-
-        assertFalse(provider.saveESCRequested);
+        assertTrue(provider.manageEscRequested);
     }
 
     @Test
@@ -775,15 +925,15 @@ public class CheckoutPresenterTest {
         paymentData.setToken(token);
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .enableESC()
-                .build();
+            .enableESC()
+            .build();
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentData(paymentData)
-                .setPaymentId(1234L)
-                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
-                .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED)
-                .build();
+            .setPaymentData(paymentData)
+            .setPaymentId(1234L)
+            .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
+            .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_ACCREDITED)
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -795,95 +945,6 @@ public class CheckoutPresenterTest {
     }
 
     @Test
-    public void onCreatePaymentWithESCTokenErrorThenDeleteESC() {
-        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
-
-        provider.setCheckoutPreferenceResponse(checkoutPreference);
-        provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
-
-        ApiException apiException = Payments.getInvalidESCPayment();
-        MercadoPagoError mpException = new MercadoPagoError(apiException, "");
-
-        FlowPreference flowPreference = new FlowPreference.Builder()
-                .enableESC()
-                .disableReviewAndConfirmScreen()
-                .build();
-
-        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
-        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
-        provider.setPaymentResponse(mpException);
-
-
-        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
-
-        presenter.initialize();
-
-        PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
-        Issuer issuer = Issuers.getIssuers().get(0);
-        PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
-        Token token = Tokens.getTokenWithESC();
-
-        //Response from payment method selection
-        presenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, null, null, null);
-
-        //Response from Review And confirm
-        presenter.onPaymentConfirmation();
-        assertTrue(provider.paymentRequested);
-
-        Cause cause = provider.failedResponse.getApiException().getCause().get(0);
-        assertEquals(cause.getCode(), ApiException.ErrorCodes.INVALID_PAYMENT_WITH_ESC);
-        assertTrue(provider.deleteESCRequested);
-    }
-
-    @Test
-    public void onCreatePaymentWithESCTokenErrorThenRequestSecurityCode() {
-
-        CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
-
-        ApiException apiException = Payments.getInvalidESCPayment();
-        MercadoPagoError mpException = new MercadoPagoError(apiException, "");
-        provider.setPaymentResponse(mpException);
-
-        FlowPreference flowPreference = new FlowPreference.Builder()
-                .enableESC()
-                .disableReviewAndConfirmScreen()
-                .build();
-
-        when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
-        when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
-        CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
-
-        presenter.initialize();
-
-        PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
-        Issuer issuer = Issuers.getIssuers().get(0);
-        PayerCost payerCost = Installments.getInstallments().getPayerCosts().get(0);
-        Token token = Tokens.getTokenWithESC();
-
-        //Response from payment method selection
-        presenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, null, null, null);
-
-        //Response from Review And confirm
-        presenter.onPaymentConfirmation();
-        assertTrue(provider.paymentRequested);
-
-        provider.paymentRequested = false;
-
-        assertTrue(view.showingPaymentRecoveryFlow);
-        PaymentRecovery paymentRecovery = view.paymentRecoveryRequested;
-        assertTrue(paymentRecovery.isStatusDetailInvalidESC());
-        assertTrue(paymentRecovery.isTokenRecoverable());
-
-        //Response from Card Vault with new Token
-        presenter.onCardFlowResponse(paymentMethod, issuer, payerCost, token, null);
-        assertTrue(provider.paymentRequested);
-
-        provider.setPaymentResponse(Payments.getApprovedPayment());
-        assertNotNull(provider.paymentResponse);
-
-    }
-
-    @Test
     public void createPaymentWithESCTokenThenSaveESC() {
 
         CheckoutPreference checkoutPreference = stubPreferenceWithAccessToken();
@@ -891,9 +952,9 @@ public class CheckoutPresenterTest {
         provider.setPaymentResponse(Payments.getApprovedPayment());
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .enableESC()
-                .disableReviewAndConfirmScreen()
-                .build();
+            .enableESC()
+            .disableReviewAndConfirmScreen()
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -915,7 +976,7 @@ public class CheckoutPresenterTest {
         //Response from Review And confirm
         assertTrue(provider.paymentRequested);
         assertNotNull(provider.paymentResponse);
-        assertTrue(provider.saveESCRequested);
+        assertTrue(provider.manageEscRequested);
     }
 
     @Test
@@ -935,15 +996,15 @@ public class CheckoutPresenterTest {
         paymentData.setToken(token);
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .enableESC()
-                .build();
+            .enableESC()
+            .build();
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentData(paymentData)
-                .setPaymentId(1234L)
-                .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
-                .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC)
-                .build();
+            .setPaymentData(paymentData)
+            .setPaymentId(1234L)
+            .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
+            .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC)
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -952,7 +1013,7 @@ public class CheckoutPresenterTest {
 
         presenter.initialize();
 
-        assertFalse(provider.saveESCRequested);
+        assertTrue(provider.manageEscRequested);
     }
 
     @Test
@@ -972,15 +1033,15 @@ public class CheckoutPresenterTest {
         paymentData.setToken(token);
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .enableESC()
-                .build();
+            .enableESC()
+            .build();
 
         PaymentResult paymentResult = new PaymentResult.Builder()
-                .setPaymentData(paymentData)
-                .setPaymentId(1234L)
-                .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
-                .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC)
-                .build();
+            .setPaymentData(paymentData)
+            .setPaymentId(1234L)
+            .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
+            .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC)
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(checkoutPreference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -989,7 +1050,7 @@ public class CheckoutPresenterTest {
 
         presenter.initialize();
 
-        assertTrue(provider.deleteESCRequested);
+        assertTrue(provider.manageEscRequested);
     }
 
     @Test
@@ -1008,7 +1069,7 @@ public class CheckoutPresenterTest {
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
         CheckoutPreference preference = stubPreferenceOneItem();
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .build();
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -1018,7 +1079,8 @@ public class CheckoutPresenterTest {
 
         presenter.initialize();
 
-        presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, collectedPayer);
+        presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null,
+            collectedPayer);
         presenter.onPaymentConfirmation();
 
         assertEquals(provider.payerPosted.getEmail(), preference.getPayer().getEmail());
@@ -1033,7 +1095,7 @@ public class CheckoutPresenterTest {
     public void ifOnlyPayerFromPreferenceThenUseItForPayment() {
         CheckoutPreference preference = stubPreferenceWithAccessToken();
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .build();
+            .build();
 
         when(mercadoPagoCheckout.getCheckoutPreference()).thenReturn(preference);
         when(mercadoPagoCheckout.getFlowPreference()).thenReturn(flowPreference);
@@ -1044,7 +1106,8 @@ public class CheckoutPresenterTest {
         CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE, view, provider);
         presenter.initialize();
 
-        presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
+        presenter
+            .onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         presenter.onPaymentConfirmation();
         assertEquals(provider.payerPosted.getEmail(), preference.getPayer().getEmail());
         assertEquals(provider.payerPosted.getAccessToken(), preference.getPayer().getAccessToken());
@@ -1108,27 +1171,16 @@ public class CheckoutPresenterTest {
     }
 
     @Test
-    public void whenIsDiscountEnabledAndNotHasDiscountThenShouldGetDiscountTrue() {
-        CheckoutPresenter presenter = getPresenterWithFlowDiscount(true);
+    public void whenHasNotPaymentMethodPluginThenShouldRetrieveDiscountReturnTrue(){
+        CheckoutStore store = CheckoutStore.getInstance();
+        store.resetPlugins();
+
+        CheckoutPresenter presenter = getCheckoutPresenter();
         assertTrue(presenter.shouldRetrieveDiscount());
     }
 
     @Test
-    public void whenIsDiscountEnabledAndHasDiscountThenShouldGetDiscountFalse() {
-        when(mercadoPagoCheckout.getDiscount()).thenReturn(new Discount());
-        CheckoutPresenter presenter = getPresenterWithFlowDiscount(true);
-        assertFalse(presenter.shouldRetrieveDiscount());
-    }
-
-    @Test
-    public void whenIsNotDiscountEnabledAndNotHasDiscountThenShouldGetDiscountFalse() {
-        CheckoutPresenter presenter = getPresenterWithFlowDiscount(false);
-        boolean shouldGetDiscount = presenter.shouldRetrieveDiscount();
-        assertFalse(shouldGetDiscount);
-    }
-
-    @Test
-    public void whenIsDiscountEnabledAndHasPaymentMethodPluginThenShouldGetDiscountFalse() {
+    public void whenHasPaymentMethodPluginThenShouldRetrieveDiscountReturnFalse() {
         CheckoutStore store = CheckoutStore.getInstance();
         List<PaymentMethodPlugin> paymentMethodPlugins = new ArrayList<>();
 
@@ -1139,26 +1191,23 @@ public class CheckoutPresenterTest {
         store.getData().put(DataInitializationTask.KEY_INIT_SUCCESS, true);
 
         when(paymentMethodPlugin.isEnabled(store.getData())).thenReturn(true);
-        CheckoutPresenter presenter = getPresenterWithFlowDiscount(true);
+        CheckoutPresenter presenter = getCheckoutPresenter();
 
-        boolean shouldGetDiscount = presenter.shouldRetrieveDiscount();
-
-        assertFalse(shouldGetDiscount);
+        assertFalse(presenter.shouldRetrieveDiscount());
     }
 
     @Test
-    public void whenIsDiscountEnabledAndHasPaymentPluginThenShouldGetDiscountFalse() {
+    public void whenHasPaymentProcessorThenShouldRetrieveDiscountReturnFalse() {
         CheckoutStore store = CheckoutStore.getInstance();
         PaymentProcessor paymentProcessor = mock(PaymentProcessor.class);
         store.addPaymentPlugins(paymentProcessor, PAYMENT_PROCESSOR_KEY);
-        CheckoutPresenter presenter = getPresenterWithFlowDiscount(true);
-        boolean shouldGetDiscount = presenter.shouldRetrieveDiscount();
-        assertFalse(shouldGetDiscount);
+        CheckoutPresenter presenter = getCheckoutPresenter();
+
+        assertFalse(presenter.shouldRetrieveDiscount());
     }
 
-    private CheckoutPresenter getPresenterWithFlowDiscount(boolean enabled) {
+    private CheckoutPresenter getCheckoutPresenter() {
         FlowPreference flowPreference = mock(FlowPreference.class);
-        when(flowPreference.isDiscountEnabled()).thenReturn(enabled);
         return getPaymentPresenter(flowPreference);
     }
 
@@ -1184,6 +1233,21 @@ public class CheckoutPresenterTest {
 
         @Override
         public void showBusinessResult(final BusinessPaymentModel model) {
+            //Do nothing
+        }
+
+        @Override
+        public void showOneTap(@NonNull final OneTapModel oneTapModel) {
+            //Do nothing
+        }
+
+        @Override
+        public void hideProgress() {
+            //Do nothing
+        }
+
+        @Override
+        public void exitCheckout(final int resCode) {
             //Do nothing
         }
 
@@ -1215,14 +1279,6 @@ public class CheckoutPresenterTest {
         }
 
         @Override
-        public void startPaymentMethodEdition() {
-            showingPaymentMethodSelection = true;
-            showingReviewAndConfirm = false;
-            showingPaymentResult = false;
-            showingPaymentRecoveryFlow = false;
-        }
-
-        @Override
         public void showPaymentResult(PaymentResult paymentResult) {
             showingPaymentMethodSelection = false;
             showingReviewAndConfirm = false;
@@ -1234,14 +1290,6 @@ public class CheckoutPresenterTest {
         public void backToReviewAndConfirm() {
             showingPaymentMethodSelection = false;
             showingReviewAndConfirm = true;
-            showingPaymentResult = false;
-            showingPaymentRecoveryFlow = false;
-        }
-
-        @Override
-        public void backToPaymentMethodSelection() {
-            showingPaymentMethodSelection = true;
-            showingReviewAndConfirm = false;
             showingPaymentResult = false;
             showingPaymentRecoveryFlow = false;
         }
@@ -1306,11 +1354,6 @@ public class CheckoutPresenterTest {
         }
 
         @Override
-        public void finishFromReviewAndConfirm() {
-
-        }
-
-        @Override
         public void showHook(Hook hook, int requestCode) {
 
         }
@@ -1338,8 +1381,6 @@ public class CheckoutPresenterTest {
         private Payment paymentResponse;
         private boolean paymentRequested;
         private Customer customerResponse;
-        private boolean saveESCRequested = false;
-        private boolean deleteESCRequested = false;
 
         private String transactionId;
         private String paymentCustomerId;
@@ -1348,6 +1389,7 @@ public class CheckoutPresenterTest {
 
         private boolean shouldFail = false;
         private MercadoPagoError failedResponse;
+        public boolean manageEscRequested = false;
 
         @Override
         public void fetchFonts() {
@@ -1355,7 +1397,20 @@ public class CheckoutPresenterTest {
         }
 
         @Override
-        public void getCheckoutPreference(String checkoutPreferenceId, TaggedCallback<CheckoutPreference> taggedCallback) {
+        public boolean manageEscForPayment(final PaymentData paymentData, final String paymentStatus,
+            final String paymentStatusDetail) {
+            manageEscRequested = true;
+            return false;
+        }
+
+        @Override
+        public boolean manageEscForError(final MercadoPagoError error, final PaymentData paymentData) {
+            return false;
+        }
+
+        @Override
+        public void getCheckoutPreference(String checkoutPreferenceId,
+            TaggedCallback<CheckoutPreference> taggedCallback) {
             checkoutPreferenceRequested = true;
             taggedCallback.onSuccess(preference);
         }
@@ -1372,7 +1427,12 @@ public class CheckoutPresenterTest {
         }
 
         @Override
-        public void getPaymentMethodSearch(BigDecimal amount, List<String> excludedPaymentTypes, List<String> excludedPaymentMethods, Payer payer, Site site, TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback, TaggedCallback<Customer> onCustomerRetrievedCallback) {
+        public void getPaymentMethodSearch(final BigDecimal amount, final List<String> excludedPaymentTypes,
+            final List<String> excludedPaymentMethods, final List<String> cardsWithEsc,
+            final List<String> supportedPlugins,
+            final Payer payer, final Site site,
+            final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback,
+            final TaggedCallback<Customer> onCustomerRetrievedCallback) {
             this.paymentMethodSearchRequested = true;
             onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearchResponse);
             if (customerResponse != null) {
@@ -1391,7 +1451,8 @@ public class CheckoutPresenterTest {
         }
 
         @Override
-        public void createPayment(String transactionId, CheckoutPreference checkoutPreference, PaymentData paymentData, Boolean binaryMode, String customerId, TaggedCallback<Payment> taggedCallback) {
+        public void createPayment(String transactionId, CheckoutPreference checkoutPreference, PaymentData paymentData,
+            Boolean binaryMode, String customerId, TaggedCallback<Payment> taggedCallback) {
             this.paymentMethodPaid = paymentData.getPaymentMethod();
             this.transactionId = transactionId;
             this.paymentCustomerId = customerId;
@@ -1402,17 +1463,6 @@ public class CheckoutPresenterTest {
             } else {
                 taggedCallback.onSuccess(paymentResponse);
             }
-        }
-
-        @Override
-        public boolean saveESC(String cardId, String value) {
-            this.saveESCRequested = true;
-            return saveESCRequested;
-        }
-
-        @Override
-        public void deleteESC(String cardId) {
-            this.deleteESCRequested = true;
         }
 
         public void setCampaignsResponse(List<Campaign> campaigns) {
@@ -1436,8 +1486,13 @@ public class CheckoutPresenterTest {
         }
 
         public void setPaymentResponse(MercadoPagoError error) {
-            this.shouldFail = true;
-            this.failedResponse = error;
+            shouldFail = true;
+            failedResponse = error;
+        }
+
+        @Override
+        public List<String> getCardsWithEsc() {
+            return new ArrayList<>();
         }
     }
 }

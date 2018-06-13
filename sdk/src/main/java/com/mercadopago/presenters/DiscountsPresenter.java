@@ -52,7 +52,6 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
                 mDiscountsView.hideProgressBar();
 
                 mDiscount = discount;
-                mDiscount.setCouponCode(discountCode);
                 mDiscountsView.drawSummary();
             }
 

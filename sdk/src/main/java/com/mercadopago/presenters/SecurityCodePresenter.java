@@ -2,8 +2,8 @@ package com.mercadopago.presenters;
 
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
-import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.PaymentMethod;
@@ -26,9 +26,6 @@ import com.mercadopago.views.SecurityCodeActivityView;
  */
 
 public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView, SecurityCodeProvider> {
-
-    public static final Integer CARD_DEFAULT_SECURITY_CODE_LENGTH = 4;
-    public static final Integer CARD_NUMBER_MAX_LENGTH = 16;
 
     private FailureRecovery mFailureRecovery;
 
@@ -139,26 +136,42 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
         }
     }
 
-    public void initializeSecurityCodeSettings() {
+    public void initializeSettings() {
         if (mCardInfo != null) {
-            Setting setting = PaymentMethodGuessingController.getSettingByPaymentMethodAndBin(mPaymentMethod, mCardInfo.getFirstSixDigits());
-            if (setting != null) {
-                SecurityCode securityCode = setting.getSecurityCode();
-                if (securityCode != null) {
-                    mSecurityCodeLength = securityCode.getLength();
-                    mSecurityCodeLocation = securityCode.getCardLocation();
-                } else {
-                    mSecurityCodeLength = CARD_DEFAULT_SECURITY_CODE_LENGTH;
-                    mSecurityCodeLocation = CardView.CARD_SIDE_BACK;
-                }
-                if (setting.getCardNumber() != null) {
-                    mCardNumberLength = setting.getCardNumber().getLength();
-                } else {
-                    mCardNumberLength = CARD_NUMBER_MAX_LENGTH;
 
-                }
-            }
+            final Setting setting = PaymentMethodGuessingController
+                .getSettingByPaymentMethodAndBin(mPaymentMethod, mCardInfo.getFirstSixDigits());
+
+            initializeSecurityCodeSettings(setting);
+            initializeCardNumberSettings(setting);
+
             getView().setSecurityCodeInputMaxLength(mSecurityCodeLength);
+        }
+    }
+
+    private boolean securityCodeSettingsAvailable() {
+        return mCardInfo != null && mCardInfo.getSecurityCodeLength() != null &&
+            mCardInfo.getSecurityCodeLocation() != null;
+    }
+
+    private void initializeSecurityCodeSettings(final Setting setting) {
+        if (securityCodeSettingsAvailable()) {
+            mSecurityCodeLength = mCardInfo.getSecurityCodeLength();
+            mSecurityCodeLocation = mCardInfo.getSecurityCodeLocation();
+        } else if (setting != null && setting.getSecurityCode() != null) {
+            mSecurityCodeLength = setting.getSecurityCode().getLength();
+            mSecurityCodeLocation = setting.getSecurityCode().getCardLocation();
+        } else {
+            mSecurityCodeLength = Card.CARD_DEFAULT_SECURITY_CODE_LENGTH;
+            mSecurityCodeLocation = CardView.CARD_SIDE_BACK;
+        }
+    }
+
+    private void initializeCardNumberSettings(final Setting setting) {
+        if (setting != null && setting.getCardNumber() != null) {
+            mCardNumberLength = setting.getCardNumber().getLength();
+        } else {
+            mCardNumberLength = Card.CARD_NUMBER_MAX_LENGTH;
         }
     }
 
@@ -183,11 +196,11 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
     private void createTokenWithESC() throws CardTokenException {
         SavedESCCardToken savedESCCardToken;
         if (mCard != null) {
-            savedESCCardToken = new SavedESCCardToken(mCard.getId(), mSecurityCode, true, "");
+            savedESCCardToken = SavedESCCardToken.createWithSecurityCode(mCard.getId(), mSecurityCode);
             getResourcesProvider().validateSecurityCodeFromToken(savedESCCardToken, mCard);
             createESCToken(savedESCCardToken);
         } else if (mToken != null) {
-            savedESCCardToken = new SavedESCCardToken(mToken.getCardId(), mSecurityCode, true, "");
+            savedESCCardToken = SavedESCCardToken.createWithSecurityCode(mToken.getCardId(), mSecurityCode);
             validateSecurityCodeFromToken();
             createESCToken(savedESCCardToken);
         }
@@ -201,13 +214,13 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
 
     private boolean hasToCloneToken() {
         return mPaymentRecovery != null && (mPaymentRecovery.isStatusDetailCallForAuthorize() ||
-                mPaymentRecovery.isStatusDetailCardDisabled()) && mToken != null;
+            mPaymentRecovery.isStatusDetailCardDisabled()) && mToken != null;
     }
 
     private boolean hasToRecoverTokenFromESC() {
         return mPaymentRecovery != null && mPaymentRecovery.isStatusDetailInvalidESC() &&
-                ((mToken != null && mToken.getCardId() != null && !mToken.getCardId().isEmpty()) ||
-                        (mCard != null && mCard.getId() != null && !mCard.getId().isEmpty()));
+            ((mToken != null && mToken.getCardId() != null && !mToken.getCardId().isEmpty()) ||
+                (mCard != null && mCard.getId() != null && !mCard.getId().isEmpty()));
     }
 
     private boolean isSavedCardWithESC() {

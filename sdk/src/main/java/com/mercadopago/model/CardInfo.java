@@ -7,6 +7,8 @@ package com.mercadopago.model;
 public class CardInfo {
 
     private Integer cardNumberLength;
+    private Integer securityCodeLength;
+    private String securityCodeLocation;
     private final String lastFourDigits;
     private final String firstSixDigits;
 
@@ -25,6 +27,8 @@ public class CardInfo {
     public CardInfo(Card card) {
         lastFourDigits = card.getLastFourDigits();
         firstSixDigits = card.getFirstSixDigits();
+        securityCodeLength = card.getSecurityCodeLength();
+        securityCodeLocation = card.getSecurityCodeLocation();
     }
 
     public static boolean canCreateCardInfo(Token token) {
@@ -42,5 +46,13 @@ public class CardInfo {
 
     public String getFirstSixDigits() {
         return firstSixDigits;
+    }
+
+    public Integer getSecurityCodeLength() {
+        return securityCodeLength;
+    }
+
+    public String getSecurityCodeLocation() {
+        return securityCodeLocation;
     }
 }

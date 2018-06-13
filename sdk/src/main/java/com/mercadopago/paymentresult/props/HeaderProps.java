@@ -34,7 +34,7 @@ public class HeaderProps {
     }
 
     public static HeaderProps from(@NonNull BusinessPayment businessPayment, @NonNull Context context) {
-        BusinessPayment.Status status = businessPayment.getStatus();
+        BusinessPayment.Decorator decorator = businessPayment.getDecorator();
         Builder builder = new Builder();
 
         if (businessPayment.getIcon() != 0) {
@@ -45,13 +45,13 @@ public class HeaderProps {
 
         return builder
                 .setHeight(HEADER_MODE_WRAP)
-                .setBackground(status.resColor)
-                .setStatusBarColor(status.resColor)
+                .setBackground(decorator.resColor)
+                .setStatusBarColor(decorator.resColor)
 
                 .setIconImage(businessPayment.getIcon())
-                .setBadgeImage(status.badge)
+                .setBadgeImage(decorator.badge)
                 .setTitle(businessPayment.getTitle())
-                .setLabel(status.message == 0 ? null : context.getString(status.message))
+                .setLabel(decorator.message == 0 ? null : context.getString(decorator.message))
                 .build();
     }
 

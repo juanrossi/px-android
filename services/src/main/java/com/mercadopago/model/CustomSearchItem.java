@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class CustomSearchItem implements Serializable, Parcelable {
     private String description;
     private String id;
+
     @SerializedName("payment_type_id")
     private String type;
     private String paymentMethodId;

@@ -1,8 +1,13 @@
 package com.mercadopago.model;
 
+import android.support.annotation.Nullable;
 import java.util.Date;
 
 public class Card implements CardInformation {
+
+    public static final Integer CARD_DEFAULT_SECURITY_CODE_LENGTH = 4;
+    public static final String CARD_DEFAULT_SECURITY_CODE_LOCATION = "back";
+    public static final Integer CARD_NUMBER_MAX_LENGTH = 16;
 
     private Cardholder cardHolder;
     private String customerId;
@@ -73,11 +78,6 @@ public class Card implements CardInformation {
         return firstSixDigits;
     }
 
-    @Override
-    public Integer getSecurityCodeLength() {
-        return securityCode == null ? null : securityCode.getLength();
-    }
-
     public void setFirstSixDigits(String firstSixDigits) {
         this.firstSixDigits = firstSixDigits;
     }
@@ -90,20 +90,22 @@ public class Card implements CardInformation {
         this.id = id;
     }
 
+    @Nullable
     public Issuer getIssuer() {
         return issuer;
     }
 
-    public void setIssuer(Issuer issuer) {
+    public void setIssuer(@Nullable final Issuer issuer) {
         this.issuer = issuer;
     }
 
+    @Nullable
     @Override
     public String getLastFourDigits() {
         return lastFourDigits;
     }
 
-    public void setLastFourDigits(String lastFourDigits) {
+    public void setLastFourDigits(@Nullable final String lastFourDigits) {
         this.lastFourDigits = lastFourDigits;
     }
 
@@ -111,7 +113,7 @@ public class Card implements CardInformation {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
+    public void setPaymentMethod(@Nullable PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
@@ -119,16 +121,25 @@ public class Card implements CardInformation {
         return securityCode;
     }
 
-    public void setSecurityCode(SecurityCode securityCode) {
+    public void setSecurityCode(@Nullable final SecurityCode securityCode) {
         this.securityCode = securityCode;
     }
 
     public boolean isSecurityCodeRequired() {
-
         if (securityCode != null) {
             return securityCode.getLength() != 0;
         } else {
             return false;
         }
     }
+
+    @Override
+    public Integer getSecurityCodeLength() {
+        return securityCode != null ? securityCode.getLength() : CARD_DEFAULT_SECURITY_CODE_LENGTH;
+    }
+
+    public String getSecurityCodeLocation() {
+        return securityCode != null ? securityCode.getCardLocation() : CARD_DEFAULT_SECURITY_CODE_LOCATION;
+    }
+
 }

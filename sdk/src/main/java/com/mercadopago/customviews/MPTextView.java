@@ -14,6 +14,7 @@ public class MPTextView extends AppCompatTextView {
     public static final String LIGHT = "light";
     public static final String REGULAR = "regular";
     public static final String MONO_REGULAR = "mono_regular";
+    public static final String BOLD = "bold";
 
     private String mFontStyle;
 
@@ -31,12 +32,26 @@ public class MPTextView extends AppCompatTextView {
         readAttr(context, attrs);
 
         if (!isInEditMode()) {
-            Typeface tf = getCustomTypeface();
-
-            if (tf != null) {
-                setTypeface(tf);
-            }
+            configureStyle();
         }
+    }
+
+    public void setFontStyle(final String fontStyle) {
+        mFontStyle = fontStyle;
+        configureStyle();
+    }
+
+    private void configureStyle() {
+        final Typeface tf = getCustomTypeface();
+        final int style = getStyle();
+
+        if (tf != null) {
+            setTypeface(tf, style);
+        }
+    }
+
+    private int getStyle() {
+        return isBoldFontStyle() ? Typeface.BOLD : Typeface.NORMAL;
     }
 
     private Typeface getCustomTypeface() {
@@ -46,13 +61,16 @@ public class MPTextView extends AppCompatTextView {
             customFont = FontCache.getTypeface(FontCache.CUSTOM_LIGHT_FONT);
         } else if (isMonoRegularFontStyle() && FontCache.hasTypeface(FontCache.CUSTOM_MONO_FONT)) {
             customFont = FontCache.getTypeface(FontCache.CUSTOM_MONO_FONT);
-        } else if (isRegularFontStyle() && FontCache.hasTypeface(FontCache.CUSTOM_REGULAR_FONT)) {
+        } else if ((isRegularFontStyle() || isBoldFontStyle()) && FontCache.hasTypeface(FontCache.CUSTOM_REGULAR_FONT)) {
             customFont = FontCache.getTypeface(FontCache.CUSTOM_REGULAR_FONT);
         }
 
         return customFont;
     }
 
+    private boolean isBoldFontStyle() {
+        return BOLD.equals(mFontStyle);
+    }
 
     private boolean isLightFontStyle() {
         return LIGHT.equals(mFontStyle);

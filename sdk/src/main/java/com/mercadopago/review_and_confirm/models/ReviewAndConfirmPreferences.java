@@ -1,16 +1,16 @@
 package com.mercadopago.review_and_confirm.models;
 
 import android.support.annotation.DrawableRes;
-
+import android.support.annotation.Nullable;
 import com.mercadopago.components.CustomComponent;
-
 import java.math.BigDecimal;
 
 public class ReviewAndConfirmPreferences {
 
     private final CustomComponent topComponent;
     private final CustomComponent bottomComponent;
-    @DrawableRes private final
+    @DrawableRes
+    @Nullable private final
     Integer collectorIcon;
     private final String quantityLabel;
     private final String unitPriceLabel;
@@ -52,11 +52,11 @@ public class ReviewAndConfirmPreferences {
 
     public boolean hasExtrasAmount() {
         return shippingAmount != null && shippingAmount.compareTo(BigDecimal.ZERO) > 0
-                || arrearsAmount != null && arrearsAmount.compareTo(BigDecimal.ZERO) > 0
-                || taxesAmount != null && taxesAmount.compareTo(BigDecimal.ZERO) > 0
-                || chargeAmount != null && chargeAmount.compareTo(BigDecimal.ZERO) > 0
-                || discountAmount != null && discountAmount.compareTo(BigDecimal.ZERO) > 0
-                || productAmount != null && productAmount.compareTo(BigDecimal.ZERO) > 0;
+            || arrearsAmount != null && arrearsAmount.compareTo(BigDecimal.ZERO) > 0
+            || taxesAmount != null && taxesAmount.compareTo(BigDecimal.ZERO) > 0
+            || chargeAmount != null && chargeAmount.compareTo(BigDecimal.ZERO) > 0
+            || discountAmount != null && discountAmount.compareTo(BigDecimal.ZERO) > 0
+            || productAmount != null && productAmount.compareTo(BigDecimal.ZERO) > 0;
     }
 
     public boolean hasCustomTopView() {
@@ -79,6 +79,8 @@ public class ReviewAndConfirmPreferences {
         return bottomComponent;
     }
 
+    @DrawableRes
+    @Nullable
     public Integer getCollectorIcon() {
         return collectorIcon;
     }

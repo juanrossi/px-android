@@ -6,11 +6,11 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.CustomComponent;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
+import com.mercadopago.components.TermsAndConditionsComponent;
 import com.mercadopago.review_and_confirm.components.actions.ChangePaymentMethodAction;
 import com.mercadopago.review_and_confirm.components.items.ReviewItems;
 import com.mercadopago.review_and_confirm.components.payment_method.PaymentMethodComponent;
@@ -26,6 +26,10 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
         LinearLayout linearLayout = createMainLayout(context);
 
         addSummary(component, linearLayout);
+
+        if (component.hasDiscountTermsAndConditions()) {
+            addDiscountTermsAndConditions(component, linearLayout);
+        }
 
         if (component.hasItemsEnabled()) {
             addReviewItems(component, linearLayout);
@@ -47,7 +51,7 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
             renderer.render(linearLayout);
         }
 
-        if (component.props.termsAndConditionsModel.isActive()) {
+        if (component.hasMercadoPagoTermsAndConditions()) {
             addTermsAndConditions(component, linearLayout);
         }
 
@@ -62,6 +66,14 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
                         component.props.preferences),
                         component.getSummaryProvider()));
         summary.render(linearLayout);
+    }
+
+    private void addDiscountTermsAndConditions(@NonNull ReviewAndConfirmContainer component, final ViewGroup parent) {
+
+        TermsAndConditionsComponent discountTermsAndConditionsComponent = new TermsAndConditionsComponent(component.props.discountTermsAndConditionsModel);
+
+        View discountTermsAndConditionsView = discountTermsAndConditionsComponent.render(parent);
+        parent.addView(discountTermsAndConditionsView);
     }
 
     @NonNull
@@ -86,21 +98,23 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
     }
 
     private void addReviewItems(@NonNull final ReviewAndConfirmContainer component, final ViewGroup parent) {
-        Renderer renderer = RendererFactory.create(parent.getContext(),
-                new ReviewItems(
-                        new ReviewItems.Props(
-                                component.props.itemsModel,
-                                component.props.preferences.getCollectorIcon(),
-                                component.props.preferences.getQuantityLabel(),
-                                component.props.preferences.getUnitPriceLabel())));
-        renderer.render(parent);
+        ReviewItems reviewItems = new ReviewItems(
+            new ReviewItems.Props(
+                component.props.itemsModel,
+                component.props.preferences.getCollectorIcon(),
+                component.props.preferences.getQuantityLabel(),
+                component.props.preferences.getUnitPriceLabel()));
+        View view = reviewItems.render(parent);
+        parent.addView(view);
     }
 
     private void addTermsAndConditions(@NonNull final ReviewAndConfirmContainer component,
-                                       final ViewGroup container) {
-        Renderer termsAndConditions = RendererFactory.create(container.getContext(),
-                new TermsAndCondition(component.props.termsAndConditionsModel, component.getDispatcher()));
-        termsAndConditions.render(container);
+                                       final ViewGroup parent) {
+
+        TermsAndConditionsComponent termsAndConditionsComponent = new TermsAndConditionsComponent(component.props.mercadoPagoTermsAndConditionsModel);
+
+        View discountTermsAndConditionsView = termsAndConditionsComponent.render(parent);
+        parent.addView(discountTermsAndConditionsView);
     }
 
 }

@@ -11,6 +11,6 @@ public class MainPaymentRenderer extends Renderer<MainPayment> {
 
     @Override
     public View render(final MainPayment component, final Context context, final ViewGroup parent) {
-        return inflate(R.layout.main_payment_procesor, parent);
+        return inflate(com.mercadopago.R.layout.mpsdk_view_progress_bar, parent);
     }
 }

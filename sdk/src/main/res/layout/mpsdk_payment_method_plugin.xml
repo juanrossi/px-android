@@ -24,6 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mpsdk_s_margin"
         android:gravity="center_horizontal"
-        tools:text="@string/lorem_ipsum"/>
+        tools:text="Lorem ipsum"/>
 
 </LinearLayout>

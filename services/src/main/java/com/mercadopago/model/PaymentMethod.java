@@ -250,4 +250,13 @@ public class PaymentMethod implements Parcelable, Serializable {
         dest.writeString(minAllowedAmount != null ? minAllowedAmount.toString() : null);
         dest.writeString(maxAllowedAmount != null ? maxAllowedAmount.toString() : null);
     }
+
+    @Nullable
+    public SecurityCode getSecurityCode() {
+        SecurityCode securityCode = null;
+        if (settings != null && !settings.isEmpty()) {
+            securityCode = settings.get(0).getSecurityCode();
+        }
+        return securityCode;
+    }
 }

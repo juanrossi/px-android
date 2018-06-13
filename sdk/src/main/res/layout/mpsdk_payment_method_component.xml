@@ -39,7 +39,7 @@
         android:gravity="center"
         android:paddingLeft="@dimen/mpsdk_m_margin"
         android:paddingRight="@dimen/mpsdk_m_margin"
-        android:textColor="@color/mpsdk_brownish_grey"
+        android:textColor="@color/ui_meli_dark_grey"
         android:textSize="@dimen/mpsdk_s_text"
         tools:text="Master terminada en 1234" />
 
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mpsdk_m_alternative_1_margin"
         android:gravity="center"
-        android:textColor="@color/mpsdk_brownish_grey"
+        android:textColor="@color/ui_meli_dark_grey"
         android:textSize="@dimen/mpsdk_xxs_text"
         tools:text="En tu estado de cuenta verás el cargo como\n MERCADOPAGO" />
 </LinearLayout>

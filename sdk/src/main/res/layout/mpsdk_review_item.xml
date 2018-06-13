@@ -33,7 +33,7 @@
             android:ellipsize="end"
             android:gravity="center_horizontal"
             android:maxLines="2"
-            android:textColor="@color/mpsdk_black"
+            android:textColor="@color/ui_meli_black"
             android:textSize="@dimen/mpsdk_l_text"
             tools:text="Titulo" />
 
@@ -46,7 +46,7 @@
             android:ellipsize="end"
             android:gravity="center_horizontal"
             android:maxLines="2"
-            android:textColor="@color/mpsdk_brownish_grey"
+            android:textColor="@color/ui_meli_dark_grey"
             android:textSize="@dimen/mpsdk_xs_text"
             tools:text="Subtitulo" />
 
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/mpsdk_s_margin"
-            android:textColor="@color/mpsdk_brownish_grey"
+            android:textColor="@color/ui_meli_dark_grey"
             android:textSize="@dimen/mpsdk_s_text"
             tools:text="Cantidad: 1" />
 
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/mpsdk_brownish_grey"
+            android:textColor="@color/ui_meli_dark_grey"
             android:textSize="@dimen/mpsdk_s_text"
             tools:text="Precio unitario: $1234" />
     </LinearLayout>

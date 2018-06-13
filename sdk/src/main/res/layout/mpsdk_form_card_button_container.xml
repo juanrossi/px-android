@@ -121,7 +121,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_gravity="bottom"
-        android:background="@color/mpsdk_black_info_background"
+        android:background="@color/ui_meli_black"
         android:visibility="gone">
 
         <com.mercadopago.customviews.MPTextView

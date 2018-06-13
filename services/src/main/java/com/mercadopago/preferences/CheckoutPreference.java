@@ -2,7 +2,6 @@ package com.mercadopago.preferences;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
-
 import com.google.gson.annotations.SerializedName;
 import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Item;
@@ -10,7 +9,6 @@ import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Sites;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,7 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.mercadopago.lite.util.TextUtil.isEmpty;
-
 
 public final class CheckoutPreference implements Serializable {
 
@@ -117,7 +114,6 @@ public final class CheckoutPreference implements Serializable {
         return expirationDateFrom == null || date.after(expirationDateFrom);
     }
 
-
     public String getSiteId() {
         return siteId;
     }
@@ -164,10 +160,11 @@ public final class CheckoutPreference implements Serializable {
     }
 
     public List<String> getExcludedPaymentTypes() {
-        if (paymentPreference != null)
+        if (paymentPreference != null) {
             return paymentPreference.getExcludedPaymentTypes();
-        else
+        } else {
             return null;
+        }
     }
 
     public Site getSite() {
@@ -180,6 +177,7 @@ public final class CheckoutPreference implements Serializable {
         return site;
     }
 
+    @Size(min = 1)
     @NonNull
     public List<Item> getItems() {
         return items;
@@ -263,15 +261,15 @@ public final class CheckoutPreference implements Serializable {
         private BigDecimal conceptAmount;
         private String conceptId;
 
-
         /**
          * Builder for custom CheckoutPreference construction
          *
-         * @param site       preference site
+         * @param site preference site
          * @param payerEmail payer email
-         * @param items      items to pay
+         * @param items items to pay
          */
-        public Builder(@NonNull final Site site, @NonNull String payerEmail, @Size(min = 1) @NonNull final List<Item> items) {
+        public Builder(@NonNull final Site site, @NonNull String payerEmail,
+            @Size(min = 1) @NonNull final List<Item> items) {
             this.items = items;
             this.payerEmail = payerEmail;
             this.localPreferenceSite = site;
