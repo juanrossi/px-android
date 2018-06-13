@@ -42,6 +42,7 @@ import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
+import com.mercadopago.util.MercadoPagoESCImpl;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.viewmodel.CardPaymentModel;
 import com.mercadopago.viewmodel.CheckoutStateModel;
@@ -111,10 +112,10 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     }
 
     private void configurePresenter() {
-        CheckoutProvider provider = new CheckoutProviderImpl(this,
+        final CheckoutProvider provider = new CheckoutProviderImpl(this,
             merchantPublicKey,
             privateKey, presenter.getServicePreference(),
-            presenter.isESCEnabled());
+            new MercadoPagoESCImpl(this, presenter.isESCEnabled()));
 
         presenter.attachResourcesProvider(provider);
         presenter.attachView(this);
@@ -285,7 +286,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     private void paymentResultOk(final Intent data) {
 
         if (PaymentProcessorPluginActivity.isBusiness(data)) {
-            BusinessPayment businessPayment = PaymentProcessorPluginActivity.getBusinessPayment(data);
+            final BusinessPayment businessPayment = PaymentProcessorPluginActivity.getBusinessPayment(data);
             presenter.onBusinessResult(businessPayment);
         } else {
             final PaymentResult paymentResult = CheckoutStore.getInstance().getPaymentResult();
@@ -293,7 +294,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         }
     }
 
-    private void resolveReviewAndConfirmRequest(int resultCode, Intent data) {
+    private void resolveReviewAndConfirmRequest(final int resultCode, final Intent data) {
         if (resultCode == RESULT_OK) {
             presenter.onPaymentConfirmation();
         } else if (resultCode == ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD) {
@@ -307,7 +308,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     private void resolveCancelReviewAndConfirm(final Intent data) {
         if (data != null && data.hasExtra(EXTRA_CLIENT_RES_CODE)) {
-            Integer customResultCode = data.getIntExtra(EXTRA_CLIENT_RES_CODE, 0);
+            final Integer customResultCode = data.getIntExtra(EXTRA_CLIENT_RES_CODE, 0);
             presenter.onCustomReviewAndConfirmResponse(customResultCode);
         } else {
             MercadoPagoError mercadoPagoError = null;
@@ -546,12 +547,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             .setESCEnabled(presenter.isESCEnabled())
             .setCard(presenter.getSelectedCard())
             .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
-        overrideTransitionIn();
-    }
-
-    @Override
-    public void startPaymentMethodEdition() {
-        showPaymentMethodSelection();
         overrideTransitionIn();
     }
 

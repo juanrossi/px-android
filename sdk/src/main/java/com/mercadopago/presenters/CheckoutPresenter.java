@@ -231,14 +231,14 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
                 @Override
                 public void onSuccess(final Discount discount) {
                     if (isViewAttached()) {
-                        CheckoutPresenter.this.state.discount = discount;
+                        state.discount = discount;
                         retrievePaymentMethodSearch();
                     }
                 }
 
                 @Override
                 public void onFailure(final MercadoPagoError error) {
-                    CheckoutPresenter.this.state.discount = null;
+                    state.discount = null;
                     if (isViewAttached()) {
                         retrievePaymentMethodSearch();
                     }
@@ -317,56 +317,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         state.editPaymentMethodFromReviewAndConfirm = false;
     }
 
-    public void checkStartPaymentResultActivity(final PaymentResult paymentResult) {
-        if (hasToDeleteESC(paymentResult)) {
-            deleteESC(paymentResult.getPaymentData());
-        }
-        if (hasToContinuePaymentWithoutESC(paymentResult)) {
-            continuePaymentWithoutESC();
-        } else {
-
-            if (hasToStoreESC(paymentResult)) {
-                getResourcesProvider().saveESC(paymentResult.getPaymentData().getToken().getCardId(),
-                    paymentResult.getPaymentData().getToken().getEsc());
-            }
-
-            if (hasToSkipPaymentResultScreen(paymentResult)) {
-                finishCheckout();
-            } else {
-                getView().showPaymentResult(paymentResult);
-            }
-        }
-    }
-
-    private boolean hasToStoreESC(final PaymentResult paymentResult) {
-        return hasValidParametersForESC(paymentResult) &&
-            paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_APPROVED) &&
-            paymentResult.getPaymentData().getToken().getEsc() != null &&
-            !paymentResult.getPaymentData().getToken().getEsc().isEmpty();
-    }
-
-    private boolean hasValidParametersForESC(final PaymentResult paymentResult) {
-        return paymentResult != null && paymentResult.getPaymentData() != null &&
-            paymentResult.getPaymentData().getToken() != null &&
-            paymentResult.getPaymentData().getToken().getCardId() != null &&
-            !paymentResult.getPaymentData().getToken().getCardId().isEmpty() &&
-            paymentResult.getPaymentStatus() != null &&
-            paymentResult.getPaymentStatusDetail() != null;
-    }
-
-    private boolean hasToDeleteESC(final PaymentResult paymentResult) {
-        return hasValidParametersForESC(paymentResult) &&
-            !paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_APPROVED);
-    }
-
-    private boolean hasToContinuePaymentWithoutESC(final PaymentResult paymentResult) {
-        return hasValidParametersForESC(paymentResult) &&
-            paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_REJECTED) &&
-            paymentResult.getPaymentStatusDetail().equals(Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC);
-    }
-
     private boolean hasToSkipPaymentResultScreen(final PaymentResult paymentResult) {
-        String status = paymentResult == null ? "" : paymentResult.getPaymentStatus();
+        final String status = paymentResult == null ? "" : paymentResult.getPaymentStatus();
         return shouldSkipResult(status);
     }
 
@@ -469,7 +421,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         state.selectedIssuer = issuer;
         state.selectedPayerCost = payerCost;
         state.createdToken = token;
-        this.state.discount = discount;
+        state.discount = discount;
         state.selectedCard = card;
         state.collectedPayer = payer;
 
@@ -517,27 +469,20 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
                     @Override
                     public void onFailure(final MercadoPagoError error) {
-                        if (isErrorInvalidPaymentWithEsc(error, paymentData)) {
-                            deleteESC(paymentData);
-                            continuePaymentWithoutESC();
-                        } else {
-                            recoverCreatePayment(error);
-                        }
+                        resolvePaymentError(error, paymentData);
                     }
                 });
         }
     }
 
-    private boolean isErrorInvalidPaymentWithEsc(MercadoPagoError error, PaymentData paymentData) {
-        if (error.isApiException() && error.getApiException().getStatus() == ApiUtil.StatusCodes.BAD_REQUEST) {
-            List<Cause> causes = error.getApiException().getCause();
-            if (causes != null && !causes.isEmpty()) {
-                Cause cause = causes.get(0);
-                return ApiException.ErrorCodes.INVALID_PAYMENT_WITH_ESC.equals(cause.getCode()) &&
-                    paymentData.getToken().getCardId() != null;
-            }
+    @VisibleForTesting
+    void resolvePaymentError(final MercadoPagoError error, final PaymentData paymentData) {
+        final boolean invalidEsc = getResourcesProvider().manageEscForError(error, paymentData);
+        if (invalidEsc) {
+            continuePaymentWithoutESC();
+        } else {
+            recoverCreatePayment(error);
         }
-        return false;
     }
 
     private boolean hasCustomPaymentProcessor() {
@@ -548,12 +493,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         state.paymentRecovery = new PaymentRecovery(state.createdToken, state.selectedPaymentMethod,
             state.selectedPayerCost, state.selectedIssuer, Payment.StatusCodes.STATUS_REJECTED,
             Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC);
-
         getView().startPaymentRecoveryFlow(state.paymentRecovery);
-    }
-
-    private void deleteESC(final PaymentData paymentData) {
-        getResourcesProvider().deleteESC(paymentData.getToken().getCardId());
     }
 
     private void recoverCreatePayment(final MercadoPagoError error) {
@@ -938,13 +878,33 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         }
     }
 
+    public void checkStartPaymentResultActivity(final PaymentResult paymentResult) {
+        final PaymentData paymentData = paymentResult.getPaymentData();
+        final String paymentStatus = paymentResult.getPaymentStatus();
+        final String paymentStatusDetail = paymentResult.getPaymentStatusDetail();
+        if (getResourcesProvider().manageEscForPayment(paymentData, paymentStatus, paymentStatusDetail)) {
+            continuePaymentWithoutESC();
+        } else {
+            if (hasToSkipPaymentResultScreen(paymentResult)) {
+                finishCheckout();
+            } else {
+                getView().showPaymentResult(paymentResult);
+            }
+        }
+    }
+
     public void onBusinessResult(final BusinessPayment businessPayment) {
         //TODO look for a better option than singleton, it make it not testeable.
-        PaymentData paymentData = CheckoutStore.getInstance().getPaymentData();
+        final PaymentData paymentData = CheckoutStore.getInstance().getPaymentData();
+
+        getResourcesProvider().manageEscForPayment(paymentData,
+            businessPayment.getPaymentStatus(),
+            businessPayment.getPaymentStatusDetail());
 
         final String lastFourDigits =
             paymentData.getToken() != null ? paymentData.getToken().getLastFourDigits() : null;
-        BusinessPaymentModel model =
+
+        final BusinessPaymentModel model =
             new BusinessPaymentModel(businessPayment, state.discount, paymentData.getPaymentMethod(),
                 paymentData.getPayerCost(),
                 state.checkoutPreference.getSite().getCurrencyId(),

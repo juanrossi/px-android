@@ -7,20 +7,17 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.provider.FontRequest;
 import android.support.v4.provider.FontsContractCompat;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.R;
-import com.mercadopago.model.PaymentTypes;
-import com.mercadopago.model.Sites;
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
-import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.exceptions.ExceptionHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.exceptions.ApiException;
+import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Customer;
@@ -31,20 +28,21 @@ import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentBody;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentMethodSearch;
+import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Site;
+import com.mercadopago.model.Sites;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.util.ApiUtil;
+import com.mercadopago.util.EscUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoESC;
-import com.mercadopago.util.MercadoPagoESCImpl;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.QueryBuilder;
 import com.mercadopago.util.TextUtil;
-
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -64,15 +62,15 @@ public class CheckoutProviderImpl implements CheckoutProvider {
     private Handler mHandler;
 
     public CheckoutProviderImpl(Context context,
-                                @NonNull String publicKey,
-                                @NonNull String privateKey,
-                                ServicePreference servicePreference,
-                                boolean escEnabled) {
+        @NonNull String publicKey,
+        @NonNull String privateKey,
+        ServicePreference servicePreference,
+        @NonNull final MercadoPagoESC mercadoPagoESC) {
         this.context = context;
         this.publicKey = publicKey;
         mercadoPagoServicesAdapter = new MercadoPagoServicesAdapter(context, publicKey, privateKey);
         this.servicePreference = servicePreference;
-        mercadoPagoESC = new MercadoPagoESCImpl(context, escEnabled);
+        this.mercadoPagoESC = mercadoPagoESC;
     }
 
     @Override
@@ -88,9 +86,30 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         }
     }
 
+    @Override
+    public boolean manageEscForPayment(final PaymentData paymentData, final String paymentStatus,
+        final String paymentStatusDetail) {
+        if (EscUtil.shouldDeleteEsc(paymentData, paymentStatus,
+            paymentStatusDetail)) {
+            mercadoPagoESC.deleteESC(paymentData.getToken().getCardId());
+        } else if (EscUtil.shouldStoreESC(paymentData, paymentStatus, paymentStatusDetail)) {
+            mercadoPagoESC.saveESC(paymentData.getToken().getCardId(), paymentData.getToken().getEsc());
+        }
+        return EscUtil.isInvalidEscPayment(paymentData, paymentStatus, paymentStatusDetail);
+    }
+
+    @Override
+    public boolean manageEscForError(final MercadoPagoError error, final PaymentData paymentData) {
+        final boolean isInvalidEsc = EscUtil.isErrorInvalidPaymentWithEsc(error, paymentData);
+        if (isInvalidEsc) {
+            mercadoPagoESC.deleteESC(paymentData.getToken().getCardId());
+        }
+        return isInvalidEsc;
+    }
+
     private void fetchRegularFont() {
         FontsContractCompat.FontRequestCallback regularFontCallback = new FontsContractCompat
-                .FontRequestCallback() {
+            .FontRequestCallback() {
             @Override
             public void onTypefaceRetrieved(Typeface typeface) {
                 FontCache.setTypeface(FontCache.CUSTOM_REGULAR_FONT, typeface);
@@ -102,15 +121,15 @@ public class CheckoutProviderImpl implements CheckoutProvider {
             }
         };
         FontsContractCompat.requestFont(context,
-                getFontRequest(FontCache.FONT_ROBOTO, QueryBuilder.WIDTH_DEFAULT,
-                        QueryBuilder.WEIGHT_DEFAULT, QueryBuilder.ITALIC_DEFAULT),
-                regularFontCallback,
-                getHandlerThreadHandler());
+            getFontRequest(FontCache.FONT_ROBOTO, QueryBuilder.WIDTH_DEFAULT,
+                QueryBuilder.WEIGHT_DEFAULT, QueryBuilder.ITALIC_DEFAULT),
+            regularFontCallback,
+            getHandlerThreadHandler());
     }
 
     private void fetchLightFont() {
         FontsContractCompat.FontRequestCallback lightFontCallback = new FontsContractCompat
-                .FontRequestCallback() {
+            .FontRequestCallback() {
             @Override
             public void onTypefaceRetrieved(Typeface typeface) {
                 FontCache.setTypeface(FontCache.CUSTOM_LIGHT_FONT, typeface);
@@ -122,15 +141,15 @@ public class CheckoutProviderImpl implements CheckoutProvider {
             }
         };
         FontsContractCompat.requestFont(context,
-                getFontRequest(FontCache.FONT_ROBOTO, QueryBuilder.WIDTH_DEFAULT,
-                        QueryBuilder.WEIGHT_LIGHT, QueryBuilder.ITALIC_DEFAULT),
-                lightFontCallback,
-                getHandlerThreadHandler());
+            getFontRequest(FontCache.FONT_ROBOTO, QueryBuilder.WIDTH_DEFAULT,
+                QueryBuilder.WEIGHT_LIGHT, QueryBuilder.ITALIC_DEFAULT),
+            lightFontCallback,
+            getHandlerThreadHandler());
     }
 
     private void fetchMonoFont() {
         FontsContractCompat.FontRequestCallback monoFontCallback = new FontsContractCompat
-                .FontRequestCallback() {
+            .FontRequestCallback() {
             @Override
             public void onTypefaceRetrieved(Typeface typeface) {
                 FontCache.setTypeface(FontCache.CUSTOM_MONO_FONT, typeface);
@@ -142,27 +161,26 @@ public class CheckoutProviderImpl implements CheckoutProvider {
             }
         };
         FontsContractCompat.requestFont(context,
-                getFontRequest(FontCache.FONT_ROBOTO_MONO, QueryBuilder.WIDTH_DEFAULT,
-                        QueryBuilder.WEIGHT_DEFAULT, QueryBuilder.ITALIC_DEFAULT),
-                monoFontCallback,
-                getHandlerThreadHandler());
+            getFontRequest(FontCache.FONT_ROBOTO_MONO, QueryBuilder.WIDTH_DEFAULT,
+                QueryBuilder.WEIGHT_DEFAULT, QueryBuilder.ITALIC_DEFAULT),
+            monoFontCallback,
+            getHandlerThreadHandler());
     }
 
     private FontRequest getFontRequest(String fontName, int width, int weight, float italic) {
         QueryBuilder queryBuilder = new QueryBuilder(fontName)
-                .withWidth(width)
-                .withWeight(weight)
-                .withItalic(italic)
-                .withBestEffort(true);
+            .withWidth(width)
+            .withWeight(weight)
+            .withItalic(italic)
+            .withBestEffort(true);
         String query = queryBuilder.build();
 
         return new FontRequest(
-                "com.google.android.gms.fonts",
-                "com.google.android.gms",
-                query,
-                R.array.com_google_android_gms_fonts_certs);
+            "com.google.android.gms.fonts",
+            "com.google.android.gms",
+            query,
+            R.array.com_google_android_gms_fonts_certs);
     }
-
 
     private Handler getHandlerThreadHandler() {
         if (mHandler == null) {
@@ -227,20 +245,23 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         mercadoPagoServicesAdapter.getPaymentMethodSearch(amount, new ArrayList<>(excludedPaymentTypesSet),
             excludedPaymentMethods, cardsWithEsc, supportedPlugins, payer, site,
             new Callback<PaymentMethodSearch>() {
-            @Override
-            public void success(final PaymentMethodSearch paymentMethodSearch) {
-                if (servicePreference != null && servicePreference.hasGetCustomerURL()) {
-                    attachCustomerCardsFromMerchantServer(paymentMethodSearch, excludedPaymentTypes, excludedPaymentMethods, onPaymentMethodSearchRetrievedCallback, onCustomerRetrievedCallback);
-                } else {
-                    onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearch);
+                @Override
+                public void success(final PaymentMethodSearch paymentMethodSearch) {
+                    if (servicePreference != null && servicePreference.hasGetCustomerURL()) {
+                        attachCustomerCardsFromMerchantServer(paymentMethodSearch, excludedPaymentTypes,
+                            excludedPaymentMethods, onPaymentMethodSearchRetrievedCallback,
+                            onCustomerRetrievedCallback);
+                    } else {
+                        onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearch);
+                    }
                 }
-            }
 
-            @Override
-            public void failure(ApiException apiException) {
-                onPaymentMethodSearchRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.PAYMENT_METHOD_SEARCH));
-            }
-        });
+                @Override
+                public void failure(ApiException apiException) {
+                    onPaymentMethodSearchRetrievedCallback
+                        .onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.PAYMENT_METHOD_SEARCH));
+                }
+            });
     }
 
     private void attachCustomerCardsFromMerchantServer(final PaymentMethodSearch paymentMethodSearch, final List<String> excludedPaymentTypes, final List<String> excludedPaymentMethods, final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback, final TaggedCallback<Customer> onCustomerRetrievedCallback) {
@@ -266,7 +287,6 @@ public class CheckoutProviderImpl implements CheckoutProvider {
             }
         });
     }
-
 
     @Override
     public String getCheckoutExceptionMessage(CheckoutPreferenceException exception) {
@@ -314,10 +334,10 @@ public class CheckoutProviderImpl implements CheckoutProvider {
     }
 
     private void createPaymentInMercadoPago(String transactionId,
-                                            CheckoutPreference checkoutPreference,
-                                            PaymentData paymentData,
-                                            Boolean binaryMode, String customerId,
-                                            final TaggedCallback<Payment> taggedCallback) {
+        CheckoutPreference checkoutPreference,
+        PaymentData paymentData,
+        Boolean binaryMode, String customerId,
+        final TaggedCallback<Payment> taggedCallback) {
         PaymentBody paymentBody = createPaymentBody(transactionId, checkoutPreference, paymentData, binaryMode, customerId);
         mercadoPagoServicesAdapter.createPayment(paymentBody, taggedCallback);
     }
@@ -359,24 +379,14 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
         List<String> unsupportedTypesForSite = new ArrayList<>();
         if (Sites.CHILE.getId().equals(site.getId())
-                || Sites.VENEZUELA.getId().equals(site.getId())
-                || Sites.COLOMBIA.getId().equals(site.getId())) {
+            || Sites.VENEZUELA.getId().equals(site.getId())
+            || Sites.COLOMBIA.getId().equals(site.getId())) {
 
             unsupportedTypesForSite.add(PaymentTypes.TICKET);
             unsupportedTypesForSite.add(PaymentTypes.ATM);
             unsupportedTypesForSite.add(PaymentTypes.BANK_TRANSFER);
         }
         return unsupportedTypesForSite;
-    }
-
-    @Override
-    public void deleteESC(String cardId) {
-        mercadoPagoESC.deleteESC(cardId);
-    }
-
-    @Override
-    public boolean saveESC(String cardId, String value) {
-        return mercadoPagoESC.saveESC(cardId, value);
     }
 
     @Override

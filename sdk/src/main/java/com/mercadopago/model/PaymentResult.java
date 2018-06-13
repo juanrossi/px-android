@@ -87,7 +87,7 @@ public class PaymentResult implements Serializable {
                 getPaymentStatus().equals(Payment.StatusCodes.STATUS_IN_PROCESS);
     }
 
-    public static class Builder{
+    public static class Builder {
 
         private PaymentData paymentData;
         private Long paymentId;
@@ -96,32 +96,32 @@ public class PaymentResult implements Serializable {
         private String payerEmail;
         private String statementDescription;
 
-        public Builder setPaymentData(PaymentData paymentData) {
+        public Builder setPaymentData(final PaymentData paymentData) {
             this.paymentData = paymentData;
             return this;
         }
 
-        public Builder setPaymentId(Long paymentId) {
+        public Builder setPaymentId(final Long paymentId) {
             this.paymentId = paymentId;
             return this;
         }
 
-        public Builder setPaymentStatus(String paymentStatus) {
+        public Builder setPaymentStatus(final String paymentStatus) {
             this.paymentStatus = paymentStatus;
             return this;
         }
 
-        public Builder setPaymentStatusDetail(String statusDetail) {
+        public Builder setPaymentStatusDetail(final String statusDetail) {
             paymentStatusDetail = statusDetail;
             return this;
         }
 
-        public Builder setPayerEmail(String payerEmail) {
+        public Builder setPayerEmail(final String payerEmail) {
             this.payerEmail = payerEmail;
             return this;
         }
 
-        public Builder setStatementDescription(String statementDescription) {
+        public Builder setStatementDescription(final String statementDescription) {
             this.statementDescription = statementDescription;
             return this;
         }
