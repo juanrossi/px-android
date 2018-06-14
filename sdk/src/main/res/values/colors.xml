@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAccent">#009EE3</color>
-    <color name="colorPrimaryDark">#30AFE2</color>
-
-    <color name="default_primary_color">#666666</color>
 
     <color name="mpsdk_real_black">#000000</color>
     <color name="mpsdk_comment_color">#999</color>
@@ -162,33 +158,7 @@
     <color name="mpsdk_background_loading">#FFFFFF</color>
     <color name="mpsdk_tint_loading">@color/mpsdk_main_color</color>
 
-    <!-- UI lib colors -->
-    <!-- Primary action button background -->
-    <!-- Primary option button enabled text -->
-    <!-- Link for terms and conditions text -->
-    <color name="ui_components_primary_color">@color/mpsdk_main_color</color>
 
-    <!-- Primary action button disabled background -->
-    <!-- Primary option button disabled text -->
-    <color name="ui_components_primary_color_disabled">#404040</color>
+    <color name="mpsdk_ui_components_warning_color">#FBAB60</color>
 
-    <!-- Primary action button pressed background -->
-    <!-- Primary optiom button pressed text -->
-    <color name="ui_components_primary_color_pressed">@color/mpsdk_main_color</color>
-
-    <!-- Spinner -->
-    <color name="ui_components_spinner_primary_color">@color/mpsdk_tint_loading</color>
-    <color name="ui_components_spinner_secondary_color">@color/mpsdk_tint_loading</color>
-
-    <!-- Snackbar success -->
-    <!-- Background success -->
-    <color name="ui_components_success_color">#00C677</color>
-
-    <!-- Snackbar error -->
-    <!-- Background error -->
-    <color name="ui_components_error_color">#E5464C</color>
-
-    <!-- Snackbar warning -->
-    <!-- Background warning -->
-    <color name="ui_components_warning_color">#E5953D</color>
 </resources>

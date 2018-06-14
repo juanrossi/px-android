@@ -141,7 +141,7 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
         } else if (isRedBackground(paymentResult)) {
             return R.color.ui_components_error_color;
         } else if (isOrangeBackground(paymentResult)) {
-            return R.color.ui_components_warning_color;
+            return R.color.mpsdk_ui_components_warning_color;
         } else {
             return R.color.mpsdk_blue_MP;
         }
