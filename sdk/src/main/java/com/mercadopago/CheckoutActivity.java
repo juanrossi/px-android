@@ -209,7 +209,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
         case ErrorUtil.ERROR_REQUEST_CODE:
@@ -270,6 +270,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     }
 
     private void resolvePaymentProcessor(final int resultCode, final Intent data) {
+        showProgress();
         if (resultCode == RESULT_OK) {
             paymentResultOk(data);
         } else {
@@ -304,6 +305,11 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         } else if (resultCode == RESULT_CANCELED) {
             presenter.onReviewAndConfirmCancel();
         }
+    }
+
+    @Override
+    public void transitionOut() {
+        overrideTransitionOut();
     }
 
     private void resolveCancelReviewAndConfirm(final Intent data) {
@@ -516,6 +522,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     @Override
     public void cancelCheckout(MercadoPagoError mercadoPagoError) {
+        overrideTransitionOut();
         Intent intent = new Intent();
         intent.putExtra(EXTRA_MERCADO_PAGO_ERROR, JsonUtil.getInstance().toJson(mercadoPagoError));
         setResult(RESULT_CANCELED, intent);
@@ -562,6 +569,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     @Override
     public void cancelCheckout(Integer resultCode, Boolean paymentMethodEdited) {
+        overrideTransitionOut();
         Intent intent = new Intent();
         intent.putExtra(EXTRA_PAYMENT_METHOD_CHANGED, paymentMethodEdited);
         setResult(resultCode, intent);
@@ -587,7 +595,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showPaymentProcessor() {
         startActivityForResult(PaymentProcessorPluginActivity.getIntent(this), PLUGIN_PAYMENT_PROCESSOR_REQUEST_CODE);
-        overrideTransitionFadeInFadeOut();
+        overrideTransitionWithNoAnimation();
     }
 
     @Override
@@ -615,6 +623,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     @Override
     public void exitCheckout(final int resCode) {
+        overrideTransitionOut();
         setResult(resCode);
         finish();
     }
@@ -634,5 +643,15 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         overrideTransitionOut();
         setResult(RESULT_CANCELED);
         finish();
+    }
+
+    @Override
+    public void onOneTapConfirmCardFlow() {
+        presenter.confirmCardFlow();
+    }
+
+    @Override
+    public void onOneTapCardFlowCanceled() {
+        presenter.cancelCardFlow();
     }
 }

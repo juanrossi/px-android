@@ -62,4 +62,6 @@ public interface CheckoutView extends MvpView {
     void hideProgress();
 
     void exitCheckout(int resCode);
+
+    void transitionOut();
 }

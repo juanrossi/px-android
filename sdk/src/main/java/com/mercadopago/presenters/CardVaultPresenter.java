@@ -268,8 +268,17 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
             installmentsListShown = true;
             askForInstallments();
         } else {
-            getView().finishWithResult();
+            finishWithResult();
         }
+    }
+
+    private void finishWithResult() {
+        if (isSecurityCodeFlowNeeded()) {
+            getView().animateTransitionSlideInSlideOut();
+        } else {
+            getView().transitionWithNoAnimation();
+        }
+        getView().finishWithResult();
     }
 
     private void askForInstallments() {
@@ -376,17 +385,31 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
         if (defaultPayerCost != null) {
             payerCost = defaultPayerCost;
-            getView().askForSecurityCodeWithoutInstallments();
+            askForSecurityCodeWithoutInstallments();
         } else if (payerCostsList.isEmpty()) {
             getView()
                 .showError(new MercadoPagoError(getResourcesProvider().getMissingPayerCostsErrorMessage(), false), "");
         } else if (payerCostsList.size() == 1) {
             payerCost = payerCosts.get(0);
-            getView().askForSecurityCodeWithoutInstallments();
+            askForSecurityCodeWithoutInstallments();
         } else {
             installmentsListShown = true;
             getView().askForInstallments();
         }
+    }
+
+    private void askForSecurityCodeWithoutInstallments() {
+        if (isSecurityCodeFlowNeeded()) {
+            getView().animateTransitionSlideInSlideOut();
+        } else {
+            getView().transitionWithNoAnimation();
+        }
+        startSecurityCodeFlowIfNeeded();
+    }
+
+    private void askForSecurityCodeFromInstallments() {
+        getView().animateTransitionSlideInSlideOut();
+        startSecurityCodeFlowIfNeeded();
     }
 
     public void resolveIssuersRequest(final Issuer issuer) {
@@ -400,12 +423,12 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
         if (savedCardAvailable()) {
             if (installmentsListShown) {
-                getView().askForSecurityCodeFromInstallments();
+                askForSecurityCodeFromInstallments();
             } else {
-                getView().askForSecurityCodeWithoutInstallments();
+                askForSecurityCodeWithoutInstallments();
             }
         } else {
-            getView().finishWithResult();
+            finishWithResult();
         }
     }
 
@@ -421,7 +444,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
             setPayerCost(getPaymentRecovery().getPayerCost());
             setIssuer(getPaymentRecovery().getIssuer());
         }
-        getView().finishWithResult();
+        finishWithResult();
     }
 
     public void resolveNewCardRequest(final PaymentMethod paymentMethod, final Token token,
@@ -477,7 +500,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         if (isInstallmentsEnabled()) {
             getInstallmentsForCardAsync(getCard());
         } else {
-            getView().askForSecurityCodeWithoutInstallments();
+            askForSecurityCodeWithoutInstallments();
         }
     }
 
@@ -505,12 +528,16 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         return issuersList;
     }
 
-    public void checkSecurityCodeFlow() {
-        if (savedCardAvailable() && isESCSaved()) {
-            createESCToken();
-        } else {
+    public void startSecurityCodeFlowIfNeeded() {
+        if (isSecurityCodeFlowNeeded()) {
             getView().startSecurityCodeActivity(TrackingUtil.SECURITY_CODE_REASON_SAVED_CARD);
+        } else {
+            createESCToken();
         }
+    }
+
+    public boolean isSecurityCodeFlowNeeded() {
+        return !savedCardAvailable() || !isESCSaved();
     }
 
     private boolean isESCSaved() {
@@ -537,7 +564,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
                     public void onSuccess(final Token token) {
                         CardVaultPresenter.this.token = token;
                         CardVaultPresenter.this.token.setLastFourDigits(card.getLastFourDigits());
-                        getView().finishWithResult();
+                        finishWithResult();
                     }
 
                     @Override

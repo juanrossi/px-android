@@ -590,6 +590,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         } else {
             state.paymentMethodEdited = true;
             getView().showPaymentMethodSelection();
+            //Back button in R&C
+            getView().transitionOut();
         }
     }
 
@@ -961,6 +963,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             state.editPaymentMethodFromReviewAndConfirm = fromReviewAndConfirm;
             state.paymentMethodEdited = true;
             getView().showPaymentMethodSelection();
+            if (fromReviewAndConfirm) {
+                //Button "change payment method" in R&C
+                getView().transitionOut();
+            }
         }
     }
 
@@ -979,5 +985,13 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         state.selectedPaymentMethod = paymentMethod;
         getView().showProgress();
         createPayment();
+    }
+
+    public void confirmCardFlow() {
+        getView().showProgress();
+    }
+
+    public void cancelCardFlow() {
+        getView().hideProgress();
     }
 }

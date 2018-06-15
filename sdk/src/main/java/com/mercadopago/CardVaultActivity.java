@@ -256,18 +256,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
     }
 
     @Override
-    public void askForSecurityCodeFromInstallments() {
-        presenter.checkSecurityCodeFlow();
-        animateTransitionSlideInSlideOut();
-    }
-
-    @Override
-    public void askForSecurityCodeWithoutInstallments() {
-        presenter.checkSecurityCodeFlow();
-        animateTransitionSlideInSlideOut();
-    }
-
-    @Override
     public void startSecurityCodeActivity(String reason) {
         new MercadoPagoComponents.Activities.SecurityCodeActivityBuilder()
             .setActivity(this)
@@ -527,8 +515,14 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
             .startActivity();
     }
 
+    @Override
     public void animateTransitionSlideInSlideOut() {
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+    }
+
+    @Override
+    public void transitionWithNoAnimation() {
+        overridePendingTransition(R.anim.mpsdk_no_change_animation, R.anim.mpsdk_no_change_animation);
     }
 
     @Override
@@ -542,7 +536,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
         returnIntent.putExtra("card", JsonUtil.getInstance().toJson(presenter.getCard()));
         setResult(RESULT_OK, returnIntent);
         finish();
-        animateTransitionSlideInSlideOut();
     }
 
     @Override

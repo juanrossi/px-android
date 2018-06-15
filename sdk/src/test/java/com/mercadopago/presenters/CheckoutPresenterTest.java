@@ -1252,6 +1252,11 @@ public class CheckoutPresenterTest {
         }
 
         @Override
+        public void transitionOut() {
+            //Do nothing
+        }
+
+        @Override
         public void showError(MercadoPagoError error) {
             this.showingError = true;
             this.errorShown = error;

@@ -31,11 +31,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 
 /**
  * Created by vaserber on 4/20/17.
@@ -711,42 +712,41 @@ public class CardVaultPresenterTest {
         presenter.resolveInstallmentsRequest(mockedPayerCost, null);
         assertTrue(mockedView.securityCodeFlowStarted);
 
-        presenter.checkSecurityCodeFlow();
-        assertTrue(mockedView.securityCodeActivityStarted);
+        presenter.startSecurityCodeFlowIfNeeded();
+        assertTrue(mockedView.securityCodeFlowStarted);
     }
 
     @Test
     public void onInstallmentsAskedThenDontAskForSecurityCodeWhenCardIdIsSaved() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
+        final MockedView mockedView = new MockedView();
+        final MockedProvider provider = new MockedProvider();
         provider.setESCEnabled(true);
 
-        List<Installment> installmentsList = Installments.getInstallmentsList();
+        final List<Installment> installmentsList = Installments.getInstallmentsList();
         provider.setResponse(installmentsList);
 
-        CardVaultPresenter presenter = new CardVaultPresenter();
+        final CardVaultPresenter presenter = new CardVaultPresenter();
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
 
         presenter.setSite(Sites.ARGENTINA);
         presenter.setAmount(new BigDecimal(100));
-        Card mockedCard = Cards.getCard();
+        final Card mockedCard = Cards.getCard();
         mockedCard.setId("12345");
         presenter.setCard(mockedCard);
+        final Token mockedToken = Tokens.getTokenWithESC();
+        provider.setResponse(mockedToken);
 
         presenter.initialize();
 
-        PayerCost mockedPayerCost = PayerCosts.getPayerCost();
+        final PayerCost mockedPayerCost = PayerCosts.getPayerCost();
 
         //Installments response
         presenter.resolveInstallmentsRequest(mockedPayerCost, null);
-        assertTrue(mockedView.securityCodeFlowStarted);
+        assertTrue(mockedView.installmentsFlowStarted);
 
-        Token mockedToken = Tokens.getTokenWithESC();
-        provider.setResponse(mockedToken);
-
-        presenter.checkSecurityCodeFlow();
-        assertFalse(mockedView.securityCodeActivityStarted);
+        presenter.startSecurityCodeFlowIfNeeded();
+        assertFalse(mockedView.securityCodeFlowStarted);
 
         assertEquals(provider.successfulTokenResponse.getId(), mockedToken.getId());
     }
@@ -773,18 +773,15 @@ public class CardVaultPresenterTest {
         presenter.initialize();
 
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
-
-        //Installments response
-        presenter.resolveInstallmentsRequest(mockedPayerCost, null);
-        assertTrue(mockedView.securityCodeFlowStarted);
-
         //Set error with create token ESC
         ApiException apiException = Tokens.getInvalidTokenWithESC();
         provider.setResponse(new MercadoPagoError(apiException, ""));
 
-        presenter.checkSecurityCodeFlow();
-        assertTrue(mockedView.securityCodeActivityStarted);
+        //Installments onActivityResult
+        presenter.resolveInstallmentsRequest(mockedPayerCost, null);
 
+        assertTrue(mockedView.installmentsFlowStarted);
+        assertTrue(mockedView.securityCodeFlowStarted);
         assertTrue(provider.deleteRequested);
         assertEquals(provider.cardIdDeleted, "12345");
     }
@@ -811,18 +808,15 @@ public class CardVaultPresenterTest {
         presenter.initialize();
 
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
-
-        //Installments response
-        presenter.resolveInstallmentsRequest(mockedPayerCost, null);
-        assertTrue(mockedView.securityCodeFlowStarted);
-
         //Set error with create token ESC
         ApiException apiException = Tokens.getInvalidTokenWithESCFingerprint();
         provider.setResponse(new MercadoPagoError(apiException, ""));
 
-        presenter.checkSecurityCodeFlow();
-        assertTrue(mockedView.securityCodeActivityStarted);
+        //Installments onActivityResult
+        presenter.resolveInstallmentsRequest(mockedPayerCost, null);
 
+        assertTrue(mockedView.installmentsFlowStarted);
+        assertTrue(mockedView.securityCodeFlowStarted);
         assertTrue(provider.deleteRequested);
         assertEquals(provider.cardIdDeleted, "12345");
     }
@@ -858,16 +852,81 @@ public class CardVaultPresenterTest {
         Token mockedToken = Tokens.getToken();
         provider.setResponse(mockedToken);
 
-        presenter.checkSecurityCodeFlow();
-        assertTrue(mockedView.securityCodeActivityStarted);
+        presenter.startSecurityCodeFlowIfNeeded();
+        assertTrue(mockedView.securityCodeFlowStarted);
 
         assertEquals(provider.successfulTokenResponse.getId(), mockedToken.getId());
     }
 
     @Test
     public void onSavedCardWithESCSavedThenCreateTokenWithESC() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
+        final MockedView mockedView = new MockedView();
+        final MockedProvider provider = new MockedProvider();
+        provider.setESCEnabled(true);
+
+        final List<Installment> installmentsList = Installments.getInstallmentsList();
+        provider.setResponse(installmentsList);
+
+        final CardVaultPresenter presenter = new CardVaultPresenter();
+        presenter.attachView(mockedView);
+        presenter.attachResourcesProvider(provider);
+
+        presenter.setSite(Sites.ARGENTINA);
+        presenter.setAmount(new BigDecimal(100));
+        final Card mockedCard = Cards.getCard();
+        mockedCard.setId("12345");
+        presenter.setCard(mockedCard);
+
+        //Set ESC to simulate it is saved
+        presenter.setESC("12345678");
+
+        presenter.initialize();
+
+        final PayerCost mockedPayerCost = PayerCosts.getPayerCost();
+        final Token mockedToken = Tokens.getTokenWithESC();
+        //Set error with create token ESC
+        provider.setResponse(mockedToken);
+
+        //Installments onActivityResult
+        presenter.resolveInstallmentsRequest(mockedPayerCost, null);
+        assertEquals(provider.successfulTokenResponse.getId(), mockedToken.getId());
+    }
+
+    @Test
+    public void whenAskInstallmentsAndSecurityCodeThenCloseFlowWithSlideAnimation() {
+        final MockedView mockedView = new MockedView();
+        final MockedProvider provider = new MockedProvider();
+        //Ask for security code
+        provider.setESCEnabled(false);
+
+        final List<Installment> installmentsList = Installments.getInstallmentsList();
+        provider.setResponse(installmentsList);
+
+        final CardVaultPresenter presenter = new CardVaultPresenter();
+        presenter.attachView(mockedView);
+        presenter.attachResourcesProvider(provider);
+
+        presenter.setSite(Sites.ARGENTINA);
+        presenter.setAmount(new BigDecimal(100));
+        final Card mockedCard = Cards.getCard();
+        mockedCard.setId("12345");
+        presenter.setCard(mockedCard);
+
+        presenter.initialize();
+
+        final PayerCost mockedPayerCost = PayerCosts.getPayerCost();
+
+        //Installments onActivityResult
+        presenter.resolveInstallmentsRequest(mockedPayerCost, null);
+        assertTrue(mockedView.securityCodeFlowStarted);
+        assertTrue(mockedView.installmentsFlowStarted);
+        assertTrue(mockedView.animateSlide);
+    }
+
+    @Test
+    public void whenDontAskForInstallmentsAndDontAskForSecurityCodeThenCloseFlowWithNoAnimation() {
+        final MockedView mockedView = new MockedView();
+        final MockedProvider provider = new MockedProvider();
         provider.setESCEnabled(true);
 
         List<Installment> installmentsList = Installments.getInstallmentsList();
@@ -879,26 +938,62 @@ public class CardVaultPresenterTest {
 
         presenter.setSite(Sites.ARGENTINA);
         presenter.setAmount(new BigDecimal(100));
-        Card mockedCard = Cards.getCard();
+        final Card mockedCard = Cards.getCard();
         mockedCard.setId("12345");
         presenter.setCard(mockedCard);
 
         //Set ESC to simulate it is saved
+        //Don't ask for security code
         presenter.setESC("12345678");
+
+        //Disable installments
+        //Don't ask for installments
+        presenter.setInstallmentsEnabled(false);
+
+        final Token mockedToken = Tokens.getTokenWithESC();
+        //Token response
+        provider.setResponse(mockedToken);
 
         presenter.initialize();
 
-        PayerCost mockedPayerCost = PayerCosts.getPayerCost();
-        Token mockedToken = Tokens.getTokenWithESC();
+        assertFalse(mockedView.securityCodeFlowStarted);
+        assertFalse(mockedView.installmentsFlowStarted);
+        assertTrue(mockedView.animateNoAnimation);
+    }
 
-        //Installments response
-        presenter.resolveInstallmentsRequest(mockedPayerCost, null);
+    @Test
+    public void whenDontAskForInstallmentsAndAskSecurityCodeThenCloseFlowWithSlideAnimation() {
+        final MockedView mockedView = new MockedView();
+        final MockedProvider provider = new MockedProvider();
+        //Ask for security code
+        provider.setESCEnabled(false);
 
-        //Set error with create token ESC
+        final List<Installment> installmentsList = Installments.getInstallmentsList();
+        provider.setResponse(installmentsList);
+
+        final CardVaultPresenter presenter = new CardVaultPresenter();
+        presenter.attachView(mockedView);
+        presenter.attachResourcesProvider(provider);
+
+        presenter.setSite(Sites.ARGENTINA);
+        presenter.setAmount(new BigDecimal(100));
+        final Card mockedCard = Cards.getCard();
+        mockedCard.setId("12345");
+        presenter.setCard(mockedCard);
+
+        //Disable installments
+        //Don't ask for installments
+        presenter.setInstallmentsEnabled(false);
+
+        final Token mockedToken = Tokens.getTokenWithESC();
+        //Token response
         provider.setResponse(mockedToken);
 
-        presenter.checkSecurityCodeFlow();
-        assertEquals(provider.successfulTokenResponse.getId(), mockedToken.getId());
+        presenter.initialize();
+
+        assertTrue(mockedView.securityCodeFlowStarted);
+        assertFalse(mockedView.installmentsFlowStarted);
+        assertTrue(mockedView.animateSlide);
     }
 
     private class MockedProvider implements CardVaultProvider {
@@ -1019,7 +1114,8 @@ public class CardVaultPresenterTest {
         private boolean finishedWithResult;
         private boolean cardVaultCanceled;
         private boolean errorState;
-        private boolean securityCodeActivityStarted;
+        private boolean animateSlide;
+        private boolean animateNoAnimation;
 
         @Override
         public void askForInstallments() {
@@ -1037,18 +1133,8 @@ public class CardVaultPresenterTest {
         }
 
         @Override
-        public void askForSecurityCodeWithoutInstallments() {
-            securityCodeFlowStarted = true;
-        }
-
-        @Override
         public void askForCardInformation() {
             guessingFlowStarted = true;
-        }
-
-        @Override
-        public void askForSecurityCodeFromInstallments() {
-            securityCodeFlowStarted = true;
         }
 
         @Override
@@ -1089,8 +1175,18 @@ public class CardVaultPresenterTest {
         }
 
         @Override
+        public void animateTransitionSlideInSlideOut() {
+            animateSlide = true;
+        }
+
+        @Override
+        public void transitionWithNoAnimation() {
+            animateNoAnimation = true;
+        }
+
+        @Override
         public void startSecurityCodeActivity(String reason) {
-            securityCodeActivityStarted = true;
+            securityCodeFlowStarted = true;
         }
     }
 }

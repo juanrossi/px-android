@@ -24,6 +24,7 @@ import com.mercadopago.util.JsonUtil;
 import com.mercadopago.viewmodel.CardPaymentModel;
 import com.mercadopago.viewmodel.OneTapModel;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class OneTapFragment extends Fragment implements OneTap.View {
@@ -54,6 +55,10 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         void onOneTapPay(@NonNull final PaymentMethod paymentMethod);
 
         void onOneTapPay(@NonNull final CardPaymentModel cardPaymentModel);
+
+        void onOneTapConfirmCardFlow();
+
+        void onOneTapCardFlowCanceled();
     }
 
     @Override
@@ -100,7 +105,6 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     @Override
     public void cancel() {
-
         if (callback != null) {
             callback.onOneTapCanceled();
         }
@@ -136,10 +140,13 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQ_CODE_CARD_VAULT && resultCode == RESULT_OK) {
             //TODO change serializable output at least
-            String tokenString = data.getStringExtra(BUNDLE_TOKEN);
-            Token token = JsonUtil.getInstance().fromJson(tokenString, Token.class);
+            final String tokenString = data.getStringExtra(BUNDLE_TOKEN);
+            final Token token = JsonUtil.getInstance().fromJson(tokenString, Token.class);
             presenter.onReceived(token);
+        } else if (requestCode == REQ_CODE_CARD_VAULT && resultCode == RESULT_CANCELED && callback != null) {
+            callback.onOneTapCardFlowCanceled();
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -201,7 +208,10 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     @Override
-    public void showCardFlow(@NonNull OneTapModel model, @NonNull final Card card) {
+    public void showCardFlow(@NonNull final OneTapModel model, @NonNull final Card card) {
+        if (callback != null) {
+            callback.onOneTapConfirmCardFlow();
+        }
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
             .setMerchantPublicKey(model.getPublicKey())
             .setPayerAccessToken(model.getCheckoutPreference().getPayer().getAccessToken())
@@ -211,7 +221,5 @@ public class OneTapFragment extends Fragment implements OneTap.View {
             .setInstallmentsEnabled(false)
             .setCard(card)
             .startActivity(this, REQ_CODE_CARD_VAULT);
-        getActivity()
-            .overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 }
