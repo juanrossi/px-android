@@ -82,9 +82,9 @@ class PaymentMethod extends CompactComponent<PaymentMethod.Props, OneTap.Actions
     @VisibleForTesting()
     CompactComponent resolveComponent() {
         if (PaymentTypes.isCardPaymentMethod(props.getPaymentMethodType())) {
-            return new MethodCard(MethodCard.Props.createFrom(props), getActions());
+            return new MethodCard(MethodCard.Props.createFrom(props));
         } else if (PaymentTypes.isPlugin(props.getPaymentMethodType())) {
-            return new MethodPlugin(MethodPlugin.Props.createFrom(props), getActions());
+            return new MethodPlugin(MethodPlugin.Props.createFrom(props));
         } else {
             //TODO should not happen or should have another way to resolve it.
             throw new IllegalStateException("shouldn't happen - one tap payment type not supported");

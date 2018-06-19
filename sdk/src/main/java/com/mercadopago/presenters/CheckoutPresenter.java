@@ -46,6 +46,7 @@ import com.mercadopago.views.CheckoutView;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -159,7 +160,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     @VisibleForTesting
     boolean shouldRetrieveDiscount() {
-        CheckoutStore store = CheckoutStore.getInstance();
+        final CheckoutStore store = CheckoutStore.getInstance();
         return !store.hasEnabledPaymentMethodPlugin() && !store.hasPaymentProcessor();
     }
 
@@ -190,7 +191,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     private TaggedCallback<List<Campaign>> onCampaignsRetrieved() {
         return new TaggedCallback<List<Campaign>>(ApiUtil.RequestOrigin.GET_CAMPAIGNS) {
             @Override
-            public void onSuccess(List<Campaign> campaigns) {
+            public void onSuccess(final List<Campaign> campaigns) {
                 if (isViewAttached()) {
                     analyzeCampaigns(campaigns);
                 }
@@ -208,11 +209,12 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         };
     }
 
-    private void analyzeCampaigns(final List<Campaign> campaigns) {
+    @VisibleForTesting
+    void analyzeCampaigns(final Collection<Campaign> campaigns) {
         if (campaigns == null || campaigns.size() == 0) {
             retrievePaymentMethodSearch();
         } else {
-            for (Campaign campaign : campaigns) {
+            for (final Campaign campaign : campaigns) {
                 if (campaign.isDirectDiscountCampaign()) {
                     state.campaign = campaign;
                     getDirectDiscount();
@@ -269,7 +271,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             @Override
             public void onSuccess(final PaymentMethodSearch paymentMethodSearch) {
                 if (isViewAttached()) {
-                    CheckoutPresenter.this.state.paymentMethodSearch = paymentMethodSearch;
+                    state.paymentMethodSearch = paymentMethodSearch;
                     startFlow();
                 }
             }
