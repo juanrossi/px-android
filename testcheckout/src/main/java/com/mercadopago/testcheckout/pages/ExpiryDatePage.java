@@ -38,9 +38,14 @@ public class ExpiryDatePage extends PageObject<CheckoutValidator> {
         return new SecurityCodePage(validator);
     }
 
-    public NoCheckoutPage pressBack() {
+    public NoCheckoutPage pressBackWithExclusion() {
         onView(isRoot()).perform(ViewActions.pressBack());
         return new NoCheckoutPage(validator);
+    }
+
+    public PaymentMethodPage pressBack() {
+        onView(isRoot()).perform(ViewActions.pressBack());
+        return new PaymentMethodPage(validator);
     }
 
     public NamePage pressPrevious() {

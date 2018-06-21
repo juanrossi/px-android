@@ -55,9 +55,14 @@ public class IdentificationPage extends PageObject<CheckoutValidator> {
         return this;
     }
 
-    public NoCheckoutPage pressBack() {
+    public NoCheckoutPage pressBackWithExclusions() {
         onView(isRoot()).perform(ViewActions.pressBack());
         return new NoCheckoutPage(validator);
+    }
+
+    public PaymentMethodPage pressBack() {
+        onView(isRoot()).perform(ViewActions.pressBack());
+        return new PaymentMethodPage(validator);
     }
 
     public SecurityCodePage pressPrevious() {
