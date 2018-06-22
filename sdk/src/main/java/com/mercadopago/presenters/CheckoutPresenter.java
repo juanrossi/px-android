@@ -61,7 +61,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     private DataInitializationTask dataInitializationTask; //instance saved as attribute to cancel and avoid crash
 
     public CheckoutPresenter(final CheckoutStateModel persistentData) {
-        this.state = persistentData;
+        state = persistentData;
     }
 
     public Serializable getState() {
@@ -369,7 +369,9 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
                 @Override
                 public void onSuccess(final CheckoutPreference checkoutPreference) {
-                    CheckoutPresenter.this.state.checkoutPreference = checkoutPreference;
+                    //TODO 21/06/2017 - Hack for credits, should remove payer access token.
+                    checkoutPreference.getPayer().setAccessToken(state.privateKey);
+                    state.checkoutPreference = checkoutPreference;
                     if (isViewAttached()) {
                         startCheckoutForPreference();
                     }

@@ -145,16 +145,16 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     }
 
     protected CheckoutStateModel getActivityParameters() {
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         final MercadoPagoCheckout mercadoPagoCheckout =
             (MercadoPagoCheckout) intent.getSerializableExtra(EXTRA_CHECKOUT_CONFIGURATION);
         final CheckoutPreference checkoutPreference = mercadoPagoCheckout.getCheckoutPreference();
         requestedResultCode = intent.getIntExtra(EXTRA_RESULT_CODE, 0);
-        final CheckoutStateModel
-            persistentData = CheckoutStateModel.from(requestedResultCode, mercadoPagoCheckout);
         privateKey =
             (checkoutPreference != null && checkoutPreference.getPayer() != null) ? checkoutPreference.getPayer()
-                .getAccessToken() : "";
+                .getAccessToken() : mercadoPagoCheckout.getPrivateKey();
+        final CheckoutStateModel
+            persistentData = CheckoutStateModel.from(requestedResultCode, mercadoPagoCheckout, privateKey);
         merchantPublicKey = mercadoPagoCheckout.getMerchantPublicKey();
         return persistentData;
     }
@@ -458,8 +458,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     }
 
     private boolean isUserLogged() {
-        return presenter.getCheckoutPreference().getPayer() != null &&
-            !TextUtil.isEmpty(presenter.getCheckoutPreference().getPayer().getAccessToken());
+        return !TextUtil.isEmpty(presenter.getCheckoutPreference().getPayer().getAccessToken());
     }
 
     private void resolvePaymentResultRequest(int resultCode, Intent data) {

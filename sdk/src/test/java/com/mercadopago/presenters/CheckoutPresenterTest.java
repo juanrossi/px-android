@@ -93,6 +93,8 @@ public class CheckoutPresenterTest {
     private MockedView view;
     private MockedProvider provider;
 
+    private String privateKey;
+
     @Before
     public void setUp() {
         view = new MockedView();
@@ -128,7 +130,7 @@ public class CheckoutPresenterTest {
     @NonNull
     private CheckoutPresenter getBasePresenter(final int resultCode, final CheckoutView view,
         final CheckoutProvider provider) {
-        final CheckoutStateModel model = CheckoutStateModel.from(resultCode, mercadoPagoCheckout);
+        final CheckoutStateModel model = CheckoutStateModel.from(resultCode, mercadoPagoCheckout, privateKey);
         final CheckoutPresenter presenter = new CheckoutPresenter(model);
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);

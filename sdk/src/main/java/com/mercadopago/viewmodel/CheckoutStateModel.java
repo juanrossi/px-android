@@ -1,5 +1,6 @@
 package com.mercadopago.viewmodel;
 
+import android.support.annotation.NonNull;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
@@ -58,11 +59,15 @@ public final class CheckoutStateModel implements Serializable {
     public String idempotencyKeySeed;
     public String currentPaymentIdempotencyKey;
     public String merchantPublicKey;
+    //TODO 21/06/2017 - Hack for credits, should remove payer access token.
+    @Deprecated
+    public String privateKey;
 
     private CheckoutStateModel() {
     }
 
-    public static CheckoutStateModel from(final int requestedResult, MercadoPagoCheckout mercadoPagoCheckout) {
+    public static CheckoutStateModel from(final int requestedResult, final MercadoPagoCheckout mercadoPagoCheckout,
+        @NonNull final String privateKey) {
         final CheckoutStateModel checkoutStateModel = new CheckoutStateModel();
         checkoutStateModel.checkoutPreferenceId = mercadoPagoCheckout.getPreferenceId();
         checkoutStateModel.campaign = mercadoPagoCheckout.getCampaign();
@@ -77,6 +82,8 @@ public final class CheckoutStateModel implements Serializable {
         checkoutStateModel.requestedResult = requestedResult;
         checkoutStateModel.idempotencyKeySeed = mercadoPagoCheckout.getMerchantPublicKey();
         checkoutStateModel.merchantPublicKey = mercadoPagoCheckout.getMerchantPublicKey();
+        //TODO 21/06/2017 - Hack for credits, should remove payer access token.
+        checkoutStateModel.privateKey = privateKey;
         return checkoutStateModel;
     }
 }

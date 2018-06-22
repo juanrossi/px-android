@@ -24,6 +24,7 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.uicontrollers.FontCache;
+import com.mercadopago.util.TextUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,7 +73,10 @@ public class MercadoPagoCheckout implements Serializable {
 
     private final boolean binaryMode;
 
-    private MercadoPagoCheckout(Builder builder) {
+    @Nullable
+    private final String privateKey;
+
+    private MercadoPagoCheckout(final Builder builder) {
         publicKey = builder.publicKey;
         checkoutPreference = builder.checkoutPreference;
         servicePreference = builder.servicePreference;
@@ -84,6 +88,7 @@ public class MercadoPagoCheckout implements Serializable {
         paymentResult = builder.paymentResult;
         paymentData = builder.paymentData;
         preferenceId = builder.preferenceId;
+        privateKey = builder.privateKey;
         configureCustomServicesHandler(servicePreference);
         configureCheckoutStore(builder);
         configureFlowHandler();
@@ -233,13 +238,19 @@ public class MercadoPagoCheckout implements Serializable {
         return checkoutPreference;
     }
 
+    @NonNull
+    public String getPrivateKey() {
+        return TextUtils.isEmpty(privateKey) ? "" : privateKey;
+    }
+
     public static class Builder {
 
-        private final String publicKey;
-        private final String preferenceId;
-        private final CheckoutPreference checkoutPreference;
-        private final List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
-        private final Map<String, PaymentProcessor> paymentPlugins = new HashMap<>();
+        final String publicKey;
+        final String preferenceId;
+        final CheckoutPreference checkoutPreference;
+        final List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
+        final Map<String, PaymentProcessor> paymentPlugins = new HashMap<>();
+
         Boolean binaryMode = false;
 
         @NonNull
@@ -247,6 +258,9 @@ public class MercadoPagoCheckout implements Serializable {
 
         @NonNull
         FlowPreference flowPreference = new FlowPreference.Builder().build();
+
+        @Nullable
+        String privateKey;
 
         PaymentResultScreenPreference paymentResultScreenPreference;
         PaymentData paymentData;
@@ -267,9 +281,11 @@ public class MercadoPagoCheckout implements Serializable {
          * @param checkoutPreference the preference that represents the payment information.
          */
         public Builder(@NonNull final String publicKey, @NonNull final CheckoutPreference checkoutPreference) {
+            preferenceId = null;
             this.publicKey = publicKey;
-            this.preferenceId = null;
             this.checkoutPreference = checkoutPreference;
+            //TODO 21/06/2017 - Hack for credits, should remove payer access token.
+            privateKey = checkoutPreference.getPayer().getAccessToken();
         }
 
         /**
@@ -281,7 +297,7 @@ public class MercadoPagoCheckout implements Serializable {
         public Builder(@NonNull final String publicKey, @NonNull final String preferenceId) {
             this.publicKey = publicKey;
             this.preferenceId = preferenceId;
-            this.checkoutPreference = null;
+            checkoutPreference = null;
         }
 
         /**
@@ -295,6 +311,21 @@ public class MercadoPagoCheckout implements Serializable {
         public Builder setDiscount(@NonNull final Discount discount, @NonNull final Campaign campaign) {
             this.discount = discount;
             this.campaign = campaign;
+            return this;
+        }
+
+        /**
+         * Private key provides save card capabilities and account money balance.
+         *
+         * @param privateKey the user private key
+         * @return builder
+         */
+        public Builder setPrivateKey(@NonNull final String privateKey) {
+            //TODO 21/06/2017 - Hack for credits, should remove payer access token.
+            this.privateKey = privateKey;
+            if (checkoutPreference != null) {
+                checkoutPreference.getPayer().setAccessToken(privateKey);
+            }
             return this;
         }
 
