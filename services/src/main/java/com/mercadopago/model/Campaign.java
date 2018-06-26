@@ -57,7 +57,7 @@ public class Campaign implements Serializable, Parcelable {
 
     private Campaign(Parcel in) {
         id = in.readString();
-        maxCouponAmount = ParcelableUtil.getBigDecimalReadByte(in);
+        maxCouponAmount = ParcelableUtil.getOptionalBigDecimal(in);
         codeType = in.readString();
     }
 
@@ -81,7 +81,7 @@ public class Campaign implements Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        ParcelableUtil.writeByte(dest, maxCouponAmount);
+        ParcelableUtil.writeOptional(dest, maxCouponAmount);
         dest.writeString(codeType);
     }
 

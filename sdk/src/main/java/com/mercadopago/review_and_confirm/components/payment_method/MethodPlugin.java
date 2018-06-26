@@ -7,9 +7,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
+import com.mercadopago.internal.datasource.PluginService;
+import com.mercadopago.internal.repository.PluginRepository;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.review_and_confirm.models.PaymentModel;
-import com.mercadopago.util.ResourceUtil;
 import com.mercadopago.util.ViewUtils;
 
 class MethodPlugin extends CompactComponent<MethodPlugin.Props, Void> {
@@ -40,13 +41,11 @@ class MethodPlugin extends CompactComponent<MethodPlugin.Props, Void> {
         final ImageView imageView = paymentView.findViewById(R.id.icon);
         final TextView title = paymentView.findViewById(R.id.title);
         final TextView description = paymentView.findViewById(R.id.description);
-
-        final PaymentMethodInfo pluginInfo = ResourceUtil.getPluginInfo(props.paymentMethodId, parent.getContext());
-        if (pluginInfo != null) {
-            ViewUtils.loadOrGone(pluginInfo.description, description);
-            ViewUtils.loadOrGone(pluginInfo.name, title);
-            imageView.setImageResource(pluginInfo.icon);
-        }
+        final PluginRepository pluginService = new PluginService(parent.getContext());
+        final PaymentMethodInfo pluginInfo = pluginService.getPaymentMethodInfo(props.paymentMethodId);
+        ViewUtils.loadOrGone(pluginInfo.description, description);
+        ViewUtils.loadOrGone(pluginInfo.name, title);
+        imageView.setImageResource(pluginInfo.icon);
 
         return paymentView;
     }

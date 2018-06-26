@@ -2,7 +2,6 @@ package com.mercadopago.plugins;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.plugins.components.MainPayment;
 import com.mercadopago.plugins.model.PluginPayment;
 
@@ -14,13 +13,14 @@ public class MainPaymentProcessor extends PaymentProcessor {
         this.pluginPayment = pluginPayment;
     }
 
+    @NonNull
     @Override
     public PluginComponent createPaymentComponent(@NonNull final PluginComponent.Props props,
-                                                  @NonNull final Context context) {
+        @NonNull final Context context) {
 
         PluginComponent.Props newProps = props.toBuilder()
-                .setToolbarVisible(false)
-                .build();
+            .setToolbarVisible(false)
+            .build();
 
         return new MainPayment(newProps, pluginPayment);
     }

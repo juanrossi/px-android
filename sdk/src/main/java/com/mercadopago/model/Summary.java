@@ -74,7 +74,7 @@ public class Summary {
         private final HashMap<String, SummaryDetail> summaryDetails = new HashMap<>();
         private final boolean showSubtotal = false;
 
-        public Builder addSummaryProductDetail(BigDecimal amount, String title, Integer textColor) {
+        public Builder addSummaryProductDetail(final BigDecimal amount, final String title, final Integer textColor) {
             putSummaryDetail(amount, title, SummaryItemType.PRODUCT, textColor);
             return this;
         }
@@ -119,9 +119,14 @@ public class Summary {
             return this;
         }
 
-        private void putSummaryDetail(BigDecimal amount, String title, String summaryItemType, Integer textColor) {
-            String name = "";
-            SummaryItemDetail summaryItemDetail = new SummaryItemDetail(name, amount);
+        private void putSummaryDetail(final BigDecimal amount,
+            final String title,
+            final String summaryItemType,
+            final Integer textColor) {
+
+            final String name = "";
+
+            final SummaryItemDetail summaryItemDetail = new SummaryItemDetail(name, amount);
 
             if (amount != null) {
                 SummaryDetail summaryDetail = new SummaryDetail(title, summaryItemType, textColor);

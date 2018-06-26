@@ -2,6 +2,7 @@ package com.mercadopago.review_and_confirm.components;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.text.Spanned;
 import android.view.View;
@@ -35,12 +36,11 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
         final LinearLayout summaryDetailsContainer = summaryView.findViewById(R.id.mpsdkSummaryDetails);
         final LinearLayout reviewSummaryPayContainer = summaryView.findViewById(R.id.mpsdkReviewSummaryPay);
         final View firstSeparator = summaryView.findViewById(R.id.mpsdkFirstSeparator);
-        final LinearLayout totalAmountContainer = summaryView.findViewById(R.id.mpsdkReviewSummaryTotal);
-        final View secondSeparator = summaryView.findViewById(R.id.mpsdkSecondSeparator);
+
         final LinearLayout disclaimerLinearLayout = summaryView.findViewById(R.id.disclaimer);
 
         //summaryDetails list
-        for (AmountDescription amountDescription : component.getAmountDescriptionComponents()) {
+        for (final AmountDescription amountDescription : component.getAmountDescriptionComponents()) {
             final Renderer amountDescriptionRenderer = RendererFactory.create(context, amountDescription);
             final View amountView = amountDescriptionRenderer.render();
             summaryDetailsContainer.addView(amountView);
@@ -48,7 +48,7 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
 
         if (shouldShowPayerCost(component.props.summaryModel)) {
             //payer cost
-            PayerCostColumn payerCostColumn = new PayerCostColumn(context, component.props.summaryModel.currencyId,
+            final PayerCostColumn payerCostColumn = new PayerCostColumn(context, component.props.summaryModel.currencyId,
                     component.props.summaryModel.siteId, component.props.summaryModel.getInstallmentsRate(),
                     component.props.summaryModel.getInstallments(), component.props.summaryModel.getPayerCostTotalAmount(),
                     component.props.summaryModel.getInstallmentAmount());
@@ -62,16 +62,14 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
 
         //disclaimer
         if (shouldShowCftDisclaimer(component.props.summaryModel)) {
-            String disclaimer = getDisclaimer(component, context);
+            final String disclaimer = getDisclaimer(component, context);
             final Renderer disclaimerRenderer = RendererFactory.create(context, component.getDisclaimerComponent(disclaimer));
             final View disclaimerView = disclaimerRenderer.render();
             disclaimerLinearLayout.addView(disclaimerView);
         }
 
         //total
-        setText(totalAmountTextView, getFormattedAmount(component.getTotalAmount(), component.props.summaryModel.currencyId));
-        totalAmountContainer.setVisibility(component.getTotalAmount() == null ? View.GONE : View.VISIBLE);
-        secondSeparator.setVisibility(component.getTotalAmount() == null ? View.GONE : View.VISIBLE);
+        setText(totalAmountTextView, getFormattedAmount(component.props.summaryModel.getAmountToPay(), component.props.summaryModel.currencyId));
 
         //disclaimer
         setText(disclaimerTextView, component.getSummary().getDisclaimerText());
@@ -93,7 +91,8 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
     }
 
 
-    private Spanned getFormattedAmount(BigDecimal amount, String currencyId) {
+    @Nullable
+    private Spanned getFormattedAmount(final BigDecimal amount, final String currencyId) {
         return amount != null && !isEmpty(currencyId) ? CurrenciesUtil.getSpannedAmountWithCurrencySymbol(amount, currencyId) : null;
     }
 

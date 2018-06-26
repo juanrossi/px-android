@@ -19,14 +19,13 @@ public class ReviewAndConfirmPreferences {
     private final BigDecimal arrearsAmount;
     private final BigDecimal taxesAmount;
     private final String disclaimerText;
-    private final BigDecimal chargeAmount;
     private final BigDecimal discountAmount;
     private final BigDecimal totalAmount;
     private final String productTitle;
     private final String disclaimerTextColor;
     private final boolean itemsEnabled;
 
-    private ReviewAndConfirmPreferences(Builder builder) {
+    ReviewAndConfirmPreferences(final Builder builder) {
         topComponent = builder.topView;
         bottomComponent = builder.bottomView;
         itemsEnabled = builder.itemsEnabled;
@@ -37,12 +36,10 @@ public class ReviewAndConfirmPreferences {
         shippingAmount = builder.shippingAmount;
         arrearsAmount = builder.arrearsAmount;
         taxesAmount = builder.taxesAmount;
-        chargeAmount = builder.chargeAmount;
         discountAmount = builder.discountAmount;
         disclaimerText = builder.disclaimerText;
         productTitle = builder.productTitle;
         disclaimerTextColor = builder.disclaimerTextColor;
-
         totalAmount = calculateTotalAmount();
     }
 
@@ -54,7 +51,6 @@ public class ReviewAndConfirmPreferences {
         return shippingAmount != null && shippingAmount.compareTo(BigDecimal.ZERO) > 0
             || arrearsAmount != null && arrearsAmount.compareTo(BigDecimal.ZERO) > 0
             || taxesAmount != null && taxesAmount.compareTo(BigDecimal.ZERO) > 0
-            || chargeAmount != null && chargeAmount.compareTo(BigDecimal.ZERO) > 0
             || discountAmount != null && discountAmount.compareTo(BigDecimal.ZERO) > 0
             || productAmount != null && productAmount.compareTo(BigDecimal.ZERO) > 0;
     }
@@ -113,10 +109,6 @@ public class ReviewAndConfirmPreferences {
         return disclaimerText;
     }
 
-    public BigDecimal getChargeAmount() {
-        return chargeAmount;
-    }
-
     public BigDecimal getDiscountAmount() {
         return discountAmount;
     }
@@ -136,7 +128,6 @@ public class ReviewAndConfirmPreferences {
     private BigDecimal calculateTotalAmount() {
         BigDecimal totalAmount = new BigDecimal(0);
         totalAmount = totalAmount.add(productAmount == null ? new BigDecimal(0) : productAmount);
-        totalAmount = totalAmount.add(chargeAmount == null ? new BigDecimal(0) : chargeAmount);
         totalAmount = totalAmount.add(taxesAmount == null ? new BigDecimal(0) : taxesAmount);
         totalAmount = totalAmount.add(shippingAmount == null ? new BigDecimal(0) : shippingAmount);
         totalAmount = totalAmount.add(arrearsAmount == null ? new BigDecimal(0) : arrearsAmount);
@@ -145,6 +136,7 @@ public class ReviewAndConfirmPreferences {
         return totalAmount;
     }
 
+    @SuppressWarnings("unused")
     public static class Builder {
         CustomComponent topView;
         CustomComponent bottomView;
@@ -158,7 +150,6 @@ public class ReviewAndConfirmPreferences {
         BigDecimal arrearsAmount;
         BigDecimal taxesAmount;
         String disclaimerText;
-        BigDecimal chargeAmount;
         BigDecimal discountAmount;
         String productTitle;
         String disclaimerTextColor;
@@ -169,7 +160,7 @@ public class ReviewAndConfirmPreferences {
          * @param productTitle the product title
          * @return builder
          */
-        public Builder setProductTitle(String productTitle) {
+        public Builder setProductTitle(final String productTitle) {
             this.productTitle = productTitle;
             return this;
         }
@@ -180,7 +171,7 @@ public class ReviewAndConfirmPreferences {
          * @param productAmount the product amount
          * @return builder
          */
-        public Builder setProductAmount(BigDecimal productAmount) {
+        public Builder setProductAmount(final BigDecimal productAmount) {
             this.productAmount = productAmount;
             return this;
         }
@@ -191,7 +182,7 @@ public class ReviewAndConfirmPreferences {
          * @param shippingAmount the shipping amount
          * @return builder
          */
-        public Builder setShippingAmount(BigDecimal shippingAmount) {
+        public Builder setShippingAmount(final BigDecimal shippingAmount) {
             this.shippingAmount = shippingAmount;
             return this;
         }
@@ -202,7 +193,7 @@ public class ReviewAndConfirmPreferences {
          * @param arrearsAmount the arrears amount
          * @return builder
          */
-        public Builder setArrearsAmount(BigDecimal arrearsAmount) {
+        public Builder setArrearsAmount(final BigDecimal arrearsAmount) {
             this.arrearsAmount = arrearsAmount;
             return this;
         }
@@ -213,19 +204,8 @@ public class ReviewAndConfirmPreferences {
          * @param taxesAmount the taxes amount
          * @return builder
          */
-        public Builder setTaxesAmount(BigDecimal taxesAmount) {
+        public Builder setTaxesAmount(final BigDecimal taxesAmount) {
             this.taxesAmount = taxesAmount;
-            return this;
-        }
-
-        /**
-         * Set charges amount that will appear in the top of review and confirm summary.
-         *
-         * @param chargeAmount the charges amount
-         * @return builder
-         */
-        public Builder setChargeAmount(BigDecimal chargeAmount) {
-            this.chargeAmount = chargeAmount;
             return this;
         }
 
@@ -235,7 +215,7 @@ public class ReviewAndConfirmPreferences {
          * @param discountAmount the discount amount
          * @return builder
          */
-        public Builder setDiscountAmount(BigDecimal discountAmount) {
+        public Builder setDiscountAmount(final BigDecimal discountAmount) {
             this.discountAmount = discountAmount;
             return this;
         }
@@ -246,7 +226,7 @@ public class ReviewAndConfirmPreferences {
          * @param disclaimerText the disclaimer text
          * @return builder
          */
-        public Builder setDisclaimerText(String disclaimerText) {
+        public Builder setDisclaimerText(final String disclaimerText) {
             this.disclaimerText = disclaimerText;
             return this;
         }
@@ -257,7 +237,7 @@ public class ReviewAndConfirmPreferences {
          * @param disclaimerTextColor the disclaimer text color in hex with hashtag
          * @return builder
          */
-        public Builder setDisclaimerTextColor(String disclaimerTextColor) {
+        public Builder setDisclaimerTextColor(final String disclaimerTextColor) {
             this.disclaimerTextColor = disclaimerTextColor;
             return this;
         }
@@ -303,7 +283,7 @@ public class ReviewAndConfirmPreferences {
          * @param collectorIcon drawable that will be shown in items view
          * @return builder
          */
-        public Builder setCollectorIcon(@DrawableRes int collectorIcon) {
+        public Builder setCollectorIcon(@DrawableRes final int collectorIcon) {
             this.collectorIcon = collectorIcon;
             return this;
         }
@@ -313,7 +293,7 @@ public class ReviewAndConfirmPreferences {
          * It appears only if the item's quantity is greater than 1
          *
          * @param quantityLabel the text that will be shown in the quantity label
-         * @return
+         * @return builder
          */
         public Builder setQuantityLabel(final String quantityLabel) {
             this.quantityLabel = quantityLabel;
@@ -326,7 +306,7 @@ public class ReviewAndConfirmPreferences {
          * if the item's quantity is greater than 1
          *
          * @param unitPriceLabel the text that will be shown in the unit price label
-         * @return
+         * @return builder
          */
         public Builder setUnitPriceLabel(final String unitPriceLabel) {
             this.unitPriceLabel = unitPriceLabel;

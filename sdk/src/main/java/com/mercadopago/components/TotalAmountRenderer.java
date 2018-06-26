@@ -35,10 +35,14 @@ public class TotalAmountRenderer extends Renderer<TotalAmount> {
                 TextFormatter.withCurrencyId(component.props.currencyId)
                     .withSpace()
                     .amount(component.props.amount)
+                    .add(component.props.discount.getCouponAmount())
                     .normalDecimals()
                     .into(totalAmountTextView);
             }
+        } else {
+            totalAmountTextView.setVisibility(View.GONE);
         }
+
         return bodyView;
     }
 }

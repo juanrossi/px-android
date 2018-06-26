@@ -9,13 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.MPCardMaskUtil;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.util.ViewUtils;
 
 /**
  * Created by vaserber on 10/19/16.
@@ -85,7 +84,7 @@ public class BackCardView {
     }
 
     private void resizeCard(ViewGroup cardViewContainer, int cardHeight, int cardWidth, int cardSecurityCodeFontSize) {
-        LayoutUtil.resizeViewGroupLayoutParams(cardViewContainer, cardHeight, cardWidth, mContext);
+        ViewUtils.resizeViewGroupLayoutParams(cardViewContainer, cardHeight, cardWidth, mContext);
         mCardSecurityCodeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardSecurityCodeFontSize);
     }
 

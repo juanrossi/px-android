@@ -54,7 +54,7 @@ public class AmountFormatter extends ChainFormatter {
     /**
      * Full display appears like 1,000.01
      *
-     * @return style to apply
+     * @return style to shouldBeTriggered
      */
     @NonNull
     public Style normalDecimals() {
@@ -64,7 +64,7 @@ public class AmountFormatter extends ChainFormatter {
     /**
      * Small display appears like 1,000 ^ 01
      *
-     * @return style to apply
+     * @return style to shouldBeTriggered
      */
     @NonNull
     public Style smallDecimals() {

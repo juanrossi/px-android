@@ -67,8 +67,8 @@ public class Discount implements Serializable, Parcelable {
         id = in.readString();
         name = in.readString();
         currencyId = in.readString();
-        percentOff = ParcelableUtil.getBigDecimalReadByte(in);
-        amountOff = ParcelableUtil.getBigDecimalReadByte(in);
+        percentOff = ParcelableUtil.getOptionalBigDecimal(in);
+        amountOff = ParcelableUtil.getOptionalBigDecimal(in);
         couponAmount = new BigDecimal(in.readString());
     }
 
@@ -94,8 +94,8 @@ public class Discount implements Serializable, Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(currencyId);
-        ParcelableUtil.writeByte(dest, percentOff);
-        ParcelableUtil.writeByte(dest, amountOff);
+        ParcelableUtil.writeOptional(dest, percentOff);
+        ParcelableUtil.writeOptional(dest, amountOff);
         dest.writeString(couponAmount.toString());
     }
 
@@ -105,7 +105,7 @@ public class Discount implements Serializable, Parcelable {
                 this.id);
     }
 
-    public static class Builder {
+    public static final class Builder {
         //region mandatory params
         private String id;
         private String currencyId;
@@ -122,7 +122,9 @@ public class Discount implements Serializable, Parcelable {
          * @param currencyId amount currency id
          * @param couponAmount amount that will be applied in discount
          */
-        public Builder(@NonNull String id, @NonNull String currencyId, @NonNull BigDecimal couponAmount) {
+        public Builder(@NonNull final String id,
+            @NonNull final String currencyId,
+            @NonNull final BigDecimal couponAmount) {
             this.id = id;
             this.currencyId = currencyId;
             this.couponAmount = couponAmount;

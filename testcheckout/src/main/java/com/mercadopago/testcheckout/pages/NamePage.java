@@ -33,7 +33,7 @@ public class NamePage extends PageObject<CheckoutValidator> {
 
     public ExpiryDatePage enterCardholderName(final String cardHolderName) {
         Matcher<View> cardCardholderNameEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardholderName);
-        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButtonText);
+        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButton);
         onView(cardCardholderNameEditTextMatcher).perform(typeText(cardHolderName));
         onView(cardNextButtonTextMatcher).perform(click());
         return new ExpiryDatePage(validator);

@@ -1,12 +1,9 @@
 package com.mercadopago.components;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PayerCost;
-
-import com.mercadopago.util.textformatter.TextFormatter;
 import java.math.BigDecimal;
 import java.util.Locale;
 
@@ -42,14 +39,14 @@ public class TotalAmount extends Component<TotalAmount.TotalAmountProps, Void> {
         String amountTitle;
 
         if (hasPayerCostWithMultipleInstallments()) {
-            String installmentsAmount = CurrenciesUtil
+            final String installmentsAmount = CurrenciesUtil
                 .getLocalizedAmountWithoutZeroDecimals(props.currencyId, props.payerCost.getInstallmentAmount());
             amountTitle = String.format(Locale.getDefault(),
                 "%dx %s",
                 props.payerCost.getInstallments(),
                 installmentsAmount);
         } else {
-            amountTitle = CurrenciesUtil.getLocalizedAmountWithoutZeroDecimals(props.currencyId, getAmount());
+            amountTitle = CurrenciesUtil.getLocalizedAmountWithoutZeroDecimals(props.currencyId, props.amount);
         }
 
         return amountTitle;
@@ -68,21 +65,5 @@ public class TotalAmount extends Component<TotalAmount.TotalAmountProps, Void> {
 
     public boolean hasPayerCostWithMultipleInstallments() {
         return props.payerCost != null && props.payerCost.hasMultipleInstallments();
-    }
-
-    private BigDecimal getAmount() {
-        BigDecimal amount;
-
-        if (props.discount != null) {
-            amount = getAmountWithDiscount();
-        } else {
-            amount = props.amount;
-        }
-
-        return amount;
-    }
-
-    private BigDecimal getAmountWithDiscount() {
-        return props.amount.subtract(props.discount.getCouponAmount());
     }
 }

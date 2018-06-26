@@ -23,7 +23,7 @@ import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.tracking.listeners.TracksListener;
 import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.LayoutUtil;
+import com.mercadopago.util.ViewUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +51,7 @@ public final class ExamplesUtils {
 
     public static void resolveCheckoutResult(final Activity context, final int requestCode, final int resultCode,
         final Intent data) {
-        LayoutUtil.showRegularLayout(context);
+        ViewUtils.showRegularLayout(context);
 
         if (requestCode == MercadoPagoCheckout.CHECKOUT_REQUEST_CODE) {
             if (resultCode == MercadoPagoCheckout.PAYMENT_RESULT_CODE) {
@@ -87,7 +87,8 @@ public final class ExamplesUtils {
     }
 
     public static List<Pair<String, Builder>> getOptions() {
-        final List<Pair<String, Builder>> options = new ArrayList<>(BusinessResultUtils.getAll());
+        final List<Pair<String, Builder>> options = new ArrayList<>(BusinessSamples.getAll());
+        ChargesSamples.addAll(options);
         options.add(new Pair<>("Review and Confirm - Custom exit", customExitReviewAndConfirm()));
         options.add(new Pair<>("Base flow - Tracks with listener", startBaseFlowWithTrackListener()));
         options.add(new Pair<>("All but debit card", allButDebitCard()));

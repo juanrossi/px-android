@@ -2,7 +2,6 @@ package com.mercadopago.providers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.BuildConfig;
 import com.mercadopago.R;
 import com.mercadopago.core.CustomServer;
@@ -11,8 +10,8 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.Card;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.Customer;
+import com.mercadopago.model.Discount;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
@@ -24,8 +23,7 @@ import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.MercadoPagoESC;
 import com.mercadopago.util.MercadoPagoESCImpl;
-import com.mercadopago.util.TextUtil;
-
+import com.mercadopago.util.TextUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +149,7 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
     }
 
     private boolean isMerchantServerCustomerAvailable() {
-        return !TextUtil.isEmpty(merchantBaseUrl) && !TextUtil.isEmpty(merchantGetCustomerUri);
+        return !TextUtils.isEmpty(merchantBaseUrl) && !TextUtils.isEmpty(merchantGetCustomerUri);
     }
 
     public void initializeMPTracker(String siteId) {

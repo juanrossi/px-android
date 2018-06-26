@@ -1,41 +1,5 @@
 <resources>
 
-    <style name="mpsdk_collapsing_toolbar_text_large" parent="Base.TextAppearance.AppCompat.Large">
-        <item name="android:textColor">@color/mpsdk_toolbar_text</item>
-    </style>
-
-    <style name="mpsdk_collapsing_toolbar_text_medium" parent="Base.TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/mpsdk_toolbar_text</item>
-    </style>
-
-    <style name="mpsdk_collapsing_review_toolbar_text_large" parent="Base.TextAppearance.AppCompat.Large">
-        <item name="android:textColor">@color/mpsdk_review_toolbar_text</item>
-    </style>
-
-    <style name="mpsdk_collapsing_review_toolbar_text_medium" parent="Base.TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/mpsdk_review_toolbar_text</item>
-    </style>
-
-    <style name="mpsdk_toolbar_text">
-        <item name="android:textColor">@color/mpsdk_toolbar_text</item>
-    </style>
-
-    <style name="mpsdk_toolbar_text_large" parent="mpsdk_toolbar_text">
-        <item name="android:textSize">@dimen/mpsdk_l_text</item>
-    </style>
-
-    <style name="mpsdk_toolbar_text_medium" parent="mpsdk_toolbar_text">
-        <item name="android:textSize">@dimen/mpsdk_m_text</item>
-    </style>
-
-    <style name="mpsdk_toolbar_text_small" parent="mpsdk_toolbar_text">
-        <item name="android:textSize">@dimen/mpsdk_s_text</item>
-    </style>
-
-    <style name="mpsdk_toolbar_text_xx_small" parent="mpsdk_toolbar_text">
-        <item name="android:textSize">@dimen/mpsdk_xxs_text</item>
-    </style>
-
     <style name="Theme.MercadoPagoTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -43,12 +7,5 @@
         <item name="android:statusBarColor">@color/mpsdk_status_bar</item>
         <item name="android:colorPrimary">@color/mpsdk_colorPrimary</item>
     </style>
-
-    <style name="Theme.MercadoPagoTheme.Modal" parent="Theme.MercadoPagoTheme.NoActionBar">
-        <item name="android:statusBarColor">@color/mpsdk_modal_status_bar</item>
-    </style>
-
-    <style name="Theme.ProcessMercadoPagoTheme.NoActionbar" parent="Theme.MercadoPagoTheme.NoActionBar"/>
-
     
 </resources>

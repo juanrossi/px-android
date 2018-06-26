@@ -10,7 +10,6 @@ import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.SavedCardToken;
 import com.mercadopago.model.SavedESCCardToken;
-import com.mercadopago.model.SecurityCode;
 import com.mercadopago.model.Setting;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
@@ -18,7 +17,7 @@ import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.providers.SecurityCodeProvider;
 import com.mercadopago.uicontrollers.card.CardView;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.TextUtil;
+import com.mercadopago.util.TextUtils;
 import com.mercadopago.views.SecurityCodeActivityView;
 
 /**
@@ -233,7 +232,7 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
 
     private boolean validateSecurityCodeFromToken() {
         try {
-            if (!TextUtil.isEmpty(mToken.getFirstSixDigits())) {
+            if (!TextUtils.isEmpty(mToken.getFirstSixDigits())) {
                 getResourcesProvider().validateSecurityCodeFromToken(mSecurityCode, mPaymentMethod, mToken.getFirstSixDigits());
             } else {
                 getResourcesProvider().validateSecurityCodeFromToken(mSecurityCode);

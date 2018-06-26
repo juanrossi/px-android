@@ -23,7 +23,7 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
                           @NonNull final Context context,
                           @Nullable final ViewGroup parent) {
 
-        LinearLayout linearLayout = createMainLayout(context);
+        final LinearLayout linearLayout = createMainLayout(context);
 
         addSummary(component, linearLayout);
 
@@ -36,18 +36,18 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
         }
 
         if (component.props.preferences.hasCustomTopView()) {
-            CustomComponent topComponent = component.props.preferences.getTopComponent();
+            final CustomComponent topComponent = component.props.preferences.getTopComponent();
             topComponent.setDispatcher(component.getDispatcher());
-            Renderer renderer = RendererFactory.create(context, topComponent);
+            final Renderer renderer = RendererFactory.create(context, topComponent);
             renderer.render(linearLayout);
         }
 
         addPaymentMethod(component.props.paymentModel, component.getDispatcher(), linearLayout);
 
         if (component.props.preferences.hasCustomBottomView()) {
-            CustomComponent bottomComponent = component.props.preferences.getBottomComponent();
+            final CustomComponent bottomComponent = component.props.preferences.getBottomComponent();
             bottomComponent.setDispatcher(component.getDispatcher());
-            Renderer renderer = RendererFactory.create(context, bottomComponent);
+            final Renderer renderer = RendererFactory.create(context, bottomComponent);
             renderer.render(linearLayout);
         }
 
@@ -60,60 +60,66 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
         return parent;
     }
 
-    private void addSummary(@NonNull ReviewAndConfirmContainer component, LinearLayout linearLayout) {
-        Renderer summary = RendererFactory.create(linearLayout.getContext(),
+    private void addSummary(@NonNull final ReviewAndConfirmContainer component, final LinearLayout linearLayout) {
+        final Renderer summary = RendererFactory.create(linearLayout.getContext(),
                 new SummaryComponent(SummaryComponent.SummaryProps.createFrom(component.props.summaryModel,
                         component.props.preferences),
                         component.getSummaryProvider()));
         summary.render(linearLayout);
     }
 
-    private void addDiscountTermsAndConditions(@NonNull ReviewAndConfirmContainer component, final ViewGroup parent) {
+    private void addDiscountTermsAndConditions(@NonNull final ReviewAndConfirmContainer component,
+        final ViewGroup parent) {
 
-        TermsAndConditionsComponent discountTermsAndConditionsComponent = new TermsAndConditionsComponent(component.props.discountTermsAndConditionsModel);
+        final TermsAndConditionsComponent discountTermsAndConditionsComponent =
+            new TermsAndConditionsComponent(component.props.discountTermsAndConditionsModel);
 
-        View discountTermsAndConditionsView = discountTermsAndConditionsComponent.render(parent);
+        final View discountTermsAndConditionsView = discountTermsAndConditionsComponent.render(parent);
         parent.addView(discountTermsAndConditionsView);
     }
 
     @NonNull
     private LinearLayout createMainLayout(@NonNull final Context context) {
-        LinearLayout linearLayout = new LinearLayout(context);
+        final LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         return linearLayout;
     }
 
-    private void addPaymentMethod(final PaymentModel paymentModel, final ActionDispatcher dispatcher, final ViewGroup parent) {
-        PaymentMethodComponent paymentMethodComponent = new PaymentMethodComponent(paymentModel, new PaymentMethodComponent.Actions() {
+    private void addPaymentMethod(final PaymentModel paymentModel,
+        final ActionDispatcher dispatcher,
+        final ViewGroup parent) {
+        final PaymentMethodComponent paymentMethodComponent =
+            new PaymentMethodComponent(paymentModel, new PaymentMethodComponent.Actions() {
             @Override
             public void onPaymentMethodChangeClicked() {
                 dispatcher.dispatch(new ChangePaymentMethodAction());
             }
         });
 
-        View paymentView = paymentMethodComponent.render(parent);
+        final View paymentView = paymentMethodComponent.render(parent);
         parent.addView(paymentView);
     }
 
     private void addReviewItems(@NonNull final ReviewAndConfirmContainer component, final ViewGroup parent) {
-        ReviewItems reviewItems = new ReviewItems(
+        final ReviewItems reviewItems = new ReviewItems(
             new ReviewItems.Props(
                 component.props.itemsModel,
                 component.props.preferences.getCollectorIcon(),
                 component.props.preferences.getQuantityLabel(),
                 component.props.preferences.getUnitPriceLabel()));
-        View view = reviewItems.render(parent);
+        final View view = reviewItems.render(parent);
         parent.addView(view);
     }
 
     private void addTermsAndConditions(@NonNull final ReviewAndConfirmContainer component,
                                        final ViewGroup parent) {
 
-        TermsAndConditionsComponent termsAndConditionsComponent = new TermsAndConditionsComponent(component.props.mercadoPagoTermsAndConditionsModel);
+        final TermsAndConditionsComponent termsAndConditionsComponent =
+            new TermsAndConditionsComponent(component.props.mercadoPagoTermsAndConditionsModel);
 
-        View discountTermsAndConditionsView = termsAndConditionsComponent.render(parent);
+        final View discountTermsAndConditionsView = termsAndConditionsComponent.render(parent);
         parent.addView(discountTermsAndConditionsView);
     }
 

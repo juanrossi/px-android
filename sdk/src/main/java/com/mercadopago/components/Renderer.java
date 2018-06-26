@@ -12,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.mercadopago.util.TextUtil;
-
+import com.mercadopago.util.TextUtils;
 
 /**
  * Created by vaserber on 10/20/17.
@@ -93,7 +91,7 @@ public abstract class Renderer<T extends Component> {
     }
 
     protected void setText(@NonNull final TextView view, @Nullable final String text) {
-        if (TextUtil.isEmpty(text)) {
+        if (TextUtils.isEmpty(text)) {
             view.setVisibility(View.GONE);
         } else {
             view.setText(text);
@@ -101,7 +99,7 @@ public abstract class Renderer<T extends Component> {
     }
 
     protected void setText(@NonNull final TextView view, @Nullable final CharSequence text) {
-        if (TextUtil.isEmpty(text)) {
+        if (TextUtils.isEmpty(text)) {
             view.setVisibility(View.GONE);
         } else {
             view.setText(text);

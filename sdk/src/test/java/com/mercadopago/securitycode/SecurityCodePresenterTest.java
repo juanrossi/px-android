@@ -22,7 +22,7 @@ import com.mercadopago.model.Token;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.presenters.SecurityCodePresenter;
 import com.mercadopago.providers.SecurityCodeProvider;
-import com.mercadopago.util.TextUtil;
+import com.mercadopago.util.TextUtils;
 import com.mercadopago.utils.MVPStructure;
 import com.mercadopago.views.SecurityCodeActivityView;
 
@@ -460,7 +460,7 @@ public class SecurityCodePresenterTest {
     }
 
     private boolean isErrorShown(SecurityCodeMockedView view) {
-        return !TextUtil.isEmpty(view.errorMessage);
+        return !TextUtils.isEmpty(view.errorMessage);
     }
 
     private PaymentRecovery getPaymentRecoveryForESC(PaymentMethod paymentMethod) {

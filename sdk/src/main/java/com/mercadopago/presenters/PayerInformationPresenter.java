@@ -10,11 +10,10 @@ import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.providers.PayerInformationProvider;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.views.PayerInformationView;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mercadopago.util.TextUtil.isEmpty;
+import static com.mercadopago.util.TextUtils.isEmpty;
 
 /**
  * Created by mromar on 9/25/17.

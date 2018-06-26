@@ -128,7 +128,7 @@ public class PayerCost implements Parcelable, Serializable {
     }
 
     protected PayerCost(Parcel in) {
-        installments = ParcelableUtil.getIntegerReadByte(in);
+        installments = ParcelableUtil.getOptionalInteger(in);
         labels = in.createStringArrayList();
         recommendedMessage = in.readString();
 
@@ -170,7 +170,7 @@ public class PayerCost implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        ParcelableUtil.writeByte(dest, installments);
+        ParcelableUtil.writeOptional(dest, installments);
 
         dest.writeStringList(labels);
 

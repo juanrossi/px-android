@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.mercadopago.lite.util.TextUtil.isEmpty;
 
-public final class CheckoutPreference implements Serializable {
+public class CheckoutPreference implements Serializable {
 
     /**
      * When the preference comes from backend then
@@ -234,6 +234,10 @@ public final class CheckoutPreference implements Serializable {
     }
 
     public PaymentPreference getPaymentPreference() {
+        // If payment preference does not exists create one.
+        if (paymentPreference == null) {
+            paymentPreference = new PaymentPreference();
+        }
         return paymentPreference;
     }
 

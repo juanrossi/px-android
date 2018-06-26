@@ -41,6 +41,7 @@ import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.ExceptionHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.internal.di.AmountModule;
 import com.mercadopago.listeners.card.CardExpiryDateTextWatcher;
 import com.mercadopago.listeners.card.CardIdentificationNumberTextWatcher;
 import com.mercadopago.listeners.card.CardNumberTextWatcher;
@@ -75,10 +76,10 @@ import com.mercadopago.uicontrollers.card.IdentificationCardView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.MPAnimationUtils;
 import com.mercadopago.util.MPCardMaskUtil;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.util.ViewUtils;
 import com.mercadopago.views.GuessingCardActivityView;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -165,8 +166,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     private MPTextView mInfoTextView;
     private MPTextView mErrorTextView;
     private String mErrorState;
-    private TextView mNextButtonText;
-    private TextView mBackButtonText;
     private TextView mBackInactiveButtonText;
     private Animation mContainerUpAnimation;
     private Animation mContainerDownAnimation;
@@ -181,7 +180,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createPresenter();
         mActivity = this;
         mActivityActive = true;
         mButtonContainerMustBeShown = true;
@@ -220,10 +218,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         super.onStop();
     }
 
-    protected void createPresenter() {
-        mPresenter = new GuessingCardPresenter();
-    }
-
     private void configurePresenter() {
         mPresenter.attachView(this);
         mPresenter.attachResourcesProvider(new GuessingCardProviderImpl(this, mPublicKey, mPrivateKey));
@@ -239,44 +233,45 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     private void getActivityParameters() {
 
-        mPublicKey = getIntent().getStringExtra("merchantPublicKey");
-        mPrivateKey = getIntent().getStringExtra("payerAccessToken");
-        String siteId = getIntent().getStringExtra("siteId");
+        final Intent intent = getIntent();
+
+        final AmountModule amountModule = new AmountModule(this);
+        mPresenter = new GuessingCardPresenter(amountModule.getAmountRepository(),
+            amountModule.getConfigurationModule().getUserSelectionRepository());
+        mPublicKey = intent.getStringExtra("merchantPublicKey");
+        mPrivateKey = intent.getStringExtra("payerAccessToken");
         PaymentPreference paymentPreference =
-            JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentPreference"), PaymentPreference.class);
+            JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentPreference"), PaymentPreference.class);
 
         PaymentRecovery paymentRecovery =
-            JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentRecovery"), PaymentRecovery.class);
+            JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentRecovery"), PaymentRecovery.class);
 
         BigDecimal transactionAmount =
-            JsonUtil.getInstance().fromJson(getIntent().getStringExtra("amount"), BigDecimal.class);
-        Discount discount = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("discount"), Discount.class);
-        String payerEmail = getIntent().getStringExtra("payerEmail");
+            JsonUtil.getInstance().fromJson(intent.getStringExtra("amount"), BigDecimal.class);
+        Discount discount = JsonUtil.getInstance().fromJson(intent.getStringExtra("discount"), Discount.class);
+        String payerEmail = intent.getStringExtra("payerEmail");
 
         Token token = null;
-        PaymentMethod paymentMethod = null;
 
         List<PaymentMethod> paymentMethodList;
         try {
             Type listType = new TypeToken<List<PaymentMethod>>() {
             }.getType();
             paymentMethodList =
-                JsonUtil.getInstance().getGson().fromJson(getIntent().getStringExtra("paymentMethodList"), listType);
+                JsonUtil.getInstance().getGson().fromJson(intent.getStringExtra("paymentMethodList"), listType);
         } catch (Exception ex) {
             paymentMethodList = null;
         }
         Identification identification = new Identification();
         boolean identificationNumberRequired = false;
 
-        Boolean showBankDeals = getIntent().getBooleanExtra("showBankDeals", true);
-        Boolean showDiscount = getIntent().getBooleanExtra("showDiscount", false);
+        Boolean showBankDeals = intent.getBooleanExtra("showBankDeals", true);
+        Boolean showDiscount = intent.getBooleanExtra("showDiscount", false);
 
         mPresenter.setPrivateKey(mPrivateKey);
         mPresenter.setPublicKey(mPublicKey);
-        mPresenter.setSiteId(siteId);
         mPresenter.setToken(token);
         mPresenter.setShowBankDeals(showBankDeals);
-        mPresenter.setPaymentMethod(paymentMethod);
         mPresenter.setPaymentMethodList(paymentMethodList);
         mPresenter.setIdentification(identification);
         mPresenter.setIdentificationNumberRequired(identificationNumberRequired);
@@ -439,11 +434,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
-    public void onInvalidStart(String message) {
-        finish();
-    }
-
-    @Override
     public void onValidStart() {
         trackScreen();
         initializeViews();
@@ -573,8 +563,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mBackButton = findViewById(R.id.mpsdkBackButton);
         mBackInactiveButton = findViewById(R.id.mpsdkBackInactiveButton);
         mBackInactiveButtonText = findViewById(R.id.mpsdkBackInactiveButtonText);
-        mNextButtonText = findViewById(R.id.mpsdkNextButtonText);
-        mBackButtonText = findViewById(R.id.mpsdkBackButtonText);
         mButtonContainer = findViewById(R.id.mpsdkButtonContainer);
         mCardNumberInput = findViewById(R.id.mpsdkCardNumberInput);
         mCardholderNameInput = findViewById(R.id.mpsdkNameInput);
@@ -1398,7 +1386,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void setErrorIdentificationNumber() {
-        LayoutUtil.openKeyboard(mIdentificationNumberEditText);
+        ViewUtils.openKeyboard(mIdentificationNumberEditText);
         mIdentificationNumberEditText.toggleLineColorOnError(true);
         mIdentificationNumberEditText.requestFocus();
     }
@@ -1606,7 +1594,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void showFinishCardFlow() {
-        LayoutUtil.hideKeyboard(this);
+        ViewUtils.hideKeyboard(this);
         mButtonContainer.setVisibility(View.GONE);
         mInputContainer.setVisibility(View.GONE);
         mProgressLayout.setVisibility(View.VISIBLE);
@@ -1723,26 +1711,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         finish();
     }
 
-    public void initializeDiscountActivity(View view) {
-        mPresenter.initializeDiscountActivity();
-    }
-
-    @Override
-    public void startDiscountActivity(BigDecimal transactionAmount) {
-        setSoftInputMode();
-
-        MercadoPagoComponents.Activities.DiscountsActivityBuilder discountsActivityBuilder =
-            new MercadoPagoComponents.Activities.DiscountsActivityBuilder();
-
-        discountsActivityBuilder.setActivity(this)
-            .setMerchantPublicKey(mPresenter.getPublicKey())
-            .setPayerEmail(mPresenter.getPayerEmail())
-            .setAmount(transactionAmount)
-            .setDiscount(mPresenter.getDiscount());
-        discountsActivityBuilder.setDiscount(mPresenter.getDiscount());
-        discountsActivityBuilder.startActivity();
-    }
-
     @Override
     public void hideProgress() {
         mButtonContainer.setVisibility(View.VISIBLE);
@@ -1753,10 +1721,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     @Override
     public void setSoftInputMode() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-    }
-
-    public GuessingCardPresenter getPresenter() {
-        return mPresenter;
     }
 
     @Override

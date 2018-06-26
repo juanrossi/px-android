@@ -3,6 +3,7 @@ package com.mercadopago.review_and_confirm.components.items;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class ReviewItems extends CompactComponent<ReviewItems.Props, Void> {
 
         final ItemsModel itemsModel;
 
+        @Nullable
         public Integer getCollectorIcon() {
             return collectorIcon;
         }
@@ -34,7 +36,7 @@ public class ReviewItems extends CompactComponent<ReviewItems.Props, Void> {
         final String unitPriceLabel;
 
         public Props(final ItemsModel itemsModel,
-            @DrawableRes final Integer collectorIcon,
+            @Nullable @DrawableRes final Integer collectorIcon,
             final String quantityLabel,
             final String unitPriceLabel) {
             this.itemsModel = itemsModel;
@@ -50,10 +52,10 @@ public class ReviewItems extends CompactComponent<ReviewItems.Props, Void> {
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        Context context = parent.getContext();
+        final Context context = parent.getContext();
         final LinearLayout linearLayout = createMainLayout(context);
 
-        for (ItemModel itemModel : props.itemsModel.itemsModelList) {
+        for (final ItemModel itemModel : props.itemsModel.itemsModelList) {
             addReviewItem(new ReviewItem(new ReviewItem.Props(
                     itemModel,
                     getIcon(props),
@@ -76,7 +78,7 @@ public class ReviewItems extends CompactComponent<ReviewItems.Props, Void> {
 
     @NonNull
     private LinearLayout createMainLayout(@NonNull final Context context) {
-        LinearLayout linearLayout = new LinearLayout(context);
+        final LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -85,7 +87,7 @@ public class ReviewItems extends CompactComponent<ReviewItems.Props, Void> {
 
     private void addReviewItem(@NonNull final ReviewItem reviewItem,
         final ViewGroup container) {
-        Renderer renderer = RendererFactory.create(container.getContext(), reviewItem);
+        final Renderer renderer = RendererFactory.create(container.getContext(), reviewItem);
         renderer.render(container);
     }
 }

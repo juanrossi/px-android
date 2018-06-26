@@ -25,7 +25,7 @@ public class PaymentMethodComponent extends CompactComponent<PaymentModel, Payme
 
     @VisibleForTesting()
     CompactComponent resolveComponent() {
-        if (PaymentTypes.isCardPaymentMethod(props.getPaymentType())) {
+        if (PaymentTypes.isCardPaymentType(props.getPaymentType())) {
             return new MethodCard(MethodCard.Props.createFrom(props));
         } else if (PaymentTypes.isPlugin(props.getPaymentType())) {
             return new MethodPlugin(MethodPlugin.Props.createFrom(props));
@@ -57,6 +57,6 @@ public class PaymentMethodComponent extends CompactComponent<PaymentModel, Payme
 
     @VisibleForTesting
     boolean shouldShowPaymentMethodButton() {
-        return props.hasMoreThanOnePaymentMethod() || PaymentTypes.isCardPaymentMethod(props.getPaymentType());
+        return props.hasMoreThanOnePaymentMethod() || PaymentTypes.isCardPaymentType(props.getPaymentType());
     }
 }

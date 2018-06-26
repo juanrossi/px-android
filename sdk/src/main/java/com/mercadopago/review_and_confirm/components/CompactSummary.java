@@ -16,8 +16,8 @@ class CompactSummary extends Component<SummaryModel, Void> {
         super(props);
     }
 
-    DisclaimerComponent getDisclaimerComponent(String disclaimer) {
-        DisclaimerComponent.Props props = new DisclaimerComponent.Props(disclaimer);
+    DisclaimerComponent getDisclaimerComponent(final String disclaimer) {
+        final DisclaimerComponent.Props props = new DisclaimerComponent.Props(disclaimer);
         return new DisclaimerComponent(props);
     }
 }

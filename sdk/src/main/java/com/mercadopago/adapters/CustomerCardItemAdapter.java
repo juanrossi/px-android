@@ -5,18 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import com.mercadopago.R;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Card;
 import com.mercadopago.util.MercadoPagoUtil;
-import com.mercadopago.util.TextUtil;
-
 import java.util.List;
 import java.util.Locale;
 
-import static com.mercadopago.util.TextUtil.isEmpty;
+import static com.mercadopago.util.TextUtils.isEmpty;
 
 public class CustomerCardItemAdapter extends RecyclerView.Adapter<CustomerCardItemAdapter.ViewHolder> {
 
@@ -74,7 +71,7 @@ public class CustomerCardItemAdapter extends RecyclerView.Adapter<CustomerCardIt
 
     @Override
     public int getItemCount() {
-        return TextUtil.isEmpty((mActionMessage)) ? mCards.size() : mCards.size() + 1;
+        return isEmpty((mActionMessage)) ? mCards.size() : mCards.size() + 1;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

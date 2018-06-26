@@ -9,10 +9,6 @@ import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.plugins.PaymentMethodPlugin;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
-/**
- * Created by lbais on 28/2/18.
- */
-
 public class ResourceUtil {
 
     private static final String SDK_PREFIX = "mpsdk_";
@@ -51,10 +47,5 @@ public class ResourceUtil {
             icon = R.drawable.mpsdk_none;
         }
         return icon;
-    }
-
-    @Nullable
-    public static PaymentMethodInfo getPluginInfo(final String paymentMethodId, final Context context) {
-        return CheckoutStore.getInstance().getPaymentMethodPluginInfoById(paymentMethodId, context);
     }
 }

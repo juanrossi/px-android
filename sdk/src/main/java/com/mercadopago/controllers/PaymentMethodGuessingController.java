@@ -1,11 +1,10 @@
 package com.mercadopago.controllers;
 
-import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.CardInformation;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Setting;
 import com.mercadopago.util.MercadoPagoUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,12 +101,6 @@ public class PaymentMethodGuessingController {
             }
         }
         return ans;
-    }
-
-    public Setting getSettingByPaymentMethod(PaymentMethod paymentMethod) {
-        List<Setting> settings = paymentMethod.getSettings();
-        Setting setting = Setting.getSettingByBin(settings, mSavedBin);
-        return setting;
     }
 
     public static Setting getSettingByPaymentMethodAndBin(PaymentMethod paymentMethod, String bin) {

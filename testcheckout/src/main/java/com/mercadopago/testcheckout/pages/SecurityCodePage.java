@@ -2,10 +2,8 @@ package com.mercadopago.testcheckout.pages;
 
 import android.support.test.espresso.action.ViewActions;
 import android.view.View;
-
 import com.mercadopago.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testlib.pages.PageObject;
-
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;

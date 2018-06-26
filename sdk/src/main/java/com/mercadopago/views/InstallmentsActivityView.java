@@ -16,8 +16,6 @@ import java.util.List;
 public interface InstallmentsActivityView extends MvpView {
     void showInstallments(List<PayerCost> payerCostList, OnSelectedCallback<Integer> onSelectedCallback);
 
-    void startDiscountFlow(BigDecimal transactionAmount);
-
     void finishWithResult(PayerCost payerCost);
 
     void showLoadingView();

@@ -1,47 +1,48 @@
 package com.mercadopago.presenters;
 
+import android.support.annotation.NonNull;
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.internal.repository.AmountRepository;
+import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.lite.exceptions.ApiException;
-import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Cause;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.SavedESCCardToken;
-import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.CardVaultProvider;
 import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.TextUtil;
+import com.mercadopago.util.TextUtils;
 import com.mercadopago.views.CardVaultView;
-import java.math.BigDecimal;
 import java.util.List;
 
 public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultProvider> {
+
+    @NonNull
+    private final AmountRepository amountRepository;
+    private final PaymentSettingRepository configuration;
 
     private FailureRecovery failureRecovery;
     private String bin;
 
     //Activity parameters
     private PaymentRecovery paymentRecovery;
-    private PaymentPreference paymentPreference;
     private List<PaymentMethod> paymentMethodList;
-    private Site site;
+
     private boolean installmentsEnabled;
     private boolean installmentsReviewEnabled;
     private boolean automaticSelection;
-    private BigDecimal amount;
+
     private String merchantBaseUrl;
     private boolean installmentsListShown;
     private boolean issuersListShown;
@@ -56,10 +57,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     private Token token;
     private Card card;
 
-    //Discount
-    private Discount discount;
-    private Campaign campaign;
-    private String payerEmail;
     private List<PayerCost> payerCostsList;
     private List<Issuer> issuersList;
 
@@ -67,15 +64,15 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     private String esc;
     private SavedESCCardToken escCardToken;
 
-    public CardVaultPresenter() {
-        super();
+    public CardVaultPresenter(@NonNull final AmountRepository amountRepository,
+        final PaymentSettingRepository configuration) {
+        this.configuration = configuration;
         installmentsEnabled = true;
-        paymentPreference = new PaymentPreference();
+        this.amountRepository = amountRepository;
     }
 
     public void initialize() {
         try {
-            validateParameters();
             onValidStart();
         } catch (final IllegalStateException exception) {
             getView().showError(new MercadoPagoError(exception.getMessage(), false), "");
@@ -90,16 +87,8 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         this.paymentRecovery = paymentRecovery;
     }
 
-    public void setPaymentPreference(final PaymentPreference paymentPreference) {
-        this.paymentPreference = paymentPreference;
-    }
-
     public void setPaymentMethodList(final List<PaymentMethod> paymentMethodList) {
         this.paymentMethodList = paymentMethodList;
-    }
-
-    public void setSite(final Site site) {
-        this.site = site;
     }
 
     public void setInstallmentsEnabled(final boolean installmentsEnabled) {
@@ -108,10 +97,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     public void setCard(final Card card) {
         this.card = card;
-    }
-
-    public void setAmount(final BigDecimal amount) {
-        this.amount = amount;
     }
 
     public void setFailureRecovery(final FailureRecovery failureRecovery) {
@@ -150,24 +135,12 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         this.payerCost = mPayerCost;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
     public PaymentRecovery getPaymentRecovery() {
         return paymentRecovery;
     }
 
-    public PaymentPreference getPaymentPreference() {
-        return paymentPreference;
-    }
-
     public List<PaymentMethod> getPaymentMethodList() {
         return paymentMethodList;
-    }
-
-    public Site getSite() {
-        return site;
     }
 
     public Card getCard() {
@@ -189,30 +162,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         } else {
             bin = this.cardInfo.getFirstSixDigits();
         }
-    }
-
-    public void setPayerEmail(final String payerEmail) {
-        this.payerEmail = payerEmail;
-    }
-
-    public String getPayerEmail() {
-        return payerEmail;
-    }
-
-    public void setDiscount(final Discount discount) {
-        this.discount = discount;
-    }
-
-    public void setCampaign(final Campaign campaign) {
-        this.campaign = campaign;
-    }
-
-    public Discount getDiscount() {
-        return discount;
-    }
-
-    public Campaign getCampaign() {
-        return campaign;
     }
 
     public void setInstallmentsReviewEnabled(final boolean installmentReviewEnabled) {
@@ -304,16 +253,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         return installmentsEnabled;
     }
 
-    private void validateParameters() throws IllegalStateException {
-        if (installmentsEnabled) {
-            if (site == null) {
-                throw new IllegalStateException(getResourcesProvider().getMissingSiteErrorMessage());
-            } else if (amount == null) {
-                throw new IllegalStateException(getResourcesProvider().getMissingAmountErrorMessage());
-            }
-        }
-    }
-
     public void recoverFromFailure() {
         if (failureRecovery != null) {
             failureRecovery.recover();
@@ -325,11 +264,11 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     }
 
     private void getInstallmentsForCardAsync(final Card card) {
-        String bin = TextUtil.isEmpty(cardInfo.getFirstSixDigits()) ? "" : cardInfo.getFirstSixDigits();
+        String bin = TextUtils.isEmpty(cardInfo.getFirstSixDigits()) ? "" : cardInfo.getFirstSixDigits();
         Long issuerId = this.card.getIssuer() == null ? null : this.card.getIssuer().getId();
         String paymentMethodId = card.getPaymentMethod() == null ? "" : card.getPaymentMethod().getId();
 
-        getResourcesProvider().getInstallmentsAsync(bin, issuerId, paymentMethodId, getTotalAmount(),
+        getResourcesProvider().getInstallmentsAsync(bin, issuerId, paymentMethodId, amountRepository.getAmountToPay(),
             new TaggedCallback<List<Installment>>(ApiUtil.RequestOrigin.GET_INSTALLMENTS) {
                 @Override
                 public void onSuccess(final List<Installment> installments) {
@@ -368,19 +307,9 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         }
     }
 
-    private BigDecimal getTotalAmount() {
-        BigDecimal amount;
-
-        if (discount == null) {
-            amount = this.amount;
-        } else {
-            amount = discount.getAmountWithDiscount(this.amount);
-        }
-        return amount;
-    }
-
     private void resolvePayerCosts(final List<PayerCost> payerCosts) {
-        PayerCost defaultPayerCost = paymentPreference.getDefaultInstallments(payerCosts);
+        PayerCost defaultPayerCost =
+            configuration.getCheckoutPreference().getPaymentPreference().getDefaultInstallments(payerCosts);
         payerCostsList = payerCosts;
 
         if (defaultPayerCost != null) {
@@ -418,8 +347,8 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         checkStartInstallmentsActivity();
     }
 
-    public void resolveInstallmentsRequest(final PayerCost payerCost, final Discount discount) {
-        setSelectedInstallments(payerCost, discount);
+    public void resolveInstallmentsRequest(final PayerCost payerCost) {
+        setSelectedInstallments(payerCost);
 
         if (savedCardAvailable()) {
             if (installmentsListShown) {
@@ -432,10 +361,9 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         }
     }
 
-    private void setSelectedInstallments(final PayerCost payerCost, final Discount discount) {
+    private void setSelectedInstallments(final PayerCost payerCost) {
         installmentsListShown = true;
         setPayerCost(payerCost);
-        setDiscount(discount);
     }
 
     public void resolveSecurityCodeRequest(final Token token) {
@@ -449,8 +377,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     public void resolveNewCardRequest(final PaymentMethod paymentMethod, final Token token,
         final PayerCost payerCost, final Issuer issuer,
-        final List<PayerCost> payerCosts, final List<Issuer> issuers,
-        final Discount discount) {
+        final List<PayerCost> payerCosts, final List<Issuer> issuers) {
 
         setPaymentMethod(paymentMethod);
         setToken(token);
@@ -459,11 +386,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         setIssuer(issuer);
         setPayerCostsList(payerCosts);
         setIssuersList(issuers);
-
-        if (discount != null) {
-            setDiscount(discount);
-        }
-
         checkStartIssuersActivity();
     }
 
@@ -599,7 +521,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     private void recoverCreateESCToken(final MercadoPagoError error) {
         if (viewAttached()) {
             getView().showError(error, ApiUtil.RequestOrigin.CREATE_TOKEN);
-
             setFailureRecovery(new FailureRecovery() {
                 @Override
                 public void recover() {

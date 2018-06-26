@@ -2,10 +2,8 @@ package com.mercadopago.testcheckout.pages;
 
 import android.support.test.espresso.action.ViewActions;
 import android.view.View;
-
 import com.mercadopago.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testlib.pages.PageObject;
-
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -44,7 +42,7 @@ public class IdentificationPage extends PageObject<CheckoutValidator> {
 
     private void insertIdAndPressNext(final String idNumber) {
         Matcher<View> cardIdentificationNumberEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardIdentificationNumber);
-        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButtonText);
+        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButton);
         onView(cardIdentificationNumberEditTextMatcher).perform(typeText(idNumber));
         onView(cardNextButtonTextMatcher).perform(click());
     }

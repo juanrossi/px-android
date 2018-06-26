@@ -14,16 +14,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Bin;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.MPAnimationUtils;
 import com.mercadopago.util.MPCardMaskUtil;
 import com.mercadopago.util.MPCardUIUtils;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.util.ViewUtils;
 
 /**
  * Created by vaserber on 9/29/16.
@@ -379,7 +378,7 @@ public class FrontCardView {
 
     private void resizeCard(ViewGroup cardViewContainer, int cardHeight, int cardWidth,
                             int cardHolderNameFontSize, int cardExpiryDateSize, int cardSecurityCodeSize) {
-        LayoutUtil.resizeViewGroupLayoutParams(cardViewContainer, cardHeight, cardWidth, mContext);
+        ViewUtils.resizeViewGroupLayoutParams(cardViewContainer, cardHeight, cardWidth, mContext);
 
         mCardholderNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardHolderNameFontSize);
         mCardExpiryMonthTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardExpiryDateSize);

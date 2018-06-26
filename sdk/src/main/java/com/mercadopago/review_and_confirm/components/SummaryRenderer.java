@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
 
@@ -15,6 +14,7 @@ public class SummaryRenderer extends Renderer<SummaryComponent> {
 
         if ((component.props.summaryModel.hasMultipleInstallments())
                 || component.props.summaryModel.hasCoupon()
+                || component.props.summaryModel.hasCharges()
                 || component.props.reviewAndConfirmPreferences.hasExtrasAmount()) {
             final Renderer fullSummaryRenderer = RendererFactory.create(context, component.getFullSummary());
             final View fullSummaryView = fullSummaryRenderer.render();
