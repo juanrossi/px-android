@@ -1,11 +1,9 @@
-package com.mercadopago.test;
+package com.mercadopago.lite.util;
 
-import com.mercadopago.util.HttpClientUtil;
+import com.mercadopago.test.FakeInterceptor;
 import com.mercadopago.util.JsonUtil;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 
@@ -68,7 +66,7 @@ public class FakeAPI {
     private OkHttpClient createClient() {
 
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
-                .addInterceptor(getFakeInterceptor());
+            .addInterceptor(getFakeInterceptor());
 
         return okHttpClientBuilder.build();
     }

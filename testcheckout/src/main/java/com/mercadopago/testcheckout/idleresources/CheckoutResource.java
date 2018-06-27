@@ -1,11 +1,8 @@
 package com.mercadopago.testcheckout.idleresources;
 
-
 import android.support.test.InstrumentationRegistry;
-
+import com.mercadopago.lite.util.HttpClientUtil;
 import com.mercadopago.testlib.HttpResource;
-import com.mercadopago.util.HttpClientUtil;
-
 import okhttp3.OkHttpClient;
 
 public class CheckoutResource extends HttpResource {

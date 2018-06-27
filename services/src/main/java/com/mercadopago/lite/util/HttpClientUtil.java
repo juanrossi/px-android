@@ -2,60 +2,93 @@ package com.mercadopago.lite.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-
+import android.os.Build;
+import android.support.annotation.NonNull;
 import com.mercadopago.lite.core.ConnectivityStateInterceptor;
 import com.mercadopago.lite.core.Settings;
-
+import com.mercadopago.lite.core.TLSSocketFactory;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
-
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-public class HttpClientUtil {
+public final class HttpClientUtil {
 
     private static OkHttpClient client;
     private static OkHttpClient customClient;
+    private static final int CACHE_SIZE = 10 * 1024 * 1024; // 10 MB
+    private static final String CACHE_DIR_NAME = "PX_OKHTTP_CACHE_SERVICES";
 
-    public synchronized static OkHttpClient getClient(Context context, int connectTimeout, int readTimeout, int writeTimeout) {
+    private HttpClientUtil() {
+    }
+
+    public static synchronized OkHttpClient getClient(@NonNull final Context context,
+        final int connectTimeout,
+        final int readTimeout,
+        final int writeTimeout) {
 
         if (customClientSet()) {
             return customClient;
         } else {
             if (client == null) {
-                createClient(context, connectTimeout, readTimeout, writeTimeout);
+                client = createClient(context, connectTimeout, readTimeout, writeTimeout);
             }
             return client;
         }
     }
 
-    private static void createClient(Context context, int connectTimeout, int readTimeout, int writeTimeout) {
+    @NonNull
+    private static OkHttpClient createClient(@NonNull final Context context, final int connectTimeout,
+        final int readTimeout,
+        final int writeTimeout) {
         // Set log info
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(Settings.OKHTTP_LOGGING);
 
         // Set cache size
-        int cacheSize = 10 * 1024 * 1024; // 10 MiB
-        okhttp3.Cache cache = new okhttp3.Cache(new File(context.getCacheDir().getPath() + "okhttp"), cacheSize);
+        final okhttp3.Cache cache =
+            new okhttp3.Cache(new File(String.format("%s%s", context.getCacheDir().getPath(), CACHE_DIR_NAME)),
+                CACHE_SIZE);
 
         // Set client
-        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
+        final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
                 .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .writeTimeout(writeTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .cache(cache)
                 .addInterceptor(interceptor);
 
-        okHttpClientBuilder.addInterceptor(new ConnectivityStateInterceptor((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)));
+        okHttpClientBuilder.addInterceptor(getConnectionInterceptor(context));
 
-        client = okHttpClientBuilder.build();
+        OkHttpClient client = okHttpClientBuilder.build();
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+            client = TLSSocketFactory.enforceTls(client);
+        }
+
+        return client;
     }
 
-    public static void setCustomClient(OkHttpClient client) {
-        customClient = client;
+    @NonNull
+    private static Interceptor getConnectionInterceptor(@NonNull final Context context) {
+        return new ConnectivityStateInterceptor(
+            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
     }
 
-    public static void removeCustomClient() {
+    /**
+     * Intended for testing proposes.
+     *
+     * @param client custom client
+     */
+    static void setCustomClient(final OkHttpClient client) {
+        customClient = TLSSocketFactory.enforceTls(client);
+    }
+
+    /**
+     * Intended for testing proposes.
+     */
+    static void removeCustomClient() {
         customClient = null;
     }
 
