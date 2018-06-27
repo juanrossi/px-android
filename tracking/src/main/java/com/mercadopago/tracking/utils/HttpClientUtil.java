@@ -51,7 +51,11 @@ public final class HttpClientUtil {
             .build();
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
-            client = TLSSocketFactory.enforceTls(client);
+            try {
+                client = TLSSocketFactory.enforceTls(client);
+            } catch (final Exception e) {
+                // Do nothing
+            }
         }
 
         return client;
