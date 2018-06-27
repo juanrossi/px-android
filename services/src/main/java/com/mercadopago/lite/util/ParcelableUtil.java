@@ -1,11 +1,14 @@
 package com.mercadopago.lite.util;
 
 import android.os.Parcel;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import java.math.BigDecimal;
 
 public class ParcelableUtil {
 
-    public static BigDecimal getBigDecimalReadByte(final Parcel in) {
+    @Nullable
+    public static BigDecimal getOptionalBigDecimal(final Parcel in) {
         if (in.readByte() == 0) {
             return null;
         } else {
@@ -13,7 +16,13 @@ public class ParcelableUtil {
         }
     }
 
-    public static Integer getIntegerReadByte(final Parcel in) {
+    @NonNull
+    public static BigDecimal getBigDecimal(final Parcel in) {
+        return new BigDecimal(in.readString());
+    }
+
+    @Nullable
+    public static Integer getOptionalInteger(final Parcel in) {
         if (in.readByte() == 0) {
             return null;
         } else {
@@ -21,7 +30,11 @@ public class ParcelableUtil {
         }
     }
 
-    public static void writeByte(final Parcel dest, final BigDecimal number) {
+    public static void write(final Parcel dest, final BigDecimal number) {
+        dest.writeString(number.toString());
+    }
+
+    public static void writeOptional(final Parcel dest, final BigDecimal number) {
         if (number == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -30,7 +43,7 @@ public class ParcelableUtil {
         }
     }
 
-    public static void writeByte(final Parcel dest, final Integer number) {
+    public static void writeOptional(final Parcel dest, final Integer number) {
         if (number == null) {
             dest.writeByte((byte) 0);
         } else {

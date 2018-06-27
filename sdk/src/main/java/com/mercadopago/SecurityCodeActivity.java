@@ -56,7 +56,7 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
 
     private static final String PRESENTER_BUNDLE = "mSecurityCodePresenter";
     private static final String PUBLIC_KEY_BUNDLE = "mMerchantPublicKey";
-    private static final String PRIVATE_KEY_BUNDLE = "mPrivateKey";
+    private static final String PRIVATE_KEY_BUNDLE = "privateKey";
     private static final String ESC_ENABLED_BUNDLE = "mEscEnabled";
     private static final String REASON_BUNDLE = "mReason";
 
@@ -215,6 +215,14 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        final Intent returnIntent = new Intent();
+        setResult(RESULT_CANCELED, returnIntent);
+        finish();
+        overrideTransitionOut();
+    }
+
     private void setListeners() {
         setSecurityCodeListeners();
         setButtonsListeners();
@@ -271,7 +279,7 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
     @Override
     public void initialize() {
         initializeControls();
-        mSecurityCodePresenter.initializeSecurityCodeSettings();
+        mSecurityCodePresenter.initializeSettings();
         loadViews();
     }
 
@@ -375,9 +383,7 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent returnIntent = new Intent();
-                setResult(RESULT_CANCELED, returnIntent);
-                finish();
+                onBackPressed();
             }
         });
     }

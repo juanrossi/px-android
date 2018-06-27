@@ -28,14 +28,14 @@ public interface CardVaultView extends MvpView {
 
     void askForSecurityCodeFromTokenRecovery();
 
-    void askForSecurityCodeFromInstallments();
-
-    void askForSecurityCodeWithoutInstallments();
-
     void askForInstallmentsFromIssuers();
 
     void askForInstallmentsFromNewCard();
 
     void cancelCardVault();
+
+    void animateTransitionSlideInSlideOut();
+
+    void transitionWithNoAnimation();
 
 }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- one tap -->
+    <string name="mpsdk_payment_detail_title_modal">Detalhes</string>
+
     <!-- Banks deals -->
     <string name="mpsdk_empty_bank_deals">Você não tem nenhuma promoção disponível</string>
     <string name="mpsdk_bank">banco</string>
@@ -27,14 +30,14 @@
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">Em quantas parcelas?</string>
 
-    <string name="mpsdk_installments_by">x</string>
-    <string name="mpsdk_installments_cft" >CFT</string>
 
+    <!-- Terms And Conditions -->
+    <string name="mpsdk_terms_and_conditions_message">Ao pagar, declaro que sou maior de idade e aceito os</string>
+    <string name="mpsdk_terms_and_conditions_linked_message">Termos e condições.</string>
+    <string name="mpsdk_terms_and_conditions">Termos e condições</string>
+    <string name="mpsdk_discount_terms_and_conditions_message">Desconto exclusivo do Mercado Livre e Mercado Pago.</string>
+    <string name="mpsdk_discount_terms_and_conditions_linked_message">Ver condições</string>
 
-    <!-- Checkout -->
-    <string name="mpsdk_text_terms_and_conditions_start">Ao pagar, afirmo que eu sou maior de idade e aceito os</string>
-    <string name="mpsdk_text_terms_and_conditions_linked">Termos e condições</string>
-    <string name="mpsdk_text_terms_and_conditions_end">do Mercado Pago</string>
 
     <!-- Card token and guessing -->
     <string name="mpsdk_invalid_card_number_incomplete">Digite todos os números do cartão</string>
@@ -118,7 +121,6 @@
     <string name="mpsdk_error_secondary_title_call">Não conseguiu autorizá-lo?</string>
     <string name="mpsdk_text_card_enabled">Eu já habilitei meu cartão</string>
 
-
     <!-- Error messages -->
     <string name="mpsdk_error_message_invalid_amount">Valor inválido</string>
     <string name="mpsdk_error_message_invalid_item">Item inválido</string>
@@ -141,7 +143,6 @@
     <string name="mpsdk_error_message_missing_identification_types">Nenhum tipo de identificação encontrado</string>
     <string name="mpsdk_error_message_missing_setting_for_bin">Nenhuma configuração encontrada para esse bin</string>
 
-
     <!-- API exception messages -->
     <string name="mpsdk_empty_card_expiration_month">O mês da data de validade do cartão não foi digitado</string>
     <string name="mpsdk_empty_card_expiration_year">O ano da data de validade do cartão não foi digitado</string>
@@ -163,7 +164,6 @@
     <string name="mpsdk_security_code_required">Código de segurança obrigatório</string>
     <string name="mpsdk_invalid_card_number">Número do cartão inválido</string>
     <string name="mpsdk_api_invalid_identification_number">O número de identificação é inválido</string>
-
 
     <!-- Utils -->
     <string name="mpsdk_continue_shopping">Pronto!</string>
@@ -220,27 +220,22 @@
     <string name="mpsdk_review_summary_pay">Você paga</string>
     <string name="mpsdk_review_summary_total">Total</string>
     <string name="mpsdk_review_summary_discount">Desconto</string>
-    <string name="mpsdk_review_summary_discounts">Descontos</string>
     <string name="mpsdk_ryc_account_money_description">Com dinheiro em conta</string>
 
     <!-- Discount -->
-    <string name="mpsdk_discount">Desconto</string>
-    <string name="mpsdk_input_button_exchange">Aplicar</string>
-    <string name="mpsdk_discount_code">Código de desconto</string>
-    <string name="mpsdk_has_a_discount">Tenho um desconto</string>
-    <string name="mpsdk_of_discount">de desconto</string>
-    <string name="mpsdk_percent_of_discount">% de desconto</string>
-    <string name="mpsdk_do_not_enter_code">O código não foi digitado</string>
     <string name="mpsdk_invalid_code">Código inválido</string>
     <string name="mpsdk_merchant_without_discount_available">Vendedor não tem desconto disponíveis</string>
     <string name="mpsdk_ran_out_of_quantity_uses_quantity">O número de pedidos esgotados</string>
     <string name="mpsdk_amount_doesnt_match">Montante fora do alcance</string>
     <string name="mpsdk_campaign_expired">Campanha expirado</string>
-    <string name="mpsdk_discount_percent_off">%1$s %%</string>
-    <string name="mpsdk_total">Total:</string>
     <string name="mpsdk_something_went_wrong">Ops! Algo deu errado…</string>
-
+    <string name="mpsdk_we_apply_the_best_available_discount">Os descontos não são acumulativos. Aplicamos o mais alto para este pagamento.</string>
+    <string name="mpsdk_max_coupon_amount">Limite de desconto %1$s</string>
+    <string name="mpsdk_total_to_pay">Total a pagar</string>
+    <string name="mpsdk_has_a_coupon_discount">Você tem um cupom de desconto?</string>
+    <string name="mpsdk_with_max_coupon_amount">Com limite de desconto</string>
     <string name="mpsdk_interest_label">Não inclui juros bancários</string>
+    <string name="mpsdk_discount_dialog_title">Meu desconto</string>
 
     <!-- Unlock Card -->
     <string name="mpsdk_text_unlock_card_start">Lembre-se de</string>

@@ -16,7 +16,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/mpsdk_l_alternative_margin"
         android:gravity="center_horizontal"
-        android:textColor="@color/mpsdk_brownish_grey"
+        android:textColor="@color/ui_meli_dark_grey"
         android:textSize="@dimen/mpsdk_xxs_text"
         tools:text="Tertiary info" />
 

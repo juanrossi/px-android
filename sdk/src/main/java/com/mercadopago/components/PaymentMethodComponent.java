@@ -1,7 +1,7 @@
 package com.mercadopago.components;
 
 import android.support.annotation.NonNull;
-
+import android.support.annotation.Nullable;
 import com.mercadopago.model.PaymentMethod;
 
 public class PaymentMethodComponent extends Component<PaymentMethodComponent.PaymentMethodProps, Void> {
@@ -14,13 +14,15 @@ public class PaymentMethodComponent extends Component<PaymentMethodComponent.Pay
 
         /* default */ final PaymentMethod paymentMethod;
         /* default */ final TotalAmount.TotalAmountProps totalAmountProps;
+        @Nullable
         /* default */ final String lastFourDigits;
+        @Nullable
         /* default */ final String disclaimer;
 
         public PaymentMethodProps(final PaymentMethod paymentMethod,
-                                  final String lastFourDigits,
-                                  final String disclaimer,
-                                  final TotalAmount.TotalAmountProps totalAmountProps) {
+            @Nullable final String lastFourDigits,
+            @Nullable final String disclaimer,
+            final TotalAmount.TotalAmountProps totalAmountProps) {
             this.paymentMethod = paymentMethod;
             this.lastFourDigits = lastFourDigits;
             this.disclaimer = disclaimer;

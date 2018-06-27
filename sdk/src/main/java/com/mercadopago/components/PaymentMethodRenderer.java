@@ -8,13 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.util.ResourceUtil;
 import com.mercadopago.util.TextUtils;
-
 import java.util.Locale;
 
 public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
@@ -30,7 +28,7 @@ public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
 
         addTotalAmountContainer(component, context, paymentMethodView);
 
-        PaymentMethodComponent.PaymentMethodProps props = component.props;
+        final PaymentMethodComponent.PaymentMethodProps props = component.props;
         imageView.setImageDrawable(ContextCompat.getDrawable(context, ResourceUtil.getIconResource(context, props.paymentMethod.getId())));
         setText(descriptionTextView, getDescription(props.paymentMethod.getName(), props.paymentMethod.getPaymentTypeId(),
                 props.lastFourDigits, context));
@@ -46,7 +44,8 @@ public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
                                          final View paymentMethodView) {
 
         final FrameLayout totalAmountContainer = paymentMethodView.findViewById(R.id.mpsdkTotalAmountContainer);
-        RendererFactory.create(context, getTotalAmountComponent(component.props.totalAmountProps)).render(totalAmountContainer);
+        RendererFactory.create(context, getTotalAmountComponent(component.props.totalAmountProps))
+            .render(totalAmountContainer);
     }
 
     private Component getTotalAmountComponent(final TotalAmount.TotalAmountProps totalAmountProps) {
@@ -55,7 +54,7 @@ public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
 
     @VisibleForTesting
     String getDisclaimer(final String paymentMethodTypeId, final String disclaimer, final Context context) {
-        if (PaymentTypes.isCardPaymentMethod(paymentMethodTypeId) && TextUtils.isNotEmpty(disclaimer)) {
+        if (PaymentTypes.isCardPaymentType(paymentMethodTypeId) && TextUtils.isNotEmpty(disclaimer)) {
             return String.format(context.getString(R.string.mpsdk_text_state_account_activity_congrats), disclaimer);
         }
         return "";
@@ -66,7 +65,7 @@ public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
                           final String paymentMethodType,
                           final String lastFourDigits,
                           final Context context) {
-        if (PaymentTypes.isCardPaymentMethod(paymentMethodType)) {
+        if (PaymentTypes.isCardPaymentType(paymentMethodType)) {
             return String.format(Locale.getDefault(), "%s %s %s",
                     paymentMethodName,
                     context.getString(R.string.mpsdk_ending_in),

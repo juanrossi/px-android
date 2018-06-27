@@ -1,6 +1,7 @@
 package com.mercadopago.testcheckout.pages;
 
 
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.view.View;
 
@@ -12,6 +13,7 @@ import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public class InstallmentsPage extends PageObject<CheckoutValidator> {
@@ -28,6 +30,11 @@ public class InstallmentsPage extends PageObject<CheckoutValidator> {
     public InstallmentsPage validate(CheckoutValidator validator) {
         validator.validate(this);
         return this;
+    }
+
+    public PaymentMethodPage pressBack() {
+        onView(isRoot()).perform(ViewActions.pressBack());
+        return new PaymentMethodPage(validator);
     }
 
     public ReviewAndConfirmPage selectInstallments(int installmentsOption) {

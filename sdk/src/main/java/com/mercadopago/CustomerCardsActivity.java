@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.CustomerCardItemAdapter;
@@ -25,11 +24,10 @@ import com.mercadopago.uicontrollers.GridSpacingItemDecoration;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.util.ViewUtils;
 import com.mercadopago.views.CustomerCardsView;
-
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -188,12 +186,12 @@ public class CustomerCardsActivity extends MercadoPagoBaseActivity implements Cu
 
     @Override
     public void hideProgress() {
-        LayoutUtil.showRegularLayout(this);
+        ViewUtils.showRegularLayout(this);
     }
 
     @Override
     public void showProgress() {
-        LayoutUtil.showProgressLayout(this);
+        ViewUtils.showProgressLayout(this);
     }
 
     @Override

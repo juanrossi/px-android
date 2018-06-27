@@ -24,6 +24,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mpsdk_s_margin"
         android:gravity="center_horizontal"
-        tools:text="@string/lorem_ipsum"/>
+        tools:text="Lorem ipsum"/>
+
+    <com.mercadopago.customviews.MPTextView
+        android:id="@+id/description"
+        style="@style/HeaderSubtitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mpsdk_xs_margin"
+        android:gravity="center_horizontal"
+        tools:text="Lorem ipsum"/>
 
 </LinearLayout>

@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mpsdk_s_margin"
         android:gravity="center_horizontal"
-        tools:text="@string/lorem_ipsum" />
+        tools:text="Some text" />
 
     <com.mercadopago.customviews.MPTextView
         android:id="@+id/subtitle"
@@ -32,6 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mpsdk_s_margin"
         android:gravity="center"
-        tools:text="@string/lorem_ipsum" />
+        tools:text="Some text" />
 
 </LinearLayout>

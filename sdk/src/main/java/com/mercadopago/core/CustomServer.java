@@ -47,16 +47,6 @@ public class CustomServer {
         service.createPayment(transactionId, ripFirstSlash(uri), paymentData, query).enqueue(callback);
     }
 
-    public static void getDirectDiscount(Context context, String transactionAmount, String payerEmail,String url, String uri, @NonNull Map<String, String> discountAdditionalInfo, Callback<Discount> callback) {
-        CustomService service = getService(context, url);
-        service.getDirectDiscount(ripFirstSlash(uri), transactionAmount, payerEmail, discountAdditionalInfo).enqueue(callback);
-    }
-
-    public static void getCodeDiscount(String discountCode, String transactionAmount, String payerEmail, Context context, String url, String uri, @NonNull Map<String, String> discountAdditionalInfo, Callback<Discount> callback) {
-        CustomService service = getService(context, url);
-        service.getCodeDiscount(ripFirstSlash(uri), transactionAmount, payerEmail, discountCode, discountAdditionalInfo).enqueue(callback);
-    }
-
     private static CustomService getService(Context context, String baseUrl) {
 
         Retrofit retrofit = getRetrofit(context, baseUrl);

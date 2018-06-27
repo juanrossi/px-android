@@ -1,6 +1,7 @@
 package com.mercadopago.uicontrollers.payercosts;
 
 import android.content.Context;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -8,12 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.util.InstallmentsUtil;
-
 import java.math.BigDecimal;
 
 /**
@@ -81,9 +80,12 @@ public class PayerCostColumn {
     }
 
     private void setInstallmentsText() {
-        final Spanned spannedInstallmentsText = CurrenciesUtil.getSpannedAmountWithCurrencySymbol(installmentsAmount, mCurrencyId);
-        mInstallmentsTextView.setText(TextUtils.concat(installments.toString(), " ", mContext.getString(R.string.mpsdk_installments_by),
-            " ", spannedInstallmentsText));
+        final Spanned spannedInstallmentsText =
+            CurrenciesUtil.getSpannedAmountWithCurrencySymbol(installmentsAmount, mCurrencyId);
+        final String x = mInstallmentsTextView.getContext().getString(R.string.mpsdk_installments_by);
+        mInstallmentsTextView
+            .setText(new SpannableStringBuilder(installments.toString()).append(x).append(" ")
+                .append(spannedInstallmentsText));
     }
 
     public void setOnClickListener(View.OnClickListener listener) {

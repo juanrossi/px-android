@@ -38,7 +38,7 @@ public class SecurityCode implements Parcelable, Serializable {
 
     protected SecurityCode(Parcel in) {
         cardLocation = in.readString();
-        length = ParcelableUtil.getIntegerReadByte(in);
+        length = ParcelableUtil.getOptionalInteger(in);
         mode = in.readString();
     }
 
@@ -62,7 +62,7 @@ public class SecurityCode implements Parcelable, Serializable {
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(cardLocation);
-        ParcelableUtil.writeByte(dest, length);
+        ParcelableUtil.writeOptional(dest, length);
         dest.writeString(mode);
     }
 }

@@ -1,7 +1,7 @@
 package com.mercadopago.review_and_confirm.components;
 
 import android.support.annotation.NonNull;
-
+import android.support.annotation.Nullable;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.Component;
 import com.mercadopago.components.RendererFactory;
@@ -32,27 +32,40 @@ public class ReviewAndConfirmContainer extends Component<ReviewAndConfirmContain
     }
 
     public boolean hasItemsEnabled() {
-        return props.preferences == null || props.preferences.hasItemsEnabled();
+        return props.preferences.hasItemsEnabled();
+    }
+
+    public boolean hasDiscountTermsAndConditions() {
+        return props.discountTermsAndConditionsModel != null;
+    }
+
+    public boolean hasMercadoPagoTermsAndConditions() {
+        return props.mercadoPagoTermsAndConditionsModel != null;
     }
 
     public static class Props {
-        final TermsAndConditionsModel termsAndConditionsModel;
-        final PaymentModel paymentModel;
-        final SummaryModel summaryModel;
-        final ReviewAndConfirmPreferences preferences;
-        final ItemsModel itemsModel;
+        /* default */ @Nullable final TermsAndConditionsModel mercadoPagoTermsAndConditionsModel;
+        /* default */ @NonNull final PaymentModel paymentModel;
+        /* default */ @NonNull final SummaryModel summaryModel;
+        /* default */ @NonNull final ReviewAndConfirmPreferences preferences;
+        /* default */ @NonNull final ItemsModel itemsModel;
+        /* default */ @Nullable final TermsAndConditionsModel discountTermsAndConditionsModel;
 
-        public Props(final TermsAndConditionsModel termsAndConditionsModel,
-                     final PaymentModel paymentModel,
-                     final SummaryModel summaryModel,
-                     final ReviewAndConfirmPreferences preferences,
-                     @NonNull final ItemsModel itemsModel) {
 
-            this.termsAndConditionsModel = termsAndConditionsModel;
+        public Props(@Nullable final TermsAndConditionsModel mercadoPagoTermsAndConditionsModel,
+                     @NonNull final PaymentModel paymentModel,
+                     @NonNull final SummaryModel summaryModel,
+                     @NonNull final ReviewAndConfirmPreferences preferences,
+                     @NonNull final ItemsModel itemsModel,
+                     @Nullable final TermsAndConditionsModel discountTermsAndConditionsModel) {
+
+            this.mercadoPagoTermsAndConditionsModel = mercadoPagoTermsAndConditionsModel;
             this.paymentModel = paymentModel;
             this.summaryModel = summaryModel;
             this.preferences = preferences;
             this.itemsModel = itemsModel;
+            this.discountTermsAndConditionsModel = discountTermsAndConditionsModel;
         }
     }
+
 }

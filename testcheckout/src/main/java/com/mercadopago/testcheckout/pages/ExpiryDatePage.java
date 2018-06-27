@@ -32,15 +32,20 @@ public class ExpiryDatePage extends PageObject<CheckoutValidator> {
 
     public SecurityCodePage enterExpiryDate(final String s) {
         Matcher<View> cardExpiryDateEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardExpiryDate);
-        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButtonText);
+        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButton);
         onView(cardExpiryDateEditTextMatcher).perform(typeText("0922"));
         onView(cardNextButtonTextMatcher).perform(click());
         return new SecurityCodePage(validator);
     }
 
-    public NoCheckoutPage pressBack() {
+    public NoCheckoutPage pressBackWithExclusion() {
         onView(isRoot()).perform(ViewActions.pressBack());
         return new NoCheckoutPage(validator);
+    }
+
+    public PaymentMethodPage pressBack() {
+        onView(isRoot()).perform(ViewActions.pressBack());
+        return new PaymentMethodPage(validator);
     }
 
     public NamePage pressPrevious() {

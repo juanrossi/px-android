@@ -7,9 +7,8 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.RelativeSizeSpan;
-
 import com.mercadopago.model.Currency;
-
+import com.mercadopago.model.Site;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -64,7 +63,18 @@ public final class CurrenciesUtil {
         return builder.toString();
     }
 
-    private static String getLocalizedAmount(final @NonNull BigDecimal amount, final Currency currency) {
+    public static String getLocalizedAmountNoDecimals(final BigDecimal truncated, final Currency currency) {
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setDecimalSeparator(currency.getDecimalSeparator());
+        dfs.setGroupingSeparator(currency.getThousandsSeparator());
+        DecimalFormat df = new DecimalFormat();
+        df.setDecimalFormatSymbols(dfs);
+        df.setMinimumFractionDigits(0);
+        df.setMaximumFractionDigits(0);
+        return df.format(truncated);
+    }
+
+    public static String getLocalizedAmount(final @NonNull BigDecimal amount, final Currency currency) {
         DecimalFormatSymbols dfs = new DecimalFormatSymbols();
         dfs.setDecimalSeparator(currency.getDecimalSeparator());
         dfs.setGroupingSeparator(currency.getThousandsSeparator());
@@ -73,6 +83,10 @@ public final class CurrenciesUtil {
         df.setMinimumFractionDigits(currency.getDecimalPlaces());
         df.setMaximumFractionDigits(currency.getDecimalPlaces());
         return df.format(amount);
+    }
+
+    public static String getLocalizedAmountWithCurrencySymbol(BigDecimal amount, Site site) {
+        return getLocalizedAmountWithCurrencySymbol(amount, site.getCurrencyId(), true);
     }
 
     public static String getLocalizedAmountWithCurrencySymbol(BigDecimal amount, String currencyId) {

@@ -2,7 +2,6 @@ package com.mercadopago.preferences;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
-
 import com.google.gson.annotations.SerializedName;
 import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Item;
@@ -10,17 +9,16 @@ import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Sites;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import static com.mercadopago.lite.util.TextUtil.isEmpty;
 
-
-public final class CheckoutPreference implements Serializable {
+public class CheckoutPreference implements Serializable {
 
     /**
      * When the preference comes from backend then
@@ -51,7 +49,7 @@ public final class CheckoutPreference implements Serializable {
     private String conceptId;
     //endregion support external integrations
 
-    private CheckoutPreference(Builder builder) {
+    CheckoutPreference(final Builder builder) {
         items = builder.items;
         expirationDateFrom = builder.expirationDateFrom;
         expirationDateTo = builder.expirationDateTo;
@@ -117,7 +115,6 @@ public final class CheckoutPreference implements Serializable {
         return expirationDateFrom == null || date.after(expirationDateFrom);
     }
 
-
     public String getSiteId() {
         return siteId;
     }
@@ -164,10 +161,11 @@ public final class CheckoutPreference implements Serializable {
     }
 
     public List<String> getExcludedPaymentTypes() {
-        if (paymentPreference != null)
+        if (paymentPreference != null) {
             return paymentPreference.getExcludedPaymentTypes();
-        else
+        } else {
             return null;
+        }
     }
 
     public Site getSite() {
@@ -180,6 +178,7 @@ public final class CheckoutPreference implements Serializable {
         return site;
     }
 
+    @Size(min = 1)
     @NonNull
     public List<Item> getItems() {
         return items;
@@ -235,6 +234,10 @@ public final class CheckoutPreference implements Serializable {
     }
 
     public PaymentPreference getPaymentPreference() {
+        // If payment preference does not exists create one.
+        if (paymentPreference == null) {
+            paymentPreference = new PaymentPreference();
+        }
         return paymentPreference;
     }
 
@@ -263,72 +266,77 @@ public final class CheckoutPreference implements Serializable {
         private BigDecimal conceptAmount;
         private String conceptId;
 
-
         /**
          * Builder for custom CheckoutPreference construction
          *
-         * @param site       preference site
+         * @param site preference site
          * @param payerEmail payer email
-         * @param items      items to pay
+         * @param items items to pay
          */
-        public Builder(@NonNull final Site site, @NonNull String payerEmail, @Size(min = 1) @NonNull final List<Item> items) {
+        public Builder(@NonNull final Site site, @NonNull final String payerEmail,
+            @Size(min = 1) @NonNull final List<Item> items) {
             this.items = items;
             this.payerEmail = payerEmail;
-            this.localPreferenceSite = site;
+            localPreferenceSite = site;
             excludedPaymentMethods = new ArrayList<>();
             excludedPaymentTypes = new ArrayList<>();
         }
 
         @SuppressWarnings("unused")
-        public Builder addExcludedPaymentMethod(@NonNull String paymentMethodId) {
+        public Builder addExcludedPaymentMethod(@NonNull final String paymentMethodId) {
             excludedPaymentMethods.add(paymentMethodId);
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Builder addExcludedPaymentMethods(@NonNull List<String> paymentMethodIds) {
+        public Builder addExcludedPaymentMethods(@NonNull final Collection<String> paymentMethodIds) {
             excludedPaymentMethods.addAll(paymentMethodIds);
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Builder addExcludedPaymentType(@NonNull String paymentTypeId) {
+        public Builder addExcludedPaymentType(@NonNull final String paymentTypeId) {
             excludedPaymentTypes.add(paymentTypeId);
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Builder addExcludedPaymentTypes(@NonNull List<String> paymentTypeIds) {
+        public Builder addExcludedPaymentTypes(@NonNull final Collection<String> paymentTypeIds) {
             excludedPaymentTypes.addAll(paymentTypeIds);
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Builder setMaxInstallments(Integer maxInstallments) {
+        public Builder setMaxInstallments(final Integer maxInstallments) {
             this.maxInstallments = maxInstallments;
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Builder setDefaultInstallments(Integer defaultInstallments) {
+        public Builder setDefaultInstallments(final Integer defaultInstallments) {
             this.defaultInstallments = defaultInstallments;
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Builder setExpirationDate(Date date) {
+        public Builder setExpirationDate(final Date date) {
             expirationDateTo = date;
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Builder setActiveFrom(Date date) {
+        public Builder setActiveFrom(final Date date) {
             expirationDateFrom = date;
             return this;
         }
 
+        /**
+         * @deprecated This method is deprecated, access token should be added
+         * as private key.
+         */
+        @Deprecated
         @SuppressWarnings("unused")
-        public Builder setPayerAccessToken(String payerAccessToken) {
+        public Builder setPayerAccessToken(final String payerAccessToken) {
             this.payerAccessToken = payerAccessToken;
             return this;
         }

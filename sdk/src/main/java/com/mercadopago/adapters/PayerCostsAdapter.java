@@ -6,13 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import com.mercadopago.R;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.Site;
 import com.mercadopago.uicontrollers.payercosts.PayerCostRow;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,10 +60,10 @@ public class PayerCostsAdapter extends RecyclerView.Adapter<PayerCostsAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public FrameLayout mPayerCostContainer;
-        public PayerCostRow mPayerCostRow;
+        /* default */ FrameLayout mPayerCostContainer;
+        /* default */ PayerCostRow mPayerCostRow;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             mPayerCostContainer = itemView.findViewById(R.id.mpsdkPayerCostAdapterContainer);
             mPayerCostRow = new PayerCostRow(itemView.getContext(), mSite);

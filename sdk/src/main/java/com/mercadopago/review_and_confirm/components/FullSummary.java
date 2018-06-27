@@ -2,16 +2,13 @@ package com.mercadopago.review_and_confirm.components;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-
 import com.mercadopago.components.Component;
 import com.mercadopago.components.RendererFactory;
-import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Summary;
 import com.mercadopago.model.SummaryDetail;
 import com.mercadopago.review_and_confirm.SummaryProvider;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.review_and_confirm.props.AmountDescriptionProps;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,43 +25,21 @@ public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> 
     }
 
     FullSummary(@NonNull final SummaryComponent.SummaryProps props,
-        @NonNull final SummaryProvider provider) {
+                @NonNull final SummaryProvider provider) {
         super(props);
         this.provider = provider;
     }
 
-    @VisibleForTesting
-    BigDecimal getTotalAmount() {
-        BigDecimal totalAmount;
-
-        if (PaymentTypes.isCardPaymentMethod(props.summaryModel.getPaymentTypeId())) {
-            if (props.summaryModel.getInstallments() == 1) {
-                if (props.summaryModel.getCouponAmount() != null && !isEmptySummaryDetails()) {
-                    totalAmount = props.summaryModel.getPayerCostTotalAmount();
-                } else {
-                    totalAmount = props.summaryModel.getTotalAmount();
-                }
-            } else {
-                totalAmount = props.summaryModel.getPayerCostTotalAmount();
-            }
-        } else if (hasDiscount() && !isEmptySummaryDetails()) {
-            totalAmount = getSubtotal();
-        } else {
-            totalAmount = props.summaryModel.getTotalAmount();
-        }
-        return totalAmount;
-    }
-
     public List<AmountDescription> getAmountDescriptionComponents() {
-        List<AmountDescription> amountDescriptionList = new ArrayList<>();
+        final List<AmountDescription> amountDescriptionList = new ArrayList<>();
 
-        for (SummaryDetail summaryDetail : getSummary().getSummaryDetails()) {
+        for (final SummaryDetail summaryDetail : getSummary().getSummaryDetails()) {
             final AmountDescriptionProps amountDescriptionProps = new AmountDescriptionProps(
-                summaryDetail.getTotalAmount(),
-                summaryDetail.getTitle(),
-                props.summaryModel.currencyId,
-                summaryDetail.getTextColor(),
-                summaryDetail.getSummaryItemType());
+                    summaryDetail.getTotalAmount(),
+                    summaryDetail.getTitle(),
+                    props.summaryModel.currencyId,
+                    summaryDetail.getTextColor(),
+                    summaryDetail.getSummaryItemType());
 
             amountDescriptionList.add(new AmountDescription(amountDescriptionProps));
         }
@@ -74,48 +49,54 @@ public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> 
 
     @VisibleForTesting
     Summary getSummary() {
-        ReviewAndConfirmPreferences reviewAndConfirmPreferences = props.reviewAndConfirmPreferences;
-        Summary.Builder summaryBuilder = new com.mercadopago.model.Summary.Builder();
+        final ReviewAndConfirmPreferences reviewAndConfirmPreferences = props.reviewAndConfirmPreferences;
+        final Summary.Builder summaryBuilder = new com.mercadopago.model.Summary.Builder();
 
-        if (isValidTotalAmount() && reviewAndConfirmPreferences.hasProductAmount()) {
+        // TODO hotfix charges with preferences
+        if (isPrefAmountDifferent(props.summaryModel.getCharges()) && reviewAndConfirmPreferences.hasProductAmount()) {
             summaryBuilder.addSummaryProductDetail(reviewAndConfirmPreferences.getProductAmount(), getItemTitle(),
-                provider.getDefaultTextColor())
+                    provider.getDefaultTextColor())
+
                 .addSummaryShippingDetail(reviewAndConfirmPreferences.getShippingAmount(),
                     provider.getSummaryShippingTitle(), provider.getDefaultTextColor())
+
                 .addSummaryArrearsDetail(reviewAndConfirmPreferences.getArrearsAmount(),
                     provider.getSummaryArrearTitle(),
                     provider.getDefaultTextColor())
-                .addSummaryTaxesDetail(reviewAndConfirmPreferences.getTaxesAmount(), provider.getSummaryTaxesTitle(),
-                    provider.getDefaultTextColor())
-                .addSummaryDiscountDetail(getDiscountAmount(), provider.getSummaryDiscountsTitle(),
-                    provider.getDiscountTextColor())
-                .setDisclaimerText(reviewAndConfirmPreferences.getDisclaimerText())
-                .setDisclaimerColor(provider.getDisclaimerTextColor());
 
-            if (getChargesAmount().compareTo(BigDecimal.ZERO) > 0) {
-                summaryBuilder.addSummaryChargeDetail(getChargesAmount(), provider.getSummaryChargesTitle(),
-                    provider.getDefaultTextColor());
-            }
+                .addSummaryTaxesDetail(reviewAndConfirmPreferences.getTaxesAmount(), provider.getSummaryTaxesTitle(),
+                            provider.getDefaultTextColor())
+
+                .addSummaryDiscountDetail(getDiscountAmount(), provider.getSummaryDiscountsTitle(),
+                            provider.getDiscountTextColor())
+
+                .setDisclaimerText(reviewAndConfirmPreferences.getDisclaimerText())
+                    .setDisclaimerColor(provider.getDisclaimerTextColor());
         } else {
-            summaryBuilder.addSummaryProductDetail(props.summaryModel.getTotalAmount(), getItemTitle(),
-                provider.getDefaultTextColor());
+            summaryBuilder.addSummaryProductDetail(props.summaryModel.getItemsAmount(), getItemTitle(),
+                    provider.getDefaultTextColor());
 
             if (isValidAmount(props.summaryModel.getPayerCostTotalAmount()) &&
-                getPayerCostChargesAmount().compareTo(BigDecimal.ZERO) > 0) {
+                    getPayerCostChargesAmount().compareTo(BigDecimal.ZERO) > 0) {
                 summaryBuilder.addSummaryChargeDetail(getPayerCostChargesAmount(), provider.getSummaryChargesTitle(),
-                    provider.getDefaultTextColor());
+                        provider.getDefaultTextColor());
             }
 
             if (!isEmpty(reviewAndConfirmPreferences.getDisclaimerText())) {
                 summaryBuilder.setDisclaimerText(reviewAndConfirmPreferences.getDisclaimerText())
-                    .setDisclaimerColor(provider.getDisclaimerTextColor());
+                        .setDisclaimerColor(provider.getDisclaimerTextColor());
             }
 
             if (isValidAmount(props.summaryModel.getCouponAmount())) {
                 summaryBuilder.addSummaryDiscountDetail(props.summaryModel.getCouponAmount(),
-                    provider.getSummaryDiscountsTitle(),
-                    provider.getDiscountTextColor());
+                        provider.getSummaryDiscountsTitle(),
+                        provider.getDiscountTextColor());
             }
+        }
+
+        if (props.summaryModel.hasCharges()) {
+            summaryBuilder.addSummaryChargeDetail(props.summaryModel.getCharges(), provider.getSummaryChargesTitle(),
+                provider.getDefaultTextColor());
         }
 
         return summaryBuilder.build();
@@ -131,40 +112,23 @@ public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> 
         return title;
     }
 
-    @VisibleForTesting
-    BigDecimal getChargesAmount() {
-        ReviewAndConfirmPreferences reviewScreenPreference = props.reviewAndConfirmPreferences;
-        BigDecimal interestAmount = new BigDecimal(0);
-
-        if (reviewScreenPreference.getChargeAmount() != null) {
-            interestAmount = reviewScreenPreference.getChargeAmount();
-        }
-
-        if (props.summaryModel.getInstallments() != null && props.summaryModel.getInstallments() > 1 &&
-            isValidAmount(props.summaryModel.getPayerCostTotalAmount())) {
-            BigDecimal totalInterestsAmount = getPayerCostChargesAmount();
-            interestAmount = interestAmount.add(totalInterestsAmount);
-        }
-
-        return interestAmount;
-    }
-
     private BigDecimal getPayerCostChargesAmount() {
-        BigDecimal totalInterestsAmount;
+        final BigDecimal totalInterestsAmount;
 
         if (isValidAmount(props.summaryModel.getCouponAmount())) {
-            BigDecimal totalAmount = props.summaryModel.getTotalAmount().subtract(props.summaryModel.getCouponAmount());
+            final BigDecimal totalAmount =
+                props.summaryModel.getAmountToPay().subtract(props.summaryModel.getCouponAmount());
             totalInterestsAmount = props.summaryModel.getPayerCostTotalAmount().subtract(totalAmount);
         } else {
             totalInterestsAmount =
-                props.summaryModel.getPayerCostTotalAmount().subtract(props.summaryModel.getTotalAmount());
+                props.summaryModel.getPayerCostTotalAmount().subtract(props.summaryModel.getAmountToPay());
         }
 
         return totalInterestsAmount;
     }
 
     private BigDecimal getDiscountAmount() {
-        ReviewAndConfirmPreferences reviewScreenPreference = props.reviewAndConfirmPreferences;
+        final ReviewAndConfirmPreferences reviewScreenPreference = props.reviewAndConfirmPreferences;
         BigDecimal discountAmount = reviewScreenPreference.getDiscountAmount();
 
         if (isValidAmount(props.summaryModel.getCouponAmount())) {
@@ -174,31 +138,15 @@ public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> 
         return discountAmount;
     }
 
-    private boolean isValidAmount(BigDecimal amount) {
-        return amount != null && amount.compareTo(BigDecimal.ZERO) >= 0;
+    private boolean isValidAmount(final BigDecimal amount) {
+        return amount != null && amount.compareTo(BigDecimal.ZERO) != 0;
     }
 
-    private boolean isValidTotalAmount() {
-        ReviewAndConfirmPreferences reviewScreenPreference = props.reviewAndConfirmPreferences;
-        BigDecimal totalAmountPreference = reviewScreenPreference.getTotalAmount();
-        return totalAmountPreference.compareTo(props.summaryModel.getTotalAmount()) == 0;
-    }
-
-    private boolean isEmptySummaryDetails() {
-        return getSummary() != null && getSummary().getSummaryDetails() != null &&
-            getSummary().getSummaryDetails().size() < 2;
-    }
-
-    private BigDecimal getSubtotal() {
-        BigDecimal ans = props.summaryModel.getTotalAmount();
-        if (hasDiscount()) {
-            ans = props.summaryModel.getTotalAmount().subtract(props.summaryModel.getCouponAmount());
-        }
-        return ans;
-    }
-
-    private boolean hasDiscount() {
-        return props.summaryModel.currencyId != null && props.summaryModel.getCouponAmount() != null;
+    private boolean isPrefAmountDifferent(final BigDecimal charges) {
+        final ReviewAndConfirmPreferences reviewScreenPreference = props.reviewAndConfirmPreferences;
+        final BigDecimal partialCharges = charges != null ? charges : BigDecimal.ZERO;
+        final BigDecimal totalAmountPreference = reviewScreenPreference.getTotalAmount().add(partialCharges);
+        return totalAmountPreference.compareTo(props.summaryModel.getAmountToPay()) == 0;
     }
 
     public DisclaimerComponent getDisclaimerComponent(String disclaimer) {

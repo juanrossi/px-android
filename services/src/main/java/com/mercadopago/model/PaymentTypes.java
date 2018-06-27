@@ -1,5 +1,6 @@
 package com.mercadopago.model;
 
+import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +25,16 @@ public class PaymentTypes {
 
     public static String PLUGIN = "payment_method_plugin";
 
+    public static final String PAYMENT_METHOD = "payment_method";
+
     private PaymentTypes() {
     }
 
-    public static boolean isCardPaymentMethod(String paymentType) {
+    public static boolean isPaymentMethodType(@NonNull final String type) {
+        return PAYMENT_METHOD.equals(type);
+    }
+
+    public static boolean isCardPaymentType(String paymentType) {
         return PaymentTypes.CREDIT_CARD.equals(paymentType) ||
                 PaymentTypes.DEBIT_CARD.equals(paymentType) ||
                 PaymentTypes.PREPAID_CARD.equals(paymentType);

@@ -39,9 +39,14 @@ public class CreditCardPage extends PageObject<CheckoutValidator> {
     }
 
 
-    public NoCheckoutPage pressBack() {
+    public NoCheckoutPage pressBackWithExclusion() {
         onView(isRoot()).perform(ViewActions.pressBack());
         return new NoCheckoutPage(validator);
+    }
+
+    public PaymentMethodPage pressBack() {
+        onView(isRoot()).perform(ViewActions.pressBack());
+        return new PaymentMethodPage(validator);
     }
 
     public CreditCardPage enterExcludedCreditCardNumber(final String cardNumber) {
@@ -57,7 +62,7 @@ public class CreditCardPage extends PageObject<CheckoutValidator> {
 
     private Matcher<View> enterCardNumber(final String cardNumber) {
         final Matcher<View> cardNumberEditTextMatcher = withId(R.id.mpsdkCardNumber);
-        final Matcher<View> cardNextButtonTextMatcher = withId(R.id.mpsdkNextButtonText);
+        final Matcher<View> cardNextButtonTextMatcher = withId(R.id.mpsdkNextButton);
         onView(cardNumberEditTextMatcher).perform(typeText(cardNumber));
         return cardNextButtonTextMatcher;
     }

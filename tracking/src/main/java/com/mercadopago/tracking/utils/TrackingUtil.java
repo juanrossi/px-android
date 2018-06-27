@@ -4,6 +4,8 @@ public final class TrackingUtil {
 
     //Action IDs
     public static final String ACTION_CHECKOUT_CONFIRMED = "/checkout_confirmed";
+    public static final String ACTION_OPEN_SUMMARY_ONE_TAP = "/open_summary_detail";
+    public static final String ACTION_CANCEL_ONE_TAP = "/back_action";
 
     //Screen IDs
     public static final String SCREEN_ID_CHECKOUT = "/init";
@@ -24,6 +26,8 @@ public final class TrackingUtil {
     public static final String SCREEN_ID_IDENTIFICATION = "/identification";
     public static final String SCREEN_ID_ISSUERS = "/card/issuer";
     public static final String SCREEN_ID_INSTALLMENTS = "/card/installments";
+    public static final String SCREEN_ID_ONE_TAP = "/express";
+    public static final String SCREEN_ID_DISCOUNT_TERMS = "/discount_terms_conditions";
 
     //Screen Names
     public static final String SCREEN_NAME_PAYMENT_VAULT = "PAYMENT_METHOD_SEARCH";
@@ -82,6 +86,7 @@ public final class TrackingUtil {
     public static final String PROPERTY_CARD_ID = "card_id";
     public static final String PROPERTY_INSTALLMENTS = "installments";
     public static final String PROPERTY_PURCHASE_AMOUNT = "purchase_amount";
+    public static final String PROPERTY_HAS_DISCOUNT = "has_discount";
 
     //Default values
     public static final String HAS_SHIPPING_DEFAULT_VALUE = "false";

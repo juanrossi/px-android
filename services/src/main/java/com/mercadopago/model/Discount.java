@@ -2,34 +2,33 @@ package com.mercadopago.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.VisibleForTesting;
-import com.mercadopago.lite.util.CurrenciesUtil;
+import android.support.annotation.NonNull;
 import com.mercadopago.lite.util.ParcelableUtil;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Locale;
 
-public class Discount implements Parcelable, Serializable {
+import static com.mercadopago.lite.util.CurrenciesUtil.isValidCurrency;
 
+public class Discount implements Serializable, Parcelable {
+    /**
+     * Discount id is the campaign_id
+     */
     private String id;
+
     private String name;
     private String currencyId;
-    private String couponCode;
-    private String concept;
-    private String campaignId;
     private BigDecimal percentOff;
     private BigDecimal amountOff;
     private BigDecimal couponAmount;
 
-    @VisibleForTesting
-    public Discount() {
-    }
-
-    public String getCouponCode() {
-        return couponCode;
-    }
-
-    public void setCouponCode(String couponCode) {
-        this.couponCode = couponCode;
+    protected Discount(Builder builder) {
+        this.id = builder.id;
+        this.currencyId = builder.currencyId;
+        this.couponAmount = builder.couponAmount;
+        this.name = builder.name;
+        this.percentOff = builder.percentOff;
+        this.amountOff = builder.amountOff;
     }
 
     public BigDecimal getAmountOff() {
@@ -44,87 +43,32 @@ public class Discount implements Parcelable, Serializable {
         return currencyId;
     }
 
-    public void setCurrencyId(String currencyId) {
-        this.currencyId = currencyId;
-    }
-
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public BigDecimal getPercentOff() {
         return percentOff;
-    }
-
-    public void setPercentOff(BigDecimal percentOff) {
-        this.percentOff = percentOff;
     }
 
     public BigDecimal getAmountWithDiscount(BigDecimal amount) {
         return amount.subtract(couponAmount);
     }
 
-    public void setAmountOff(BigDecimal amountOff) {
-        this.amountOff = amountOff;
+    public boolean hasPercentOff() {
+        return percentOff != null && !BigDecimal.ZERO.equals(percentOff);
     }
 
-    public void setCouponAmount(BigDecimal couponAmount) {
-        this.couponAmount = couponAmount;
-    }
-
-    public Boolean hasPercentOff() {
-        return percentOff != null && !percentOff.equals(new BigDecimal(0));
-    }
-
-    public void setConcept(String concept) {
-        this.concept = concept;
-    }
-
-    public String getConcept() {
-        return concept;
-    }
-
-    public boolean isValid() {
-        return isDiscountCurrencyIdValid() && isAmountValid(couponAmount) && id != null;
-    }
-
-    private Boolean isDiscountCurrencyIdValid() {
-        return currencyId != null && CurrenciesUtil.isValidCurrency(currencyId);
-    }
-
-    private Boolean isAmountValid(BigDecimal amount) {
-        return amount != null && amount.compareTo(BigDecimal.ZERO) >= 0;
-    }
-
-    public String getCampaignId() {
-        return campaignId;
-    }
-
-    public void setCampaignId(final String campaignId) {
-        this.campaignId = campaignId;
-    }
-
-    protected Discount(Parcel in) {
+    private Discount(Parcel in) {
         id = in.readString();
         name = in.readString();
         currencyId = in.readString();
-        couponCode = in.readString();
-        concept = in.readString();
-        campaignId = in.readString();
-        percentOff = ParcelableUtil.getBigDecimalReadByte(in);
-        amountOff = ParcelableUtil.getBigDecimalReadByte(in);
+        percentOff = ParcelableUtil.getOptionalBigDecimal(in);
+        amountOff = ParcelableUtil.getOptionalBigDecimal(in);
         couponAmount = new BigDecimal(in.readString());
     }
 
@@ -146,15 +90,71 @@ public class Discount implements Parcelable, Serializable {
     }
 
     @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
+    public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(currencyId);
-        dest.writeString(couponCode);
-        dest.writeString(concept);
-        dest.writeString(campaignId);
-        ParcelableUtil.writeByte(dest, percentOff);
-        ParcelableUtil.writeByte(dest, amountOff);
+        ParcelableUtil.writeOptional(dest, percentOff);
+        ParcelableUtil.writeOptional(dest, amountOff);
         dest.writeString(couponAmount.toString());
+    }
+
+    public String getDiscountTermsUrl() {
+        return String
+            .format(Locale.US, "https://api.mercadolibre.com/campaigns/%s/terms_and_conditions?format_type=html",
+                this.id);
+    }
+
+    public static final class Builder {
+        //region mandatory params
+        private String id;
+        private String currencyId;
+        private BigDecimal couponAmount;
+        //endregion mandatory params
+        private String name;
+        private BigDecimal percentOff;
+        private BigDecimal amountOff;
+
+        /**
+         * Builder for discount construction
+         *
+         * @param id discount id
+         * @param currencyId amount currency id
+         * @param couponAmount amount that will be applied in discount
+         */
+        public Builder(@NonNull final String id,
+            @NonNull final String currencyId,
+            @NonNull final BigDecimal couponAmount) {
+            this.id = id;
+            this.currencyId = currencyId;
+            this.couponAmount = couponAmount;
+            setPercentOff(BigDecimal.ZERO);
+            setAmountOff(BigDecimal.ZERO);
+        }
+
+        @SuppressWarnings("unused")
+        public Discount.Builder setName(@NonNull String name) {
+            this.name = name;
+            return this;
+        }
+
+        @SuppressWarnings("unused")
+        public Discount.Builder setPercentOff(@NonNull BigDecimal percentOff) {
+            this.percentOff = percentOff;
+            return this;
+        }
+
+        @SuppressWarnings("unused")
+        public Discount.Builder setAmountOff(@NonNull BigDecimal amountOff) {
+            this.amountOff = amountOff;
+            return this;
+        }
+
+        public Discount build() {
+            if (!isValidCurrency(currencyId)) {
+                throw new IllegalStateException("invalid currency id");
+            }
+            return new Discount(this);
+        }
     }
 }

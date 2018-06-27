@@ -1,15 +1,13 @@
 package com.mercadopago.plugins.model;
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
-
+import android.support.annotation.Nullable;
 import com.mercadopago.components.PaymentMethodComponent;
 import com.mercadopago.components.TotalAmount;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
-
 import java.math.BigDecimal;
 
 public class BusinessPaymentModel implements Parcelable {
@@ -21,15 +19,16 @@ public class BusinessPaymentModel implements Parcelable {
     private final String currencyId;
     private final BigDecimal amount;
 
+    @Nullable
     private final String lastFourDigits;
 
     public BusinessPaymentModel(final BusinessPayment payment,
-                                final Discount discount,
-                                final PaymentMethod paymentMethod,
-                                final PayerCost payerCost,
-                                final String currencyId,
-                                final BigDecimal amount,
-                                final String lastFourDigits) {
+        final Discount discount,
+        final PaymentMethod paymentMethod,
+        final PayerCost payerCost,
+        final String currencyId,
+        final BigDecimal amount,
+        @Nullable final String lastFourDigits) {
         this.payment = payment;
         this.discount = discount;
         this.paymentMethod = paymentMethod;
@@ -40,8 +39,13 @@ public class BusinessPaymentModel implements Parcelable {
     }
 
     public PaymentMethodComponent.PaymentMethodProps getPaymentMethodProps() {
-        TotalAmount.TotalAmountProps totalAmountProps = new TotalAmount.TotalAmountProps(currencyId, amount, payerCost, discount);
-        return new PaymentMethodComponent.PaymentMethodProps(paymentMethod, lastFourDigits, payment.getStatementDescription(), totalAmountProps);
+        final TotalAmount.TotalAmountProps totalAmountProps = new TotalAmount.TotalAmountProps(currencyId, amount,
+            payerCost,
+            discount);
+        return new PaymentMethodComponent.PaymentMethodProps(paymentMethod,
+            lastFourDigits,
+            payment.getStatementDescription(),
+            totalAmountProps);
     }
 
     protected BusinessPaymentModel(Parcel in) {
@@ -56,12 +60,12 @@ public class BusinessPaymentModel implements Parcelable {
 
     public static final Creator<BusinessPaymentModel> CREATOR = new Creator<BusinessPaymentModel>() {
         @Override
-        public BusinessPaymentModel createFromParcel(Parcel in) {
+        public BusinessPaymentModel createFromParcel(final Parcel in) {
             return new BusinessPaymentModel(in);
         }
 
         @Override
-        public BusinessPaymentModel[] newArray(int size) {
+        public BusinessPaymentModel[] newArray(final int size) {
             return new BusinessPaymentModel[size];
         }
     };

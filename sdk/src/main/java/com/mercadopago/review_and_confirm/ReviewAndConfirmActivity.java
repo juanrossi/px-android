@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -13,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-
 import com.mercadopago.MercadoPagoBaseActivity;
 import com.mercadopago.R;
 import com.mercadopago.components.Action;
@@ -44,20 +44,23 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     private static final String EXTRA_SUMMARY_MODEL = "extra_summary_model";
     private static final String EXTRA_PUBLIC_KEY = "extra_public_key";
     private static final String EXTRA_ITEMS = "extra_items";
+    private static final String EXTRA_DISCOUNT_TERMS_AND_CONDITIONS = "extra_discount_terms_and_conditions";
 
     public static void start(@NonNull final Activity activity,
                              @NonNull final String merchantPublicKey,
-                             @NonNull final TermsAndConditionsModel termsAndConditions,
+                             @Nullable final TermsAndConditionsModel mercadoPagoTermsAndConditions,
                              @NonNull final PaymentModel paymentModel,
                              @NonNull final SummaryModel summaryModel,
-                             @NonNull final ItemsModel itemsModel) {
+                             @NonNull final ItemsModel itemsModel,
+                             @Nullable final TermsAndConditionsModel discountTermsAndConditions) {
         //TODO result code should be changed by the outside.
-        Intent intent = new Intent(activity, ReviewAndConfirmActivity.class);
+        final Intent intent = new Intent(activity, ReviewAndConfirmActivity.class);
         intent.putExtra(EXTRA_PUBLIC_KEY, merchantPublicKey);
-        intent.putExtra(EXTRA_TERMS_AND_CONDITIONS, termsAndConditions);
+        intent.putExtra(EXTRA_TERMS_AND_CONDITIONS, mercadoPagoTermsAndConditions);
         intent.putExtra(EXTRA_PAYMENT_MODEL, paymentModel);
         intent.putExtra(EXTRA_SUMMARY_MODEL, summaryModel);
         intent.putExtra(EXTRA_ITEMS, itemsModel);
+        intent.putExtra(EXTRA_DISCOUNT_TERMS_AND_CONDITIONS, discountTermsAndConditions);
         activity.startActivityForResult(intent, MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE);
     }
 
@@ -85,7 +88,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelPayment();
+                onBackPressed();
             }
         });
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
@@ -170,42 +173,53 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     }
 
     private ReviewAndConfirmContainer.Props getActivityParameters() {
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        TermsAndConditionsModel termsAndConditionsModel = null;
-        PaymentModel paymentModel = null;
-        SummaryModel summaryModel = null;
+        final Intent intent = getIntent();
+        final Bundle extras = intent.getExtras();
 
-        ItemsModel itemsModel = null;
         if (extras != null) {
-            termsAndConditionsModel = extras.getParcelable(EXTRA_TERMS_AND_CONDITIONS);
-            paymentModel = extras.getParcelable(EXTRA_PAYMENT_MODEL);
-            summaryModel = extras.getParcelable(EXTRA_SUMMARY_MODEL);
-            itemsModel = extras.getParcelable(EXTRA_ITEMS);
-            Tracker.trackReviewAndConfirmScreen(getApplicationContext(), getIntent().getStringExtra(EXTRA_PUBLIC_KEY), paymentModel);
+            final TermsAndConditionsModel termsAndConditionsModel = extras.getParcelable(EXTRA_TERMS_AND_CONDITIONS);
+            final PaymentModel paymentModel = extras.getParcelable(EXTRA_PAYMENT_MODEL);
+            final SummaryModel summaryModel = extras.getParcelable(EXTRA_SUMMARY_MODEL);
+            final ItemsModel itemsModel = extras.getParcelable(EXTRA_ITEMS);
+            final TermsAndConditionsModel discountTermsAndConditions =
+                extras.getParcelable(EXTRA_DISCOUNT_TERMS_AND_CONDITIONS);
+            final ReviewAndConfirmPreferences preferences = CheckoutStore
+                .getInstance()
+                .getReviewAndConfirmPreferences();
+
+            Tracker.trackReviewAndConfirmScreen(getApplicationContext(), getIntent().getStringExtra(EXTRA_PUBLIC_KEY),
+                paymentModel);
+            return new ReviewAndConfirmContainer.Props(termsAndConditionsModel, paymentModel, summaryModel, preferences,
+                itemsModel, discountTermsAndConditions);
         }
 
-        ReviewAndConfirmPreferences reviewAndConfirmPreferences = CheckoutStore.getInstance().getReviewAndConfirmPreferences();
-        return new ReviewAndConfirmContainer.Props(termsAndConditionsModel, paymentModel, summaryModel, reviewAndConfirmPreferences, itemsModel);
+        throw new IllegalStateException("Unsupported parameters for Review and confirm activity");
     }
 
-    private void setFloatingElevationVisibility(View floatingConfirmLayout, boolean visible) {
+    private void setFloatingElevationVisibility(final View floatingConfirmLayout, final boolean visible) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            float elevationInPixels = visible ? getBaseContext().getResources().getDimension(R.dimen.mpsdk_xxs_margin) : 0;
+            final float elevationInPixels =
+                visible ? getBaseContext().getResources().getDimension(R.dimen.mpsdk_xxs_margin) : 0;
             floatingConfirmLayout.setElevation(elevationInPixels);
         }
     }
 
     private void confirmPayment() {
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            PaymentModel paymentModel = extras.getParcelable(EXTRA_PAYMENT_MODEL);
-            SummaryModel summaryModel = extras.getParcelable(EXTRA_SUMMARY_MODEL);
+            final PaymentModel paymentModel = extras.getParcelable(EXTRA_PAYMENT_MODEL);
+            final SummaryModel summaryModel = extras.getParcelable(EXTRA_SUMMARY_MODEL);
             Tracker.trackCheckoutConfirm(getApplicationContext(), getIntent().getStringExtra(EXTRA_PUBLIC_KEY), paymentModel, summaryModel);
         }
 
         setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
     }
 
     private void cancelPayment() {
@@ -224,7 +238,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     }
 
     @Override
-    public void dispatch(Action action) {
+    public void dispatch(final Action action) {
         if (action instanceof ChangePaymentMethodAction) {
             changePaymentMethod();
         } else if (action instanceof CancelPaymentAction) {
@@ -234,7 +248,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         } else if (action instanceof ExitAction) {
             processCustomExit((ExitAction) action);
         } else {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("action not allowed");
         }
     }
 }

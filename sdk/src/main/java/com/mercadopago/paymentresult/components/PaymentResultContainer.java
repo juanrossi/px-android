@@ -2,7 +2,6 @@ package com.mercadopago.paymentresult.components;
 
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.R;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.Component;
@@ -100,6 +99,7 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
     public Body getBodyComponent() {
         Body body = null;
         if (props.paymentResult != null) {
+            //TODO fix amount.
             final PaymentResultBodyProps bodyProps = new PaymentResultBodyProps.Builder()
                     .setStatus(props.paymentResult.getPaymentStatus())
                     .setStatusDetail(props.paymentResult.getPaymentStatusDetail())

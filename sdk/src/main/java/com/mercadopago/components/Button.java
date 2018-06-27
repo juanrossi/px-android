@@ -1,11 +1,9 @@
 package com.mercadopago.components;
 
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mercadolibre.android.ui.widgets.MeliButton;
 import javax.annotation.Nonnull;
 
@@ -22,6 +20,11 @@ public abstract class Button extends CompactComponent<Button.Props, Button.Actio
 
         public Props(final String label, final Action action) {
             this.action = action;
+            this.label = label;
+        }
+
+        public Props(final String label) {
+            this.action = new Action();
             this.label = label;
         }
 

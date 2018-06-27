@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.IdentificationTypesAdapter;
 import com.mercadopago.callbacks.PaymentMethodSelectionCallback;
@@ -37,11 +37,11 @@ import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
-import com.mercadopago.core.MercadoPagoUI;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.ExceptionHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.internal.di.AmountModule;
 import com.mercadopago.listeners.card.CardExpiryDateTextWatcher;
 import com.mercadopago.listeners.card.CardIdentificationNumberTextWatcher;
 import com.mercadopago.listeners.card.CardNumberTextWatcher;
@@ -73,26 +73,20 @@ import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.uicontrollers.card.CardView;
 import com.mercadopago.uicontrollers.card.IdentificationCardView;
-import com.mercadopago.uicontrollers.discounts.DiscountRowView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.MPAnimationUtils;
 import com.mercadopago.util.MPCardMaskUtil;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.util.ViewUtils;
 import com.mercadopago.views.GuessingCardActivityView;
-
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Created by vaserber on 10/13/16.
- */
-
-public class GuessingCardActivity extends MercadoPagoBaseActivity implements GuessingCardActivityView, TimerObserver {
+public class GuessingCardActivity extends MercadoPagoBaseActivity implements GuessingCardActivityView,
+    TimerObserver, CardExpiryDateEditTextCallback, View.OnTouchListener, View.OnClickListener {
 
     public static final String CARD_NUMBER_INPUT = "cardNumber";
     public static final String CARDHOLDER_NAME_INPUT = "cardHolderName";
@@ -105,7 +99,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     public static final String NORMAL_STATE = "textview_normal";
 
     public static final String CARD_SIDE_STATE_BUNDLE = "mCardSideState";
-    public static final String PAYMENT_METHOD_BUNDLE = "mPaymentMethod";
+    public static final String PAYMENT_METHOD_BUNDLE = "paymentMethod";
     public static final String ID_REQUIRED_BUNDLE = "mIdentificationNumberRequired";
     public static final String SEC_CODE_REQUIRED_BUNDLE = "mIsSecurityCodeRequired";
     public static final String SEC_CODE_LENGTH_BUNDLE = "mCardSecurityCodeLength";
@@ -131,9 +125,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     protected boolean mLowResActive;
     protected GuessingCardPresenter mPresenter;
     protected String mDefaultBaseURL;
-    protected String mMerchantDiscountBaseURL;
-    protected String mMerchantGetDiscountURI;
-    protected Map<String, String> mDiscountAdditionalInfo;
     private Activity mActivity;
     //View controls
     private ScrollView mScrollView;
@@ -157,7 +148,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     private FrameLayout mNextButton;
     private FrameLayout mBackButton;
     private FrameLayout mBackInactiveButton;
-    private FrameLayout mDiscountFrameLayout;
+
     private LinearLayout mButtonContainer;
     private MPEditText mCardNumberEditText;
     private MPEditText mCardHolderNameEditText;
@@ -175,8 +166,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     private MPTextView mInfoTextView;
     private MPTextView mErrorTextView;
     private String mErrorState;
-    private TextView mNextButtonText;
-    private TextView mBackButtonText;
     private TextView mBackInactiveButtonText;
     private Animation mContainerUpAnimation;
     private Animation mContainerDownAnimation;
@@ -191,7 +180,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createPresenter();
         mActivity = this;
         mActivityActive = true;
         mButtonContainerMustBeShown = true;
@@ -230,10 +218,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         super.onStop();
     }
 
-    protected void createPresenter() {
-        mPresenter = new GuessingCardPresenter();
-    }
-
     private void configurePresenter() {
         mPresenter.attachView(this);
         mPresenter.attachResourcesProvider(new GuessingCardProviderImpl(this, mPublicKey, mPrivateKey));
@@ -242,54 +226,52 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     private void setMerchantInfo() {
         if (CustomServicesHandler.getInstance().getServicePreference() != null) {
             mDefaultBaseURL = CustomServicesHandler.getInstance().getServicePreference().getDefaultBaseURL();
-            mMerchantDiscountBaseURL = CustomServicesHandler.getInstance().getServicePreference().getGetMerchantDiscountBaseURL();
-            mMerchantGetDiscountURI = CustomServicesHandler.getInstance().getServicePreference().getGetMerchantDiscountURI();
-            mDiscountAdditionalInfo = CustomServicesHandler.getInstance().getServicePreference().getGetDiscountAdditionalInfo();
         }
 
         mPresenter.setMerchantBaseUrl(mDefaultBaseURL);
-        mPresenter.setMerchantDiscountBaseUrl(mMerchantDiscountBaseURL);
-        mPresenter.setMerchantGetDiscountUri(mMerchantGetDiscountURI);
-        mPresenter.setDiscountAdditionalInfo(mDiscountAdditionalInfo);
     }
 
     private void getActivityParameters() {
 
-        mPublicKey = getIntent().getStringExtra("merchantPublicKey");
-        mPrivateKey = getIntent().getStringExtra("payerAccessToken");
-        String siteId = getIntent().getStringExtra("siteId");
-        PaymentPreference paymentPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentPreference"), PaymentPreference.class);
+        final Intent intent = getIntent();
 
-        PaymentRecovery paymentRecovery = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentRecovery"), PaymentRecovery.class);
+        final AmountModule amountModule = new AmountModule(this);
+        mPresenter = new GuessingCardPresenter(amountModule.getAmountRepository(),
+            amountModule.getConfigurationModule().getUserSelectionRepository());
+        mPublicKey = intent.getStringExtra("merchantPublicKey");
+        mPrivateKey = intent.getStringExtra("payerAccessToken");
+        PaymentPreference paymentPreference =
+            JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentPreference"), PaymentPreference.class);
 
-        BigDecimal transactionAmount = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("amount"), BigDecimal.class);
-        Boolean discountEnabled = getIntent().getBooleanExtra("discountEnabled", true);
-        Discount discount = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("discount"), Discount.class);
-        String payerEmail = getIntent().getStringExtra("payerEmail");
+        PaymentRecovery paymentRecovery =
+            JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentRecovery"), PaymentRecovery.class);
+
+        BigDecimal transactionAmount =
+            JsonUtil.getInstance().fromJson(intent.getStringExtra("amount"), BigDecimal.class);
+        Discount discount = JsonUtil.getInstance().fromJson(intent.getStringExtra("discount"), Discount.class);
+        String payerEmail = intent.getStringExtra("payerEmail");
 
         Token token = null;
-        PaymentMethod paymentMethod = null;
 
         List<PaymentMethod> paymentMethodList;
         try {
             Type listType = new TypeToken<List<PaymentMethod>>() {
             }.getType();
-            paymentMethodList = JsonUtil.getInstance().getGson().fromJson(getIntent().getStringExtra("paymentMethodList"), listType);
+            paymentMethodList =
+                JsonUtil.getInstance().getGson().fromJson(intent.getStringExtra("paymentMethodList"), listType);
         } catch (Exception ex) {
             paymentMethodList = null;
         }
         Identification identification = new Identification();
         boolean identificationNumberRequired = false;
 
-        Boolean showBankDeals = getIntent().getBooleanExtra("showBankDeals", true);
-        Boolean showDiscount = getIntent().getBooleanExtra("showDiscount", false);
+        Boolean showBankDeals = intent.getBooleanExtra("showBankDeals", true);
+        Boolean showDiscount = intent.getBooleanExtra("showDiscount", false);
 
         mPresenter.setPrivateKey(mPrivateKey);
         mPresenter.setPublicKey(mPublicKey);
-        mPresenter.setSiteId(siteId);
         mPresenter.setToken(token);
         mPresenter.setShowBankDeals(showBankDeals);
-        mPresenter.setPaymentMethod(paymentMethod);
         mPresenter.setPaymentMethodList(paymentMethodList);
         mPresenter.setIdentification(identification);
         mPresenter.setIdentificationNumberRequired(identificationNumberRequired);
@@ -298,7 +280,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mPresenter.setPayerEmail(payerEmail);
         mPresenter.setDiscount(discount);
         mPresenter.setTransactionAmount(transactionAmount);
-        mPresenter.setDiscountEnabled(discountEnabled);
         mPresenter.setShowDiscount(showDiscount);
     }
 
@@ -317,17 +298,20 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             outState.putString(SEC_CODE_LOCATION_BUNDLE, mPresenter.getSecurityCodeLocation());
             outState.putString(CARD_TOKEN_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getCardToken()));
             outState.putString(CARD_INFO_BIN_BUNDLE, mPresenter.getSavedBin());
-            outState.putString(PAYMENT_METHOD_LIST_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getPaymentMethodList()));
+            outState.putString(PAYMENT_METHOD_LIST_BUNDLE,
+                JsonUtil.getInstance().toJson(mPresenter.getPaymentMethodList()));
             outState.putString(CARD_NUMBER_BUNDLE, mPresenter.getCardNumber());
             outState.putString(CARD_NAME_BUNDLE, mPresenter.getCardholderName());
             outState.putString(EXPIRY_MONTH_BUNDLE, mPresenter.getExpiryMonth());
             outState.putString(EXPIRY_YEAR_BUNDLE, mPresenter.getExpiryYear());
             outState.putString(IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentification()));
             outState.putString(IDENTIFICATION_NUMBER_BUNDLE, mPresenter.getIdentificationNumber());
-            outState.putString(IDENTIFICATION_TYPE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentificationType()));
+            outState.putString(IDENTIFICATION_TYPE_BUNDLE,
+                JsonUtil.getInstance().toJson(mPresenter.getIdentificationType()));
             outState.putString(PAYMENT_TYPES_LIST_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getPaymentTypes()));
             outState.putString(BANK_DEALS_LIST_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getBankDealsList()));
-            outState.putString(IDENTIFICATION_TYPES_LIST_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentificationTypes()));
+            outState.putString(IDENTIFICATION_TYPES_LIST_BUNDLE,
+                JsonUtil.getInstance().toJson(mPresenter.getIdentificationTypes()));
             outState.putString(PAYMENT_RECOVERY_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getPaymentRecovery()));
             outState.putBoolean(LOW_RES_BUNDLE, mLowResActive);
 
@@ -340,14 +324,15 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(PAYMENT_METHOD_BUNDLE) != null) {
-                PaymentMethod pm = JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_METHOD_BUNDLE), PaymentMethod.class);
+                PaymentMethod pm = JsonUtil.getInstance()
+                    .fromJson(savedInstanceState.getString(PAYMENT_METHOD_BUNDLE), PaymentMethod.class);
                 if (pm != null) {
                     List<PaymentMethod> paymentMethodList;
                     try {
                         Type listType = new TypeToken<List<PaymentMethod>>() {
                         }.getType();
                         paymentMethodList = JsonUtil.getInstance().getGson().fromJson(
-                                savedInstanceState.getString(PAYMENT_METHOD_LIST_BUNDLE), listType);
+                            savedInstanceState.getString(PAYMENT_METHOD_LIST_BUNDLE), listType);
                     } catch (Exception ex) {
                         paymentMethodList = null;
                     }
@@ -356,7 +341,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                         Type listType = new TypeToken<List<PaymentType>>() {
                         }.getType();
                         paymentTypesList = JsonUtil.getInstance().getGson().fromJson(
-                                savedInstanceState.getString(PAYMENT_TYPES_LIST_BUNDLE), listType);
+                            savedInstanceState.getString(PAYMENT_TYPES_LIST_BUNDLE), listType);
                     } catch (Exception ex) {
                         paymentTypesList = null;
                     }
@@ -365,7 +350,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                         Type listType = new TypeToken<List<BankDeal>>() {
                         }.getType();
                         bankDealsList = JsonUtil.getInstance().getGson().fromJson(
-                                savedInstanceState.getString(BANK_DEALS_LIST_BUNDLE), listType);
+                            savedInstanceState.getString(BANK_DEALS_LIST_BUNDLE), listType);
                     } catch (Exception ex) {
                         bankDealsList = null;
                     }
@@ -374,7 +359,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                         Type listType = new TypeToken<List<IdentificationType>>() {
                         }.getType();
                         identificationTypesList = JsonUtil.getInstance().getGson().fromJson(
-                                savedInstanceState.getString(IDENTIFICATION_TYPES_LIST_BUNDLE), listType);
+                            savedInstanceState.getString(IDENTIFICATION_TYPES_LIST_BUNDLE), listType);
                     } catch (Exception ex) {
                         identificationTypesList = null;
                     }
@@ -392,14 +377,18 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                     mPresenter.setExpiryYear(savedInstanceState.getString(EXPIRY_YEAR_BUNDLE));
                     String idNumber = savedInstanceState.getString(IDENTIFICATION_NUMBER_BUNDLE);
                     mPresenter.setIdentificationNumber(idNumber);
-                    Identification identification = JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_BUNDLE), Identification.class);
+                    Identification identification = JsonUtil.getInstance()
+                        .fromJson(savedInstanceState.getString(IDENTIFICATION_BUNDLE), Identification.class);
                     identification.setNumber(idNumber);
                     mPresenter.setIdentification(identification);
-                    CardToken cardToken = JsonUtil.getInstance().fromJson(savedInstanceState.getString(CARD_TOKEN_BUNDLE), CardToken.class);
+                    CardToken cardToken = JsonUtil.getInstance()
+                        .fromJson(savedInstanceState.getString(CARD_TOKEN_BUNDLE), CardToken.class);
                     cardToken.getCardholder().setIdentification(identification);
-                    IdentificationType identificationType = JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class);
+                    IdentificationType identificationType = JsonUtil.getInstance()
+                        .fromJson(savedInstanceState.getString(IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class);
                     mPresenter.setCardToken(cardToken);
-                    mPresenter.setPaymentRecovery(JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_RECOVERY_BUNDLE), PaymentRecovery.class));
+                    mPresenter.setPaymentRecovery(JsonUtil.getInstance()
+                        .fromJson(savedInstanceState.getString(PAYMENT_RECOVERY_BUNDLE), PaymentRecovery.class));
                     mLowResActive = savedInstanceState.getBoolean(LOW_RES_BUNDLE);
                     if (mCardView == null) {
                         loadViews();
@@ -419,7 +408,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                     if (cardViewsActive()) {
                         mCardView.updateCardNumberMask(getCardNumberTextTrimmed());
                     }
-
                 }
             }
         }
@@ -443,11 +431,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     private void setContentViewNormal() {
         setContentView(R.layout.mpsdk_activity_form_card_normal);
-    }
-
-    @Override
-    public void onInvalidStart(String message) {
-        finish();
     }
 
     @Override
@@ -487,10 +470,10 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         String paymentTypeId = mPresenter.getPaymentTypeId();
 
         final ScreenViewEvent event = new ScreenViewEvent.Builder()
-                .setFlowId(FlowHandler.getInstance().getFlowId())
-                .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId)
-                .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM + " " + paymentTypeId)
-                .build();
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId)
+            .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM + " " + paymentTypeId)
+            .build();
 
         mPresenter.getTrackingContext().trackEvent(event);
     }
@@ -499,10 +482,10 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         String paymentTypeId = mPresenter.getPaymentTypeId();
 
         final ScreenViewEvent event = new ScreenViewEvent.Builder()
-                .setFlowId(FlowHandler.getInstance().getFlowId())
-                .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_NUMBER)
-                .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_NUMBER)
-                .build();
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_NUMBER)
+            .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_NUMBER)
+            .build();
         mPresenter.getTrackingContext().trackEvent(event);
     }
 
@@ -510,10 +493,10 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         String paymentTypeId = mPresenter.getPaymentTypeId();
 
         final ScreenViewEvent event = new ScreenViewEvent.Builder()
-                .setFlowId(FlowHandler.getInstance().getFlowId())
-                .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_HOLDER_NAME)
-                .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_NAME)
-                .build();
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_HOLDER_NAME)
+            .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_NAME)
+            .build();
         mPresenter.getTrackingContext().trackEvent(event);
     }
 
@@ -521,10 +504,10 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         String paymentTypeId = mPresenter.getPaymentTypeId();
 
         final ScreenViewEvent event = new ScreenViewEvent.Builder()
-                .setFlowId(FlowHandler.getInstance().getFlowId())
-                .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_EXPIRATION_DATE)
-                .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_EXPIRY)
-                .build();
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_EXPIRATION_DATE)
+            .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_EXPIRY)
+            .build();
         mPresenter.getTrackingContext().trackEvent(event);
     }
 
@@ -532,10 +515,10 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         String paymentTypeId = mPresenter.getPaymentTypeId();
 
         final ScreenViewEvent event = new ScreenViewEvent.Builder()
-                .setFlowId(FlowHandler.getInstance().getFlowId())
-                .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_SECURITY_CODE)
-                .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_CVV)
-                .build();
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_SECURITY_CODE)
+            .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_CVV)
+            .build();
         mPresenter.getTrackingContext().trackEvent(event);
     }
 
@@ -543,12 +526,12 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         String paymentTypeId = mPresenter.getPaymentTypeId();
 
         final ScreenViewEvent event = new ScreenViewEvent.Builder()
-                .setFlowId(FlowHandler.getInstance().getFlowId())
-                .setScreenId(TrackingUtil.SCREEN_ID_IDENTIFICATION)
-                .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_IDENTIFICATION_NUMBER)
-                .addProperty(TrackingUtil.PROPERTY_PAYMENT_TYPE_ID, paymentTypeId)
-                .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, mPresenter.getPaymentMethod().getId())
-                .build();
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setScreenId(TrackingUtil.SCREEN_ID_IDENTIFICATION)
+            .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_IDENTIFICATION_NUMBER)
+            .addProperty(TrackingUtil.PROPERTY_PAYMENT_TYPE_ID, paymentTypeId)
+            .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, mPresenter.getPaymentMethod().getId())
+            .build();
         mPresenter.getTrackingContext().trackEvent(event);
     }
 
@@ -580,8 +563,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mBackButton = findViewById(R.id.mpsdkBackButton);
         mBackInactiveButton = findViewById(R.id.mpsdkBackInactiveButton);
         mBackInactiveButtonText = findViewById(R.id.mpsdkBackInactiveButtonText);
-        mNextButtonText = findViewById(R.id.mpsdkNextButtonText);
-        mBackButtonText = findViewById(R.id.mpsdkBackButtonText);
         mButtonContainer = findViewById(R.id.mpsdkButtonContainer);
         mCardNumberInput = findViewById(R.id.mpsdkCardNumberInput);
         mCardholderNameInput = findViewById(R.id.mpsdkNameInput);
@@ -594,7 +575,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mInfoTextView = findViewById(R.id.mpsdkBlackInfoTextView);
         mErrorTextView = findViewById(R.id.mpsdkErrorTextView);
         mScrollView = findViewById(R.id.mpsdkScrollViewContainer);
-        mDiscountFrameLayout = findViewById(R.id.mpsdkDiscount);
         mContainerUpAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.mpsdk_slide_bottom_up);
         mContainerDownAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.mpsdk_slide_bottom_down);
 
@@ -690,16 +670,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
-                    returnIntent.putExtra("discountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDiscountEnabled()));
-                    setResult(RESULT_CANCELED, returnIntent);
-                    finish();
-                }
-            });
+            toolbar.setOnClickListener(this);
         }
     }
 
@@ -730,9 +701,11 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             String paymentTypeText = getString(R.string.mpsdk_form_card_title);
             if (paymentTypeId != null) {
                 if (paymentTypeId.equals(PaymentTypes.CREDIT_CARD)) {
-                    paymentTypeText = getString(R.string.mpsdk_form_card_title_payment_type, getString(R.string.mpsdk_credit_payment_type));
+                    paymentTypeText = getString(R.string.mpsdk_form_card_title_payment_type,
+                        getString(R.string.mpsdk_credit_payment_type));
                 } else if (paymentTypeId.equals(PaymentTypes.DEBIT_CARD)) {
-                    paymentTypeText = getString(R.string.mpsdk_form_card_title_payment_type, getString(R.string.mpsdk_debit_payment_type));
+                    paymentTypeText = getString(R.string.mpsdk_form_card_title_payment_type,
+                        getString(R.string.mpsdk_debit_payment_type));
                 } else if (paymentTypeId.equals(PaymentTypes.PREPAID_CARD)) {
                     paymentTypeText = getString(R.string.mpsdk_form_card_title_payment_type_prepaid);
                 }
@@ -753,19 +726,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             }
 
             mBankDealsTextView.setVisibility(View.VISIBLE);
-
             mBankDealsTextView.setFocusable(true);
-            mBankDealsTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new MercadoPagoComponents.Activities.BankDealsActivityBuilder()
-                            .setActivity(mActivity)
-                            .setMerchantPublicKey(mPresenter.getPublicKey())
-                            .setPayerAccessToken(mPresenter.getPrivateKey())
-                            .setBankDeals(mPresenter.getBankDealsList())
-                            .startActivity();
-                }
-            });
+            mBankDealsTextView.setOnClickListener(this);
         }
     }
 
@@ -782,72 +744,60 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 return onNextKey(actionId, event);
             }
         });
-        mCardNumberEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                onTouchEditText(mCardNumberEditText, event);
-                return true;
-            }
-        });
+        mCardNumberEditText.setOnTouchListener(this);
         mCardNumberEditText.addTextChangedListener(new CardNumberTextWatcher(
-                controller,
-                new PaymentMethodSelectionCallback() {
-                    @Override
-                    public void onPaymentMethodListSet(List<PaymentMethod> paymentMethodList, String bin) {
-                        mPresenter.resolvePaymentMethodListSet(paymentMethodList, bin);
-                    }
+            controller,
+            new PaymentMethodSelectionCallback() {
+                @Override
+                public void onPaymentMethodListSet(List<PaymentMethod> paymentMethodList, String bin) {
+                    mPresenter.resolvePaymentMethodListSet(paymentMethodList, bin);
+                }
 
-                    @Override
-                    public void onPaymentMethodSet(PaymentMethod paymentMethod) {
-                        mPresenter.onPaymentMethodSet(paymentMethod);
-                    }
+                @Override
+                public void onPaymentMethodCleared() {
+                    mPresenter.resolvePaymentMethodCleared();
+                }
+            },
+            new CardNumberEditTextCallback() {
+                @Override
+                public void checkOpenKeyboard() {
+                    openKeyboard(mCardNumberEditText);
+                }
 
-                    @Override
-                    public void onPaymentMethodCleared() {
-                        mPresenter.resolvePaymentMethodCleared();
+                @Override
+                public void saveCardNumber(CharSequence string) {
+                    mPresenter.saveCardNumber(string.toString());
+                    if (cardViewsActive()) {
+                        mCardView.drawEditingCardNumber(string.toString());
                     }
+                    mPresenter.setCurrentNumberLength(string.length());
+                }
 
-                },
-                new CardNumberEditTextCallback() {
-                    @Override
-                    public void checkOpenKeyboard() {
-                        openKeyboard(mCardNumberEditText);
+                @Override
+                public void appendSpace(CharSequence currentNumber) {
+                    if (MPCardMaskUtil.needsMask(currentNumber, mPresenter.getCardNumberLength())) {
+                        mCardNumberEditText.append(" ");
                     }
+                }
 
-                    @Override
-                    public void saveCardNumber(CharSequence string) {
-                        mPresenter.saveCardNumber(string.toString());
-                        if (cardViewsActive()) {
-                            mCardView.drawEditingCardNumber(string.toString());
-                        }
-                        mPresenter.setCurrentNumberLength(string.length());
+                @Override
+                public void deleteChar(CharSequence s) {
+                    if (MPCardMaskUtil.needsMask(s, mPresenter.getCardNumberLength())) {
+                        mCardNumberEditText.getText().delete(s.length() - 1, s.length());
                     }
+                    mPresenter.setCurrentNumberLength(s.length());
+                }
 
-                    @Override
-                    public void appendSpace(CharSequence currentNumber) {
-                        if (MPCardMaskUtil.needsMask(currentNumber, mPresenter.getCardNumberLength())) {
-                            mCardNumberEditText.append(" ");
-                        }
-                    }
+                @Override
+                public void changeErrorView() {
+                    checkChangeErrorView();
+                }
 
-                    @Override
-                    public void deleteChar(CharSequence s) {
-                        if (MPCardMaskUtil.needsMask(s, mPresenter.getCardNumberLength())) {
-                            mCardNumberEditText.getText().delete(s.length() - 1, s.length());
-                        }
-                        mPresenter.setCurrentNumberLength(s.length());
-                    }
-
-                    @Override
-                    public void changeErrorView() {
-                        checkChangeErrorView();
-                    }
-
-                    @Override
-                    public void toggleLineColorOnError(boolean toggle) {
-                        mCardNumberEditText.toggleLineColorOnError(toggle);
-                    }
-                }));
+                @Override
+                public void toggleLineColorOnError(boolean toggle) {
+                    mCardNumberEditText.toggleLineColorOnError(toggle);
+                }
+            }));
     }
 
     @Override
@@ -882,7 +832,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         }
     }
 
-
     private void eraseDefaultSpace() {
         String text = getCardNumberTextTrimmed();
         setEditText(mCardNumberEditText, text);
@@ -907,47 +856,26 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void setNextButtonListeners() {
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateCurrentEditText();
-            }
-        });
+        mNextButton.setOnClickListener(this);
     }
 
     @Override
     public void setBackButtonListeners() {
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!mCurrentEditingEditText.equals(CARD_NUMBER_INPUT)) {
-                    checkIsEmptyOrValid();
-                }
-            }
-        });
+        mBackButton.setOnClickListener(this);
     }
 
     @Override
     public void setErrorContainerListener() {
-        mRedErrorContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<PaymentMethod> supportedPaymentMethods = mPresenter.getAllSupportedPaymentMethods();
-                if (supportedPaymentMethods != null && !supportedPaymentMethods.isEmpty()) {
-                    startReviewPaymentMethodsActivity(supportedPaymentMethods);
-                }
-            }
-        });
+        mRedErrorContainer.setOnClickListener(this);
     }
 
     private void startReviewPaymentMethodsActivity(List<PaymentMethod> supportedPaymentMethods) {
         new MercadoPagoComponents.Activities.ReviewPaymentMethodsActivityBuilder()
-                .setActivity(mActivity)
-                .setPublicKey(mPresenter.getPublicKey())
-                .setPaymentMethods(supportedPaymentMethods)
-                .startActivity();
+            .setActivity(mActivity)
+            .setPublicKey(mPresenter.getPublicKey())
+            .setPaymentMethods(supportedPaymentMethods)
+            .startActivity();
         overridePendingTransition(R.anim.mpsdk_slide_up_activity, R.anim.mpsdk_no_change_animation);
-
     }
 
     @Override
@@ -968,44 +896,39 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void setCardholderNameListeners() {
-        mCardHolderNameEditText.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        mCardHolderNameEditText.setFilters(new InputFilter[] { new InputFilter.AllCaps() });
         mCardHolderNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 return onNextKey(actionId, event);
             }
         });
-        mCardHolderNameEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                onTouchEditText(mCardHolderNameEditText, event);
-                return true;
-            }
-        });
-        mCardHolderNameEditText.addTextChangedListener(new CardholderNameTextWatcher(new CardholderNameEditTextCallback() {
-            @Override
-            public void checkOpenKeyboard() {
-                openKeyboard(mCardHolderNameEditText);
-            }
-
-            @Override
-            public void saveCardholderName(CharSequence string) {
-                mPresenter.saveCardholderName(string.toString());
-                if (cardViewsActive()) {
-                    mCardView.drawEditingCardHolderName(string.toString());
+        mCardHolderNameEditText.setOnTouchListener(this);
+        mCardHolderNameEditText
+            .addTextChangedListener(new CardholderNameTextWatcher(new CardholderNameEditTextCallback() {
+                @Override
+                public void checkOpenKeyboard() {
+                    openKeyboard(mCardHolderNameEditText);
                 }
-            }
 
-            @Override
-            public void changeErrorView() {
-                checkChangeErrorView();
-            }
+                @Override
+                public void saveCardholderName(CharSequence string) {
+                    mPresenter.saveCardholderName(string.toString());
+                    if (cardViewsActive()) {
+                        mCardView.drawEditingCardHolderName(string.toString());
+                    }
+                }
 
-            @Override
-            public void toggleLineColorOnError(boolean toggle) {
-                mCardHolderNameEditText.toggleLineColorOnError(toggle);
-            }
-        }));
+                @Override
+                public void changeErrorView() {
+                    checkChangeErrorView();
+                }
+
+                @Override
+                public void toggleLineColorOnError(boolean toggle) {
+                    mCardHolderNameEditText.toggleLineColorOnError(toggle);
+                }
+            }));
     }
 
     @Override
@@ -1016,55 +939,49 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 return onNextKey(actionId, event);
             }
         });
-        mCardExpiryDateEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                onTouchEditText(mCardExpiryDateEditText, event);
-                return true;
-            }
-        });
-        mCardExpiryDateEditText.addTextChangedListener(new CardExpiryDateTextWatcher(new CardExpiryDateEditTextCallback() {
-            @Override
-            public void checkOpenKeyboard() {
-                openKeyboard(mCardExpiryDateEditText);
-            }
+        mCardExpiryDateEditText.setOnTouchListener(this);
+        mCardExpiryDateEditText.addTextChangedListener(new CardExpiryDateTextWatcher(this));
+    }
 
-            @Override
-            public void saveExpiryMonth(CharSequence string) {
-                mPresenter.saveExpiryMonth(string.toString());
-                if (cardViewsActive()) {
-                    mCardView.drawEditingExpiryMonth(string.toString());
-                }
-            }
+    @Override
+    public void checkOpenKeyboard() {
+        openKeyboard(mCardExpiryDateEditText);
+    }
 
-            @Override
-            public void saveExpiryYear(CharSequence string) {
-                mPresenter.saveExpiryYear(string.toString());
-                if (cardViewsActive()) {
-                    mCardView.drawEditingExpiryYear(string.toString());
-                }
-            }
+    @Override
+    public void saveExpiryMonth(CharSequence string) {
+        mPresenter.saveExpiryMonth(string.toString());
+        if (cardViewsActive()) {
+            mCardView.drawEditingExpiryMonth(string.toString());
+        }
+    }
 
-            @Override
-            public void changeErrorView() {
-                checkChangeErrorView();
-            }
+    @Override
+    public void saveExpiryYear(CharSequence string) {
+        mPresenter.saveExpiryYear(string.toString());
+        if (cardViewsActive()) {
+            mCardView.drawEditingExpiryYear(string.toString());
+        }
+    }
 
-            @Override
-            public void toggleLineColorOnError(boolean toggle) {
-                mCardExpiryDateEditText.toggleLineColorOnError(toggle);
-            }
+    @Override
+    public void changeErrorView() {
+        checkChangeErrorView();
+    }
 
-            @Override
-            public void appendDivider() {
-                mCardExpiryDateEditText.append("/");
-            }
+    @Override
+    public void toggleLineColorOnError(boolean toggle) {
+        mCardExpiryDateEditText.toggleLineColorOnError(toggle);
+    }
 
-            @Override
-            public void deleteChar(CharSequence string) {
-                mCardExpiryDateEditText.getText().delete(string.length() - 1, string.length());
-            }
-        }));
+    @Override
+    public void appendDivider() {
+        mCardExpiryDateEditText.append("/");
+    }
+
+    @Override
+    public void deleteChar(CharSequence string) {
+        mCardExpiryDateEditText.getText().delete(string.length() - 1, string.length());
     }
 
     @Override
@@ -1075,38 +992,33 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 return onNextKey(actionId, event);
             }
         });
-        mSecurityCodeEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                onTouchEditText(mSecurityCodeEditText, event);
-                return true;
-            }
-        });
-        mSecurityCodeEditText.addTextChangedListener(new CardSecurityCodeTextWatcher(new CardSecurityCodeEditTextCallback() {
-            @Override
-            public void checkOpenKeyboard() {
-                openKeyboard(mSecurityCodeEditText);
-            }
-
-            @Override
-            public void saveSecurityCode(CharSequence string) {
-                mPresenter.saveSecurityCode(string.toString());
-                if (cardViewsActive()) {
-                    mCardView.setSecurityCodeLocation(mPresenter.getSecurityCodeLocation());
-                    mCardView.drawEditingSecurityCode(string.toString());
+        mSecurityCodeEditText.setOnTouchListener(this);
+        mSecurityCodeEditText
+            .addTextChangedListener(new CardSecurityCodeTextWatcher(new CardSecurityCodeEditTextCallback() {
+                @Override
+                public void checkOpenKeyboard() {
+                    openKeyboard(mSecurityCodeEditText);
                 }
-            }
 
-            @Override
-            public void changeErrorView() {
-                checkChangeErrorView();
-            }
+                @Override
+                public void saveSecurityCode(CharSequence string) {
+                    mPresenter.saveSecurityCode(string.toString());
+                    if (cardViewsActive()) {
+                        mCardView.setSecurityCodeLocation(mPresenter.getSecurityCodeLocation());
+                        mCardView.drawEditingSecurityCode(string.toString());
+                    }
+                }
 
-            @Override
-            public void toggleLineColorOnError(boolean toggle) {
-                mSecurityCodeEditText.toggleLineColorOnError(toggle);
-            }
-        }));
+                @Override
+                public void changeErrorView() {
+                    checkChangeErrorView();
+                }
+
+                @Override
+                public void toggleLineColorOnError(boolean toggle) {
+                    mSecurityCodeEditText.toggleLineColorOnError(toggle);
+                }
+            }));
     }
 
     @Override
@@ -1122,17 +1034,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 //Do something
             }
         });
-        mIdentificationTypeSpinner.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mCurrentEditingEditText.equals(CARD_SECURITYCODE_INPUT)) {
-                    return false;
-                }
-                checkTransitionCardToId();
-                openKeyboard(mIdentificationNumberEditText);
-                return false;
-            }
-        });
+        mIdentificationTypeSpinner.setOnTouchListener(this);
     }
 
     @Override
@@ -1143,44 +1045,39 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 return onNextKey(actionId, event);
             }
         });
-        mIdentificationNumberEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                onTouchEditText(mIdentificationNumberEditText, event);
-                return true;
-            }
-        });
-        mIdentificationNumberEditText.addTextChangedListener(new CardIdentificationNumberTextWatcher(new CardIdentificationNumberEditTextCallback() {
-            @Override
-            public void checkOpenKeyboard() {
-                openKeyboard(mIdentificationNumberEditText);
-            }
-
-            @Override
-            public void saveIdentificationNumber(CharSequence string) {
-                mPresenter.saveIdentificationNumber(string.toString());
-                if (mPresenter.getIdentificationNumberMaxLength() == string.length()) {
-                    mPresenter.setIdentificationNumber(string.toString());
-                    mPresenter.validateIdentificationNumber();
+        mIdentificationNumberEditText.setOnTouchListener(this);
+        mIdentificationNumberEditText.addTextChangedListener(
+            new CardIdentificationNumberTextWatcher(new CardIdentificationNumberEditTextCallback() {
+                @Override
+                public void checkOpenKeyboard() {
+                    openKeyboard(mIdentificationNumberEditText);
                 }
-                if (cardViewsActive()) {
-                    mIdentificationCardView.setIdentificationNumber(string.toString());
-                    if (showingIdentification()) {
-                        mIdentificationCardView.draw();
+
+                @Override
+                public void saveIdentificationNumber(CharSequence string) {
+                    mPresenter.saveIdentificationNumber(string.toString());
+                    if (mPresenter.getIdentificationNumberMaxLength() == string.length()) {
+                        mPresenter.setIdentificationNumber(string.toString());
+                        mPresenter.validateIdentificationNumber();
+                    }
+                    if (cardViewsActive()) {
+                        mIdentificationCardView.setIdentificationNumber(string.toString());
+                        if (showingIdentification()) {
+                            mIdentificationCardView.draw();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void changeErrorView() {
-                checkChangeErrorView();
-            }
+                @Override
+                public void changeErrorView() {
+                    checkChangeErrorView();
+                }
 
-            @Override
-            public void toggleLineColorOnError(boolean toggle) {
-                mIdentificationNumberEditText.toggleLineColorOnError(toggle);
-            }
-        }));
+                @Override
+                public void toggleLineColorOnError(boolean toggle) {
+                    mIdentificationNumberEditText.toggleLineColorOnError(toggle);
+                }
+            }));
     }
 
     @Override
@@ -1229,8 +1126,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     private boolean isNextKey(int actionId, KeyEvent event) {
         return actionId == EditorInfo.IME_ACTION_NEXT ||
-                (event != null && event.getAction() == KeyEvent.ACTION_DOWN
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            (event != null && event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
     }
 
     @Override
@@ -1325,8 +1222,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             return;
         }
         if (mCurrentEditingEditText.equals(CARD_EXPIRYDATE_INPUT) ||
-                mCurrentEditingEditText.equals(CARD_IDENTIFICATION_INPUT) ||
-                mCurrentEditingEditText.equals(CARD_SECURITYCODE_INPUT)) {
+            mCurrentEditingEditText.equals(CARD_IDENTIFICATION_INPUT) ||
+            mCurrentEditingEditText.equals(CARD_SECURITYCODE_INPUT)) {
             trackCardSecurityCode();
             enableBackInputButton();
             mCurrentEditingEditText = CARD_SECURITYCODE_INPUT;
@@ -1341,7 +1238,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     private void requestIdentificationFocus() {
-        if (mPresenter.isSecurityCodeRequired() ? !mPresenter.validateSecurityCode() : !mPresenter.validateExpiryDate()) {
+        if (mPresenter.isSecurityCodeRequired() ? !mPresenter.validateSecurityCode()
+            : !mPresenter.validateExpiryDate()) {
             return;
         }
         trackCardIdentification();
@@ -1424,7 +1322,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             mBlackInfoContainer.startAnimation(mContainerUpAnimation);
         }
         mBlackInfoContainer.setVisibility(View.VISIBLE);
-        mInfoTextView.setText(getResources().getString(R.string.mpsdk_exclusion_one_element, supportedPaymentMethod.getName()));
+        mInfoTextView
+            .setText(getResources().getString(R.string.mpsdk_exclusion_one_element, supportedPaymentMethod.getName()));
         if (!withAnimation) {
             mButtonContainer.setVisibility(View.GONE);
         }
@@ -1432,7 +1331,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void restoreBlackInfoContainerView() {
-        mBlackInfoContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.mpsdk_black_info_background));
+        mBlackInfoContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.ui_meli_black));
     }
 
     @Override
@@ -1487,7 +1386,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void setErrorIdentificationNumber() {
-        LayoutUtil.openKeyboard(mIdentificationNumberEditText);
+        ViewUtils.openKeyboard(mIdentificationNumberEditText);
         mIdentificationNumberEditText.toggleLineColorOnError(true);
         mIdentificationNumberEditText.requestFocus();
     }
@@ -1509,90 +1408,90 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     private boolean validateCurrentEditText() {
         switch (mCurrentEditingEditText) {
-            case CARD_NUMBER_INPUT:
-                if (mPresenter.validateCardNumber()) {
-                    mCardNumberInput.setVisibility(View.GONE);
-                    requestCardHolderNameFocus();
-                    return true;
-                }
-                return false;
-            case CARDHOLDER_NAME_INPUT:
-                if (mPresenter.validateCardName()) {
-                    mCardholderNameInput.setVisibility(View.GONE);
-                    requestExpiryDateFocus();
-                    return true;
-                }
-                return false;
-            case CARD_EXPIRYDATE_INPUT:
-                if (mPresenter.validateExpiryDate()) {
-                    mCardExpiryDateInput.setVisibility(View.GONE);
-                    if (mPresenter.isSecurityCodeRequired()) {
-                        requestSecurityCodeFocus();
-                    } else if (mPresenter.isIdentificationNumberRequired()) {
-                        requestIdentificationFocus();
-                    } else {
-                        mPresenter.checkFinishWithCardToken();
-                    }
-                    return true;
-                }
-                return false;
-            case CARD_SECURITYCODE_INPUT:
-                if (mPresenter.validateSecurityCode()) {
-                    mCardSecurityCodeInput.setVisibility(View.GONE);
-                    if (mPresenter.isIdentificationNumberRequired()) {
-                        requestIdentificationFocus();
-                    } else {
-                        mPresenter.checkFinishWithCardToken();
-                    }
-                    return true;
-                }
-                return false;
-            case CARD_IDENTIFICATION_INPUT:
-                if (mPresenter.validateIdentificationNumber()) {
+        case CARD_NUMBER_INPUT:
+            if (mPresenter.validateCardNumber()) {
+                mCardNumberInput.setVisibility(View.GONE);
+                requestCardHolderNameFocus();
+                return true;
+            }
+            return false;
+        case CARDHOLDER_NAME_INPUT:
+            if (mPresenter.validateCardName()) {
+                mCardholderNameInput.setVisibility(View.GONE);
+                requestExpiryDateFocus();
+                return true;
+            }
+            return false;
+        case CARD_EXPIRYDATE_INPUT:
+            if (mPresenter.validateExpiryDate()) {
+                mCardExpiryDateInput.setVisibility(View.GONE);
+                if (mPresenter.isSecurityCodeRequired()) {
+                    requestSecurityCodeFocus();
+                } else if (mPresenter.isIdentificationNumberRequired()) {
+                    requestIdentificationFocus();
+                } else {
                     mPresenter.checkFinishWithCardToken();
-                    return true;
                 }
-                return false;
-            default:
-                return false;
+                return true;
+            }
+            return false;
+        case CARD_SECURITYCODE_INPUT:
+            if (mPresenter.validateSecurityCode()) {
+                mCardSecurityCodeInput.setVisibility(View.GONE);
+                if (mPresenter.isIdentificationNumberRequired()) {
+                    requestIdentificationFocus();
+                } else {
+                    mPresenter.checkFinishWithCardToken();
+                }
+                return true;
+            }
+            return false;
+        case CARD_IDENTIFICATION_INPUT:
+            if (mPresenter.validateIdentificationNumber()) {
+                mPresenter.checkFinishWithCardToken();
+                return true;
+            }
+            return false;
+        default:
+            return false;
         }
     }
 
     private boolean checkIsEmptyOrValid() {
         switch (mCurrentEditingEditText) {
-            case CARDHOLDER_NAME_INPUT:
-                if (mPresenter.checkIsEmptyOrValidCardholderName()) {
-                    mCardNumberInput.setVisibility(View.VISIBLE);
-                    requestCardNumberFocus();
-                    return true;
-                }
-                return false;
-            case CARD_EXPIRYDATE_INPUT:
-                if (mPresenter.checkIsEmptyOrValidExpiryDate()) {
-                    mCardholderNameInput.setVisibility(View.VISIBLE);
-                    requestCardHolderNameFocus();
-                    return true;
-                }
-                return false;
-            case CARD_SECURITYCODE_INPUT:
-                if (mPresenter.checkIsEmptyOrValidSecurityCode()) {
+        case CARDHOLDER_NAME_INPUT:
+            if (mPresenter.checkIsEmptyOrValidCardholderName()) {
+                mCardNumberInput.setVisibility(View.VISIBLE);
+                requestCardNumberFocus();
+                return true;
+            }
+            return false;
+        case CARD_EXPIRYDATE_INPUT:
+            if (mPresenter.checkIsEmptyOrValidExpiryDate()) {
+                mCardholderNameInput.setVisibility(View.VISIBLE);
+                requestCardHolderNameFocus();
+                return true;
+            }
+            return false;
+        case CARD_SECURITYCODE_INPUT:
+            if (mPresenter.checkIsEmptyOrValidSecurityCode()) {
+                mCardExpiryDateInput.setVisibility(View.VISIBLE);
+                requestExpiryDateFocus();
+                return true;
+            }
+            return false;
+        case CARD_IDENTIFICATION_INPUT:
+            if (mPresenter.checkIsEmptyOrValidIdentificationNumber()) {
+                if (mPresenter.isSecurityCodeRequired()) {
+                    mCardSecurityCodeInput.setVisibility(View.VISIBLE);
+                    requestSecurityCodeFocus();
+                } else {
                     mCardExpiryDateInput.setVisibility(View.VISIBLE);
                     requestExpiryDateFocus();
-                    return true;
                 }
-                return false;
-            case CARD_IDENTIFICATION_INPUT:
-                if (mPresenter.checkIsEmptyOrValidIdentificationNumber()) {
-                    if (mPresenter.isSecurityCodeRequired()) {
-                        mCardSecurityCodeInput.setVisibility(View.VISIBLE);
-                        requestSecurityCodeFocus();
-                    } else {
-                        mCardExpiryDateInput.setVisibility(View.VISIBLE);
-                        requestExpiryDateFocus();
-                    }
-                    return true;
-                }
-                return false;
+                return true;
+            }
+            return false;
         }
         return false;
     }
@@ -1645,7 +1544,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mCardSideState = CardView.CARD_SIDE_BACK;
         if (cardViewsActive()) {
             mCardView.flipCardToBack(mPresenter.getPaymentMethod(), mPresenter.getSecurityCodeLength(),
-                    getWindow(), mCardBackground, mPresenter.getSecurityCode());
+                getWindow(), mCardBackground, mPresenter.getSecurityCode());
         }
     }
 
@@ -1653,8 +1552,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mCardSideState = CardView.CARD_SIDE_FRONT;
         if (cardViewsActive()) {
             mCardView.flipCardToFrontFromBack(getWindow(), mCardBackground, mPresenter.getCardNumber(),
-                    mPresenter.getCardholderName(), mPresenter.getExpiryMonth(), mPresenter.getExpiryYear(),
-                    mPresenter.getSecurityCodeFront());
+                mPresenter.getCardholderName(), mPresenter.getExpiryMonth(), mPresenter.getExpiryYear(),
+                mPresenter.getSecurityCodeFront());
         }
     }
 
@@ -1684,18 +1583,18 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         List<PaymentMethod> paymentMethods = mPresenter.getGuessedPaymentMethods();
         List<PaymentType> paymentTypes = mPresenter.getPaymentTypes();
         new MercadoPagoComponents.Activities.PaymentTypesActivityBuilder()
-                .setActivity(mActivity)
-                .setMerchantPublicKey(mPresenter.getPublicKey())
-                .setPaymentMethods(paymentMethods)
-                .setPaymentTypes(paymentTypes)
-                .setCardInfo(new CardInfo(mPresenter.getCardToken()))
-                .startActivity();
+            .setActivity(mActivity)
+            .setMerchantPublicKey(mPresenter.getPublicKey())
+            .setPaymentMethods(paymentMethods)
+            .setPaymentTypes(paymentTypes)
+            .setCardInfo(new CardInfo(mPresenter.getCardToken()))
+            .startActivity();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 
     @Override
     public void showFinishCardFlow() {
-        LayoutUtil.hideKeyboard(this);
+        ViewUtils.hideKeyboard(this);
         mButtonContainer.setVisibility(View.GONE);
         mInputContainer.setVisibility(View.GONE);
         mProgressLayout.setVisibility(View.VISIBLE);
@@ -1708,7 +1607,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         if (requestCode == MercadoPagoComponents.Activities.PAYMENT_TYPES_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Bundle bundle = data.getExtras();
-                PaymentType paymentType = JsonUtil.getInstance().fromJson(bundle.getString("paymentType"), PaymentType.class);
+                PaymentType paymentType =
+                    JsonUtil.getInstance().fromJson(bundle.getString("paymentType"), PaymentType.class);
                 mPresenter.setSelectedPaymentType(paymentType);
                 showFinishCardFlow();
             } else if (resultCode == RESULT_CANCELED) {
@@ -1750,55 +1650,51 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
-    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean discountEnabled, List<Issuer> issuers) {
+    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount,
+        List<Issuer> issuers) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuers", JsonUtil.getInstance().toJson(issuers));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-        returnIntent.putExtra("discountEnabled", discountEnabled);
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 
     @Override
-    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, Boolean discountEnabled, Issuer issuer, List<PayerCost> payerCosts) {
+    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount,
+        Issuer issuer, List<PayerCost> payerCosts) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuer", JsonUtil.getInstance().toJson(issuer));
         returnIntent.putExtra("payerCosts", JsonUtil.getInstance().toJson(payerCosts));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-        returnIntent.putExtra("directDiscountEnabled", directDiscountEnabled);
-        returnIntent.putExtra("discountEnabled", discountEnabled);
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 
     @Override
-    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, Boolean discountEnabled, Issuer issuer, PayerCost payerCost) {
+    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount,
+        Issuer issuer, PayerCost payerCost) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuer", JsonUtil.getInstance().toJson(issuer));
         returnIntent.putExtra("payerCost", JsonUtil.getInstance().toJson(payerCost));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-        returnIntent.putExtra("directDiscountEnabled", directDiscountEnabled);
-        returnIntent.putExtra("discountEnabled", discountEnabled);
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
-
 
     @Override
     public void onBackPressed() {
         checkFlipCardToFront();
         Intent returnIntent = new Intent();
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
-        returnIntent.putExtra("discountEnabled", JsonUtil.getInstance().toJson(mPresenter.getDiscountEnabled()));
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);
         finish();
@@ -1815,26 +1711,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         finish();
     }
 
-    public void initializeDiscountActivity(View view) {
-        mPresenter.initializeDiscountActivity();
-    }
-
-    @Override
-    public void startDiscountActivity(BigDecimal transactionAmount) {
-        setSoftInputMode();
-
-        MercadoPagoComponents.Activities.DiscountsActivityBuilder discountsActivityBuilder =
-                new MercadoPagoComponents.Activities.DiscountsActivityBuilder();
-
-        discountsActivityBuilder.setActivity(this)
-                .setMerchantPublicKey(mPresenter.getPublicKey())
-                .setPayerEmail(mPresenter.getPayerEmail())
-                .setAmount(transactionAmount)
-                .setDiscount(mPresenter.getDiscount());
-        discountsActivityBuilder.setDiscount(mPresenter.getDiscount());
-        discountsActivityBuilder.startActivity();
-    }
-
     @Override
     public void hideProgress() {
         mButtonContainer.setVisibility(View.VISIBLE);
@@ -1843,40 +1719,73 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
-    public void showDiscountRow(BigDecimal transactionAmount) {
-
-        MercadoPagoUI.Views.DiscountRowViewBuilder discountRowBuilder = new MercadoPagoUI.Views.DiscountRowViewBuilder();
-
-        discountRowBuilder.setContext(this)
-                .setDiscount(mPresenter.getDiscount())
-                .setTransactionAmount(transactionAmount)
-                .setShortRowEnabled(true)
-                .setDiscountEnabled(mPresenter.getDiscountEnabled());
-
-        if (mPresenter.getDiscount() != null) {
-            discountRowBuilder.setCurrencyId(mPresenter.getDiscount().getCurrencyId());
-        }
-
-        DiscountRowView discountRowView = discountRowBuilder.build();
-
-        discountRowView.inflateInParent(mDiscountFrameLayout, true);
-        discountRowView.initializeControls();
-        discountRowView.draw();
-        discountRowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initializeDiscountActivity(view);
-            }
-        });
-    }
-
-    @Override
     public void setSoftInputMode() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
-    public GuessingCardPresenter getPresenter() {
-        return mPresenter;
+    @Override
+    public boolean onTouch(final View v, final MotionEvent event) {
+        // because method count increase with inline declarations
+        // this listener covers all on touch events.
+        final int id = v.getId();
+        if (id == R.id.mpsdkCardNumber) {
+            onTouchEditText(mCardNumberEditText, event);
+            return true;
+        } else if (id == R.id.mpsdkCardholderName) {
+            onTouchEditText(mCardHolderNameEditText, event);
+            return true;
+        } else if (id == R.id.mpsdkCardExpiryDate) {
+            onTouchEditText(mCardExpiryDateEditText, event);
+            return true;
+        } else if (id == R.id.mpsdkCardSecurityCode) {
+            onTouchEditText(mSecurityCodeEditText, event);
+            return true;
+        } else if (id == R.id.mpsdkCardIdentificationType) {
+            if (mCurrentEditingEditText.equals(CARD_SECURITYCODE_INPUT)) {
+                return false;
+            }
+            checkTransitionCardToId();
+            openKeyboard(mIdentificationNumberEditText);
+            return false;
+        } else if (id == R.id.mpsdkCardIdentificationNumber) {
+            onTouchEditText(mIdentificationNumberEditText, event);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onClick(final View v) {
+        // because method count increase with inline declarations
+        // this listener covers all on touch events.
+        final int id = v.getId();
+        if (id == R.id.mpsdkBankDealsText) {
+            new MercadoPagoComponents.Activities.BankDealsActivityBuilder()
+                .setActivity(mActivity)
+                .setMerchantPublicKey(mPresenter.getPublicKey())
+                .setPayerAccessToken(mPresenter.getPrivateKey())
+                .setBankDeals(mPresenter.getBankDealsList())
+                .startActivity();
+        } else if (id == R.id.mpsdkNextButton) {
+            validateCurrentEditText();
+        } else if (id == R.id.mpsdkBackButton && !mCurrentEditingEditText.equals(CARD_NUMBER_INPUT)) {
+            checkIsEmptyOrValid();
+        } else if (id == R.id.mpsdkRedErrorContainer) {
+            List<PaymentMethod> supportedPaymentMethods = mPresenter.getAllSupportedPaymentMethods();
+            if (supportedPaymentMethods != null && !supportedPaymentMethods.isEmpty()) {
+                startReviewPaymentMethodsActivity(supportedPaymentMethods);
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        final int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

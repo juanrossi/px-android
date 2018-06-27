@@ -7,15 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import com.mercadopago.R;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.BankDeal;
-import com.mercadopago.util.TextUtil;
+import com.mercadopago.util.TextUtils;
 import com.mercadopago.util.ViewUtils;
 import com.squareup.picasso.Callback;
-
 import java.util.List;
 
 public class BankDealsAdapter extends RecyclerView.Adapter<BankDealsAdapter.ViewHolder> {
@@ -100,7 +98,7 @@ public class BankDealsAdapter extends RecyclerView.Adapter<BankDealsAdapter.View
         }
 
         private String getRecommendedMessage(BankDeal bankDeal) {
-            return TextUtil.isEmpty(bankDeal.getRecommendedMessage()) ? "" : bankDeal.getRecommendedMessage();
+            return TextUtils.isEmpty(bankDeal.getRecommendedMessage()) ? "" : bankDeal.getRecommendedMessage();
         }
     }
 }

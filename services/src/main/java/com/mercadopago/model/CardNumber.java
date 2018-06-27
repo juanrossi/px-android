@@ -28,7 +28,7 @@ public class CardNumber implements Parcelable, Serializable {
     }
 
     protected CardNumber(Parcel in) {
-        length = ParcelableUtil.getIntegerReadByte(in);
+        length = ParcelableUtil.getOptionalInteger(in);
         validation = in.readString();
     }
 
@@ -51,7 +51,7 @@ public class CardNumber implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        ParcelableUtil.writeByte(dest, length);
+        ParcelableUtil.writeOptional(dest, length);
         dest.writeString(validation);
     }
 }

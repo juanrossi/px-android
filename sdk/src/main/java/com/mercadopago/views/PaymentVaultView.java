@@ -1,22 +1,32 @@
 package com.mercadopago.views;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
+import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.CustomSearchItem;
+import com.mercadopago.model.Discount;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearchItem;
+import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpView;
 import com.mercadopago.plugins.PaymentMethodPlugin;
-
+import com.mercadopago.plugins.model.PaymentMethodInfo;
+import com.mercadopago.preferences.CheckoutPreference;
+import com.mercadopago.preferences.PaymentPreference;
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface PaymentVaultView extends MvpView {
 
-    void startSavedCardFlow(Card card, BigDecimal transactionAmount);
+    void startSavedCardFlow(Card card);
+
+    void showPaymentMethodPluginActivity();
 
     void showSelectedItem(PaymentMethodSearchItem item);
 
@@ -36,18 +46,17 @@ public interface PaymentVaultView extends MvpView {
 
     void setTitle(String title);
 
-    void startCardFlow(String paymentType, BigDecimal transactionAmount,
-                       Boolean automaticallySelection);
+    void startCardFlow(Boolean automaticallySelection);
 
-    void startPaymentMethodsSelection();
+    void startPaymentMethodsSelection(final PaymentPreference paymentPreference);
 
     void finishPaymentMethodSelection(PaymentMethod selectedPaymentMethod);
 
     void finishPaymentMethodSelection(PaymentMethod paymentMethod, Payer payer);
 
-    void showDiscount(BigDecimal transactionAmount);
+    void showAmount(@Nullable Discount discount, @Nullable Campaign campaign, final BigDecimal totalAmount, final Site site);
 
-    void startDiscountFlow(BigDecimal transactionAmount);
+    void startDiscountFlow(CheckoutPreference preference);
 
     void collectPayerInformation();
 
@@ -55,5 +64,9 @@ public interface PaymentVaultView extends MvpView {
 
     void showHook(final Hook hook, final int code);
 
-    void showPaymentMethodPluginConfiguration();
+    void showDetailDialog(@NonNull final Discount discount, @NonNull final Campaign campaign);
+
+    void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign);
+
+    void showDiscountInputDialog();
 }

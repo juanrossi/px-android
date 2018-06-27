@@ -6,8 +6,8 @@ import com.mercadopago.model.Item;
 import com.mercadopago.model.Site;
 import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.ServicePreference;
-import com.mercadopago.util.TextUtil;
 
+import com.mercadopago.util.TextUtils;
 import java.util.List;
 
 public class CheckoutConfiguration {
@@ -52,7 +52,7 @@ public class CheckoutConfiguration {
     }
 
     public Site getSite() {
-        return TextUtil.isEmpty(siteId) ? null : Sites.getById(siteId);
+        return TextUtils.isEmpty(siteId) ? null : Sites.getById(siteId);
     }
 
     public Integer getTime() {

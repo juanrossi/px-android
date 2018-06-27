@@ -31,7 +31,7 @@ public class DebitCardPage extends PageObject<CheckoutValidator> {
 
     public NamePage enterCreditCardNumber(final String cardNumber) {
         Matcher<View> cardNumberEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardNumber);
-        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButtonText);
+        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButton);
         onView(cardNumberEditTextMatcher).perform(typeText(cardNumber));
         onView(cardNextButtonTextMatcher).perform(click());
         return new NamePage(validator);

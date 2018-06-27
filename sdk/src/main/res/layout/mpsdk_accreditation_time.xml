@@ -18,7 +18,7 @@
         android:layout_marginTop="@dimen/mpsdk_l_margin"
         android:gravity="center_horizontal|top"
         android:textSize="@dimen/mpsdk_xxs_text"
-        android:textColor="@color/mpsdk_brownish_grey"
+        android:textColor="@color/ui_meli_dark_grey"
         tools:text="Se acreditara en x horas"/>
 
     <LinearLayout

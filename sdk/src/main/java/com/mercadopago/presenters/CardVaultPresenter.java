@@ -1,90 +1,78 @@
 package com.mercadopago.presenters;
 
+import android.support.annotation.NonNull;
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.internal.repository.AmountRepository;
+import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Cause;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.SavedESCCardToken;
-import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.CardVaultProvider;
 import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.TextUtil;
+import com.mercadopago.util.TextUtils;
 import com.mercadopago.views.CardVaultView;
-
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-
-/**
- * Created by vaserber on 10/12/16.
- */
 
 public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultProvider> {
 
-    protected FailureRecovery mFailureRecovery;
-    protected String mBin;
+    @NonNull
+    private final AmountRepository amountRepository;
+    private final PaymentSettingRepository configuration;
+
+    private FailureRecovery failureRecovery;
+    private String bin;
 
     //Activity parameters
-    protected PaymentRecovery mPaymentRecovery;
-    protected PaymentPreference mPaymentPreference;
-    protected List<PaymentMethod> mPaymentMethodList;
-    protected Site mSite;
-    protected boolean mInstallmentsEnabled;
-    protected boolean mInstallmentsReviewEnabled;
-    protected boolean mAutomaticSelection;
-    protected BigDecimal mAmount;
-    protected String mMerchantBaseUrl;
-    protected String mMerchantDiscountUrl;
-    protected String mMerchantGetDiscountUri;
-    protected Map<String, String> mDiscountAdditionalInfo;
-    protected boolean mInstallmentsListShown;
-    protected boolean mIssuersListShown;
+    private PaymentRecovery paymentRecovery;
+    private List<PaymentMethod> paymentMethodList;
+
+    private boolean installmentsEnabled;
+    private boolean installmentsReviewEnabled;
+    private boolean automaticSelection;
+
+    private String merchantBaseUrl;
+    private boolean installmentsListShown;
+    private boolean issuersListShown;
 
     //Activity result
-    protected PaymentMethod mPaymentMethod;
-    protected PayerCost mPayerCost;
-    protected Issuer mIssuer;
+    protected PaymentMethod paymentMethod;
+    private PayerCost payerCost;
+    private Issuer issuer;
 
     //Card Info
-    protected CardInfo mCardInfo;
-    protected Token mToken;
-    protected Card mCard;
+    private CardInfo cardInfo;
+    private Token token;
+    private Card card;
 
-    //Discount
-    protected boolean mDiscountEnabled;
-    protected Discount mDiscount;
-    protected String mPayerEmail;
-    protected List<PayerCost> mPayerCostsList;
-    protected List<Issuer> mIssuersList;
+    private List<PayerCost> payerCostsList;
+    private List<Issuer> issuersList;
 
     //Security Code
-    protected String mESC;
-    protected SavedESCCardToken mESCCardToken;
+    private String esc;
+    private SavedESCCardToken escCardToken;
 
-    public CardVaultPresenter() {
-        super();
-        mInstallmentsEnabled = true;
-        mDiscountEnabled = true;
-        mPaymentPreference = new PaymentPreference();
+    public CardVaultPresenter(@NonNull final AmountRepository amountRepository,
+        final PaymentSettingRepository configuration) {
+        this.configuration = configuration;
+        installmentsEnabled = true;
+        this.amountRepository = amountRepository;
     }
 
     public void initialize() {
         try {
-            validateParameters();
             onValidStart();
         } catch (final IllegalStateException exception) {
             getView().showError(new MercadoPagoError(exception.getMessage(), false), "");
@@ -96,217 +84,154 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     }
 
     public void setPaymentRecovery(final PaymentRecovery paymentRecovery) {
-        mPaymentRecovery = paymentRecovery;
-    }
-
-    public void setPaymentPreference(final PaymentPreference paymentPreference) {
-        mPaymentPreference = paymentPreference;
+        this.paymentRecovery = paymentRecovery;
     }
 
     public void setPaymentMethodList(final List<PaymentMethod> paymentMethodList) {
-        mPaymentMethodList = paymentMethodList;
-    }
-
-    public void setSite(final Site site) {
-        mSite = site;
+        this.paymentMethodList = paymentMethodList;
     }
 
     public void setInstallmentsEnabled(final boolean installmentsEnabled) {
-        mInstallmentsEnabled = installmentsEnabled;
+        this.installmentsEnabled = installmentsEnabled;
     }
 
     public void setCard(final Card card) {
-        mCard = card;
-    }
-
-    public void setAmount(final BigDecimal amount) {
-        mAmount = amount;
+        this.card = card;
     }
 
     public void setFailureRecovery(final FailureRecovery failureRecovery) {
-        mFailureRecovery = failureRecovery;
+        this.failureRecovery = failureRecovery;
     }
 
     public Issuer getIssuer() {
-        return mIssuer;
+        return issuer;
     }
 
     public void setIssuer(final Issuer mIssuer) {
-        this.mIssuer = mIssuer;
+        this.issuer = mIssuer;
     }
 
     public Token getToken() {
-        return mToken;
+        return token;
     }
 
     public void setToken(final Token mToken) {
-        this.mToken = mToken;
+        this.token = mToken;
     }
 
     public PaymentMethod getPaymentMethod() {
-        return mPaymentMethod;
+        return paymentMethod;
     }
 
     public void setPaymentMethod(final PaymentMethod mPaymentMethod) {
-        this.mPaymentMethod = mPaymentMethod;
+        this.paymentMethod = mPaymentMethod;
     }
 
     public PayerCost getPayerCost() {
-        return mPayerCost;
+        return payerCost;
     }
 
     public void setPayerCost(final PayerCost mPayerCost) {
-        this.mPayerCost = mPayerCost;
-    }
-
-    public BigDecimal getAmount() {
-        return mAmount;
+        this.payerCost = mPayerCost;
     }
 
     public PaymentRecovery getPaymentRecovery() {
-        return mPaymentRecovery;
-    }
-
-    public PaymentPreference getPaymentPreference() {
-        return mPaymentPreference;
+        return paymentRecovery;
     }
 
     public List<PaymentMethod> getPaymentMethodList() {
-        return mPaymentMethodList;
-    }
-
-    public Site getSite() {
-        return mSite;
+        return paymentMethodList;
     }
 
     public Card getCard() {
-        return mCard;
+        return card;
     }
 
     public String getESC() {
-        return mESC;
+        return esc;
     }
 
     public void setESC(final String esc) {
-        mESC = esc;
+        this.esc = esc;
     }
 
     public void setCardInfo(final CardInfo cardInfo) {
-        mCardInfo = cardInfo;
-        if (mCardInfo == null) {
-            mBin = "";
+        this.cardInfo = cardInfo;
+        if (this.cardInfo == null) {
+            bin = "";
         } else {
-            mBin = mCardInfo.getFirstSixDigits();
+            bin = this.cardInfo.getFirstSixDigits();
         }
-    }
-
-    public void setPayerEmail(final String payerEmail) {
-        mPayerEmail = payerEmail;
-    }
-
-    public String getPayerEmail() {
-        return mPayerEmail;
-    }
-
-    public void setDiscount(final Discount discount) {
-        mDiscount = discount;
-    }
-
-    public Discount getDiscount() {
-        return mDiscount;
-    }
-
-    public void setDiscountEnabled(final boolean discountEnabled) {
-        mDiscountEnabled = discountEnabled;
-    }
-
-    public boolean getDiscountEnabled() {
-        return mDiscountEnabled;
-    }
-
-    public void setDiscountAdditionalInfo(final Map<String, String> discountAdditionalInfo) {
-        mDiscountAdditionalInfo = discountAdditionalInfo;
-    }
-
-    public Map<String, String> getDiscountAdditionalInfo() {
-        return mDiscountAdditionalInfo;
     }
 
     public void setInstallmentsReviewEnabled(final boolean installmentReviewEnabled) {
-        mInstallmentsReviewEnabled = installmentReviewEnabled;
+        installmentsReviewEnabled = installmentReviewEnabled;
     }
 
     public Boolean getInstallmentsReviewEnabled() {
-        return mInstallmentsReviewEnabled;
+        return installmentsReviewEnabled;
     }
 
     public CardInfo getCardInfo() {
-        return mCardInfo;
+        return cardInfo;
     }
 
     public Integer getCardNumberLength() {
-        return PaymentMethodGuessingController.getCardNumberLength(mPaymentMethod, mBin);
+        return PaymentMethodGuessingController.getCardNumberLength(paymentMethod, bin);
     }
 
     public void setMerchantBaseUrl(final String merchantBaseUrl) {
-        mMerchantBaseUrl = merchantBaseUrl;
+        this.merchantBaseUrl = merchantBaseUrl;
     }
 
     public String getMerchantBaseUrl() {
-        return mMerchantBaseUrl;
-    }
-
-    public void setMerchantDiscountBaseUrl(final String merchantDiscountUrl) {
-        mMerchantDiscountUrl = merchantDiscountUrl;
-    }
-
-    public String getMerchantDiscountBaseUrl() {
-        return mMerchantDiscountUrl;
-    }
-
-    public void setMerchantGetDiscountUri(final String merchantGetDiscountUri) {
-        mMerchantGetDiscountUri = merchantGetDiscountUri;
-    }
-
-    public String getMerchantGetDiscountUri() {
-        return mMerchantGetDiscountUri;
+        return merchantBaseUrl;
     }
 
     public void setAutomaticSelection(final boolean automaticSelection) {
-        mAutomaticSelection = automaticSelection;
+        this.automaticSelection = automaticSelection;
     }
 
     public boolean getAutomaticSelection() {
-        return mAutomaticSelection;
+        return automaticSelection;
     }
 
     public boolean isInstallmentsListShown() {
-        return mInstallmentsListShown;
+        return installmentsListShown;
     }
 
     public boolean isIssuersListShown() {
-        return mIssuersListShown;
+        return issuersListShown;
     }
 
     public void setInstallmentsListShown(final boolean installmentsListShown) {
-        mInstallmentsListShown = installmentsListShown;
+        this.installmentsListShown = installmentsListShown;
     }
 
     public void setIssuersListShown(final boolean issuersListShown) {
-        mIssuersListShown = issuersListShown;
+        this.issuersListShown = issuersListShown;
     }
 
     private void checkStartInstallmentsActivity() {
-        if (isInstallmentsEnabled() && mPayerCost == null) {
-            mInstallmentsListShown = true;
+        if (isInstallmentsEnabled() && payerCost == null) {
+            installmentsListShown = true;
             askForInstallments();
         } else {
-            getView().finishWithResult();
+            finishWithResult();
         }
     }
 
+    private void finishWithResult() {
+        if (isSecurityCodeFlowNeeded()) {
+            getView().animateTransitionSlideInSlideOut();
+        } else {
+            getView().transitionWithNoAnimation();
+        }
+        getView().finishWithResult();
+    }
+
     private void askForInstallments() {
-        if (mIssuersListShown) {
+        if (issuersListShown) {
             getView().askForInstallmentsFromIssuers();
         } else if (!savedCardAvailable()) {
             getView().askForInstallmentsFromNewCard();
@@ -316,8 +241,8 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     }
 
     private void checkStartIssuersActivity() {
-        if (mIssuer == null) {
-            mIssuersListShown = true;
+        if (issuer == null) {
+            issuersListShown = true;
             getView().startIssuersActivity();
         } else {
             checkStartInstallmentsActivity();
@@ -325,57 +250,47 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     }
 
     public boolean isInstallmentsEnabled() {
-        return mInstallmentsEnabled;
-    }
-
-    private void validateParameters() throws IllegalStateException {
-        if (mInstallmentsEnabled) {
-            if (mSite == null) {
-                throw new IllegalStateException(getResourcesProvider().getMissingSiteErrorMessage());
-            } else if (mAmount == null) {
-                throw new IllegalStateException(getResourcesProvider().getMissingAmountErrorMessage());
-            }
-        }
+        return installmentsEnabled;
     }
 
     public void recoverFromFailure() {
-        if (mFailureRecovery != null) {
-            mFailureRecovery.recover();
+        if (failureRecovery != null) {
+            failureRecovery.recover();
         }
     }
 
     public List<PayerCost> getPayerCostList() {
-        return mPayerCostsList;
+        return payerCostsList;
     }
 
     private void getInstallmentsForCardAsync(final Card card) {
-        String bin = TextUtil.isEmpty(mCardInfo.getFirstSixDigits()) ? "" : mCardInfo.getFirstSixDigits();
-        Long issuerId = mCard.getIssuer() == null ? null : mCard.getIssuer().getId();
+        String bin = TextUtils.isEmpty(cardInfo.getFirstSixDigits()) ? "" : cardInfo.getFirstSixDigits();
+        Long issuerId = this.card.getIssuer() == null ? null : this.card.getIssuer().getId();
         String paymentMethodId = card.getPaymentMethod() == null ? "" : card.getPaymentMethod().getId();
 
-        getResourcesProvider().getInstallmentsAsync(bin, issuerId, paymentMethodId, getTotalAmount(),
-                new TaggedCallback<List<Installment>>(ApiUtil.RequestOrigin.GET_INSTALLMENTS) {
-            @Override
-            public void onSuccess(final List<Installment> installments) {
-                if (viewAttached()) {
-                    resolveInstallmentsList(installments);
+        getResourcesProvider().getInstallmentsAsync(bin, issuerId, paymentMethodId, amountRepository.getAmountToPay(),
+            new TaggedCallback<List<Installment>>(ApiUtil.RequestOrigin.GET_INSTALLMENTS) {
+                @Override
+                public void onSuccess(final List<Installment> installments) {
+                    if (viewAttached()) {
+                        resolveInstallmentsList(installments);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(final MercadoPagoError error) {
-                if (viewAttached()) {
-                    getView().showError(error, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
+                @Override
+                public void onFailure(final MercadoPagoError error) {
+                    if (viewAttached()) {
+                        getView().showError(error, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
 
-                    setFailureRecovery(new FailureRecovery() {
-                        @Override
-                        public void recover() {
-                            getInstallmentsForCardAsync(card);
-                        }
-                    });
+                        setFailureRecovery(new FailureRecovery() {
+                            @Override
+                            public void recover() {
+                                getInstallmentsForCardAsync(card);
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
     }
 
     private void resolveInstallmentsList(final List<Installment> installments) {
@@ -392,59 +307,63 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         }
     }
 
-    private BigDecimal getTotalAmount() {
-        BigDecimal amount;
-
-        if (!mDiscountEnabled || mDiscount == null) {
-            amount = mAmount;
-        } else {
-            amount = mDiscount.getAmountWithDiscount(mAmount);
-        }
-        return amount;
-    }
-
     private void resolvePayerCosts(final List<PayerCost> payerCosts) {
-        PayerCost defaultPayerCost = mPaymentPreference.getDefaultInstallments(payerCosts);
-        mPayerCostsList = payerCosts;
+        PayerCost defaultPayerCost =
+            configuration.getCheckoutPreference().getPaymentPreference().getDefaultInstallments(payerCosts);
+        payerCostsList = payerCosts;
 
         if (defaultPayerCost != null) {
-            mPayerCost = defaultPayerCost;
-            getView().askForSecurityCodeWithoutInstallments();
-        } else if (mPayerCostsList.isEmpty()) {
-            getView().showError(new MercadoPagoError(getResourcesProvider().getMissingPayerCostsErrorMessage(), false), "");
-        } else if (mPayerCostsList.size() == 1) {
-            mPayerCost = payerCosts.get(0);
-            getView().askForSecurityCodeWithoutInstallments();
+            payerCost = defaultPayerCost;
+            askForSecurityCodeWithoutInstallments();
+        } else if (payerCostsList.isEmpty()) {
+            getView()
+                .showError(new MercadoPagoError(getResourcesProvider().getMissingPayerCostsErrorMessage(), false), "");
+        } else if (payerCostsList.size() == 1) {
+            payerCost = payerCosts.get(0);
+            askForSecurityCodeWithoutInstallments();
         } else {
-            mInstallmentsListShown = true;
+            installmentsListShown = true;
             getView().askForInstallments();
         }
     }
 
+    private void askForSecurityCodeWithoutInstallments() {
+        if (isSecurityCodeFlowNeeded()) {
+            getView().animateTransitionSlideInSlideOut();
+        } else {
+            getView().transitionWithNoAnimation();
+        }
+        startSecurityCodeFlowIfNeeded();
+    }
+
+    private void askForSecurityCodeFromInstallments() {
+        getView().animateTransitionSlideInSlideOut();
+        startSecurityCodeFlowIfNeeded();
+    }
+
     public void resolveIssuersRequest(final Issuer issuer) {
-        mIssuersListShown = true;
+        issuersListShown = true;
         setIssuer(issuer);
         checkStartInstallmentsActivity();
     }
 
-    public void resolveInstallmentsRequest(final PayerCost payerCost, final Discount discount) {
-        setSelectedInstallments(payerCost, discount);
+    public void resolveInstallmentsRequest(final PayerCost payerCost) {
+        setSelectedInstallments(payerCost);
 
         if (savedCardAvailable()) {
-            if (mInstallmentsListShown) {
-                getView().askForSecurityCodeFromInstallments();
+            if (installmentsListShown) {
+                askForSecurityCodeFromInstallments();
             } else {
-                getView().askForSecurityCodeWithoutInstallments();
+                askForSecurityCodeWithoutInstallments();
             }
         } else {
-            getView().finishWithResult();
+            finishWithResult();
         }
     }
 
-    private void setSelectedInstallments(final PayerCost payerCost, final Discount discount) {
-        mInstallmentsListShown = true;
+    private void setSelectedInstallments(final PayerCost payerCost) {
+        installmentsListShown = true;
         setPayerCost(payerCost);
-        setDiscount(discount);
     }
 
     public void resolveSecurityCodeRequest(final Token token) {
@@ -453,28 +372,20 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
             setPayerCost(getPaymentRecovery().getPayerCost());
             setIssuer(getPaymentRecovery().getIssuer());
         }
-        getView().finishWithResult();
+        finishWithResult();
     }
 
     public void resolveNewCardRequest(final PaymentMethod paymentMethod, final Token token,
-                                      final boolean discountEnabled,
-                                      final PayerCost payerCost, final Issuer issuer,
-                                      final List<PayerCost> payerCosts, final List<Issuer> issuers,
-                                      final Discount discount) {
+        final PayerCost payerCost, final Issuer issuer,
+        final List<PayerCost> payerCosts, final List<Issuer> issuers) {
 
         setPaymentMethod(paymentMethod);
         setToken(token);
         setCardInfo(new CardInfo(token));
-        setDiscountEnabled(discountEnabled);
         setPayerCost(payerCost);
         setIssuer(issuer);
         setPayerCostsList(payerCosts);
         setIssuersList(issuers);
-
-        if (discount != null) {
-            setDiscount(discount);
-        }
-
         checkStartIssuersActivity();
     }
 
@@ -483,8 +394,8 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     }
 
     private void onValidStart() {
-        mInstallmentsListShown = false;
-        mIssuersListShown = false;
+        installmentsListShown = false;
+        issuersListShown = false;
         if (viewAttached()) {
             getView().showProgressLayout();
         }
@@ -511,7 +422,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         if (isInstallmentsEnabled()) {
             getInstallmentsForCardAsync(getCard());
         } else {
-            getView().askForSecurityCodeWithoutInstallments();
+            askForSecurityCodeWithoutInstallments();
         }
     }
 
@@ -528,83 +439,88 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     }
 
     public void setPayerCostsList(final List<PayerCost> payerCostsList) {
-        mPayerCostsList = payerCostsList;
+        this.payerCostsList = payerCostsList;
     }
 
     private void setIssuersList(final List<Issuer> issuers) {
-        mIssuersList = issuers;
+        issuersList = issuers;
     }
 
     public List<Issuer> getIssuersList() {
-        return mIssuersList;
+        return issuersList;
     }
 
-    public void checkSecurityCodeFlow() {
-        if (savedCardAvailable() && isESCSaved()) {
-            createESCToken();
-        } else {
+    public void startSecurityCodeFlowIfNeeded() {
+        if (isSecurityCodeFlowNeeded()) {
             getView().startSecurityCodeActivity(TrackingUtil.SECURITY_CODE_REASON_SAVED_CARD);
+        } else {
+            createESCToken();
         }
+    }
+
+    public boolean isSecurityCodeFlowNeeded() {
+        return !savedCardAvailable() || !isESCSaved();
     }
 
     private boolean isESCSaved() {
         if (!isESCEmpty()) {
             return true;
         } else {
-            setESC(getResourcesProvider().findESCSaved(mCard.getId()));
+            setESC(getResourcesProvider().findESCSaved(card.getId()));
             return !isESCEmpty();
         }
     }
 
     private boolean isESCEmpty() {
-        return mESC == null || mESC.isEmpty();
+        return esc == null || esc.isEmpty();
     }
 
     private void createESCToken() {
         if (savedCardAvailable() && !isESCEmpty()) {
 
-            mESCCardToken = new SavedESCCardToken(mCard.getId(), "", true, mESC);
+            escCardToken = SavedESCCardToken.createWithEsc(card.getId(), esc);
 
-            getResourcesProvider().createESCTokenAsync(mESCCardToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
-                @Override
-                public void onSuccess(final Token token) {
-                    mToken = token;
-                    mToken.setLastFourDigits(mCard.getLastFourDigits());
-                    getView().finishWithResult();
-                }
+            getResourcesProvider()
+                .createESCTokenAsync(escCardToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
+                    @Override
+                    public void onSuccess(final Token token) {
+                        CardVaultPresenter.this.token = token;
+                        CardVaultPresenter.this.token.setLastFourDigits(card.getLastFourDigits());
+                        finishWithResult();
+                    }
 
-                @Override
-                public void onFailure(final MercadoPagoError error) {
+                    @Override
+                    public void onFailure(final MercadoPagoError error) {
 
-                    if (error.isApiException() && error.getApiException().getStatus() == ApiUtil.StatusCodes.BAD_REQUEST) {
-                        List<Cause> causes = error.getApiException().getCause();
-                        if (causes != null && !causes.isEmpty()) {
-                            Cause cause = causes.get(0);
-                            if (ApiException.ErrorCodes.INVALID_ESC.equals(cause.getCode()) ||
+                        if (error.isApiException() &&
+                            error.getApiException().getStatus() == ApiUtil.StatusCodes.BAD_REQUEST) {
+                            List<Cause> causes = error.getApiException().getCause();
+                            if (causes != null && !causes.isEmpty()) {
+                                Cause cause = causes.get(0);
+                                if (ApiException.ErrorCodes.INVALID_ESC.equals(cause.getCode()) ||
                                     ApiException.ErrorCodes.INVALID_FINGERPRINT.equals(cause.getCode())) {
 
-                                getResourcesProvider().deleteESC(mESCCardToken.getCardId());
+                                    getResourcesProvider().deleteESC(escCardToken.getCardId());
 
-                                mESC = null;
-                                if (viewAttached()) {
-                                    getView().startSecurityCodeActivity(TrackingUtil.SECURITY_CODE_REASON_ESC);
+                                    esc = null;
+                                    if (viewAttached()) {
+                                        getView().startSecurityCodeActivity(TrackingUtil.SECURITY_CODE_REASON_ESC);
+                                    }
+                                } else {
+                                    recoverCreateESCToken(error);
                                 }
-                            } else {
-                                recoverCreateESCToken(error);
                             }
+                        } else {
+                            recoverCreateESCToken(error);
                         }
-                    } else {
-                        recoverCreateESCToken(error);
                     }
-                }
-            });
+                });
         }
     }
 
     private void recoverCreateESCToken(final MercadoPagoError error) {
         if (viewAttached()) {
             getView().showError(error, ApiUtil.RequestOrigin.CREATE_TOKEN);
-
             setFailureRecovery(new FailureRecovery() {
                 @Override
                 public void recover() {

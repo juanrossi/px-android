@@ -32,7 +32,7 @@
                     android:layout_margin="10dp"
                     android:gravity="center_vertical"
                     android:text="Payment METHOD"
-                    android:textColor="@color/mpsdk_black"
+                    android:textColor="@color/ui_meli_black"
                     android:textSize="20sp" />
 
                 <com.mercadopago.customviews.MPTextView
@@ -42,7 +42,7 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="20dp"
                     android:gravity="center"
-                    android:textColor="@color/mpsdk_black"
+                    android:textColor="@color/ui_meli_black"
                     android:textSize="27sp"
                     tools:text="Tarjeta" />
 

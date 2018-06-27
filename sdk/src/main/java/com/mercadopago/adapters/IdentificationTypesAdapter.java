@@ -33,10 +33,6 @@ public class IdentificationTypesAdapter extends BaseAdapter {
         }
     }
 
-    public List<IdentificationType> getIdentificationTypes() {
-        return mData;
-    }
-
     @Override
     public long getItemId(int position) {
         return position;

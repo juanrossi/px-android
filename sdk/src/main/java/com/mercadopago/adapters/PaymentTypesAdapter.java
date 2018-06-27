@@ -6,13 +6,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mercadopago.R;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.customviews.MPTextView;
-import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.PaymentType;
-
+import com.mercadopago.model.PaymentTypes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +41,7 @@ public class PaymentTypesAdapter extends RecyclerView.Adapter<PaymentTypesAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View adapterView = inflater.inflate(R.layout.mpsdk_adapter_payment_types, parent, false);
-        ViewHolder viewHolder = new ViewHolder(adapterView);
-        return viewHolder;
+        return new ViewHolder(adapterView);
     }
 
     @Override
@@ -66,11 +63,6 @@ public class PaymentTypesAdapter extends RecyclerView.Adapter<PaymentTypesAdapte
         return ans;
     }
 
-
-    public PaymentType getItem(int position) {
-        return mPaymentTypes.get(position);
-    }
-
     @Override
     public int getItemCount() {
         return mPaymentTypes.size();
@@ -78,9 +70,9 @@ public class PaymentTypesAdapter extends RecyclerView.Adapter<PaymentTypesAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public MPTextView mPaymentTypeIdTextView;
+        /* default */ MPTextView mPaymentTypeIdTextView;
 
-        public ViewHolder(View itemView) {
+        /* default */ ViewHolder(View itemView) {
             super(itemView);
             mPaymentTypeIdTextView = itemView.findViewById(R.id.mpsdkPaymentTypeTextView);
             itemView.setOnKeyListener(new View.OnKeyListener() {

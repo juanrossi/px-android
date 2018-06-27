@@ -90,10 +90,6 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="Theme.MercadoPagoTheme.Modal" parent="Theme.MercadoPagoTheme.NoActionBar" />
-
-    <style name="Theme.ProcessMercadoPagoTheme.NoActionbar" parent="Theme.MercadoPagoTheme.NoActionBar" />
-
     <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">19dp</item>
         <item name="android:textColor">@color/mpsdk_white</item>
@@ -101,11 +97,11 @@
 
     <style name="HeaderTitleText">
         <item name="android:textSize">@dimen/mpsdk_l_text</item>
-        <item name="android:textColor">@color/mpsdk_black</item>
+        <item name="android:textColor">@color/ui_meli_black</item>
     </style>
 
     <style name="TimeText">
-        <item name="android:textColor">@color/mpsdk_brownish_grey</item>
+        <item name="android:textColor">@color/ui_meli_dark_grey</item>
         <item name="android:textSize">@dimen/mpsdk_xs_text</item>
         <item name="android:drawablePadding">@dimen/mpsdk_xxxs_margin</item>
         <item name="android:drawableLeft">@drawable/mpsdk_time</item>
@@ -114,12 +110,12 @@
 
     <style name="HeaderSubtitleText">
         <item name="android:textSize">@dimen/mpsdk_s_text</item>
-        <item name="android:textColor">@color/mpsdk_brownish_grey</item>
+        <item name="android:textColor">@color/ui_meli_dark_grey</item>
     </style>
 
     <style name="DealsLogoName">
         <item name="android:textSize">@dimen/mpsdk_title_text</item>
-        <item name="android:textColor">@color/mpsdk_warm_grey</item>
+        <item name="android:textColor">@color/ui_meli_grey</item>
         <item name="android:lines">2</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -131,17 +127,17 @@
 
     <style name="DealsDescription">
         <item name="android:textSize">@dimen/mpsdk_small_text</item>
-        <item name="android:textColor">@color/mpsdk_warm_grey</item>
+        <item name="android:textColor">@color/ui_meli_grey</item>
     </style>
 
     <style name="DealsDetailTitle">
         <item name="android:textSize">@dimen/mpsdk_title_text</item>
-        <item name="android:textColor">@color/mpsdk_black</item>
+        <item name="android:textColor">@color/ui_meli_black</item>
     </style>
 
     <style name="DealsLegal">
         <item name="android:textSize">@dimen/mpsdk_smaller_text</item>
-        <item name="android:textColor">@color/mpsdk_warm_grey</item>
+        <item name="android:textColor">@color/ui_meli_grey</item>
     </style>
 
 </resources>

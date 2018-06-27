@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.IdentificationTypesAdapter;
 import com.mercadopago.callbacks.card.TicketIdentificationNameEditTextCallback;
@@ -39,10 +38,9 @@ import com.mercadopago.uicontrollers.identification.IdentificationTicketView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.util.ViewUtils;
 import com.mercadopago.views.PayerInformationView;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,11 +84,8 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     private LinearLayout mIdentificationLastNameInput;
     private LinearLayout mIdentificationTypeContainer;
     private LinearLayout mButtonContainer;
-    private FrameLayout mBackground;
     private FrameLayout mNextButton;
-    private TextView mNextButtonText;
     private FrameLayout mBackButton;
-    private TextView mBackButtonText;
     private FrameLayout mIdentificationCardContainer;
     private FrameLayout mErrorContainer;
     private Spinner mIdentificationTypeSpinner;
@@ -98,7 +93,6 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     private MPEditText mIdentificationNameEditText;
     private MPEditText mIdentificationLastNameEditText;
     private MPTextView mErrorTextView;
-    private TextView mBackInactiveButtonText;
     private Toolbar mLowResToolbar;
     private MPTextView mLowResTitleToolbar;
     private Toolbar mNormalToolbar;
@@ -243,22 +237,16 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
         mIdentificationTypeContainer = findViewById(R.id.mpsdkCardIdentificationTypeContainer);
 
         mNextButton = findViewById(R.id.mpsdkNextButton);
-        mNextButtonText = findViewById(R.id.mpsdkNextButtonText);
-
         mBackButton = findViewById(R.id.mpsdkBackButton);
-        mBackButtonText = findViewById(R.id.mpsdkBackButtonText);
 
         mScrollView = findViewById(R.id.mpsdkScrollViewContainer);
         mProgressLayout = findViewById(R.id.mpsdkProgressLayout);
 
-        mBackground = findViewById(R.id.mpsdkBackground);
         mIdentificationCardContainer = findViewById(R.id.mpsdkIdentificationCardContainer);
 
         mIdentificationTicketView = new IdentificationTicketView(this);
         mIdentificationTicketView.inflateInParent(mIdentificationCardContainer, true);
         mIdentificationTicketView.initializeControls();
-
-        mBackInactiveButtonText = findViewById(R.id.mpsdkBackInactiveButtonText);
 
         mButtonContainer = findViewById(R.id.mpsdkButtonContainer);
         mErrorContainer = findViewById(R.id.mpsdkErrorContainer);
@@ -625,7 +613,7 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     }
 
     private void showFinishCardFlow() {
-        LayoutUtil.hideKeyboard(this);
+        ViewUtils.hideKeyboard(this);
         showProgressBar();
         mPresenter.createPayer();
         finishWithPayer();
@@ -734,21 +722,21 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
 
     @Override
     public void setErrorIdentificationNumber() {
-        LayoutUtil.openKeyboard(mIdentificationNumberEditText);
+        ViewUtils.openKeyboard(mIdentificationNumberEditText);
         mIdentificationNumberEditText.toggleLineColorOnError(true);
         mIdentificationNumberEditText.requestFocus();
     }
 
     @Override
     public void setErrorName() {
-        LayoutUtil.openKeyboard(mIdentificationNameEditText);
+        ViewUtils.openKeyboard(mIdentificationNameEditText);
         mIdentificationNameEditText.toggleLineColorOnError(true);
         mIdentificationNameEditText.requestFocus();
     }
 
     @Override
     public void setErrorLastName() {
-        LayoutUtil.openKeyboard(mIdentificationLastNameEditText);
+        ViewUtils.openKeyboard(mIdentificationLastNameEditText);
         mIdentificationLastNameEditText.toggleLineColorOnError(true);
         mIdentificationLastNameEditText.requestFocus();
     }

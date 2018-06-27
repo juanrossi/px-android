@@ -2,16 +2,16 @@ package com.mercadopago.uicontrollers.installments;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatButton;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
-import com.mercadopago.model.PayerCost;
 import com.mercadopago.lite.util.CurrenciesUtil;
+import com.mercadopago.model.PayerCost;
 
 /**
  * Created by mromar on 2/3/17.
@@ -45,9 +45,12 @@ public class InstallmentsReviewView implements InstallmentsView {
     }
 
     private void setInstallmentAmountText() {
+        String installments = mPayerCost.getInstallments().toString();
+        final String x = mContext.getString(R.string.mpsdk_installments_by);
         final Spanned spannedInstallmentsText = CurrenciesUtil.getSpannedAmountWithCurrencySymbol(mPayerCost.getInstallmentAmount(), mCurrencyId);
-        mInstallmentsAmount.setText(TextUtils.concat(mPayerCost.getInstallments().toString(), " ",
-            mContext.getString(R.string.mpsdk_installments_by), " ", spannedInstallmentsText));
+
+        mInstallmentsAmount
+            .setText(new SpannableStringBuilder(installments).append(x).append(" ").append(spannedInstallmentsText));
     }
 
     private void setTotalAmountWithRateText() {
@@ -56,7 +59,7 @@ public class InstallmentsReviewView implements InstallmentsView {
     }
 
     private void setCFTPercentText() {
-        String cftPercent = mContext.getString(R.string.mpsdk_installments_cft) + " " + mPayerCost.getCFTPercent();
+        String cftPercent = mContext.getString(R.string.mpsdk_installments_cft, mPayerCost.getCFTPercent());
         mCftpercent.setText(cftPercent);
     }
 

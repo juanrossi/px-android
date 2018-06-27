@@ -6,14 +6,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-
 import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.ComponentManager;
-import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.internal.di.ConfigurationModule;
+import com.mercadopago.internal.di.UserSelectionComponent;
+import com.mercadopago.internal.repository.UserSelectionRepository;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentResult;
+import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.plugins.model.BusinessPayment;
 import com.mercadopago.plugins.model.GenericPayment;
 import com.mercadopago.plugins.model.PluginPayment;
@@ -38,9 +40,13 @@ public final class PaymentProcessorPluginActivity extends AppCompatActivity impl
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         final CheckoutStore store = CheckoutStore.getInstance();
-        final PaymentProcessor paymentProcessor = store.doesPaymentProcessorSupportPaymentMethodSelected();
+        final UserSelectionComponent configurationModule = new ConfigurationModule(getApplicationContext());
+        final UserSelectionRepository userSelectionRepository = configurationModule.getUserSelectionRepository();
+        final PaymentProcessor paymentProcessor =
+            store.doesPaymentProcessorSupportPaymentMethodSelected(
+                userSelectionRepository.getPaymentMethod().getId()
+            );
 
         if (paymentProcessor == null) {
             cancel();

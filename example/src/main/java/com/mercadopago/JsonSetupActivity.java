@@ -17,14 +17,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
-
 import com.google.gson.JsonSyntaxException;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.example.R;
 import com.mercadopago.preferences.CheckoutPreference;
-import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.TextUtil;
+import com.mercadopago.util.TextUtils;
 import com.mercadopago.utils.CheckoutConfiguration;
 
 public class JsonSetupActivity extends AppCompatActivity {
@@ -94,16 +92,11 @@ public class JsonSetupActivity extends AppCompatActivity {
     private void startCheckout() {
         MercadoPagoCheckout.Builder checkoutBuilder;
 
-        if (!TextUtil.isEmpty(mConfiguration.getPrefId())) {
+        if (!TextUtils.isEmpty(mConfiguration.getPrefId())) {
             checkoutBuilder = new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), mConfiguration.getPrefId());
         } else {
             CheckoutPreference preference = createCheckoutPreference(mConfiguration);
             checkoutBuilder = new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), preference);
-        }
-
-        if (mConfiguration.getServicePreference() != null) {
-            completeServicePreferenceWithDefaultValues();
-            checkoutBuilder.setServicePreference(mConfiguration.getServicePreference());
         }
 
         checkoutBuilder.setFlowPreference(mConfiguration.getFlowPreference());
@@ -118,34 +111,6 @@ public class JsonSetupActivity extends AppCompatActivity {
         }
     }
 
-    private void completeServicePreferenceWithDefaultValues() {
-        if (mConfiguration.getServicePreference() != null) {
-            ServicePreference servicePreference = mConfiguration.getServicePreference();
-            if (servicePreference.getProcessingModeString() == null || servicePreference.getProcessingModeString().isEmpty()) {
-
-                ServicePreference.Builder builder = new ServicePreference.Builder();
-                if (servicePreference.hasGetCustomerURL()) {
-                    builder.setGetCustomerURL(servicePreference.getGetCustomerURL(), servicePreference.getGetCustomerURI(), servicePreference.getGetCustomerAdditionalInfo());
-                }
-                if (servicePreference.hasCreatePaymentURL()) {
-                    builder.setCreatePaymentURL(servicePreference.getCreatePaymentURL(), servicePreference.getCreatePaymentURI(), servicePreference.getCreatePaymentAdditionalInfo());
-                }
-                if (servicePreference.hasGetDiscountURL()) {
-                    builder.setDiscountURL(servicePreference.getGetMerchantDiscountBaseURL(), servicePreference.getGetMerchantDiscountURI(), servicePreference.getGetDiscountAdditionalInfo());
-                }
-                if (servicePreference.hasCreateCheckoutPrefURL()) {
-                    builder.setCreateCheckoutPreferenceURL(servicePreference.getCreateCheckoutPreferenceURL(), servicePreference.getCreateCheckoutPreferenceURI(), servicePreference.getCreateCheckoutPreferenceAdditionalInfo());
-                }
-                builder.setDefaultBaseURL(servicePreference.getDefaultBaseURL())
-                        .setGatewayURL(servicePreference.getGatewayBaseURL());
-
-                ServicePreference newServicePreference = builder.build();
-
-                mConfiguration.setServicePreference(newServicePreference);
-            }
-        }
-    }
-
     private CheckoutPreference createCheckoutPreference(CheckoutConfiguration checkoutConfiguration) {
         return new CheckoutPreference.Builder(checkoutConfiguration.getSite(), checkoutConfiguration.getPayerEmail(), checkoutConfiguration.getItems())
                 .build();
@@ -156,7 +121,7 @@ public class JsonSetupActivity extends AppCompatActivity {
         String configsJson = mJsonInputEditText.getText().toString();
         try {
             mConfiguration = JsonUtil.getInstance().fromJson(configsJson, CheckoutConfiguration.class);
-            if (!TextUtil.isEmpty(configsJson)) {
+            if (!TextUtils.isEmpty(configsJson)) {
                 isOk = true;
             }
         } catch (JsonSyntaxException exception) {

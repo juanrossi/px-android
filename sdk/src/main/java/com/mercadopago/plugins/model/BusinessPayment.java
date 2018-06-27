@@ -9,32 +9,52 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-
 import com.mercadopago.R;
 import com.mercadopago.model.ExternalFragment;
 import com.mercadopago.util.TextUtils;
 
 @SuppressWarnings("unused")
-public final class BusinessPayment implements PluginPayment, Parcelable {
+public class BusinessPayment implements PluginPayment, Parcelable {
 
+    @Nullable
     private final String help;
-    private final int iconId;
+    @NonNull
     private final String title;
-    private final Status status;
+
+    @NonNull
+    private final Decorator decorator;
+
     private final boolean shouldShowPaymentMethod;
+    private final int iconId;
+
+    @Nullable
     private final ExitAction exitActionPrimary;
+    @Nullable
     private final ExitAction exitActionSecondary;
+    @Nullable
     private final String statementDescription;
+    @Nullable
     private final String receiptId;
+
+    @Nullable
     private final String imageUrl;
 
+    @NonNull
+    private final String paymentStatus;
+
+    @NonNull
+    private final String paymentStatusDetail;
+
+    @Nullable
     private final ExternalFragment topFragment;
+
+    @Nullable
     private final ExternalFragment bottomFragment;
 
-    private BusinessPayment(Builder builder) {
+    /* default */ BusinessPayment(final Builder builder) {
         help = builder.help;
         title = builder.title;
-        status = builder.status;
+        decorator = builder.decorator;
         iconId = builder.iconId;
         shouldShowPaymentMethod = builder.shouldShowPaymentMethod;
         exitActionPrimary = builder.buttonPrimary;
@@ -44,32 +64,36 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         imageUrl = builder.imageUrl;
         topFragment = builder.topFragment;
         bottomFragment = builder.bottomFragment;
+        paymentStatus = builder.paymentStatus;
+        paymentStatusDetail = builder.paymentStatusDetail;
 
     }
 
-    protected BusinessPayment(Parcel in) {
+    protected BusinessPayment(final Parcel in) {
         iconId = in.readInt();
         title = in.readString();
         shouldShowPaymentMethod = in.readByte() != 0;
         exitActionPrimary = in.readParcelable(ExitAction.class.getClassLoader());
         exitActionSecondary = in.readParcelable(ExitAction.class.getClassLoader());
-        status = Status.fromName(in.readString());
+        decorator = Decorator.fromName(in.readString());
         help = in.readString();
         statementDescription = in.readString();
         receiptId = in.readString();
         imageUrl = in.readString();
         topFragment = in.readParcelable(ExternalFragment.class.getClassLoader());
         bottomFragment = in.readParcelable(ExternalFragment.class.getClassLoader());
+        paymentStatus = in.readString();
+        paymentStatusDetail = in.readString();
     }
 
     public static final Creator<BusinessPayment> CREATOR = new Creator<BusinessPayment>() {
         @Override
-        public BusinessPayment createFromParcel(Parcel in) {
+        public BusinessPayment createFromParcel(final Parcel in) {
             return new BusinessPayment(in);
         }
 
         @Override
-        public BusinessPayment[] newArray(int size) {
+        public BusinessPayment[] newArray(final int size) {
             return new BusinessPayment[size];
         }
     };
@@ -91,13 +115,15 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         dest.writeByte((byte) (shouldShowPaymentMethod ? 1 : 0));
         dest.writeParcelable(exitActionPrimary, flags);
         dest.writeParcelable(exitActionSecondary, flags);
-        dest.writeString(status.name);
+        dest.writeString(decorator.name);
         dest.writeString(help);
         dest.writeString(statementDescription);
         dest.writeString(receiptId);
         dest.writeString(imageUrl);
         dest.writeParcelable(topFragment, 0);
         dest.writeParcelable(bottomFragment, 0);
+        dest.writeString(paymentStatus);
+        dest.writeString(paymentStatusDetail);
     }
 
     public boolean hasReceipt() {
@@ -112,14 +138,16 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         return bottomFragment != null;
     }
 
-    public Status getStatus() {
-        return status;
+    @NonNull
+    public Decorator getDecorator() {
+        return decorator;
     }
 
     public int getIcon() {
         return iconId;
     }
 
+    @NonNull
     public String getTitle() {
         return title;
     }
@@ -128,14 +156,17 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         return TextUtils.isNotEmpty(help);
     }
 
+    @Nullable
     public ExitAction getSecondaryAction() {
         return exitActionSecondary;
     }
 
+    @Nullable
     public ExitAction getPrimaryAction() {
         return exitActionPrimary;
     }
 
+    @Nullable
     public String getHelp() {
         return help;
     }
@@ -144,37 +175,56 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
         return shouldShowPaymentMethod;
     }
 
+    @Nullable
     public String getStatementDescription() {
         return statementDescription;
     }
 
+    @Nullable
     public String getReceipt() {
         return receiptId;
     }
 
+    @Nullable
     public String getImageUrl() {
         return imageUrl;
     }
 
+    @Nullable
     public ExternalFragment getTopFragment() {
         return topFragment;
     }
 
+    @Nullable
     public ExternalFragment getBottomFragment() {
         return bottomFragment;
     }
 
-    public enum Status {
-        APPROVED("APPROVED", R.color.ui_components_success_color, R.drawable.mpsdk_badge_check, 0),
-        REJECTED("REJECTED", R.color.ui_components_error_color, R.drawable.mpsdk_badge_error, R.string.mpsdk_rejection_label),
-        PENDING("PENDING", R.color.mpsdk_ui_components_warning_color, R.drawable.mpsdk_badge_pending_orange, 0);
+    @NonNull
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    @NonNull
+    public String getPaymentStatusDetail() {
+        return paymentStatusDetail;
+    }
+
+    public enum Decorator {
+        APPROVED("APPROVED", R.color.ui_components_success_color,
+            R.drawable.mpsdk_badge_check, 0),
+        REJECTED("REJECTED", R.color.ui_components_error_color,
+            R.drawable.mpsdk_badge_error,
+            R.string.mpsdk_rejection_label),
+        PENDING("PENDING", R.color.mpsdk_ui_components_warning_color,
+            R.drawable.mpsdk_badge_pending_orange, 0);
 
         public final String name;
         public final int resColor;
         public final int badge;
         public final int message;
 
-        Status(final String name,
+        Decorator(final String name,
                @ColorRes final int resColor,
                @DrawableRes final int badge,
                @StringRes final int message) {
@@ -184,46 +234,48 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
             this.message = message;
         }
 
-        public static Status fromName(String text) {
-            for (Status s : Status.values()) {
+        public static Decorator fromName(final String text) {
+            for (final Decorator s : Decorator.values()) {
                 if (s.name.equalsIgnoreCase(text)) {
                     return s;
                 }
             }
-            throw new IllegalStateException("Invalid status");
+            throw new IllegalStateException("Invalid decorator");
         }
     }
 
-
-    public static class Builder {
+    public static final class Builder {
 
         // Mandatory values
-        @NonNull
-        private final Status status;
-        @DrawableRes
-        private final int iconId;
-        @NonNull
-        private final String title;
+        /* default */ @NonNull final Decorator decorator;
+        /* default */ @DrawableRes final int iconId;
+        /* default */ @NonNull final String title;
+        /* default */ @NonNull final String paymentStatus;
+        /* default */ @NonNull final String paymentStatusDetail;
 
-        private String imageUrl;
 
         // Optional values
-        private boolean shouldShowPaymentMethod;
-        private String statementDescription;
-        private ExitAction buttonPrimary;
-        private ExitAction buttonSecondary;
-        private String help;
-        private String receiptId;
+        /* default */ @Nullable String imageUrl;
+        /* default */ boolean shouldShowPaymentMethod;
+        /* default */ @Nullable String statementDescription;
+        /* default */ @Nullable ExitAction buttonPrimary;
+        /* default */ @Nullable ExitAction buttonSecondary;
+        /* default */ @Nullable String help;
+        /* default */ @Nullable String receiptId;
 
-        private ExternalFragment topFragment;
-        private ExternalFragment bottomFragment;
+        ExternalFragment topFragment;
+        ExternalFragment bottomFragment;
 
-        public Builder(@NonNull final Status status,
-                       @DrawableRes final int iconId,
-                       @NonNull final String title) {
+        public Builder(@NonNull final Decorator decorator,
+            @NonNull final String paymentStatus,
+            @NonNull final String paymentStatusDetail,
+            @DrawableRes final int iconId,
+            @NonNull final String title) {
             this.title = title;
-            this.status = status;
+            this.decorator = decorator;
             this.iconId = iconId;
+            this.paymentStatus = paymentStatus;
+            this.paymentStatusDetail = paymentStatusDetail;
             shouldShowPaymentMethod = false;
             buttonPrimary = null;
             buttonSecondary = null;
@@ -232,16 +284,19 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
             imageUrl = null;
         }
 
-        public Builder(@NonNull final Status status,
-                       @NonNull final String imageUrl,
-                       @NonNull final String title) {
-            this(status, R.drawable.mpsdk_icon_default, title);
+        public Builder(@NonNull final Decorator decorator,
+            @NonNull final String paymentStatus,
+            @NonNull final String paymentStatusDetail,
+            @NonNull final String imageUrl,
+            @NonNull final String title) {
+            this(decorator, paymentStatus, paymentStatusDetail, R.drawable.mpsdk_icon_default, title);
             this.imageUrl = imageUrl;
         }
 
         public BusinessPayment build() {
-            if (buttonPrimary == null && buttonSecondary == null)
+            if (buttonPrimary == null && buttonSecondary == null) {
                 throw new IllegalStateException("At least one button should be provided for BusinessPayment");
+            }
             return new BusinessPayment(this);
         }
 
@@ -253,7 +308,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
          * @param exitAction a {@link ExitAction }
          * @return builder
          */
-        public Builder setPrimaryButton(@Nullable ExitAction exitAction) {
+        public Builder setPrimaryButton(@Nullable final ExitAction exitAction) {
             buttonPrimary = exitAction;
             return this;
         }
@@ -266,7 +321,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
          * @param exitAction a {@link ExitAction }
          * @return builder
          */
-        public Builder setSecondaryButton(@Nullable ExitAction exitAction) {
+        public Builder setSecondaryButton(@Nullable final ExitAction exitAction) {
             buttonSecondary = exitAction;
             return this;
         }
@@ -277,7 +332,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
          * @param help a help message
          * @return builder
          */
-        public Builder setHelp(@Nullable String help) {
+        public Builder setHelp(@Nullable final String help) {
             this.help = help;
             return this;
         }
@@ -290,8 +345,8 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
          * @param visible visibility mode
          * @return builder
          */
-        public Builder setPaymentMethodVisibility(boolean visible) {
-            this.shouldShowPaymentMethod = visible;
+        public Builder setPaymentMethodVisibility(final boolean visible) {
+            shouldShowPaymentMethod = visible;
             return this;
         }
 
@@ -327,7 +382,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
          * @return builder
          */
         public Builder setTopFragment(@NonNull final Class<? extends Fragment> zClass, @Nullable final Bundle args) {
-            this.topFragment = new ExternalFragment(zClass, args);
+            topFragment = new ExternalFragment(zClass, args);
             return this;
         }
 
@@ -339,7 +394,7 @@ public final class BusinessPayment implements PluginPayment, Parcelable {
          * @return builder
          */
         public Builder setBottomFragment(@NonNull final Class<? extends Fragment> zClass, @Nullable final Bundle args) {
-            this.bottomFragment = new ExternalFragment(zClass, args);
+            bottomFragment = new ExternalFragment(zClass, args);
             return this;
         }
     }

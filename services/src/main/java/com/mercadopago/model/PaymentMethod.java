@@ -203,7 +203,7 @@ public class PaymentMethod implements Parcelable, Serializable {
         secureThumbnail = in.readString();
         deferredCapture = in.readString();
         settings = in.createTypedArrayList(Setting.CREATOR);
-        accreditationTime = ParcelableUtil.getIntegerReadByte(in);
+        accreditationTime = ParcelableUtil.getOptionalInteger(in);
         merchantAccountId = in.readString();
         financialInstitutions = in.createTypedArrayList(FinancialInstitution.CREATOR);
         String minString = in.readString();
@@ -244,10 +244,19 @@ public class PaymentMethod implements Parcelable, Serializable {
         dest.writeString(secureThumbnail);
         dest.writeString(deferredCapture);
         dest.writeTypedList(settings);
-        ParcelableUtil.writeByte(dest, accreditationTime);
+        ParcelableUtil.writeOptional(dest, accreditationTime);
         dest.writeString(merchantAccountId);
         dest.writeTypedList(financialInstitutions);
         dest.writeString(minAllowedAmount != null ? minAllowedAmount.toString() : null);
         dest.writeString(maxAllowedAmount != null ? maxAllowedAmount.toString() : null);
+    }
+
+    @Nullable
+    public SecurityCode getSecurityCode() {
+        SecurityCode securityCode = null;
+        if (settings != null && !settings.isEmpty()) {
+            securityCode = settings.get(0).getSecurityCode();
+        }
+        return securityCode;
     }
 }

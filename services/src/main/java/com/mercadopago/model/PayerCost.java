@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class PayerCost implements Parcelable, Serializable {
 
+    public static final int NO_INSTALLMENTS = 1;
     private static final String CFT = "CFT";
     private static final String TEA = "TEA";
     private Integer installments;
@@ -127,14 +128,39 @@ public class PayerCost implements Parcelable, Serializable {
     }
 
     protected PayerCost(Parcel in) {
-        installments = ParcelableUtil.getIntegerReadByte(in);
+        installments = ParcelableUtil.getOptionalInteger(in);
         labels = in.createStringArrayList();
         recommendedMessage = in.readString();
-        installmentRate = new BigDecimal(in.readString());
-        totalAmount = new BigDecimal(in.readString());
-        minAllowedAmount = new BigDecimal(in.readString());
-        maxAllowedAmount = new BigDecimal(in.readString());
-        installmentAmount = new BigDecimal(in.readString());
+
+        if (in.readByte() == 0) {
+            installmentRate = null;
+        } else {
+            installmentRate = new BigDecimal(in.readString());
+        }
+
+        if (in.readByte() == 0) {
+            totalAmount = null;
+        } else {
+            totalAmount = new BigDecimal(in.readString());
+        }
+
+        if (in.readByte() == 0) {
+            minAllowedAmount = null;
+        } else {
+            minAllowedAmount = new BigDecimal(in.readString());
+        }
+
+        if (in.readByte() == 0) {
+            maxAllowedAmount = null;
+        } else {
+            maxAllowedAmount = new BigDecimal(in.readString());
+        }
+
+        if (in.readByte() == 0) {
+            installmentAmount = null;
+        } else {
+            installmentAmount = new BigDecimal(in.readString());
+        }
     }
 
     @Override
@@ -144,15 +170,45 @@ public class PayerCost implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        ParcelableUtil.writeByte(dest, installments);
+        ParcelableUtil.writeOptional(dest, installments);
 
         dest.writeStringList(labels);
+
         dest.writeString(recommendedMessage);
 
-        dest.writeString(installmentRate.toString());
-        dest.writeString(totalAmount.toString());
-        dest.writeString(minAllowedAmount.toString());
-        dest.writeString(maxAllowedAmount.toString());
-        dest.writeString(installmentAmount.toString());
+        if (installmentRate == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(installmentRate.toString());
+        }
+
+        if (totalAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(totalAmount.toString());
+        }
+
+        if (minAllowedAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(minAllowedAmount.toString());
+        }
+
+        if (maxAllowedAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(maxAllowedAmount.toString());
+        }
+
+        if (installmentAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(installmentAmount.toString());
+        }
     }
 }

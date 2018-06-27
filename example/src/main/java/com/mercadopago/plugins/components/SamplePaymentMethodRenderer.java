@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.mercadopago.example.R;
 import com.mercadopago.plugins.PluginRenderer;
-import com.mercadopago.util.TextUtil;
+import com.mercadopago.util.TextUtils;
 
 /**
  * Created by nfortuna on 12/13/17.
@@ -31,7 +31,7 @@ public class SamplePaymentMethodRenderer extends PluginRenderer<SamplePaymentMet
         continueButton.setEnabled(!component.state.authenticating);
         passwordView.setEnabled(!component.state.authenticating);
         passwordView.setText(component.state.password);
-        errorLabel.setVisibility(TextUtil.isEmpty(component.state.errorMessage)
+        errorLabel.setVisibility(TextUtils.isEmpty(component.state.errorMessage)
                 ? View.GONE : View.VISIBLE);
         errorLabel.setText(component.state.errorMessage);
         progressbar.setVisibility(component.state.authenticating ? View.VISIBLE : View.GONE);

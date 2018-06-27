@@ -6,7 +6,6 @@ import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
@@ -26,11 +25,12 @@ public class CompactSummaryRenderer extends Renderer<CompactSummary> {
         final MPTextView itemTitleTextView = summaryView.findViewById(R.id.mpsdkItemTitle);
         final LinearLayout disclaimerLinearLayout = summaryView.findViewById(R.id.disclaimer);
 
-        setText(totalAmountTextView, CurrenciesUtil.getSpannedAmountWithCurrencySymbol(component.props.getTotalAmount(), component.props.currencyId));
+        setText(totalAmountTextView, CurrenciesUtil
+            .getSpannedAmountWithCurrencySymbol(component.props.getAmountToPay(), component.props.currencyId));
         setText(itemTitleTextView, getItemTitle(component.props.title, context));
 
         if (shouldShowCftDisclaimer(component.props)) {
-            String disclaimer = getDisclaimer(component, context);
+            final String disclaimer = getDisclaimer(component, context);
             final Renderer disclaimerRenderer = RendererFactory.create(context, component.getDisclaimerComponent(disclaimer));
             final View disclaimerView = disclaimerRenderer.render();
             disclaimerLinearLayout.addView(disclaimerView);
@@ -55,10 +55,6 @@ public class CompactSummaryRenderer extends Renderer<CompactSummary> {
     }
 
     private String getDisclaimer(CompactSummary component, Context context) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(context.getString(R.string.mpsdk_installments_cft));
-        stringBuilder.append(" ");
-        stringBuilder.append(component.props.getCftPercent());
-        return stringBuilder.toString();
+        return context.getString(R.string.mpsdk_installments_cft, component.props.getCftPercent());
     }
 }
