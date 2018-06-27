@@ -37,10 +37,14 @@ public final class HttpClientUtil {
         final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(Settings.OKHTTP_LOGGING);
 
-        // Set cache size
-        final Cache cache =
-            new Cache(new File(String.format("%s%s", context.getCacheDir().getPath(), CACHE_DIR_NAME)), CACHE_SIZE);
-
+        Cache cache = null;
+        try {
+            cache =
+                new okhttp3.Cache(new File(String.format("%s%s", context.getCacheDir().getPath(), CACHE_DIR_NAME)),
+                    CACHE_SIZE);
+        } catch (final Exception e) {
+            // do nothing
+        }
         // Set client
         OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(TIMEOUT, TimeUnit.SECONDS)

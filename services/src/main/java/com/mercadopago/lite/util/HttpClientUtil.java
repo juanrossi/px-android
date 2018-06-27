@@ -9,6 +9,7 @@ import com.mercadopago.lite.core.Settings;
 import com.mercadopago.lite.core.TLSSocketFactory;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
+import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -47,9 +48,14 @@ public final class HttpClientUtil {
         interceptor.setLevel(Settings.OKHTTP_LOGGING);
 
         // Set cache size
-        final okhttp3.Cache cache =
-            new okhttp3.Cache(new File(String.format("%s%s", context.getCacheDir().getPath(), CACHE_DIR_NAME)),
-                CACHE_SIZE);
+        Cache cache = null;
+        try {
+            cache =
+                new okhttp3.Cache(new File(String.format("%s%s", context.getCacheDir().getPath(), CACHE_DIR_NAME)),
+                    CACHE_SIZE);
+        } catch (final Exception e) {
+            // do nothing
+        }
 
         // Set client
         final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
