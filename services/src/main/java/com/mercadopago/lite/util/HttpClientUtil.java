@@ -39,8 +39,17 @@ public final class HttpClientUtil {
         }
     }
 
+    /**
+     * Intended public for client implementation.
+     *
+     * @param context
+     * @param connectTimeout
+     * @param readTimeout
+     * @param writeTimeout
+     * @return am httpClient with TLS 1.1 support
+     */
     @NonNull
-    private static OkHttpClient createClient(@NonNull final Context context, final int connectTimeout,
+    public static OkHttpClient createClient(@NonNull final Context context, final int connectTimeout,
         final int readTimeout,
         final int writeTimeout) {
         // Set log info
@@ -59,11 +68,11 @@ public final class HttpClientUtil {
 
         // Set client
         final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
-                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
-                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
-                .readTimeout(readTimeout, TimeUnit.SECONDS)
-                .cache(cache)
-                .addInterceptor(interceptor);
+            .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+            .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+            .readTimeout(readTimeout, TimeUnit.SECONDS)
+            .cache(cache)
+            .addInterceptor(interceptor);
 
         okHttpClientBuilder.addInterceptor(getConnectionInterceptor(context));
 
