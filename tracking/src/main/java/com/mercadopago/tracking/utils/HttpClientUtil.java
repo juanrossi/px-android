@@ -32,27 +32,28 @@ public final class HttpClientUtil {
     }
 
     @NonNull
-    private static OkHttpClient createClient(final Context context) {
+    private static OkHttpClient createClient(@NonNull final Context context) {
         // Set log info
         final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(Settings.OKHTTP_LOGGING);
 
-        Cache cache = null;
-        try {
-            cache =
-                new okhttp3.Cache(new File(String.format("%s%s", context.getCacheDir().getPath(), CACHE_DIR_NAME)),
-                    CACHE_SIZE);
-        } catch (final Exception e) {
-            // do nothing
-        }
-        // Set client
-        OkHttpClient client = new OkHttpClient.Builder()
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder()
             .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT_WRITE, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT_READ, TimeUnit.SECONDS)
-            .cache(cache)
-            .addInterceptor(interceptor)
-            .build();
+            .addInterceptor(interceptor);
+
+        try {
+            final Cache cache =
+                new okhttp3.Cache(new File(String.format("%s%s", context.getCacheDir().getPath(), CACHE_DIR_NAME)),
+                    CACHE_SIZE);
+            builder.cache(cache);
+        } catch (final Exception e) {
+            // do nothing
+        }
+
+        // Set client
+        client = builder.build();
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
             try {

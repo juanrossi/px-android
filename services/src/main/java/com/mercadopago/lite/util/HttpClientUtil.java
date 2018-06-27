@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.mercadopago.lite.core.ConnectivityStateInterceptor;
 import com.mercadopago.lite.core.Settings;
 import com.mercadopago.lite.core.TLSSocketFactory;
@@ -42,6 +43,21 @@ public final class HttpClientUtil {
     /**
      * Intended public for client implementation.
      *
+     * @param connectTimeout
+     * @param readTimeout
+     * @param writeTimeout
+     * @return am httpClient with TLS 1.1 support
+     */
+    @NonNull
+    public static OkHttpClient createClient(final int connectTimeout,
+        final int readTimeout,
+        final int writeTimeout) {
+        return createClient(null, connectTimeout, readTimeout, writeTimeout);
+    }
+
+    /**
+     * Intended public for client implementation.
+     *
      * @param context
      * @param connectTimeout
      * @param readTimeout
@@ -49,33 +65,32 @@ public final class HttpClientUtil {
      * @return am httpClient with TLS 1.1 support
      */
     @NonNull
-    public static OkHttpClient createClient(@NonNull final Context context, final int connectTimeout,
+    public static OkHttpClient createClient(@Nullable final Context context, final int connectTimeout,
         final int readTimeout,
         final int writeTimeout) {
         // Set log info
         final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(Settings.OKHTTP_LOGGING);
 
-        // Set cache size
-        Cache cache = null;
-        try {
-            cache =
-                new okhttp3.Cache(new File(String.format("%s%s", context.getCacheDir().getPath(), CACHE_DIR_NAME)),
-                    CACHE_SIZE);
-        } catch (final Exception e) {
-            // do nothing
-        }
-
-        // Set client
         final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
             .connectTimeout(connectTimeout, TimeUnit.SECONDS)
             .writeTimeout(writeTimeout, TimeUnit.SECONDS)
-            .readTimeout(readTimeout, TimeUnit.SECONDS)
-            .cache(cache)
-            .addInterceptor(interceptor);
+            .readTimeout(readTimeout, TimeUnit.SECONDS);
 
-        okHttpClientBuilder.addInterceptor(getConnectionInterceptor(context));
+        // Set cache size
+        if (context != null) {
+            okHttpClientBuilder.addInterceptor(getConnectionInterceptor(context));
+            try {
+                final Cache cache =
+                    new Cache(new File(String.format("%s%s", context.getCacheDir().getPath(), CACHE_DIR_NAME)),
+                        CACHE_SIZE);
+                okHttpClientBuilder.cache(cache);
+            } catch (final Exception e) {
+                // do nothing
+            }
+        }
 
+        // Set client
         OkHttpClient client = okHttpClientBuilder.build();
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
