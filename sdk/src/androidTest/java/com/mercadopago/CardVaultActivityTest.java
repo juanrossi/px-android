@@ -15,7 +15,7 @@ import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Sites;
 import com.mercadopago.model.Token;
-import com.mercadopago.test.FakeAPI;
+import com.mercadopago.lite.util.FakeAPI;
 import com.mercadopago.test.StaticMock;
 import com.mercadopago.util.JsonUtil;
 

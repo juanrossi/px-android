@@ -2,20 +2,17 @@ package com.mercadopago.core;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.lite.adapters.ErrorHandlingCallAdapter;
 import com.mercadopago.lite.callbacks.Callback;
+import com.mercadopago.lite.util.HttpClientUtil;
+import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Payment;
 import com.mercadopago.preferences.CheckoutPreference;
-import com.mercadopago.model.Customer;
 import com.mercadopago.services.CustomService;
-import com.mercadopago.util.HttpClientUtil;
 import com.mercadopago.util.JsonUtil;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
