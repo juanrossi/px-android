@@ -2,9 +2,9 @@ package com.mercadopago.plugins.model;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodInfoModel;
 
-public class PaymentMethodInfo {
-
+public class PaymentMethodInfo implements PaymentMethodInfoModel {
     public final String id;
     public final String name;
     public final String description;
@@ -30,7 +30,23 @@ public class PaymentMethodInfo {
         this.icon = icon;
     }
 
+    @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public int getIcon() {
+        return icon;
     }
 }

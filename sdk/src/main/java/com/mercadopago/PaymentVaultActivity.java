@@ -58,6 +58,7 @@ import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodInfoContro
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchCustomOption;
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchOption;
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchViewController;
+import com.mercadopago.uicontrollers.paymentmethodsearch.PluginPaymentMethodInfo;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
@@ -318,8 +319,9 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         for (final PaymentMethodInfo infoItem : infoItems) {
             final PaymentMethodPlugin plugin = store.getPaymentMethodPluginById(infoItem.id);
             if (plugin != null && plugin.isEnabled(store.getData())) {
+                final PluginPaymentMethodInfo pluginPaymentMethodInfo = new PluginPaymentMethodInfo(infoItem);
                 final PaymentMethodSearchViewController viewController =
-                    new PaymentMethodInfoController(this, infoItem);
+                    new PaymentMethodInfoController(this, pluginPaymentMethodInfo);
                 viewController.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
