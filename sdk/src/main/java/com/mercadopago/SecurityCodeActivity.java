@@ -9,14 +9,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import android.widget.TextView;
 import com.mercadopago.callbacks.card.CardSecurityCodeEditTextCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.MercadoPagoCheckout;
@@ -363,6 +366,26 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
                 mSecurityCodeEditText.toggleLineColorOnError(toggle);
             }
         }));
+        mSecurityCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return onNextKey(actionId, event);
+            }
+        });
+    }
+
+    private boolean onNextKey(int actionId, KeyEvent event) {
+        if (isNextKey(actionId, event)) {
+            mSecurityCodePresenter.validateSecurityCodeInput();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isNextKey(int actionId, KeyEvent event) {
+        return actionId == EditorInfo.IME_ACTION_NEXT ||
+            (event != null && event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
     }
 
     private void setButtonsListeners() {
