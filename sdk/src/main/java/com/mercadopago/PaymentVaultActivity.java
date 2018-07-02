@@ -317,7 +317,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         final CheckoutStore store = CheckoutStore.getInstance();
         final List<PaymentMethodSearchViewController> controllers = new ArrayList<>();
         for (final PaymentMethodInfo infoItem : infoItems) {
-            final PaymentMethodPlugin plugin = store.getPaymentMethodPluginById(infoItem.id);
+            final PaymentMethodPlugin plugin = store.getPaymentMethodPluginById(infoItem.getId());
             if (plugin != null && plugin.isEnabled(store.getData())) {
                 final PluginPaymentMethodInfo pluginPaymentMethodInfo = new PluginPaymentMethodInfo(infoItem);
                 final PaymentMethodSearchViewController viewController =

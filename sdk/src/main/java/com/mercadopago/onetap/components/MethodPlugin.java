@@ -42,8 +42,8 @@ class MethodPlugin extends CompactComponent<MethodPlugin.Props, Void> {
         final TextView name = main.findViewById(R.id.name);
         final TextView description = main.findViewById(R.id.description);
         logo.setImageResource(pluginInfo.icon);
-        ViewUtils.loadOrGone(pluginInfo.name, name);
-        ViewUtils.loadOrGone(pluginInfo.description, description);
+        ViewUtils.loadOrGone(pluginInfo.getName(), name);
+        ViewUtils.loadOrGone(pluginInfo.getDescription(), description);
 
         return main;
     }

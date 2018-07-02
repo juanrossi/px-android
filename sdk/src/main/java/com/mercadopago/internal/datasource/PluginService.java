@@ -36,7 +36,7 @@ public class PluginService implements PluginRepository {
     public PaymentMethod getPluginAsPaymentMethod(@NonNull final String pluginId, @NonNull final String paymentType) {
         final PaymentMethodPlugin plugin = getPlugin(pluginId);
         final PaymentMethodInfo paymentInfo = getPaymentMethodInfo(plugin);
-        return new PaymentMethod(paymentInfo.id, paymentInfo.name, paymentType);
+        return new PaymentMethod(paymentInfo.getId(), paymentInfo.getName(), paymentType);
     }
 
     @Override

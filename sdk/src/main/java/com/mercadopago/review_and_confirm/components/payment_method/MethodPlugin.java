@@ -43,8 +43,8 @@ class MethodPlugin extends CompactComponent<MethodPlugin.Props, Void> {
         final TextView description = paymentView.findViewById(R.id.description);
         final PluginRepository pluginService = new PluginService(parent.getContext());
         final PaymentMethodInfo pluginInfo = pluginService.getPaymentMethodInfo(props.paymentMethodId);
-        ViewUtils.loadOrGone(pluginInfo.description, description);
-        ViewUtils.loadOrGone(pluginInfo.name, title);
+        ViewUtils.loadOrGone(pluginInfo.getDescription(), description);
+        ViewUtils.loadOrGone(pluginInfo.getName(), title);
         imageView.setImageResource(pluginInfo.icon);
 
         return paymentView;

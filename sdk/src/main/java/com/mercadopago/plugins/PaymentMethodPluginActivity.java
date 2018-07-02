@@ -58,7 +58,7 @@ public class PaymentMethodPluginActivity extends AppCompatActivity implements Ac
             .getPaymentMethodInfo(paymentMethod.getId());
 
         final PaymentMethodPlugin plugin = CheckoutStore
-                .getInstance().getPaymentMethodPluginById(paymentMethodInfo.id);
+                .getInstance().getPaymentMethodPluginById(paymentMethodInfo.getId());
 
         final Intent intent = getIntent();
         mPublicKey = intent.getStringExtra(PUBLIC_KEY);

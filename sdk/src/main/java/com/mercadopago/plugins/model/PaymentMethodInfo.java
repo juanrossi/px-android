@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodInfoModel;
 
 public class PaymentMethodInfo implements PaymentMethodInfoModel {
-    public final String id;
-    public final String name;
-    public final String description;
+    private final String id;
+    private final String name;
+    private final String description;
     @DrawableRes public final
     int icon;
 
@@ -26,7 +26,7 @@ public class PaymentMethodInfo implements PaymentMethodInfoModel {
                              @DrawableRes final int icon) {
         this.id = id;
         this.name = name;
-        description = null;
+        this.description = null;
         this.icon = icon;
     }
 
