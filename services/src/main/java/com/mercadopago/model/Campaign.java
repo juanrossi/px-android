@@ -5,8 +5,10 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.mercadopago.lite.util.ParcelableUtil;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 public class Campaign implements Serializable, Parcelable {
 
@@ -83,6 +85,10 @@ public class Campaign implements Serializable, Parcelable {
         dest.writeString(id);
         ParcelableUtil.writeByte(dest, maxCouponAmount);
         dest.writeString(codeType);
+    }
+
+    public String getCampaignTermsUrl() {
+        return String.format(Locale.US, "https://api.mercadolibre.com/campaigns/%s/terms_and_conditions?format_type=html", id);
     }
 
     public static class Builder {

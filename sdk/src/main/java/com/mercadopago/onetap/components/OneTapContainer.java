@@ -57,9 +57,9 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
     }
 
     private void addTermsAndConditions(final ViewGroup parent) {
-        if (props.getDiscount() != null) {
+        if (props.getCampaign() != null) {
             final Context context = parent.getContext();
-            TermsAndConditionsModel model = new TermsAndConditionsModel(props.getDiscount().getDiscountTermsUrl(),
+            TermsAndConditionsModel model = new TermsAndConditionsModel(props.getCampaign().getCampaignTermsUrl(),
                 context.getString(R.string.mpsdk_discount_terms_and_conditions_message),
                 context.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message),
                 props.getPublicKey(),

@@ -3,7 +3,9 @@ package com.mercadopago.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+
 import com.mercadopago.lite.util.ParcelableUtil;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -99,12 +101,6 @@ public class Discount implements Serializable, Parcelable {
         dest.writeString(couponAmount.toString());
     }
 
-    public String getDiscountTermsUrl() {
-        return String
-            .format(Locale.US, "https://api.mercadolibre.com/campaigns/%s/terms_and_conditions?format_type=html",
-                this.id);
-    }
-
     public static class Builder {
         //region mandatory params
         private String id;
@@ -118,8 +114,8 @@ public class Discount implements Serializable, Parcelable {
         /**
          * Builder for discount construction
          *
-         * @param id discount id
-         * @param currencyId amount currency id
+         * @param id           discount id
+         * @param currencyId   amount currency id
          * @param couponAmount amount that will be applied in discount
          */
         public Builder(@NonNull String id, @NonNull String currencyId, @NonNull BigDecimal couponAmount) {
