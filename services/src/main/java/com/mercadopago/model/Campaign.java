@@ -5,23 +5,25 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.mercadopago.lite.util.ParcelableUtil;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 public class Campaign implements Serializable, Parcelable {
 
-    private String id;
-    private String codeType;
-    private BigDecimal maxCouponAmount;
+    private final String id;
+    private final String codeType;
+    private final BigDecimal maxCouponAmount;
 
     private static final String CODE_TYPE_SINGLE = "single";
     private static final String CODE_TYPE_MULTIPLE = "multiple";
     private static final String CODE_TYPE_NONE = "none";
 
-    private Campaign(Builder builder) {
-        this.id = builder.id;
-        this.maxCouponAmount = builder.maxCouponAmount;
-        this.codeType = builder.codeType;
+    private Campaign(final Builder builder) {
+        id = builder.id;
+        maxCouponAmount = builder.maxCouponAmount;
+        codeType = builder.codeType;
     }
 
     @SuppressWarnings("unused")
@@ -85,9 +87,13 @@ public class Campaign implements Serializable, Parcelable {
         dest.writeString(codeType);
     }
 
+    public String getCampaignTermsUrl() {
+        return String.format(Locale.US, "https://api.mercadolibre.com/campaigns/%s/terms_and_conditions?format_type=html", id);
+    }
+
     public static class Builder {
         //region mandatory params
-        private String id;
+        private final String id;
         //endregion mandatory params
         private BigDecimal maxCouponAmount = BigDecimal.ZERO;
         private String codeType;
@@ -103,13 +109,13 @@ public class Campaign implements Serializable, Parcelable {
         }
 
         @SuppressWarnings("unused")
-        public Campaign.Builder setMaxCouponAmount(BigDecimal maxCouponAmount) {
+        public Campaign.Builder setMaxCouponAmount(final BigDecimal maxCouponAmount) {
             this.maxCouponAmount = maxCouponAmount;
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Campaign.Builder setCodeType(String codeType) {
+        public Campaign.Builder setCodeType(final String codeType) {
             this.codeType = codeType;
             return this;
         }

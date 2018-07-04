@@ -3,6 +3,7 @@ package com.mercadopago.review_and_confirm;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import com.mercadopago.R;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.internal.di.AmountModule;
 import com.mercadopago.internal.repository.AmountRepository;
 import com.mercadopago.internal.repository.UserSelectionRepository;
@@ -25,6 +26,7 @@ public class ReviewAndConfirmBuilder {
 
     private Issuer issuer;
     private Discount discount;
+    private Campaign campaign;
     private Token token;
     private Boolean hasExtraPaymentMethods;
     private String merchantPublicKey;
@@ -50,8 +52,9 @@ public class ReviewAndConfirmBuilder {
         return this;
     }
 
-    public ReviewAndConfirmBuilder setDiscount(Discount discount) {
+    public ReviewAndConfirmBuilder setDiscount(Discount discount, Campaign campaign) {
         this.discount = discount;
+        this.campaign = campaign;
         return this;
     }
 
@@ -89,17 +92,17 @@ public class ReviewAndConfirmBuilder {
 
         final TermsAndConditionsModel mercadoPagoTermsAndConditions =
                 termsAndConditionsEnabled ? new TermsAndConditionsModel(site.getTermsAndConditionsUrl(),
-                    activity.getString(R.string.mpsdk_terms_and_conditions_message),
-                    activity.getString(R.string.mpsdk_terms_and_conditions_linked_message),
-                    merchantPublicKey,
-                    LineSeparatorType.TOP_LINE_SEPARATOR) : null;
+                        activity.getString(R.string.mpsdk_terms_and_conditions_message),
+                        activity.getString(R.string.mpsdk_terms_and_conditions_linked_message),
+                        merchantPublicKey,
+                        LineSeparatorType.TOP_LINE_SEPARATOR) : null;
 
-        final TermsAndConditionsModel discountTermsAndConditions =
-                discount != null ? new TermsAndConditionsModel(discount.getDiscountTermsUrl(),
-                    activity.getString(R.string.mpsdk_discount_terms_and_conditions_message),
-                    activity.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message),
-                    merchantPublicKey,
-                    LineSeparatorType.BOTTOM_LINE_SEPARATOR) : null;
+        TermsAndConditionsModel discountTermsAndConditions =
+                campaign != null ? new TermsAndConditionsModel(campaign.getCampaignTermsUrl(),
+                        activity.getString(R.string.mpsdk_discount_terms_and_conditions_message),
+                        activity.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message),
+                        merchantPublicKey,
+                        LineSeparatorType.BOTTOM_LINE_SEPARATOR) : null;
 
         final PaymentModel paymentModel = new PaymentModel(paymentMethod, token, issuer, hasExtraPaymentMethods);
 
