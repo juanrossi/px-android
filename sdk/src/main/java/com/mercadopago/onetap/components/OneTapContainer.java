@@ -73,7 +73,7 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
         parent.addView(view);
     }
 
-    private void addTermsAndConditions(final ViewGroup parent, Campaign campaign) {
+    private void addTermsAndConditions(final ViewGroup parent, final Campaign campaign) {
         if (campaign != null) {
             final Context context = parent.getContext();
             TermsAndConditionsModel model = new TermsAndConditionsModel(campaign.getCampaignTermsUrl(),
