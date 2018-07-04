@@ -7,14 +7,14 @@ import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
 import com.mercadopago.components.DetailDirectDiscount;
 import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.model.Item;
-import com.mercadopago.viewmodel.OneTapModel;
 import javax.annotation.Nonnull;
 
-public class PaymentDetailContainer extends CompactComponent<OneTapModel, Void> {
+public class PaymentDetailContainer extends CompactComponent<PaymentSettingRepository, Void> {
 
-    public PaymentDetailContainer(@NonNull final OneTapModel oneTapModel) {
-        super(oneTapModel);
+    public PaymentDetailContainer(@NonNull final PaymentSettingRepository configuration) {
+        super(configuration);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class PaymentDetailContainer extends CompactComponent<OneTapModel, Void> 
     }
 
     private void addDiscount(@NonNull final ViewGroup parent) {
-        if (props.hasDiscount()) {
+        if (props.getDiscount() != null && props.getCampaign() != null) {
             final View discountView =
                 new DetailDirectDiscount(new DetailDirectDiscount.Props(props.getDiscount(), props.getCampaign()))
                     .render(parent);

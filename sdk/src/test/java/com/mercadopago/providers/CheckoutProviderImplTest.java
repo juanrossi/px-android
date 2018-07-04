@@ -32,7 +32,7 @@ public class CheckoutProviderImplTest {
 
     @Before
     public void setUp() {
-        checkoutProvider = new CheckoutProviderImpl(null, null, null, null, mercadoPagoESC);
+        checkoutProvider = new CheckoutProviderImpl(null, null, null, mercadoPagoESC);
     }
 
     @NonNull

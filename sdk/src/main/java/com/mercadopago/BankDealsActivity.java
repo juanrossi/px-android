@@ -6,7 +6,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.BankDealsAdapter;
 import com.mercadopago.callbacks.FailureRecovery;
@@ -22,8 +21,7 @@ import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.LayoutUtil;
-
+import com.mercadopago.util.ViewUtils;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -115,7 +113,7 @@ public class BankDealsActivity extends MercadoPagoActivity implements OnSelected
     }
 
     private void getBankDeals() {
-        LayoutUtil.showProgressLayout(this);
+        ViewUtils.showProgressLayout(this);
         mMercadoPago.getBankDeals(new TaggedCallback<List<BankDeal>>(ApiUtil.RequestOrigin.GET_BANK_DEALS) {
 
             @Override
@@ -161,7 +159,7 @@ public class BankDealsActivity extends MercadoPagoActivity implements OnSelected
     }
     protected void solveBankDeals(List<BankDeal> bankDeals) {
         mRecyclerView.setAdapter(new BankDealsAdapter(bankDeals, this));
-        LayoutUtil.showRegularLayout(getActivity());
+        ViewUtils.showRegularLayout(getActivity());
     }
 
     @Override

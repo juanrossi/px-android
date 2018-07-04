@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
+import com.mercadopago.internal.repository.PaymentSettingRepository;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CardPaymentMetadata;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.onetap.OneTap;
 import com.mercadopago.util.ViewUtils;
@@ -22,53 +23,36 @@ import javax.annotation.Nullable;
 
 class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
 
-    static class Props {
-        /* default */ @NonNull final BigDecimal amount;
-        /* default */ @Nullable final Discount discount;
-        /* default */ @NonNull final String currencyId;
+    /* default */ static class Props {
+        /* default */ @NonNull final PaymentSettingRepository config;
         /* default */ @Nullable final PayerCost payerCost;
         /* default */ final int installment;
-        /* default */ final boolean hasExtraAmount;
-        /* default */ final boolean hasMaxDiscountLabel;
 
-        /* default */ Props(final boolean hasExtraAmount, @NonNull final BigDecimal amount,
-            @Nullable final Discount discount,
-            @NonNull final String currencyId,
+        /* default */ Props(@NonNull final PaymentSettingRepository config,
             @Nullable final PayerCost payerCost,
-            final int installment,
-            final boolean hasMaxDiscountLabel) {
-            this.amount = amount;
-            this.discount = discount;
-            this.currencyId = currencyId;
+            final int installment) {
+            this.config = config;
             this.payerCost = payerCost;
             this.installment = installment;
-            this.hasExtraAmount = hasExtraAmount;
-            this.hasMaxDiscountLabel = hasMaxDiscountLabel;
         }
 
-        /* default */
-        static Props from(final OneTapModel props) {
+
+        /* default */ static Props from(final OneTapModel props,
+            final PaymentSettingRepository configuration) {
             final CardPaymentMetadata card = props.getPaymentMethods().getOneTapMetadata().getCard();
             final PayerCost payerCost = card != null ? card.getAutoSelectedInstallment() : null;
             return new Amount.Props(
-                props.hasExtraAmount(),
-                props.getCheckoutPreference().getTotalAmount(), props.getDiscount(),
-                props.getCheckoutPreference().getSite().getCurrencyId(),
+                configuration,
                 payerCost,
-                payerCost == null ? PayerCost.NO_INSTALLMENTS : payerCost.getInstallments(),
-                props.hasMaxDiscountLabel());
-        }
-
-        /* default */ boolean hasExtrasAmount() {
-            return hasExtraAmount;
+                payerCost == null ? PayerCost.NO_INSTALLMENTS : payerCost.getInstallments());
         }
 
         /* default */ boolean hasDiscount() {
-            return discount != null;
+            return config.getDiscount() != null;
         }
 
         /* default */ boolean shouldShowPercentOff() {
-            return hasDiscount() && discount.hasPercentOff();
+            return hasDiscount() && config.getDiscount().hasPercentOff();
         }
 
         /* default */ boolean hasMultipleInstallments() {
@@ -76,7 +60,12 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
         }
 
         /* default */ boolean hasMaxDiscountLabel() {
-            return hasMaxDiscountLabel;
+            final Campaign campaign = config.getCampaign();
+            return campaign != null && !BigDecimal.ZERO.equals(campaign.getMaxCouponAmount());
+        }
+
+        /* default */ String getCurrencyId() {
+            return config.getCheckoutPreference().getSite().getCurrencyId();
         }
     }
 
@@ -111,16 +100,16 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
         ViewUtils.showOrGone(discountLayout, props.hasDiscount());
 
         if (props.shouldShowPercentOff()) {
-            TextFormatter.withCurrencyId(props.currencyId)
+            TextFormatter.withCurrencyId(props.getCurrencyId())
                 .noSpace().noSymbol()
-                .amount(props.discount.getPercentOff())
+                .amount(props.config.getDiscount().getPercentOff())
                 .normalDecimals()
                 .into(discountMessage)
                 .holder(R.string.mpsdk_discount_percent_off_percent);
         } else if (props.hasDiscount()) {
-            TextFormatter.withCurrencyId(props.currencyId)
+            TextFormatter.withCurrencyId(props.getCurrencyId())
                 .withSpace()
-                .amount(props.discount.getAmountOff())
+                .amount(props.config.getDiscount().getAmountOff())
                 .normalDecimals()
                 .into(discountMessage)
                 .holder(R.string.mpsdk_discount_percent_off_amount);
@@ -136,9 +125,9 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
 
     private void resolveSmallAmountPlusDiscount(final View content) {
         final TextView amount = content.findViewById(R.id.amount);
-        TextFormatter.withCurrencyId(props.currencyId)
+        TextFormatter.withCurrencyId(props.getCurrencyId())
             .withSpace()
-            .amount(props.amount)
+            .amount(props.config.getCheckoutPreference().getTotalAmount())
             .normalDecimals()
             .into(amount)
             .strike()
@@ -149,12 +138,12 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
         // amount with discount included.
         final TextView amountWithDiscount = content.findViewById(R.id.amount_with_discount);
 
-        final CurrencyFormatter currencyFormatter = TextFormatter.withCurrencyId(props.currencyId)
+        final CurrencyFormatter currencyFormatter = TextFormatter.withCurrencyId(props.getCurrencyId())
             .withSpace();
 
         final AmountFormatter amountFormatter = props.hasMultipleInstallments() ?
             currencyFormatter.amount(props.payerCost.getInstallmentAmount()) :
-            currencyFormatter.amount(resolveAmountWithDiscount(props.amount));
+            currencyFormatter.amount(resolveAmountWithDiscount(props.config.getCheckoutPreference().getTotalAmount()));
 
         final CharSequence charSequence = amountFormatter
             .smallDecimals()
@@ -175,6 +164,6 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
     }
 
     private BigDecimal resolveAmountWithDiscount(@NonNull final BigDecimal amount) {
-        return props.discount == null ? amount : amount.subtract(props.discount.getCouponAmount());
+        return !props.hasDiscount() ? amount : amount.subtract(props.config.getDiscount().getCouponAmount());
     }
 }

@@ -1,19 +1,13 @@
 package com.mercadopago.plugins.model;
 
-import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodInfoModel;
 
-import com.mercadopago.plugins.PaymentMethodPlugin;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class PaymentMethodInfo {
-
-    public final String id;
-    public final String name;
-    public final String description;
+public class PaymentMethodInfo implements PaymentMethodInfoModel {
+    private final String id;
+    private final String name;
+    private final String description;
     @DrawableRes public final
     int icon;
 
@@ -30,27 +24,29 @@ public class PaymentMethodInfo {
     public PaymentMethodInfo(@NonNull final String id,
                              @NonNull final String name,
                              @DrawableRes final int icon) {
-
         this.id = id;
         this.name = name;
-        description = null;
+        this.description = null;
         this.icon = icon;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
 
-    @NonNull
-    public static List<PaymentMethodInfo> getPluginsPaymentMethodInfo(final Context context, final List<PaymentMethodPlugin> paymentMethodPlugins) {
-        List<PaymentMethodInfo> list = new ArrayList<>();
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-        for (PaymentMethodPlugin plugin : paymentMethodPlugins) {
-            final PaymentMethodInfo info = plugin.getPaymentMethodInfo(context);
-            list.add(info);
-        }
-
-        return list;
+    @Override
+    public int getIcon() {
+        return icon;
     }
 }

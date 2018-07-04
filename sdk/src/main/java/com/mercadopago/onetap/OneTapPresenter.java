@@ -1,7 +1,7 @@
 package com.mercadopago.onetap;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.internal.repository.PluginRepository;
 import com.mercadopago.model.OneTapMetadata;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Token;
@@ -14,36 +14,35 @@ import com.mercadopago.viewmodel.mappers.PaymentMethodMapper;
 
 class OneTapPresenter extends MvpPresenter<OneTap.View, ResourcesProvider> implements OneTap.Actions {
 
-    @NonNull
-    private final OneTapModel model;
-    @NonNull
-    private final CardMapper cardMapper;
-    @NonNull
-    private final PaymentMethodMapper paymentMethodMapper;
+    @NonNull private final OneTapModel model;
+    @NonNull private final PluginRepository pluginRepository;
+
+    @NonNull private final CardMapper cardMapper;
+    @NonNull private final PaymentMethodMapper paymentMethodMapper;
 
     /**
      * Creates a OneTap presenter.
-     *
-     * @param model one tap viewmodel
+     *  @param model one tap viewmodel
+     * @param pluginRepository
      */
-    OneTapPresenter(@NonNull final OneTapModel model) {
+    OneTapPresenter(@NonNull final OneTapModel model,
+        @NonNull final PluginRepository pluginRepository) {
         this.model = model;
+        this.pluginRepository = pluginRepository;
         cardMapper = new CardMapper();
         paymentMethodMapper = new PaymentMethodMapper();
     }
 
     @Override
     public void confirmPayment() {
-        OneTapMetadata oneTapMetadata = model.getPaymentMethods().getOneTapMetadata();
-        String paymentTypeId = oneTapMetadata.getPaymentTypeId();
-        String paymentMethodId = oneTapMetadata.getPaymentMethodId();
-        // TODO refactor
-        CheckoutStore.getInstance().setSelectedPaymentMethodId(paymentMethodId);
+        final OneTapMetadata oneTapMetadata = model.getPaymentMethods().getOneTapMetadata();
+        final String paymentTypeId = oneTapMetadata.getPaymentTypeId();
+        final String paymentMethodId = oneTapMetadata.getPaymentMethodId();
         getView().trackConfirm(model);
-        if (PaymentTypes.isCardPaymentMethod(paymentTypeId)) {
+        if (PaymentTypes.isCardPaymentType(paymentTypeId)) {
             getView().showCardFlow(model, cardMapper.map(model));
         } else if (PaymentTypes.isPlugin(paymentTypeId)) {
-            getView().showPaymentFlowPlugin(paymentTypeId, paymentMethodId);
+            getView().showPaymentFlow(pluginRepository.getPluginAsPaymentMethod(paymentMethodId, paymentTypeId));
         } else {
             getView().showPaymentFlow(paymentMethodMapper.map(model.getPaymentMethods()));
         }

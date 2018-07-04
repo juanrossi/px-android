@@ -12,17 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mercadopago.R;
-import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoComponents;
+import com.mercadopago.internal.datasource.PluginService;
+import com.mercadopago.internal.di.AmountModule;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Token;
 import com.mercadopago.onetap.components.OneTapContainer;
-import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.tracker.Tracker;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.viewmodel.CardPaymentModel;
 import com.mercadopago.viewmodel.OneTapModel;
+import java.math.BigDecimal;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -36,11 +37,15 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     private static final String BUNDLE_TOKEN = "token";
 
     private CallBack callback;
-    private OneTapPresenter presenter;
+    OneTapPresenter presenter;
+
+    //TODO remove - just for tracking
+    private BigDecimal amountToPay;
+    private boolean hasDiscount;
 
     public static OneTapFragment getInstance(@NonNull final OneTapModel oneTapModel) {
-        OneTapFragment oneTapFragment = new OneTapFragment();
-        Bundle bundle = new Bundle();
+        final OneTapFragment oneTapFragment = new OneTapFragment();
+        final Bundle bundle = new Bundle();
         bundle.putSerializable(ARG_ONE_TAP_MODEL, oneTapModel);
         oneTapFragment.setArguments(bundle);
         return oneTapFragment;
@@ -65,7 +70,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     public void onAttach(final Context context) {
         super.onAttach(context);
         if (context instanceof CallBack) {
-            this.callback = (CallBack) context;
+            callback = (CallBack) context;
         }
     }
 
@@ -85,10 +90,13 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
-        Bundle arguments = getArguments();
+        final Bundle arguments = getArguments();
         if (arguments != null) {
-            OneTapModel model = (OneTapModel) arguments.getSerializable(ARG_ONE_TAP_MODEL);
-            presenter = new OneTapPresenter(model);
+            final AmountModule amountModule = new AmountModule(view.getContext());
+            amountToPay = amountModule.getAmountRepository().getAmountToPay();
+            hasDiscount = amountModule.getConfigurationModule().getConfiguration().getDiscount() != null;
+            final OneTapModel model = (OneTapModel) arguments.getSerializable(ARG_ONE_TAP_MODEL);
+            presenter = new OneTapPresenter(model, new PluginService(view.getContext()));
             configureView(view, presenter, model);
             presenter.attachView(this);
             trackScreen(model);
@@ -96,11 +104,10 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     private void trackScreen(final OneTapModel model) {
-        Tracker.trackOneTapScreen(getActivity().getApplicationContext(), model.getPublicKey(),
-            model.getPaymentMethods().getOneTapMetadata(),
-            model.hasDiscount() ? model.getCheckoutPreference().getTotalAmount()
-                .subtract(model.getDiscount().getCouponAmount()) :
-                model.getCheckoutPreference().getTotalAmount());
+        if (getActivity() != null) {
+            Tracker.trackOneTapScreen(getActivity().getApplicationContext(), model.getPublicKey(),
+                model.getPaymentMethods().getOneTapMetadata(), amountToPay);
+        }
     }
 
     @Override
@@ -129,7 +136,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
             }
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     presenter.cancel();
                 }
             });
@@ -172,39 +179,32 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     @Override
-    public void showPaymentFlowPlugin(@NonNull final String paymentTypeId, @NonNull final String paymentMethodId) {
-        //TODO refactor - horrible way to get it but depends on context
-        if (callback != null && getActivity() != null) {
-            PaymentMethodInfo pluginInfo =
-                CheckoutStore.getInstance().getPaymentMethodPluginInfoById(paymentMethodId, getActivity());
-            callback.onOneTapPay(new PaymentMethod(pluginInfo.id, pluginInfo.name, paymentTypeId));
-        }
-    }
-
-    @Override
     public void showDetailModal(@NonNull final OneTapModel model) {
-        PaymentDetailInfoDialog.showDialog(getChildFragmentManager(), model);
+        PaymentDetailInfoDialog.showDialog(getChildFragmentManager());
     }
 
     @Override
     public void trackConfirm(final OneTapModel model) {
-        Tracker.trackOneTapConfirm(getActivity().getApplicationContext(), model.getPublicKey(),
-            model.getPaymentMethods().getOneTapMetadata(),
-            model.hasDiscount() ? model.getCheckoutPreference().getTotalAmount()
-                .subtract(model.getDiscount().getCouponAmount()) :
-                model.getCheckoutPreference().getTotalAmount());
+        if (getActivity() != null) {
+            Tracker.trackOneTapConfirm(getActivity().getApplicationContext(), model.getPublicKey(),
+                model.getPaymentMethods().getOneTapMetadata(), amountToPay);
+        }
     }
 
     @Override
     public void trackCancel(final String publicKey) {
-        Tracker.trackOneTapCancel(getActivity().getApplicationContext(), publicKey);
+        if (getActivity() != null) {
+            Tracker.trackOneTapCancel(getActivity().getApplicationContext(), publicKey);
+        }
     }
 
     @Override
     public void trackModal(final OneTapModel model) {
-        Tracker
-            .trackOneTapSummaryDetail(getActivity().getApplicationContext(), model.getPublicKey(), model.hasDiscount(),
-                model.getPaymentMethods().getOneTapMetadata().getCard());
+        if (getActivity() != null) {
+            Tracker
+                .trackOneTapSummaryDetail(getActivity().getApplicationContext(), model.getPublicKey(), hasDiscount,
+                    model.getPaymentMethods().getOneTapMetadata().getCard());
+        }
     }
 
     @Override
@@ -214,9 +214,6 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         }
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
             .setMerchantPublicKey(model.getPublicKey())
-            .setPayerAccessToken(model.getCheckoutPreference().getPayer().getAccessToken())
-            .setCheckoutPreference(model.getCheckoutPreference())
-            .setDiscount(model.getDiscount(), model.getCampaign())
             .setESCEnabled(model.isEscEnabled())
             .setInstallmentsEnabled(false)
             .setCard(card)

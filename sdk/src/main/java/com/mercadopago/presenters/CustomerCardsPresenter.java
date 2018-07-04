@@ -10,10 +10,9 @@ import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.providers.CustomerCardsProvider;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.views.CustomerCardsView;
-
 import java.util.List;
 
-import static com.mercadopago.util.TextUtil.isEmpty;
+import static com.mercadopago.util.TextUtils.isEmpty;
 
 /**
  * Created by mromar on 4/10/17.

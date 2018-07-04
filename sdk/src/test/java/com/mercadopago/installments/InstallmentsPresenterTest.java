@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.internal.repository.AmountRepository;
+import com.mercadopago.internal.repository.PaymentSettingRepository;
+import com.mercadopago.internal.repository.UserSelectionRepository;
 import com.mercadopago.mocks.Installments;
 import com.mercadopago.mocks.Issuers;
 import com.mercadopago.mocks.PayerCosts;
@@ -20,31 +23,51 @@ import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Sites;
 import com.mercadopago.mvp.TaggedCallback;
+import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.InstallmentsPresenter;
 import com.mercadopago.providers.InstallmentsProvider;
 import com.mercadopago.views.InstallmentsActivityView;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static com.mercadopago.util.TextUtil.isEmpty;
+import static com.mercadopago.util.TextUtils.isEmpty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class InstallmentsPresenterTest {
+
+    private MockedView mockedView = new MockedView();
+    private MockedProvider provider = new MockedProvider();
+    private InstallmentsPresenter presenter;
+
+    @Mock private AmountRepository amountRepository;
+    @Mock private PaymentSettingRepository configuration;
+    @Mock private CheckoutPreference checkoutPreference;
+    @Mock private UserSelectionRepository userSelectionRepository;
+
+    @Before
+    public void setUp() {
+        //Simulation no charge - no discount
+        when(configuration.getCheckoutPreference()).thenReturn(checkoutPreference);
+        when(amountRepository.getAmountToPay()).thenReturn(new BigDecimal(1000));
+        presenter = new InstallmentsPresenter(amountRepository, configuration, userSelectionRepository);
+        presenter.attachView(mockedView);
+        presenter.attachResourcesProvider(provider);
+    }
 
     @Test
     public void whenPayerCostIsNullThenGetInstallments() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<Installment> installments = Installments.getInstallmentsList();
         provider.setResponse(installments);
@@ -53,12 +76,8 @@ public class InstallmentsPresenterTest {
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
 
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
+
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setIssuer(issuer);
@@ -72,8 +91,6 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenGetInstallmentsGetEmptyListThenShowError() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<Installment> installments = new ArrayList<Installment>();
         provider.setResponse(installments);
@@ -81,13 +98,8 @@ public class InstallmentsPresenterTest {
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
+
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setIssuer(issuer);
@@ -100,8 +112,6 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenGetInstallmentsGetMoreThanOneElementsThenShowError() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<Installment> installments = getThreeInstallmentList();
         provider.setResponse(installments);
@@ -109,13 +119,8 @@ public class InstallmentsPresenterTest {
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
+
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setIssuer(issuer);
@@ -128,21 +133,14 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenPayerCostIsNotNullThenFinishWithPayerCost() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<PayerCost> payerCosts = PayerCosts.getPayerCostsWithCFT();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
+
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setPayerCosts(payerCosts);
@@ -157,21 +155,14 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenIsReviewEnabledThenShowReview() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<PayerCost> payerCosts = PayerCosts.getPayerCostsWithCFT();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
+
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setPayerCosts(payerCosts);
@@ -189,8 +180,6 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenIsReviewEnabledButIsNotRequiredThenNotShowReview() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<PayerCost> payerCosts = PayerCosts.getPayerCostList();
 
@@ -198,12 +187,7 @@ public class InstallmentsPresenterTest {
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
 
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setPayerCosts(payerCosts);
@@ -220,21 +204,13 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenIsNotReviewEnabledThenFinishWithResult() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<PayerCost> payerCosts = PayerCosts.getPayerCostsWithCFT();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setPayerCosts(payerCosts);
@@ -251,8 +227,6 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenSelectOnInstallmentThenFinishWithPayerCost() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<Installment> installments = Installments.getInstallmentsList();
         provider.setResponse(installments);
@@ -260,13 +234,7 @@ public class InstallmentsPresenterTest {
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setIssuer(issuer);
@@ -283,8 +251,6 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenGetInstallmentFailThenShowError() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         MercadoPagoError mercadoPagoError = new MercadoPagoError("Error", true);
         provider.setResponse(mercadoPagoError);
@@ -293,11 +259,8 @@ public class InstallmentsPresenterTest {
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
 
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
+
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setIssuer(issuer);
@@ -310,8 +273,6 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenRecoverFromFailureThenGetInstallmentsAgain() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         MercadoPagoError mercadoPagoError = new MercadoPagoError("Error", true);
         provider.setResponse(mercadoPagoError);
@@ -319,12 +280,8 @@ public class InstallmentsPresenterTest {
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
+
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setIssuer(issuer);
@@ -339,33 +296,18 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenRecoverFromFailureIsNullThenNotRecoverFromError() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
         presenter.recoverFromFailure();
-
         assertEquals(presenter.getFailureRecovery(), null);
     }
 
     @Test
     public void whenPayerCostsSizeIsOneThenFinishWithResult() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
         List<PayerCost> payerCosts = PayerCosts.getOnePayerCostList();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPayerCosts(payerCosts);
         presenter.setPaymentMethod(paymentMethod);
@@ -379,8 +321,6 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenPayerCostsIsEmptyThenShowError() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<Installment> installments = Installments.getInstallmentsListWithoutPayerCosts();
         provider.setResponse(installments);
@@ -388,12 +328,7 @@ public class InstallmentsPresenterTest {
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setIssuer(issuer);
@@ -406,8 +341,6 @@ public class InstallmentsPresenterTest {
 
     @Test
     public void whenPaymentPreferenceHasDefaultPayerCostThenFinishWithResult() {
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
 
         List<PayerCost> payerCosts = PayerCosts.getPayerCostsWithCFT();
 
@@ -415,12 +348,7 @@ public class InstallmentsPresenterTest {
         Issuer issuer = Issuers.getIssuerMLA();
         PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setDefaultInstallments(1);
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
         presenter.setPaymentPreference(paymentPreference);
-        presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPayerCosts(payerCosts);
         presenter.setPaymentMethod(paymentMethod);
@@ -437,126 +365,62 @@ public class InstallmentsPresenterTest {
     public void whenIsCardInfoAndPaymentMethodAvailableThenIsNotRequiredCardDrawn() {
         CardInfo cardInfo = getCardInfo();
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.setCardInfo(cardInfo);
         presenter.setPaymentMethod(paymentMethod);
-
         assertTrue(presenter.isRequiredCardDrawn());
     }
 
     @Test
     public void whenIsNotPaymentMethodAvailableThenIsNotRequiredCardDrawn() {
         CardInfo cardInfo = getCardInfo();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.setCardInfo(cardInfo);
-
         assertFalse(presenter.isRequiredCardDrawn());
     }
 
     @Test
     public void whenIsNotCardInfoAvailableThenIsNotRequiredCardDrawn() {
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
         presenter.setPaymentMethod(paymentMethod);
-
         assertFalse(presenter.isRequiredCardDrawn());
     }
 
     @Test
     public void whenCardInfoNullThenBinIsNull() {
-        InstallmentsPresenter installmentsPresenter = new InstallmentsPresenter();
         CardInfo cardInfo = null;
-
-        installmentsPresenter.setCardInfo(cardInfo);
-
-        assertTrue(isEmpty(installmentsPresenter.getBin()));
+        presenter.setCardInfo(cardInfo);
+        assertTrue(isEmpty(presenter.getBin()));
     }
 
     @Test
     public void whenIssuerIsNullThenIssuerIdIsNull() {
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
         Issuer issuer = null;
-
         presenter.setIssuer(issuer);
-
         assertTrue(presenter.getIssuerId() == null);
-    }
-
-    @Test
-    public void whenHasDiscountThenGetAmountWithDiscount() {
-        BigDecimal amount = new BigDecimal(500);
-
-        Discount discount = mock(Discount.class);
-        when(discount.getAmountWithDiscount(amount)).thenReturn(amount.subtract(new BigDecimal(20)));
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.setAmount(amount);
-        presenter.setDiscount(discount);
-
-        assertEquals(presenter.getAmount(), presenter.getDiscount().getAmountWithDiscount(amount));
-    }
-
-    @Test
-    public void whenDiscountIsNullThenGetAmountWithoutDiscount() {
-        Discount discount = null;
-        BigDecimal amount = new BigDecimal(500);
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.setAmount(amount);
-
-        presenter.setDiscount(discount);
-
-        assertEquals(presenter.getAmount(), amount);
     }
 
     @Test
     public void whenMCOThenShowBankInterestsNotCoveredWarning() {
 
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
-
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
-        presenter.setSite(Sites.COLOMBIA);
-        presenter.setAmount(new BigDecimal(1000));
+        when(checkoutPreference.getSite()).thenReturn(Sites.COLOMBIA);
+        when(checkoutPreference.getSiteId()).thenReturn(Sites.COLOMBIA.getId());
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setIssuer(issuer);
-
         presenter.initialize();
-
         assertTrue(mockedView.bankInterestsWarningShown);
     }
 
     @Test
     public void whenNotMCOThenDoNotShowBankInterestsNotCoveredWarning() {
 
-        MockedView mockedView = new MockedView();
-        MockedProvider provider = new MockedProvider();
-
         PaymentMethod paymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer issuer = Issuers.getIssuers().get(0);
-
-        InstallmentsPresenter presenter = new InstallmentsPresenter();
-        presenter.attachView(mockedView);
-        presenter.attachResourcesProvider(provider);
-
-        presenter.setSite(Sites.ARGENTINA);
-        presenter.setAmount(new BigDecimal(1000));
         presenter.setCardInfo(getCardInfo());
         presenter.setPaymentMethod(paymentMethod);
         presenter.setIssuer(issuer);
-
         presenter.initialize();
-
         assertFalse(mockedView.bankInterestsWarningShown);
     }
 
@@ -652,7 +516,6 @@ public class InstallmentsPresenterTest {
         private boolean headerShown = false;
         private boolean errorShown = false;
         private boolean loadingViewShown = false;
-        private boolean discountRowShown = false;
         private boolean installmentRecyclerViewShown = false;
         private boolean installmentsReviewViewShown = false;
         private boolean installmentsReviewViewInitialized = false;
@@ -666,10 +529,6 @@ public class InstallmentsPresenterTest {
             this.installmentsShown = true;
         }
 
-        @Override
-        public void startDiscountFlow(BigDecimal transactionAmount) {
-            //Do something
-        }
 
         @Override
         public void finishWithResult(PayerCost payerCost) {

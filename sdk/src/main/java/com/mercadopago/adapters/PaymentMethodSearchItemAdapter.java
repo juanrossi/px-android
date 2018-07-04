@@ -9,9 +9,6 @@ import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchView
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mreverter on 18/1/16.
- */
 public class PaymentMethodSearchItemAdapter extends RecyclerView.Adapter<PaymentMethodSearchItemAdapter.ViewHolder> {
 
     private final List<PaymentMethodSearchViewController> mItems;

@@ -60,10 +60,8 @@
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".PaymentTypesActivity"
-            android:theme="@style/Theme.ProcessMercadoPagoTheme.NoActionbar" />
-        <activity
-            android:name=".DiscountsActivity"
-            android:theme="@style/Theme.MercadoPagoTheme.Modal" />
+            android:theme="@style/Theme.MercadoPagoTheme.NoActionBar"/>
+
         <activity
             android:name=".ReviewPaymentMethodsActivity"
             android:theme="@style/Theme.MercadoPagoTheme.NoActionBar" />

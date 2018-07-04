@@ -7,12 +7,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import com.mercadopago.lite.util.FakeAPI;
 import com.mercadopago.model.Customer;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.PaymentMethodSearch;
-import com.mercadopago.model.Sites;
 import com.mercadopago.test.StaticMock;
-import com.mercadopago.util.JsonUtil;
-import java.math.BigDecimal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -32,15 +28,11 @@ public class PaymentVaultActivityTest {
     private Intent validStartIntent;
     private FakeAPI mFakeAPI;
 
-    private BigDecimal transactionAmount = new BigDecimal(100);
-
     @Before
     public void setupStartIntent() {
         validStartIntent = new Intent();
         validStartIntent.putExtra("merchantPublicKey", "1234");
-        validStartIntent.putExtra("amount", JsonUtil.getInstance().toJson(transactionAmount));
         validStartIntent.putExtra("purchaseTitle", "test item");
-        validStartIntent.putExtra("site", JsonUtil.getInstance().toJson(Sites.ARGENTINA));
     }
 
     @Before

@@ -11,13 +11,12 @@ import com.mercadopago.components.CompactComponent;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PayerCost;
-import com.mercadopago.onetap.OneTap;
 import com.mercadopago.util.ResourceUtil;
 import com.mercadopago.util.textformatter.TextFormatter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-class MethodCard extends CompactComponent<MethodCard.Props, OneTap.Actions> {
+class MethodCard extends CompactComponent<MethodCard.Props, Void> {
 
     static class Props {
 
@@ -48,8 +47,8 @@ class MethodCard extends CompactComponent<MethodCard.Props, OneTap.Actions> {
         }
     }
 
-    /* default */ MethodCard(final Props props, final OneTap.Actions callBack) {
-        super(props, callBack);
+    /* default */ MethodCard(final Props props) {
+        super(props);
     }
 
     @Override

@@ -54,7 +54,6 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/mpsdkSecondSeparator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mpsdk_xxxs_height"
         android:layout_gravity="bottom"
@@ -62,7 +61,6 @@
         android:background="@color/mpsdk_summary_separator_color" />
 
     <LinearLayout
-        android:id="@+id/mpsdkReviewSummaryTotal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mpsdk_xs_alternative_1_margin"

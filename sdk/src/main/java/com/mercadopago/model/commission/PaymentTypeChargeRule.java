@@ -1,29 +1,22 @@
 package com.mercadopago.model.commission;
 
 import android.support.annotation.NonNull;
-
+import com.mercadopago.internal.repository.ChargeRepository;
 import java.math.BigDecimal;
 
-public final class PaymentTypeChargeRule extends ChargeRule {
+public final class PaymentTypeChargeRule extends PaymentMethodRule {
 
-    @NonNull
-    private final String paymentType;
-    @NonNull
-    private final Charge charge;
-
+    /**
+     * @param paymentType the payment type associated with the charge to shouldBeTriggered.
+     * @param charge the charge amount to apply for this rule
+     */
     public PaymentTypeChargeRule(@NonNull final String paymentType,
-                                 @NonNull final Charge charge) {
-        this.paymentType = paymentType;
-        this.charge = charge;
-    }
-
-    public boolean shouldApply(@NonNull final String paymentType) {
-        return paymentType.equals(this.paymentType);
+        @NonNull final BigDecimal charge) {
+        super(paymentType, charge);
     }
 
     @Override
-    @NonNull
-    public BigDecimal applyCharge(@NonNull final BigDecimal totalAmount) {
-        return charge.calculate(totalAmount);
+    public boolean shouldBeTriggered(@NonNull final ChargeRepository chargeRepository) {
+        return chargeRepository.shouldApply(this);
     }
 }

@@ -10,7 +10,7 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 import com.mercadopago.tracker.Tracker;
 import com.mercadopago.util.ErrorUtil;
-import com.mercadopago.util.TextUtil;
+import com.mercadopago.util.TextUtils;
 
 public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
@@ -41,7 +41,7 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void validateActivityParameters() throws IllegalStateException {
-        if (TextUtil.isEmpty(url)) {
+        if (TextUtils.isEmpty(url)) {
             throw new IllegalStateException("no site provided");
         }
     }

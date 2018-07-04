@@ -6,12 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.util.MPCardMaskUtil;
 
-import static com.mercadopago.util.TextUtil.isEmpty;
+import static com.mercadopago.util.TextUtils.isEmpty;
 
 /**
  * Created by mromar on 9/27/17.

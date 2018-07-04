@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PaymentMethodsAdapter;
@@ -22,9 +21,8 @@ import com.mercadopago.providers.PaymentMethodsProvider;
 import com.mercadopago.providers.PaymentMethodsProviderImpl;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.LayoutUtil;
+import com.mercadopago.util.ViewUtils;
 import com.mercadopago.views.PaymentMethodsView;
-
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -164,12 +162,12 @@ public class PaymentMethodsActivity extends MercadoPagoBaseActivity implements P
 
     @Override
     public void showProgress() {
-        LayoutUtil.showProgressLayout(this);
+        ViewUtils.showProgressLayout(this);
     }
 
     @Override
     public void hideProgress() {
-        LayoutUtil.showRegularLayout(this);
+        ViewUtils.showRegularLayout(this);
     }
 
     @Override

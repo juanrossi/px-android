@@ -3,15 +3,14 @@ package com.mercadopago.review_and_confirm.components.payment_method;
 import com.mercadopago.components.CompactComponent;
 import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.review_and_confirm.models.PaymentModel;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

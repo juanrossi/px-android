@@ -2,13 +2,17 @@ package com.mercadopago.util;
 
 import android.support.annotation.Nullable;
 
-/**
- * Created by mreverter on 1/17/17.
- */
+public final class TextUtils {
 
-public class TextUtils {
+    private TextUtils() {
+    }
+
     public static boolean isEmpty(@Nullable final String text) {
         return text == null || text.isEmpty();
+    }
+
+    public static boolean isEmpty(CharSequence text) {
+        return text == null || text.length() <= 0;
     }
 
     public static boolean isNotEmpty(@Nullable final String text) {

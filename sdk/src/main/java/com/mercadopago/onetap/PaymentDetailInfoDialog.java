@@ -6,23 +6,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import com.mercadolibre.android.ui.widgets.MeliDialog;
 import com.mercadopago.R;
+import com.mercadopago.internal.di.ConfigurationModule;
 import com.mercadopago.onetap.components.PaymentDetailContainer;
-import com.mercadopago.viewmodel.OneTapModel;
 
 public class PaymentDetailInfoDialog extends MeliDialog {
 
     private static final String TAG = PaymentDetailInfoDialog.class.getName();
-    private static final String ARG_ONETAP_MODEL = "arg_onetap_model";
-    private OneTapModel oneTapModel;
 
-    public static void showDialog(@NonNull final FragmentManager fragmentManager,
-        @NonNull final OneTapModel oneTapModel) {
+    public static void showDialog(@NonNull final FragmentManager fragmentManager) {
         final PaymentDetailInfoDialog paymentDetailInfoDialog = new PaymentDetailInfoDialog();
         final Bundle bundle = new Bundle();
-        bundle.putSerializable(ARG_ONETAP_MODEL, oneTapModel);
         paymentDetailInfoDialog.setArguments(bundle);
         paymentDetailInfoDialog.show(fragmentManager, TAG);
     }
@@ -30,8 +25,8 @@ public class PaymentDetailInfoDialog extends MeliDialog {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        oneTapModel = (OneTapModel) getArguments().getSerializable(ARG_ONETAP_MODEL);
-        PaymentDetailContainer container = new PaymentDetailContainer(oneTapModel);
+        PaymentDetailContainer container =
+            new PaymentDetailContainer(new ConfigurationModule(view.getContext()).getConfiguration());
         container.render((ViewGroup) view.findViewById(R.id.main_container));
     }
 

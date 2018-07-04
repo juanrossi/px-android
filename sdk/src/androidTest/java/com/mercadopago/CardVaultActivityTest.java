@@ -3,32 +3,36 @@ package com.mercadopago;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
+import com.mercadopago.internal.di.ConfigurationModule;
+import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
+import com.mercadopago.model.Item;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Sites;
 import com.mercadopago.model.Token;
 import com.mercadopago.lite.util.FakeAPI;
+import com.mercadopago.model.commission.ChargeRule;
+import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.test.StaticMock;
 import com.mercadopago.util.JsonUtil;
-
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
@@ -50,14 +54,18 @@ public class CardVaultActivityTest {
     private Intent validStartIntent;
     private FakeAPI mFakeAPI;
 
-    private BigDecimal transactionAmount = new BigDecimal(100);
-
     @Before
     public void setupStartIntent() {
+        final Item item = new Item("sarasa", 1, new BigDecimal(100));
+        item.setId("someId");
+        final PaymentSettingRepository configuration =
+            new ConfigurationModule(InstrumentationRegistry.getContext()).getConfiguration();
+        configuration.configure(new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a",
+            Collections.singletonList(item)).build());
+        configuration.configure(new ArrayList<ChargeRule>());
+
         validStartIntent = new Intent();
         validStartIntent.putExtra("merchantPublicKey", "1234");
-        validStartIntent.putExtra("amount", JsonUtil.getInstance().toJson(transactionAmount));
-        validStartIntent.putExtra("site", JsonUtil.getInstance().toJson(Sites.ARGENTINA));
     }
 
     @Before

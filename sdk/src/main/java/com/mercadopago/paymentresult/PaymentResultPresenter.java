@@ -1,7 +1,6 @@
 package com.mercadopago.paymentresult;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionsListener;
@@ -11,6 +10,7 @@ import com.mercadopago.components.RecoverPaymentAction;
 import com.mercadopago.components.ResultCodeAction;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.lite.constants.ProcessingModes;
 import com.mercadopago.model.Instruction;
 import com.mercadopago.model.Instructions;
 import com.mercadopago.model.Payment;
@@ -18,12 +18,10 @@ import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.review_and_confirm.components.actions.ChangePaymentMethodAction;
 import com.mercadopago.tracking.model.ScreenViewEvent;
 import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.util.ApiUtil;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,7 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
     private PaymentResult paymentResult;
     private Site site;
     private BigDecimal amount;
-    private ServicePreference servicePreference;
+
     private final PaymentResultNavigator navigator;
     private FailureRecovery failureRecovery;
     private boolean initialized = false;
@@ -177,16 +175,11 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
         this.amount = amount;
     }
 
-    public void setServicePreference(final ServicePreference servicePreference) {
-        if (servicePreference != null) {
-            this.servicePreference = servicePreference;
-        }
-    }
 
     private void checkGetInstructions() {
         if (hasToAskForInstructions()) {
-            getInstructionsAsync(paymentResult.getPaymentId(), paymentResult.getPaymentData()
-                .getPaymentMethod().getPaymentTypeId());
+            getInstructionsAsync(paymentResult.getPaymentId(),
+                paymentResult.getPaymentData().getPaymentMethod().getPaymentTypeId());
         } else {
             getView().notifyPropsChanged();
         }
@@ -245,7 +238,7 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
             navigator.showError(new MercadoPagoError(getResourcesProvider().getStandardErrorMessage(), false),
                 ApiUtil.RequestOrigin.GET_INSTRUCTIONS);
         } else {
-            getView().setPropInstruction(instruction, servicePreference.getProcessingModeString(), false);
+            getView().setPropInstruction(instruction, ProcessingModes.AGGREGATOR, false);
             getView().notifyPropsChanged();
         }
     }
@@ -297,9 +290,5 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
 
     public BigDecimal getAmount() {
         return amount;
-    }
-
-    public ServicePreference getServicePreference() {
-        return servicePreference;
     }
 }

@@ -9,8 +9,8 @@ import com.mercadopago.model.CardPaymentMetadata;
 import com.mercadopago.model.OneTapMetadata;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
+import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.plugins.PaymentMethodPlugin;
-import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.review_and_confirm.models.PaymentModel;
 import com.mercadopago.review_and_confirm.models.SummaryModel;
 import com.mercadopago.tracking.model.ActionEvent;
@@ -202,10 +202,10 @@ public class Tracker {
                 .setScreenName(TrackingUtil.SCREEN_NAME_REVIEW_AND_CONFIRM)
                 .addProperty(TrackingUtil.PROPERTY_PAYMENT_TYPE_ID, paymentModel.getPaymentType())
                 .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, paymentModel.paymentMethodId)
-                .addProperty(TrackingUtil.PROPERTY_PURCHASE_AMOUNT, summaryModel.getTotalAmount().toString());
+                .addProperty(TrackingUtil.PROPERTY_PURCHASE_AMOUNT, summaryModel.getAmountToPay().toString());
 
-        if (summaryModel.getInstallments() != null) {
-            builder.addProperty(TrackingUtil.PROPERTY_INSTALLMENTS, summaryModel.getInstallments().toString());
+        if (PaymentTypes.isCreditCardPaymentType(summaryModel.getPaymentTypeId())) {
+            builder.addProperty(TrackingUtil.PROPERTY_INSTALLMENTS, String.valueOf(summaryModel.getInstallments()));
         }
 
         //If is saved card
@@ -256,9 +256,7 @@ public class Tracker {
 
     private static String getFormattedPaymentMethodsForTracking(final Context context, @NonNull final PaymentMethodSearch paymentMethodSearch, final Set<String> escCardIds) {
         List<PaymentMethodPlugin> paymentMethodPluginList = CheckoutStore.getInstance().getPaymentMethodPluginList();
-        List<PaymentMethodInfo> pluginsPaymentMethodInfo = PaymentMethodInfo.getPluginsPaymentMethodInfo(context, paymentMethodPluginList);
-
-        return TrackingFormatter.getFormattedPaymentMethodsForTracking(paymentMethodSearch, pluginsPaymentMethodInfo, escCardIds);
+        return TrackingFormatter.getFormattedPaymentMethodsForTracking(paymentMethodSearch, paymentMethodPluginList, escCardIds);
     }
 
 }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import com.mercadopago.BuildConfig;
 import com.mercadopago.components.Component;
 import com.mercadopago.components.ComponentManager;
@@ -53,7 +52,6 @@ import com.mercadopago.tracking.model.ScreenViewEvent;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-
 import java.math.BigDecimal;
 
 public class PaymentResultActivity extends AppCompatActivity implements PaymentResultNavigator {
@@ -146,8 +144,6 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
             outState.putString(PAYMENT_RESULT_BUNDLE, JsonUtil.getInstance().toJson(presenter.getPaymentResult()));
             outState.putString(SITE_BUNDLE, JsonUtil.getInstance().toJson(presenter.getSite()));
             outState.putString(AMOUNT_BUNDLE, JsonUtil.getInstance().toJson(presenter.getAmount()));
-            outState
-                .putString(SERVICE_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(presenter.getServicePreference()));
         }
         outState.putString(MERCHANT_PUBLIC_KEY_BUNDLE, merchantPublicKey);
         outState.putString(PAYER_ACCESS_TOKEN_BUNDLE, payerAccessToken);
@@ -180,7 +176,6 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
         presenter.setPaymentResult(paymentResult);
         presenter.setSite(site);
         presenter.setAmount(amount);
-        presenter.setServicePreference(servicePreference);
 
         final PaymentResultProvider provider = new PaymentResultProviderImpl(this, merchantPublicKey, payerAccessToken);
         presenter.attachResourcesProvider(provider);
@@ -207,13 +202,9 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
         merchantPublicKey = intent.getStringExtra("merchantPublicKey");
         payerAccessToken = intent.getStringExtra("payerAccessToken");
         congratsDisplay = intent.getIntExtra("congratsDisplay", -1);
-        final ServicePreference servicePreference =
-            JsonUtil.getInstance().fromJson(intent.getExtras().getString("servicePreference"), ServicePreference.class);
         paymentResultScreenPreference = JsonUtil.getInstance()
             .fromJson(intent.getExtras().getString("paymentResultScreenPreference"),
                 PaymentResultScreenPreference.class);
-
-        presenter.setServicePreference(servicePreference);
     }
 
     @Override

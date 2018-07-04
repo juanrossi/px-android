@@ -6,7 +6,13 @@ public class Payer implements Serializable {
 
 
     private String id;
+    /**
+     * @deprecated This method is deprecated, access token should be added
+     * as private key.
+     */
+    @Deprecated
     private String accessToken;
+
     private Identification identification;
     private String type;
     private String email;
@@ -45,10 +51,20 @@ public class Payer implements Serializable {
         this.type = type;
     }
 
+    /**
+     * @deprecated This method is deprecated, access token should be added
+     * as private key.
+     */
+    @Deprecated
     public String getAccessToken() {
         return accessToken;
     }
 
+    /**
+     * @deprecated This method is deprecated, access token should be added
+     * as private key.
+     */
+    @Deprecated
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }

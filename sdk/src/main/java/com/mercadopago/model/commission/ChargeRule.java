@@ -1,10 +1,23 @@
 package com.mercadopago.model.commission;
 
 import android.support.annotation.NonNull;
-
+import com.mercadopago.internal.repository.ChargeRepository;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public abstract class ChargeRule {
+public abstract class ChargeRule implements Serializable {
+
     @NonNull
-    public abstract BigDecimal applyCharge(@NonNull BigDecimal totalAmount);
+    private final BigDecimal charge;
+
+    protected ChargeRule(@NonNull final BigDecimal charge) {
+        this.charge = charge;
+    }
+
+    @NonNull
+    public BigDecimal charge() {
+        return charge;
+    }
+
+    public abstract boolean shouldBeTriggered(@NonNull final ChargeRepository chargeRepository);
 }

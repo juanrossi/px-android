@@ -90,10 +90,6 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="Theme.MercadoPagoTheme.Modal" parent="Theme.MercadoPagoTheme.NoActionBar" />
-
-    <style name="Theme.ProcessMercadoPagoTheme.NoActionbar" parent="Theme.MercadoPagoTheme.NoActionBar" />
-
     <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">19dp</item>
         <item name="android:textColor">@color/mpsdk_white</item>

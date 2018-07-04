@@ -16,12 +16,12 @@ import java.util.Collection;
 
 import static com.mercadopago.utils.ExamplesUtils.createBase;
 
-public final class BusinessResultUtils {
+final class BusinessSamples {
 
     private static final String BUTTON_PRIMARY_NAME = "ButtonPrimaryName";
     private static final String BUTTON_SECONDARY_NAME = "ButtonSecondaryName";
 
-    private BusinessResultUtils() {
+    private BusinessSamples() {
     }
 
     public static Collection<? extends Pair<String, MercadoPagoCheckout.Builder>> getAll() {
@@ -54,7 +54,7 @@ public final class BusinessResultUtils {
         return customBusinessPayment(payment);
     }
 
-    private static MercadoPagoCheckout.Builder startCompleteApprovedBusiness() {
+    static MercadoPagoCheckout.Builder startCompleteApprovedBusiness() {
         final Bundle args = new Bundle();
         args.putParcelable(SampleTopFragment.SOME_PARCELABLE, new SampleTopFragment.ParcelableArgument("SOME_LABEL"));
         final BusinessPayment payment = new BusinessPayment.Builder(BusinessPayment.Decorator.APPROVED,

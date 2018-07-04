@@ -40,10 +40,10 @@ public class PaymentMethodSearch implements Serializable {
         return groups != null && !groups.isEmpty();
     }
 
-    public PaymentMethod getPaymentMethodBySearchItem(PaymentMethodSearchItem item) {
+    public PaymentMethod getPaymentMethodBySearchItem(final PaymentMethodSearchItem item) {
         PaymentMethod requiredPaymentMethod = null;
         if (paymentMethods != null && item != null && item.getId() != null) {
-            for (PaymentMethod currentPaymentMethod : paymentMethods) {
+            for (final PaymentMethod currentPaymentMethod : paymentMethods) {
                 if (itemMatchesPaymentMethod(item, currentPaymentMethod)) {
                     requiredPaymentMethod = currentPaymentMethod;
                     requiredPaymentMethod.setPaymentTypeId(getPaymentTypeIdFromItem(item, currentPaymentMethod));

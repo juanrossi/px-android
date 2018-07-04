@@ -11,7 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.R;
 import com.mercadopago.core.CheckoutStore;
-import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
 import com.mercadopago.exceptions.ExceptionHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -19,10 +18,8 @@ import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Campaign;
-import com.mercadopago.model.Card;
 import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
-import com.mercadopago.model.MerchantPayment;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentBody;
@@ -33,8 +30,6 @@ import com.mercadopago.model.Site;
 import com.mercadopago.model.Sites;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.CheckoutPreference;
-import com.mercadopago.preferences.PaymentPreference;
-import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.EscUtil;
@@ -42,19 +37,15 @@ import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoESC;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.QueryBuilder;
-import com.mercadopago.util.TextUtil;
-import java.lang.reflect.Type;
+import com.mercadopago.util.TextUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class CheckoutProviderImpl implements CheckoutProvider {
 
-    private final ServicePreference servicePreference;
     private final Context context;
     private final MercadoPagoServicesAdapter mercadoPagoServicesAdapter;
     private final String publicKey;
@@ -64,12 +55,10 @@ public class CheckoutProviderImpl implements CheckoutProvider {
     public CheckoutProviderImpl(Context context,
         @NonNull String publicKey,
         @NonNull String privateKey,
-        ServicePreference servicePreference,
         @NonNull final MercadoPagoESC mercadoPagoESC) {
         this.context = context;
         this.publicKey = publicKey;
         mercadoPagoServicesAdapter = new MercadoPagoServicesAdapter(context, publicKey, privateKey);
-        this.servicePreference = servicePreference;
         this.mercadoPagoESC = mercadoPagoESC;
     }
 
@@ -245,16 +234,10 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         mercadoPagoServicesAdapter.getPaymentMethodSearch(amount, new ArrayList<>(excludedPaymentTypesSet),
             excludedPaymentMethods, cardsWithEsc, supportedPlugins, payer, site,
             new Callback<PaymentMethodSearch>() {
-                @Override
-                public void success(final PaymentMethodSearch paymentMethodSearch) {
-                    if (servicePreference != null && servicePreference.hasGetCustomerURL()) {
-                        attachCustomerCardsFromMerchantServer(paymentMethodSearch, excludedPaymentTypes,
-                            excludedPaymentMethods, onPaymentMethodSearchRetrievedCallback,
-                            onCustomerRetrievedCallback);
-                    } else {
-                        onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearch);
-                    }
-                }
+            @Override
+            public void success(final PaymentMethodSearch paymentMethodSearch) {
+                onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearch);
+            }
 
                 @Override
                 public void failure(ApiException apiException) {
@@ -264,29 +247,6 @@ public class CheckoutProviderImpl implements CheckoutProvider {
             });
     }
 
-    private void attachCustomerCardsFromMerchantServer(final PaymentMethodSearch paymentMethodSearch, final List<String> excludedPaymentTypes, final List<String> excludedPaymentMethods, final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback, final TaggedCallback<Customer> onCustomerRetrievedCallback) {
-        CustomServer.getCustomer(context, servicePreference.getGetCustomerURL(), servicePreference.getGetCustomerURI(), servicePreference.getGetCustomerAdditionalInfo(), new Callback<Customer>() {
-            @Override
-            public void success(Customer customer) {
-                PaymentPreference paymentPreference = new PaymentPreference();
-                paymentPreference.setExcludedPaymentTypeIds(excludedPaymentTypes);
-                paymentPreference.setExcludedPaymentMethodIds(excludedPaymentMethods);
-                List<Card> savedCards = paymentPreference.getValidCards(customer.getCards());
-                paymentMethodSearch.setCards(savedCards, context.getString(R.string.mpsdk_last_digits_label));
-
-                onCustomerRetrievedCallback.onSuccess(customer);
-                onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearch);
-            }
-
-            @Override
-            public void failure(ApiException apiException) {
-                onCustomerRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_CUSTOMER));
-
-                //Return payment method search to avoid failure due to merchant server
-                onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearch);
-            }
-        });
-    }
 
     @Override
     public String getCheckoutExceptionMessage(CheckoutPreferenceException exception) {
@@ -300,37 +260,8 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
     @Override
     public void createPayment(String transactionId, CheckoutPreference checkoutPreference, PaymentData paymentData, Boolean binaryMode, String customerId, TaggedCallback<Payment> taggedCallback) {
-        if (servicePreference != null && servicePreference.hasCreatePaymentURL()) {
-            createPaymentInMerchantServer(transactionId, paymentData, taggedCallback);
-        } else {
-            createPaymentInMercadoPago(transactionId, checkoutPreference, paymentData, binaryMode, customerId, taggedCallback);
-        }
-    }
-
-    private void createPaymentInMerchantServer(String transactionId, PaymentData paymentData, final TaggedCallback<Payment> taggedCallback) {
-        Map<String, Object> paymentInfoMap = new HashMap<>();
-        paymentInfoMap.putAll(servicePreference.getCreatePaymentAdditionalInfo());
-
-        MerchantPayment merchantPayment = new MerchantPayment(paymentData);
-        String payLoadJson = JsonUtil.getInstance().toJson(merchantPayment);
-
-        Type type = new TypeToken<Map<String, Object>>() {
-        }.getType();
-        Map<String, Object> paymentDataMap = new Gson().fromJson(payLoadJson, type);
-
-        paymentInfoMap.putAll(paymentDataMap);
-
-        CustomServer.createPayment(context, transactionId, servicePreference.getCreatePaymentURL(), servicePreference.getCreatePaymentURI(), paymentInfoMap, new HashMap<String, String>(), new Callback<Payment>() {
-            @Override
-            public void success(Payment payment) {
-                taggedCallback.onSuccess(payment);
-            }
-
-            @Override
-            public void failure(ApiException apiException) {
-                taggedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.CREATE_PAYMENT));
-            }
-        });
+        createPaymentInMercadoPago(transactionId, checkoutPreference, paymentData, binaryMode, customerId,
+            taggedCallback);
     }
 
     private void createPaymentInMercadoPago(String transactionId,
@@ -350,7 +281,8 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         paymentBody.setBinaryMode(binaryMode);
 
         Payer payer = paymentData.getPayer();
-        if (!TextUtil.isEmpty(customerId) && MercadoPagoUtil.isCard(paymentData.getPaymentMethod().getPaymentTypeId())) {
+        if (!TextUtils.isEmpty(customerId) &&
+            MercadoPagoUtil.isCard(paymentData.getPaymentMethod().getPaymentTypeId())) {
             payer.setId(customerId);
         }
         paymentBody.setPayer(payer);

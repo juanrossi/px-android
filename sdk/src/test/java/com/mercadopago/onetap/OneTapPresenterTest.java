@@ -1,5 +1,6 @@
 package com.mercadopago.onetap;
 
+import com.mercadopago.internal.repository.PluginRepository;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardPaymentMetadata;
 import com.mercadopago.model.Issuer;
@@ -50,6 +51,8 @@ public class OneTapPresenterTest {
     @Mock
     private CardPaymentMetadata cardMetadata;
 
+    @Mock private PluginRepository pluginRepository;
+
     private OneTapPresenter oneTapPresenter;
 
     @Before
@@ -57,7 +60,7 @@ public class OneTapPresenterTest {
         when(metadata.getCard()).thenReturn(cardMetadata);
         when(model.getPaymentMethods()).thenReturn(paymentMethodSearch);
         when(paymentMethodSearch.getOneTapMetadata()).thenReturn(metadata);
-        oneTapPresenter = new OneTapPresenter(model);
+        oneTapPresenter = new OneTapPresenter(model, pluginRepository);
         oneTapPresenter.attachView(view);
     }
 
@@ -73,8 +76,10 @@ public class OneTapPresenterTest {
     @Test
     public void whenConfirmPaymentPluginShowPaymentPluginFlow() {
         configPlugin();
+        when(pluginRepository.getPluginAsPaymentMethod(PLUGIN_ID, PaymentTypes.PLUGIN)).thenReturn(paymentMethod);
         oneTapPresenter.confirmPayment();
-        verify(view).showPaymentFlowPlugin(PaymentTypes.PLUGIN, PLUGIN_ID);
+        verify(pluginRepository).getPluginAsPaymentMethod(PLUGIN_ID, PaymentTypes.PLUGIN);
+        verify(view).showPaymentFlow(paymentMethod);
         verify(view).trackConfirm(model);
         verifyNoMoreInteractions(view);
     }
@@ -129,5 +134,12 @@ public class OneTapPresenterTest {
         verify(view).showDetailModal(model);
         verify(view).trackModal(model);
         verifyNoMoreInteractions(view);
+    }
+
+    @Test
+    public void whenCanceledThenCancelAndTrack() {
+        oneTapPresenter.cancel();
+        verify(view).cancel();
+        verify(view).trackCancel(model.getPublicKey());
     }
 }

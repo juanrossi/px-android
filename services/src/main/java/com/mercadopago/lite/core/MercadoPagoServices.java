@@ -88,9 +88,14 @@ public class MercadoPagoServices {
         service.getPreference(Settings.servicesVersion, checkoutPreferenceId, this.mPublicKey).enqueue(callback);
     }
 
-    public void getInstructions(Long paymentId, String paymentTypeId, final Callback<Instructions> callback) {
-        CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
-        service.getPaymentResult(Settings.servicesVersion, mContext.getResources().getConfiguration().locale.getLanguage(), paymentId, this.mPublicKey, this.mPrivateKey, paymentTypeId, PAYMENT_RESULT_API_VERSION).enqueue(callback);
+    public void getInstructions(final Long paymentId, final String paymentTypeId,
+        final Callback<Instructions> callback) {
+        final CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
+        service.getPaymentResult(Settings.servicesVersion,
+            mContext.getResources().getConfiguration().locale.getLanguage(),
+            paymentId,
+            mPublicKey, mPrivateKey, paymentTypeId, PAYMENT_RESULT_API_VERSION)
+            .enqueue(callback);
     }
 
     public void getPaymentMethodSearch(final BigDecimal amount, final List<String> excludedPaymentTypes,

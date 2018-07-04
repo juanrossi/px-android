@@ -1,8 +1,6 @@
 package com.mercadopago.core;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.hooks.CheckoutHooks;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.model.Payment;
@@ -11,12 +9,10 @@ import com.mercadopago.model.PaymentResult;
 import com.mercadopago.plugins.DataInitializationTask;
 import com.mercadopago.plugins.PaymentMethodPlugin;
 import com.mercadopago.plugins.PaymentProcessor;
-import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
-import com.mercadopago.util.TextUtil;
-
+import com.mercadopago.util.TextUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +39,6 @@ public class CheckoutStore {
     //App state
     private Hook hook;
     private final Map<String, Object> data = new HashMap<>();
-    private String selectedPaymentMethodId;
 
     //Payment
     private PaymentResult paymentResult;
@@ -68,8 +63,12 @@ public class CheckoutStore {
         return paymentResultScreenPreference;
     }
 
+    @NonNull
     public ReviewAndConfirmPreferences getReviewAndConfirmPreferences() {
-        return reviewAndConfirmPreferences == null ? new ReviewAndConfirmPreferences.Builder().build() : reviewAndConfirmPreferences;
+        if (reviewAndConfirmPreferences == null) {
+            reviewAndConfirmPreferences = new ReviewAndConfirmPreferences.Builder().build();
+        }
+        return reviewAndConfirmPreferences;
     }
 
     public void setPaymentResultScreenPreference(PaymentResultScreenPreference paymentResultScreenPreference) {
@@ -94,34 +93,10 @@ public class CheckoutStore {
     }
 
     public PaymentMethodPlugin getPaymentMethodPluginById(@NonNull final String id) {
-        for (PaymentMethodPlugin plugin : paymentMethodPluginList) {
+        for (final PaymentMethodPlugin plugin : paymentMethodPluginList) {
             if (plugin.getId().equalsIgnoreCase(id)) {
                 return plugin;
             }
-        }
-        return null;
-    }
-
-    public PaymentMethodPlugin getSelectedPaymentMethodPlugin() {
-        if (!TextUtil.isEmpty(selectedPaymentMethodId)) {
-            return getPaymentMethodPluginById(selectedPaymentMethodId);
-        }
-        return null;
-    }
-
-    public PaymentMethodInfo getPaymentMethodPluginInfoById(@NonNull final String id, @NonNull final Context context) {
-        for (PaymentMethodPlugin plugin : paymentMethodPluginList) {
-            final PaymentMethodInfo info = plugin.getPaymentMethodInfo(context);
-            if (info.id.equalsIgnoreCase(id)) {
-                return info;
-            }
-        }
-        return null;
-    }
-
-    public PaymentMethodInfo getSelectedPaymentMethodInfo(@NonNull final Context context) {
-        if (!TextUtil.isEmpty(selectedPaymentMethodId)) {
-            return getPaymentMethodPluginInfoById(selectedPaymentMethodId, context);
         }
         return null;
     }
@@ -152,10 +127,10 @@ public class CheckoutStore {
         return pluginIds;
     }
 
-    public String getFirstEnabledPluginId() {
+    public PaymentMethodPlugin getFirstEnabledPlugin() {
         for (final PaymentMethodPlugin plugin : paymentMethodPluginList) {
             if (plugin.isEnabled(CheckoutStore.getInstance().getData())) {
-                return plugin.getId();
+                return plugin;
             }
         }
         return null;
@@ -169,10 +144,6 @@ public class CheckoutStore {
             }
         }
         return count;
-    }
-
-    public void setSelectedPaymentMethodId(final String selectedPaymentMethodId) {
-        this.selectedPaymentMethodId = selectedPaymentMethodId;
     }
 
     public void setPaymentPlugins(Map<String, PaymentProcessor> paymentPlugins) {
@@ -199,9 +170,10 @@ public class CheckoutStore {
         return data;
     }
 
-    public PaymentProcessor doesPaymentProcessorSupportPaymentMethodSelected() {
+    public PaymentProcessor doesPaymentProcessorSupportPaymentMethodSelected(
+        @NonNull final String selectedPaymentMethodId) {
         PaymentProcessor paymentProcessor = null;
-        if (!TextUtil.isEmpty(selectedPaymentMethodId)) {
+        if (!TextUtils.isEmpty(selectedPaymentMethodId)) {
             paymentProcessor = paymentPlugins.get(PAYMENT_PROCESSOR_KEY);
             if (paymentProcessor == null || !paymentProcessor.support(selectedPaymentMethodId, getData())) {
                 paymentProcessor = paymentPlugins.get(selectedPaymentMethodId);
@@ -247,7 +219,6 @@ public class CheckoutStore {
     }
 
     public void reset() {
-        selectedPaymentMethodId = null;
         paymentResult = null;
         paymentData = null;
         payment = null;

@@ -2,7 +2,6 @@ package com.mercadopago.review_and_confirm.components;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.Component;
 import com.mercadopago.components.RendererFactory;
@@ -33,7 +32,7 @@ public class ReviewAndConfirmContainer extends Component<ReviewAndConfirmContain
     }
 
     public boolean hasItemsEnabled() {
-        return props.preferences == null || props.preferences.hasItemsEnabled();
+        return props.preferences.hasItemsEnabled();
     }
 
     public boolean hasDiscountTermsAndConditions() {
@@ -45,12 +44,12 @@ public class ReviewAndConfirmContainer extends Component<ReviewAndConfirmContain
     }
 
     public static class Props {
-        /* default */ final TermsAndConditionsModel mercadoPagoTermsAndConditionsModel;
-        /* default */ final PaymentModel paymentModel;
-        /* default */ final SummaryModel summaryModel;
-        /* default */ final ReviewAndConfirmPreferences preferences;
-        /* default */ final ItemsModel itemsModel;
-        /* default */ final TermsAndConditionsModel discountTermsAndConditionsModel;
+        /* default */ @Nullable final TermsAndConditionsModel mercadoPagoTermsAndConditionsModel;
+        /* default */ @NonNull final PaymentModel paymentModel;
+        /* default */ @NonNull final SummaryModel summaryModel;
+        /* default */ @NonNull final ReviewAndConfirmPreferences preferences;
+        /* default */ @NonNull final ItemsModel itemsModel;
+        /* default */ @Nullable final TermsAndConditionsModel discountTermsAndConditionsModel;
 
 
         public Props(@Nullable final TermsAndConditionsModel mercadoPagoTermsAndConditionsModel,

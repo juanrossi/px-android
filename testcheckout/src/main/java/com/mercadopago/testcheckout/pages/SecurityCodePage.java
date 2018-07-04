@@ -2,10 +2,8 @@ package com.mercadopago.testcheckout.pages;
 
 import android.support.test.espresso.action.ViewActions;
 import android.view.View;
-
 import com.mercadopago.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testlib.pages.PageObject;
-
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -37,9 +35,14 @@ public class SecurityCodePage extends PageObject<CheckoutValidator> {
         return new IdentificationPage(validator);
     }
 
-    public NoCheckoutPage pressBack() {
+    public NoCheckoutPage pressBackWithExclusion() {
         onView(isRoot()).perform(ViewActions.pressBack());
         return new NoCheckoutPage(validator);
+    }
+
+    public PaymentMethodPage pressBack() {
+        onView(isRoot()).perform(ViewActions.pressBack());
+        return new PaymentMethodPage(validator);
     }
 
     public ExpiryDatePage pressPrevious() {

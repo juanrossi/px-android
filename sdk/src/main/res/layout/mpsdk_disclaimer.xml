@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <com.mercadopago.customviews.MPTextView
-        android:id="@+id/disclaimer"
+        android:id="@+id/cftText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mpsdk_m_margin"

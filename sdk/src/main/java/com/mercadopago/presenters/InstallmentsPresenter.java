@@ -5,6 +5,9 @@ import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.internal.repository.AmountRepository;
+import com.mercadopago.internal.repository.PaymentSettingRepository;
+import com.mercadopago.internal.repository.UserSelectionRepository;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.CouponDiscount;
@@ -13,7 +16,6 @@ import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.preferences.PaymentPreference;
@@ -22,12 +24,14 @@ import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.InstallmentsUtil;
 import com.mercadopago.views.AmountView;
 import com.mercadopago.views.InstallmentsActivityView;
-
-import java.math.BigDecimal;
 import java.util.List;
 
 public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView, InstallmentsProvider> implements
     AmountView.OnClick {
+
+    @NonNull private final AmountRepository amountRepository;
+    private final PaymentSettingRepository configuration;
+    private final UserSelectionRepository userSelectionRepository;
 
     private FailureRecovery mFailureRecovery;
 
@@ -39,30 +43,35 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     private String payerEmail;
     private PaymentMethod paymentMethod;
     private Issuer issuer;
-    private BigDecimal amount;
+
     private List<PayerCost> payerCosts;
     private PaymentPreference paymentPreference;
     private CardInfo cardInfo;
-    private Discount discount;
-    private Campaign campaign;
     private Boolean installmentsReviewEnabled;
-    private Site site;
+
+    public InstallmentsPresenter(@NonNull final AmountRepository amountRepository,
+        final PaymentSettingRepository configuration,
+        final UserSelectionRepository userSelectionRepository) {
+        this.amountRepository = amountRepository;
+        this.configuration = configuration;
+        this.userSelectionRepository = userSelectionRepository;
+    }
 
     public void initialize() {
         initializeAmountRow();
-
         showSiteRelatedInformation();
         loadPayerCosts();
     }
 
     public void initializeAmountRow() {
         if (isViewAttached()) {
-            getView().showAmount(discount, campaign, amount, site);
+            getView().showAmount(configuration.getDiscount(), configuration.getCampaign(),
+                amountRepository.getItemsPlusCharges(), configuration.getCheckoutPreference().getSite());
         }
     }
 
     private void showSiteRelatedInformation() {
-        if (site != null && InstallmentsUtil.shouldWarnAboutBankInterests(site.getId())) {
+        if (InstallmentsUtil.shouldWarnAboutBankInterests(configuration.getCheckoutPreference().getSiteId())) {
             getView().warnAboutBankInterests();
         }
     }
@@ -101,7 +110,7 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     private void getInstallmentsAsync() {
         getView().showLoadingView();
 
-        getResourcesProvider().getInstallments(bin, getAmount(), issuerId, paymentMethod.getId(),
+        getResourcesProvider().getInstallments(bin, amountRepository.getAmountToPay(), issuerId, paymentMethod.getId(),
             new TaggedCallback<List<Installment>>(ApiUtil.RequestOrigin.GET_INSTALLMENTS) {
                 @Override
                 public void onSuccess(List<Installment> installments) {
@@ -117,7 +126,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
                 @Override
                 public void onFailure(MercadoPagoError mercadoPagoError) {
                     getView().hideLoadingView();
-
                     setFailureRecovery(new FailureRecovery() {
                         @Override
                         public void recover() {
@@ -155,10 +163,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         return PaymentMethodGuessingController.getCardNumberLength(paymentMethod, bin);
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
     public void setPayerCosts(List<PayerCost> payerCosts) {
         this.payerCosts = payerCosts;
     }
@@ -179,23 +183,12 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         return paymentMethod;
     }
 
-    public BigDecimal getAmount() {
-        BigDecimal amount;
-
-        if (discount == null) {
-            amount = this.amount;
-        } else {
-            amount = discount.getAmountWithDiscount(this.amount);
-        }
-        return amount;
-    }
-
     public boolean isRequiredCardDrawn() {
         return cardInfo != null && paymentMethod != null;
     }
 
     public void onDiscountReceived(Discount discount) {
-        setDiscount(discount);
+        configuration.configure(discount);
         initializeAmountRow();
         getInstallmentsAsync();
     }
@@ -213,21 +206,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         this.payerEmail = payerEmail;
     }
 
-    public Discount getDiscount() {
-        return discount;
-    }
-
-    public Campaign getCampaign() {
-        return campaign;
-    }
-
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
-    }
-
-    public void setCampaign(Campaign campaign) {
-        this.campaign = campaign;
-    }
 
     public String getPayerEmail() {
         return payerEmail;
@@ -251,16 +229,9 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         }
     }
 
-    public void setSite(Site site) {
-        this.site = site;
-    }
-
-    public Site getSite() {
-        return site;
-    }
-
     public void onItemSelected(int position) {
         PayerCost selectedPayerCost = payerCosts.get(position);
+        userSelectionRepository.select(selectedPayerCost);
         if (isInstallmentsReviewEnabled() && isInstallmentsReviewRequired(selectedPayerCost)) {
             getView().hideInstallmentsRecyclerView();
             getView().showInstallmentsReviewView();

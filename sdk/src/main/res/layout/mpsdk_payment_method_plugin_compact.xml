@@ -39,6 +39,14 @@
                 android:textColor="@color/ui_meli_black"
                 android:textSize="@dimen/mpsdk_s_text"/>
 
+            <com.mercadopago.customviews.MPTextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Dinero en Mercado Pago"
+                android:textColor="@color/ui_meli_black"
+                android:textSize="@dimen/mpsdk_s_text"/>
+
         </LinearLayout>
 
 

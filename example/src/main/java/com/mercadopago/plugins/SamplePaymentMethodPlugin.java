@@ -2,7 +2,6 @@ package com.mercadopago.plugins;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.example.R;
 import com.mercadopago.plugins.components.SamplePaymentMethod;
 import com.mercadopago.plugins.components.SampleResourcesProvider;

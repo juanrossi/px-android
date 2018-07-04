@@ -12,18 +12,18 @@ import java.util.Locale;
 
 public class Campaign implements Serializable, Parcelable {
 
-    private String id;
-    private String codeType;
-    private BigDecimal maxCouponAmount;
+    private final String id;
+    private final String codeType;
+    private final BigDecimal maxCouponAmount;
 
     private static final String CODE_TYPE_SINGLE = "single";
     private static final String CODE_TYPE_MULTIPLE = "multiple";
     private static final String CODE_TYPE_NONE = "none";
 
-    private Campaign(Builder builder) {
-        this.id = builder.id;
-        this.maxCouponAmount = builder.maxCouponAmount;
-        this.codeType = builder.codeType;
+    private Campaign(final Builder builder) {
+        id = builder.id;
+        maxCouponAmount = builder.maxCouponAmount;
+        codeType = builder.codeType;
     }
 
     @SuppressWarnings("unused")
@@ -59,7 +59,7 @@ public class Campaign implements Serializable, Parcelable {
 
     private Campaign(Parcel in) {
         id = in.readString();
-        maxCouponAmount = ParcelableUtil.getBigDecimalReadByte(in);
+        maxCouponAmount = ParcelableUtil.getOptionalBigDecimal(in);
         codeType = in.readString();
     }
 
@@ -83,7 +83,7 @@ public class Campaign implements Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        ParcelableUtil.writeByte(dest, maxCouponAmount);
+        ParcelableUtil.writeOptional(dest, maxCouponAmount);
         dest.writeString(codeType);
     }
 
@@ -93,7 +93,7 @@ public class Campaign implements Serializable, Parcelable {
 
     public static class Builder {
         //region mandatory params
-        private String id;
+        private final String id;
         //endregion mandatory params
         private BigDecimal maxCouponAmount = BigDecimal.ZERO;
         private String codeType;
@@ -109,13 +109,13 @@ public class Campaign implements Serializable, Parcelable {
         }
 
         @SuppressWarnings("unused")
-        public Campaign.Builder setMaxCouponAmount(BigDecimal maxCouponAmount) {
+        public Campaign.Builder setMaxCouponAmount(final BigDecimal maxCouponAmount) {
             this.maxCouponAmount = maxCouponAmount;
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Campaign.Builder setCodeType(String codeType) {
+        public Campaign.Builder setCodeType(final String codeType) {
             this.codeType = codeType;
             return this;
         }
