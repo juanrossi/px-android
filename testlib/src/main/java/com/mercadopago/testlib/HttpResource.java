@@ -1,15 +1,11 @@
 package com.mercadopago.testlib;
 
-
 import android.support.test.espresso.IdlingRegistry;
-
-import com.jakewharton.espresso.OkHttp3IdlingResource;
-
+import com.mercadopago.testlib.espresso.OkHttp3IdlingResource;
+import okhttp3.OkHttpClient;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-
-import okhttp3.OkHttpClient;
 
 public abstract class HttpResource implements TestRule {
 
@@ -20,8 +16,8 @@ public abstract class HttpResource implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                OkHttpClient client = getClient();
-                OkHttp3IdlingResource okHttp3IdlingResource = OkHttp3IdlingResource.create(RES_NAME_OK_HTTP, client);
+                final OkHttpClient client = getClient();
+                final OkHttp3IdlingResource okHttp3IdlingResource = OkHttp3IdlingResource.create(RES_NAME_OK_HTTP, client);
                 IdlingRegistry.getInstance().register(okHttp3IdlingResource);
                 base.evaluate();
                 IdlingRegistry.getInstance().unregister(okHttp3IdlingResource);
