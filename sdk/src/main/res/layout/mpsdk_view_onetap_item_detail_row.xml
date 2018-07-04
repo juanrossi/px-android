@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/mpsdk_m_margin"
                 android:layout_marginRight="@dimen/mpsdk_m_margin"
-                android:layout_marginTop="@dimen/mpsdk_xs_margin"
+                android:layout_marginTop="@dimen/mpsdk_xxxs_margin"
                 android:ellipsize="end"
                 android:lines="1"
                 android:textColor="@color/ui_meli_grey"

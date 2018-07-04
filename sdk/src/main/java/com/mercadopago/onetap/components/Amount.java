@@ -138,8 +138,7 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
         // amount with discount included.
         final TextView amountWithDiscount = content.findViewById(R.id.amount_with_discount);
 
-        final CurrencyFormatter currencyFormatter = TextFormatter.withCurrencyId(props.getCurrencyId())
-            .withSpace();
+        final CurrencyFormatter currencyFormatter = TextFormatter.withCurrencyId(props.getCurrencyId());
 
         final AmountFormatter amountFormatter = props.hasMultipleInstallments() ?
             currencyFormatter.amount(props.payerCost.getInstallmentAmount()) :

@@ -57,7 +57,7 @@ public class OneTapMetadata implements Parcelable, Serializable {
 
     public boolean isValidOneTapType() {
         return PaymentTypes.isPlugin(paymentTypeId) ||
-            PaymentTypes.isCardPaymentType(paymentTypeId);
+            (PaymentTypes.isCardPaymentType(paymentTypeId) && card != null);
     }
 
 }

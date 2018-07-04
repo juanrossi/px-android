@@ -10,7 +10,7 @@
     android:foreground="?attr/selectableItemBackground"
     android:gravity="center"
     android:orientation="vertical"
-    android:layout_marginBottom="@dimen/mpsdk_m_margin"
+    android:layout_marginBottom="@dimen/mpsdk_s_margin"
     android:paddingLeft="@dimen/mpsdk_s_margin"
     android:paddingRight="@dimen/mpsdk_s_margin">
 
@@ -64,6 +64,7 @@
         android:id="@+id/discount_detail_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/mpsdk_xxs_margin"
         android:gravity="center"
         android:orientation="horizontal">
 
