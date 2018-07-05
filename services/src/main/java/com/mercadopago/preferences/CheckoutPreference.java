@@ -258,7 +258,6 @@ public class CheckoutPreference implements Serializable {
         private Date expirationDateTo;
         private Date expirationDateFrom;
         private String payerAccessToken;
-        private boolean excludeAccountMoney = true;
         private BigDecimal marketplaceFee;
         private BigDecimal shippingCost;
         private String operationType;
@@ -341,9 +340,13 @@ public class CheckoutPreference implements Serializable {
             return this;
         }
 
+        /**
+         * @deprecated Account money is always enabled. You can exclude it
+         * using the add exclusion methods.
+         */
+        @Deprecated
         @SuppressWarnings("unused")
         public Builder enableAccountMoney() {
-            excludeAccountMoney = false;
             return this;
         }
 
@@ -385,9 +388,6 @@ public class CheckoutPreference implements Serializable {
 
         @SuppressWarnings("unused")
         public CheckoutPreference build() {
-            if (excludeAccountMoney) {
-                addExcludedPaymentType(PaymentTypes.ACCOUNT_MONEY);
-            }
             return new CheckoutPreference(this);
         }
     }

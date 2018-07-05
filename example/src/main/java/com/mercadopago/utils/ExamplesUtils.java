@@ -107,7 +107,6 @@ public final class ExamplesUtils {
         final CheckoutPreference.Builder builder = new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a",
             Collections.singletonList(item));
 
-        builder.enableAccountMoney(); // to not exclude double account money.
         for (final String type : PaymentTypes.getAllPaymentTypes()) {
             if (!PaymentTypes.DEBIT_CARD.equals(type)) {
                 builder.addExcludedPaymentType(type);
