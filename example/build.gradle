@@ -4,6 +4,8 @@ android {
     compileSdkVersion api_level as int
     buildToolsVersion build_tools_version
 
+    testBuildType "release"
+
     defaultConfig {
         applicationId "com.mercadopago.example"
         minSdkVersion min_api_level as int

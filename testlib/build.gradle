@@ -35,6 +35,7 @@ android {
         targetSdkVersion api_level as int
         versionCode 1
         versionName "1.0"
+        consumerProguardFiles 'proguard-rules.pro'
     }
 
     android {
