@@ -24,6 +24,7 @@ import com.mercadopago.plugins.PaymentProcessor;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
+import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.uicontrollers.FontCache;
@@ -370,6 +371,12 @@ public class MercadoPagoCheckout implements Serializable {
         @SuppressWarnings("unused")
         public Builder setPaymentResultScreenPreference(PaymentResultScreenPreference paymentResultScreenPreference) {
             this.paymentResultScreenPreference = paymentResultScreenPreference;
+            return this;
+        }
+
+        @SuppressWarnings("unused")
+        @Deprecated
+        public Builder setServicePreference(@NonNull final ServicePreference servicePreference) {
             return this;
         }
 

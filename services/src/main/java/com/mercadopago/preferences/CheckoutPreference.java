@@ -6,13 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Item;
 import com.mercadopago.model.Payer;
-import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Sites;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -288,7 +286,7 @@ public class CheckoutPreference implements Serializable {
         }
 
         @SuppressWarnings("unused")
-        public Builder addExcludedPaymentMethods(@NonNull final Collection<String> paymentMethodIds) {
+        public Builder addExcludedPaymentMethods(@NonNull final List<String> paymentMethodIds) {
             excludedPaymentMethods.addAll(paymentMethodIds);
             return this;
         }
@@ -300,7 +298,7 @@ public class CheckoutPreference implements Serializable {
         }
 
         @SuppressWarnings("unused")
-        public Builder addExcludedPaymentTypes(@NonNull final Collection<String> paymentTypeIds) {
+        public Builder addExcludedPaymentTypes(@NonNull final List<String> paymentTypeIds) {
             excludedPaymentTypes.addAll(paymentTypeIds);
             return this;
         }
