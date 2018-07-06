@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+
 import com.mercadopago.MercadoPagoBaseActivity;
 import com.mercadopago.R;
 import com.mercadopago.components.Action;
@@ -112,21 +113,19 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     }
 
     private void configureFloatingBehaviour(final NestedScrollView scrollView, final View floatingConfirmLayout) {
-        addScrollBottomMargin(floatingConfirmLayout, scrollView);
+        addScrollBottomPadding(floatingConfirmLayout, scrollView);
         configureScrollLayoutListener(floatingConfirmLayout, scrollView);
         addScrollListener(floatingConfirmLayout, scrollView);
     }
 
-    private void addScrollBottomMargin(final View floatingConfirmLayout, final NestedScrollView scrollView) {
+    private void addScrollBottomPadding(final View floatingConfirmLayout, final NestedScrollView scrollView) {
         ViewTreeObserver floatingObserver = floatingConfirmLayout.getViewTreeObserver();
         floatingObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) scrollView.getLayoutParams();
-                int bottomMargin = floatingConfirmLayout.getHeight();
-                if (bottomMargin != params.bottomMargin) {
-                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, bottomMargin);
-                    scrollView.setLayoutParams(params);
+                int bottomPadding = floatingConfirmLayout.getHeight();
+                if (scrollView.getPaddingBottom() != bottomPadding) {
+                    scrollView.setPadding(scrollView.getPaddingLeft(), scrollView.getPaddingTop(), scrollView.getPaddingRight(), bottomPadding);
                 }
             }
         });
@@ -182,15 +181,15 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
             final SummaryModel summaryModel = extras.getParcelable(EXTRA_SUMMARY_MODEL);
             final ItemsModel itemsModel = extras.getParcelable(EXTRA_ITEMS);
             final TermsAndConditionsModel discountTermsAndConditions =
-                extras.getParcelable(EXTRA_DISCOUNT_TERMS_AND_CONDITIONS);
+                    extras.getParcelable(EXTRA_DISCOUNT_TERMS_AND_CONDITIONS);
             final ReviewAndConfirmPreferences preferences = CheckoutStore
-                .getInstance()
-                .getReviewAndConfirmPreferences();
+                    .getInstance()
+                    .getReviewAndConfirmPreferences();
 
             Tracker.trackReviewAndConfirmScreen(getApplicationContext(), getIntent().getStringExtra(EXTRA_PUBLIC_KEY),
-                paymentModel);
+                    paymentModel);
             return new ReviewAndConfirmContainer.Props(termsAndConditionsModel, paymentModel, summaryModel, preferences,
-                itemsModel, discountTermsAndConditions);
+                    itemsModel, discountTermsAndConditions);
         }
 
         throw new IllegalStateException("Unsupported parameters for Review and confirm activity");
@@ -199,7 +198,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     private void setFloatingElevationVisibility(final View floatingConfirmLayout, final boolean visible) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final float elevationInPixels =
-                visible ? getBaseContext().getResources().getDimension(R.dimen.mpsdk_xxs_margin) : 0;
+                    visible ? getBaseContext().getResources().getDimension(R.dimen.mpsdk_xxs_margin) : 0;
             floatingConfirmLayout.setElevation(elevationInPixels);
         }
     }
