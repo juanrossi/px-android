@@ -1,5 +1,6 @@
 package com.mercadopago.model;
 
+import android.support.annotation.Nullable;
 import java.io.Serializable;
 
 public class Payer implements Serializable {
@@ -65,7 +66,7 @@ public class Payer implements Serializable {
      * as private key.
      */
     @Deprecated
-    public void setAccessToken(String accessToken) {
+    public void setAccessToken(@Nullable final String accessToken) {
         this.accessToken = accessToken;
     }
 

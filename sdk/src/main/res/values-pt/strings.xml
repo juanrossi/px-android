@@ -122,14 +122,12 @@
     <string name="mpsdk_text_card_enabled">Eu já habilitei meu cartão</string>
 
     <!-- Error messages -->
-    <string name="mpsdk_error_message_invalid_amount">Valor inválido</string>
     <string name="mpsdk_error_message_invalid_item">Item inválido</string>
     <string name="mpsdk_error_message_expired_preference">Preferência expirada</string>
     <string name="mpsdk_error_message_inactive_preference">Preferência inativa</string>
     <string name="mpsdk_error_message_invalid_default_installments">Número de parcelas padrão inválido</string>
     <string name="mpsdk_error_message_invalid_max_installments">Número máximo do parcelas inválido</string>
     <string name="mpsdk_error_message_excluded_all_payment_type">Todos os tipos de pagamentos foram excluídos</string>
-    <string name="mpsdk_error_message_invalid_currency">Moeda inválida</string>
     <string name="mpsdk_error_message_invalid_installments">Número do parcelas inválido</string>
     <string name="mpsdk_error_title">Ops! Algo deu errado</string>
     <string name="mpsdk_standard_error_message">Estamos trabalhando para solucionar o problema. Por favor, tente novamente mais tarde.</string>
@@ -232,10 +230,15 @@
     <string name="mpsdk_we_apply_the_best_available_discount">Os descontos não são acumulativos. Aplicamos o mais alto para este pagamento.</string>
     <string name="mpsdk_max_coupon_amount">Limite de desconto %1$s</string>
     <string name="mpsdk_total_to_pay">Total a pagar</string>
-    <string name="mpsdk_has_a_coupon_discount">Você tem um cupom de desconto?</string>
+    <string name="mpsdk_enter_coupon_code">Digite seu cupom de desconto</string>
+    <string name="mpsdk_enter_coupon_code_title">Adicione o seu cupom</string>
     <string name="mpsdk_with_max_coupon_amount">Com limite de desconto</string>
     <string name="mpsdk_interest_label">Não inclui juros bancários</string>
     <string name="mpsdk_discount_dialog_title">Meu desconto</string>
+    <string name="mpsdk_excellent">¡Excelente!</string>
+    <string name="mpsdk_get_your_discount_amount">Agora pague sua compra e ganhe\n %1$s de desconto</string>
+    <string name="mpsdk_get_your_discount_percent">Agora pague sua compra e ganhe %1$s%% de desconto</string>
+    <string name="mpsdk_discount_error_check_this_data">Verificar esses dados</string>
 
     <!-- Unlock Card -->
     <string name="mpsdk_text_unlock_card_start">Lembre-se de</string>

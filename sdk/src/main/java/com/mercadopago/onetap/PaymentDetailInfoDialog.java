@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mercadolibre.android.ui.widgets.MeliDialog;
 import com.mercadopago.R;
-import com.mercadopago.internal.di.ConfigurationModule;
+import com.mercadopago.internal.di.Session;
 import com.mercadopago.onetap.components.PaymentDetailContainer;
 
 public class PaymentDetailInfoDialog extends MeliDialog {
@@ -25,8 +25,10 @@ public class PaymentDetailInfoDialog extends MeliDialog {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        PaymentDetailContainer container =
-            new PaymentDetailContainer(new ConfigurationModule(view.getContext()).getConfiguration());
+        final Session session = Session.getSession(view.getContext());
+        final PaymentDetailContainer container =
+            new PaymentDetailContainer(new PaymentDetailContainer.Props(session.getDiscountRepository(),
+                session.getConfigurationModule().getPaymentSettings().getCheckoutPreference().getItems()));
         container.render((ViewGroup) view.findViewById(R.id.main_container));
     }
 

@@ -22,7 +22,7 @@
         android:layout_height="150dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_behavior="com.mercadopago.core.FixAppBarLayoutBehavior">
+        app:layout_behavior="com.mercadopago.views.FixAppBarLayoutBehavior">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/mpsdkCollapsingToolbar"

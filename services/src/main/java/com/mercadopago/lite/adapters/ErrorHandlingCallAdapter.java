@@ -3,19 +3,17 @@ package com.mercadopago.lite.adapters;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.util.ApiUtil;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.Token;
 import com.mercadopago.tracking.tracker.MPTracker;
-
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.SocketTimeoutException;
-
 import retrofit2.Call;
 import retrofit2.CallAdapter;
 import retrofit2.Response;
@@ -57,23 +55,19 @@ public class ErrorHandlingCallAdapter {
     /**
      * Adapts a {@link Call} to {@link MPCall}.
      */
-    static class MPCallAdapter<T> implements MPCall<T> {
+    /* default */ static class MPCallAdapter<T> implements MPCall<T> {
+
         private final Call<T> call;
 
-        MPCallAdapter(Call<T> call) {
+        /* default */ MPCallAdapter(final Call<T> call) {
             this.call = call;
-        }
-
-        @Override
-        public void cancel() {
-            call.cancel();
         }
 
         @Override
         public void enqueue(final Callback<T> callback) {
             call.enqueue(new retrofit2.Callback<T>() {
                 @Override
-                public void onResponse(Call<T> call, Response<T> response) {
+                public void onResponse(@NonNull final Call<T> call, @NonNull final Response<T> response) {
                     final Response<T> r = response;
                     executeOnMainThread(new Runnable() {
                         @Override
@@ -81,7 +75,7 @@ public class ErrorHandlingCallAdapter {
                             int code = r.code();
                             if (code >= 200 && code < 300) {
                                 //Get body
-                                T body = r.body();
+                                final T body = r.body();
                                 if (body instanceof Payment) {
                                     Payment mPayment = (Payment) body;
 
@@ -91,10 +85,9 @@ public class ErrorHandlingCallAdapter {
                                     }
                                 } else if (body instanceof Token) {
                                     Token mToken = (Token) body;
-
                                     MPTracker.getInstance().trackToken(mToken.getId());
                                 }
-                                callback.success(r.body());
+                                callback.success(body);
                             } else {
                                 callback.failure(ApiUtil.getApiException(r));
                             }
@@ -105,7 +98,7 @@ public class ErrorHandlingCallAdapter {
                 @Override
                 public void onFailure(@NonNull final Call<T> call, @NonNull Throwable t) {
                     final Throwable th = t;
-                    if (callback.attempts++ == 3 || (th instanceof SocketTimeoutException)) {
+                    if (++callback.attempts == 3 || (th instanceof SocketTimeoutException)) {
                         executeOnMainThread(new Runnable() {
                             @Override
                             public void run() {
@@ -120,12 +113,22 @@ public class ErrorHandlingCallAdapter {
         }
 
         @Override
-        public MPCall<T> clone() {
-            return new MPCallAdapter<>(call.clone());
+        public void execute(final Callback<T> callback) {
+            try {
+                final Response<T> execute = call.execute();
+                if (execute.isSuccessful()) {
+                    final T body = execute.body();
+                    callback.success(body);
+                } else {
+                    callback.failure(ApiUtil.getApiException(execute));
+                }
+            } catch (IOException e) {
+                callback.failure(ApiUtil.getApiException(e));
+            }
         }
     }
 
-    private static void executeOnMainThread(@NonNull Runnable r) {
+    private static void executeOnMainThread(@NonNull final Runnable r) {
         final Handler handler = new Handler(Looper.getMainLooper());
         handler.post(r);
     }

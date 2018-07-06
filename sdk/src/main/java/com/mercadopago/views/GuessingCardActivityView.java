@@ -4,7 +4,6 @@ import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.lite.exceptions.CardTokenException;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
@@ -92,12 +91,12 @@ public interface GuessingCardActivityView extends MvpView {
 
     void setSoftInputMode();
 
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, List<Issuer> issuers);
+    void finishCardFlow(PaymentMethod paymentMethod, Token token, List<Issuer> issuers);
 
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Issuer issuer,
+    void finishCardFlow(PaymentMethod paymentMethod, Token token, Issuer issuer,
         List<PayerCost> payerCosts);
 
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Issuer issuer,
+    void finishCardFlow(PaymentMethod paymentMethod, Token token, Issuer issuer,
         PayerCost payerCost);
 
     void hideProgress();

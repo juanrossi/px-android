@@ -1,34 +1,13 @@
 package com.mercadopago.providers;
 
-import com.mercadopago.model.Discount;
-import com.mercadopago.model.Payer;
+import android.support.annotation.NonNull;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
-import com.mercadopago.model.Site;
-import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.mvp.ResourcesProvider;
-import com.mercadopago.preferences.PaymentPreference;
-import android.support.annotation.NonNull;
-
-import java.math.BigDecimal;
 import java.util.List;
-
-/**
- * Created by mreverter on 1/30/17.
- */
 
 public interface PaymentVaultProvider extends ResourcesProvider {
     String getTitle();
-
-    void getPaymentMethodSearch(final BigDecimal amount, final PaymentPreference paymentPreference,
-        final Payer payer, final Site site, final List<String> cardsWithEsc, final List<String> supportedPlugins,
-        final TaggedCallback<PaymentMethodSearch> taggedCallback);
-
-    void getDirectDiscount(String amount, String payerEmail, TaggedCallback<Discount> taggedCallback);
-
-    String getInvalidSiteConfigurationErrorMessage();
-
-    String getInvalidAmountErrorMessage();
 
     String getAllPaymentTypesExcludedErrorMessage();
 
@@ -45,5 +24,4 @@ public interface PaymentVaultProvider extends ResourcesProvider {
     void trackChildrenScreen(@NonNull PaymentMethodSearchItem paymentMethodSearchItem, @NonNull String siteId);
 
     List<String> getCardsWithEsc();
-
 }

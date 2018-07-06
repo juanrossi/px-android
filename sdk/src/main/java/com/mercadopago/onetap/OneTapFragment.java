@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.mercadopago.R;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.internal.datasource.PluginService;
-import com.mercadopago.internal.di.AmountModule;
+import com.mercadopago.internal.di.Session;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Token;
@@ -92,9 +92,9 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         final Bundle arguments = getArguments();
         if (arguments != null) {
-            final AmountModule amountModule = new AmountModule(view.getContext());
-            amountToPay = amountModule.getAmountRepository().getAmountToPay();
-            hasDiscount = amountModule.getConfigurationModule().getConfiguration().getDiscount() != null;
+            final Session session = Session.getSession(view.getContext());
+            amountToPay = session.getAmountRepository().getAmountToPay();
+            hasDiscount = session.getDiscountRepository().getDiscount() != null;
             final OneTapModel model = (OneTapModel) arguments.getSerializable(ARG_ONE_TAP_MODEL);
             presenter = new OneTapPresenter(model, new PluginService(view.getContext()));
             configureView(view, presenter, model);

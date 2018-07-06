@@ -7,18 +7,13 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.provider.FontRequest;
 import android.support.v4.provider.FontsContractCompat;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mercadopago.R;
-import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
 import com.mercadopago.exceptions.ExceptionHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.lite.exceptions.CheckoutPreferenceException;
-import com.mercadopago.model.Campaign;
-import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.Payment;
@@ -33,7 +28,6 @@ import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.EscUtil;
-import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoESC;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.QueryBuilder;
@@ -196,59 +190,6 @@ public class CheckoutProviderImpl implements CheckoutProvider {
     }
 
     @Override
-    public void getDiscountCampaigns(final TaggedCallback<List<Campaign>> callback) {
-
-        if (CheckoutStore.getInstance().getPaymentMethodPluginList().isEmpty()) {
-            mercadoPagoServicesAdapter.getCampaigns(new Callback<List<Campaign>>() {
-                @Override
-                public void success(List<Campaign> campaigns) {
-                    callback.onSuccess(campaigns);
-                }
-
-                @Override
-                public void failure(ApiException apiException) {
-                    callback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_CAMPAIGNS));
-                }
-            });
-        } else {
-            final List<Campaign> empty = new ArrayList<>();
-            callback.onSuccess(empty);
-        }
-    }
-
-    @Override
-    public void getDirectDiscount(BigDecimal amount, String payerEmail, TaggedCallback<Discount> taggedCallback) {
-        mercadoPagoServicesAdapter.getDirectDiscount(amount.toString(), payerEmail, taggedCallback);
-    }
-
-    @Override
-    public void getPaymentMethodSearch(BigDecimal amount, final List<String> excludedPaymentTypes,
-        final List<String> excludedPaymentMethods, final List<String> cardsWithEsc,
-        final List<String> supportedPlugins, final Payer payer, final Site site,
-        final TaggedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback,
-        final TaggedCallback<Customer> onCustomerRetrievedCallback) {
-
-        final Set<String> excludedPaymentTypesSet = new HashSet<>(excludedPaymentTypes);
-        excludedPaymentTypesSet.addAll(getUnsupportedPaymentTypes(site));
-
-        mercadoPagoServicesAdapter.getPaymentMethodSearch(amount, new ArrayList<>(excludedPaymentTypesSet),
-            excludedPaymentMethods, cardsWithEsc, supportedPlugins, payer, site,
-            new Callback<PaymentMethodSearch>() {
-            @Override
-            public void success(final PaymentMethodSearch paymentMethodSearch) {
-                onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearch);
-            }
-
-                @Override
-                public void failure(ApiException apiException) {
-                    onPaymentMethodSearchRetrievedCallback
-                        .onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.PAYMENT_METHOD_SEARCH));
-                }
-            });
-    }
-
-
-    @Override
     public String getCheckoutExceptionMessage(CheckoutPreferenceException exception) {
         return ExceptionHandler.getErrorMessage(context, exception);
     }
@@ -305,24 +246,5 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
         paymentBody.setTransactionId(transactionId);
         return paymentBody;
-    }
-
-    private List<String> getUnsupportedPaymentTypes(Site site) {
-
-        List<String> unsupportedTypesForSite = new ArrayList<>();
-        if (Sites.CHILE.getId().equals(site.getId())
-            || Sites.VENEZUELA.getId().equals(site.getId())
-            || Sites.COLOMBIA.getId().equals(site.getId())) {
-
-            unsupportedTypesForSite.add(PaymentTypes.TICKET);
-            unsupportedTypesForSite.add(PaymentTypes.ATM);
-            unsupportedTypesForSite.add(PaymentTypes.BANK_TRANSFER);
-        }
-        return unsupportedTypesForSite;
-    }
-
-    @Override
-    public List<String> getCardsWithEsc() {
-        return new ArrayList<>(mercadoPagoESC.getESCCardIds());
     }
 }

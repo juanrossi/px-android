@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
+import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CardPaymentMetadata;
@@ -24,35 +25,40 @@ import javax.annotation.Nullable;
 class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
 
     /* default */ static class Props {
-        /* default */ @NonNull final PaymentSettingRepository config;
+        /* default */ @NonNull final DiscountRepository discountRepository;
         /* default */ @Nullable final PayerCost payerCost;
         /* default */ final int installment;
+        /* default */ @NonNull final PaymentSettingRepository config;
 
-        /* default */ Props(@NonNull final PaymentSettingRepository config,
+        /* default */ Props(@NonNull final DiscountRepository discountRepository,
+            @NonNull final PaymentSettingRepository config,
             @Nullable final PayerCost payerCost,
             final int installment) {
             this.config = config;
+            this.discountRepository = discountRepository;
             this.payerCost = payerCost;
             this.installment = installment;
         }
 
 
         /* default */ static Props from(final OneTapModel props,
-            final PaymentSettingRepository configuration) {
+            final PaymentSettingRepository config,
+            final DiscountRepository discountRepository) {
             final CardPaymentMetadata card = props.getPaymentMethods().getOneTapMetadata().getCard();
             final PayerCost payerCost = card != null ? card.getAutoSelectedInstallment() : null;
             return new Amount.Props(
-                configuration,
+                discountRepository,
+                config,
                 payerCost,
                 payerCost == null ? PayerCost.NO_INSTALLMENTS : payerCost.getInstallments());
         }
 
         /* default */ boolean hasDiscount() {
-            return config.getDiscount() != null;
+            return discountRepository.getDiscount() != null;
         }
 
         /* default */ boolean shouldShowPercentOff() {
-            return hasDiscount() && config.getDiscount().hasPercentOff();
+            return hasDiscount() && discountRepository.getDiscount().hasPercentOff();
         }
 
         /* default */ boolean hasMultipleInstallments() {
@@ -60,7 +66,7 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
         }
 
         /* default */ boolean hasMaxDiscountLabel() {
-            final Campaign campaign = config.getCampaign();
+            final Campaign campaign = discountRepository.getCampaign();
             return campaign != null && !BigDecimal.ZERO.equals(campaign.getMaxCouponAmount());
         }
 
@@ -102,14 +108,14 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
         if (props.shouldShowPercentOff()) {
             TextFormatter.withCurrencyId(props.getCurrencyId())
                 .noSpace().noSymbol()
-                .amount(props.config.getDiscount().getPercentOff())
+                .amount(props.discountRepository.getDiscount().getPercentOff())
                 .normalDecimals()
                 .into(discountMessage)
                 .holder(R.string.mpsdk_discount_percent_off_percent);
         } else if (props.hasDiscount()) {
             TextFormatter.withCurrencyId(props.getCurrencyId())
                 .withSpace()
-                .amount(props.config.getDiscount().getAmountOff())
+                .amount(props.discountRepository.getDiscount().getAmountOff())
                 .normalDecimals()
                 .into(discountMessage)
                 .holder(R.string.mpsdk_discount_percent_off_amount);
@@ -163,6 +169,7 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
     }
 
     private BigDecimal resolveAmountWithDiscount(@NonNull final BigDecimal amount) {
-        return !props.hasDiscount() ? amount : amount.subtract(props.config.getDiscount().getCouponAmount());
+        return !props.hasDiscount() ? amount
+            : amount.subtract(props.discountRepository.getDiscount().getCouponAmount());
     }
 }

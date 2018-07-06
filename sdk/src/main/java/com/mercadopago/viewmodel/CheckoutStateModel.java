@@ -7,10 +7,10 @@ import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentData;
-import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Token;
+import com.mercadopago.preferences.PaymentResultScreenPreference;
 import java.io.Serializable;
 
 public final class CheckoutStateModel implements Serializable {
@@ -27,15 +27,12 @@ public final class CheckoutStateModel implements Serializable {
      */
     public PaymentData paymentDataInput;
 
-    //TODO 21/06/2017 - Hack for credits, should remove payer access token.
-    @Deprecated
-    public final String privateKey;
+    public final PaymentResultScreenPreference paymentResultScreenPreference;
 
-    public final MercadoPagoCheckout config;
+    public final boolean isBinary;
 
     public final int requestedResult;
 
-    public PaymentMethodSearch paymentMethodSearch;
     public Issuer selectedIssuer;
     public Token createdToken;
     public Card selectedCard;
@@ -44,17 +41,16 @@ public final class CheckoutStateModel implements Serializable {
     public boolean paymentMethodEdited;
     public boolean editPaymentMethodFromReviewAndConfirm;
     public PaymentRecovery paymentRecovery;
-    public String customerId;
     public String currentPaymentIdempotencyKey;
     public String merchantPublicKey;
+    public boolean isUniquePaymentMethod;
+    public boolean isOneTap;
 
-    public CheckoutStateModel(final int requestedResult,
-        @NonNull final MercadoPagoCheckout config,
-        @NonNull final String privateKey) {
+    public CheckoutStateModel(final int requestedResult, @NonNull final MercadoPagoCheckout config) {
         this.requestedResult = requestedResult;
         paymentResultInput = config.getPaymentResult();
         paymentDataInput = config.getPaymentData();
-        this.privateKey = privateKey;
-        this.config = config;
+        paymentResultScreenPreference = config.getPaymentResultScreenPreference();
+        isBinary = config.isBinaryMode();
     }
 }

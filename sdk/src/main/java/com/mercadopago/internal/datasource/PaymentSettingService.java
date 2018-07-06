@@ -5,21 +5,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
-import com.mercadopago.model.Campaign;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.commission.ChargeRule;
 import com.mercadopago.model.commission.PaymentMethodRule;
 import com.mercadopago.preferences.CheckoutPreference;
+import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.util.JsonUtil;
 import java.lang.reflect.Type;
 import java.util.List;
 
 public class PaymentSettingService implements PaymentSettingRepository {
 
-    private static final String PREF_CAMPAIGN = "pref_campaign";
-    private static final String PREF_DISCOUNT = "pref_discount";
-    private static final String PREF_CHARGES = "pref_charges";
-    private static final String PREF_CHECKOUT_PREF = "pref_checkout_config";
+    private static final String PREF_CHARGES = "PREF_CHARGES";
+    private static final String PREF_CHECKOUT_PREF = "PREF_CHECKOUT_PREFERENCE";
+    private static final String PREF_CHECKOUT_PREF_ID = "PREF_CHECKOUT_PREFERENCE_ID";
+    private static final String PREF_PUBLIC_KEY = "PREF_PUBLIC_KEY";
+    private static final String PREF_PRIVATE_KEY = "PREF_PRIVATE_KEY";
+    private static final String PREF_FLOW = "PREF_FLOW";
 
     @NonNull private final SharedPreferences sharedPreferences;
     @NonNull private final JsonUtil jsonUtil;
@@ -36,6 +37,13 @@ public class PaymentSettingService implements PaymentSettingRepository {
     public void reset() {
         final SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.clear().apply();
+        pref = null;
+    }
+
+    @Override
+    public void configurePreferenceId(@Nullable final String preferenceId) {
+        final SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(PREF_CHECKOUT_PREF_ID, preferenceId).apply();
     }
 
     @Override
@@ -46,37 +54,39 @@ public class PaymentSettingService implements PaymentSettingRepository {
     }
 
     @Override
+    public void configure(@NonNull final FlowPreference flowPreference) {
+        final SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(PREF_FLOW, jsonUtil.toJson(flowPreference));
+        edit.apply();
+    }
+
+    @Override
+    public void configure(@NonNull final String publicKey) {
+        final SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(PREF_PUBLIC_KEY, publicKey);
+        edit.apply();
+    }
+
+    @Override
+    public void configurePrivateKey(@Nullable final String privateKey) {
+        final SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(PREF_PRIVATE_KEY, privateKey);
+        edit.apply();
+    }
+
+    @Override
     public void configure(@Nullable final CheckoutPreference checkoutPreference) {
         final SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString(PREF_CHECKOUT_PREF, jsonUtil.toJson(checkoutPreference));
-        edit.apply();
+        if (checkoutPreference == null) {
+            edit.remove(PREF_CHECKOUT_PREF).apply();
+        } else {
+            //TODO FIX - ACCESS TOKEN
+            final String privateKey = getPrivateKey();
+            checkoutPreference.getPayer().setAccessToken(privateKey);
+            edit.putString(PREF_CHECKOUT_PREF, jsonUtil.toJson(checkoutPreference));
+            edit.apply();
+        }
         pref = checkoutPreference;
-    }
-
-    @Override
-    public void configure(@Nullable final Discount discount) {
-        final SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString(PREF_DISCOUNT, jsonUtil.toJson(discount));
-        edit.apply();
-    }
-
-    @Override
-    public void configure(@Nullable final Campaign campaign) {
-        final SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString(PREF_CAMPAIGN, jsonUtil.toJson(campaign));
-        edit.apply();
-    }
-
-    @Nullable
-    @Override
-    public Discount getDiscount() {
-        return jsonUtil.fromJson(sharedPreferences.getString(PREF_DISCOUNT, ""), Discount.class);
-    }
-
-    @Nullable
-    @Override
-    public Campaign getCampaign() {
-        return jsonUtil.fromJson(sharedPreferences.getString(PREF_CAMPAIGN, ""), Campaign.class);
     }
 
     @NonNull
@@ -87,12 +97,40 @@ public class PaymentSettingService implements PaymentSettingRepository {
         return jsonUtil.fromJson(sharedPreferences.getString(PREF_CHARGES, ""), listType);
     }
 
-    @NonNull
+    @Nullable
     @Override
     public CheckoutPreference getCheckoutPreference() {
         if (pref == null) {
             pref = jsonUtil.fromJson(sharedPreferences.getString(PREF_CHECKOUT_PREF, ""), CheckoutPreference.class);
         }
         return pref;
+    }
+
+    @Nullable
+    @Override
+    public String getCheckoutPreferenceId() {
+        return sharedPreferences.getString(PREF_CHECKOUT_PREF_ID, null);
+    }
+
+    @NonNull
+    @Override
+    public String getPublicKey() {
+        return sharedPreferences.getString(PREF_PUBLIC_KEY, "");
+    }
+
+    @NonNull
+    @Override
+    public FlowPreference getFlow() {
+        // should never be null - see MercadoPagoCheckout
+        return jsonUtil.fromJson(sharedPreferences.getString(PREF_FLOW, ""), FlowPreference.class);
+    }
+
+    @Nullable
+    @Override
+    public String getPrivateKey() {
+        //TODO FIX - ACCESS TOKEN
+        final CheckoutPreference checkoutPreference = getCheckoutPreference();
+        return checkoutPreference == null ? sharedPreferences.getString(PREF_PRIVATE_KEY, null)
+            : checkoutPreference.getPayer().getAccessToken();
     }
 }

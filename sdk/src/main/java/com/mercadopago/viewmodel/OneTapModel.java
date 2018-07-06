@@ -3,6 +3,7 @@ package com.mercadopago.viewmodel;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import java.io.Serializable;
@@ -27,11 +28,12 @@ public class OneTapModel implements Serializable {
         this.publicKey = publicKey;
     }
 
-    public static OneTapModel from(CheckoutStateModel checkoutStateModel,
+    public static OneTapModel from(final PaymentMethodSearch groups,
+        final PaymentSettingRepository paymentSettingRepository,
         final ReviewAndConfirmPreferences reviewAndConfirmPreferences) {
-        return new OneTapModel(checkoutStateModel.paymentMethodSearch,
-            checkoutStateModel.config.getFlowPreference().isESCEnabled(),
-            checkoutStateModel.config.getMerchantPublicKey(),
+        return new OneTapModel(groups,
+            paymentSettingRepository.getFlow().isESCEnabled(),
+            paymentSettingRepository.getPublicKey(),
             reviewAndConfirmPreferences.getCollectorIcon());
     }
 

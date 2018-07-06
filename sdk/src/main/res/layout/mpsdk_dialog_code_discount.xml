@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/input_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/mpsdk_m_margin">
+
+    <com.mercadopago.customviews.MPTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/mpsdk_xl_margin"
+        android:text="@string/mpsdk_enter_coupon_code_title"
+        android:textSize="@dimen/mpsdk_xl_text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/mpsdk_s_margin"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <com.mercadolibre.android.ui.widgets.TextField
+            android:id="@+id/text_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:focusable="true"
+            custom:ui_textFieldMaxLines="1"/>
+
+        <com.mercadolibre.android.ui.widgets.MeliSpinner
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            custom:size="small"/>
+
+    </LinearLayout>
+
+
+    <com.mercadolibre.android.ui.widgets.MeliButton
+        android:id="@+id/confirm_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mpsdk_continue_label"/>
+
+</LinearLayout>

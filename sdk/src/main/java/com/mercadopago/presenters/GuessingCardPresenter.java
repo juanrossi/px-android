@@ -7,20 +7,22 @@ import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.internal.repository.AmountRepository;
+import com.mercadopago.internal.repository.GroupsRepository;
 import com.mercadopago.internal.repository.UserSelectionRepository;
+import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Bin;
 import com.mercadopago.model.CardToken;
 import com.mercadopago.model.Cardholder;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentType;
 import com.mercadopago.model.SecurityCode;
@@ -36,7 +38,6 @@ import com.mercadopago.uicontrollers.card.FrontCardView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.MPCardMaskUtil;
 import com.mercadopago.views.GuessingCardActivityView;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     public static final int CARD_DEFAULT_IDENTIFICATION_NUMBER_LENGTH = 12;
     @NonNull private final AmountRepository amountRepository;
     @NonNull private final UserSelectionRepository userSelectionRepository;
+    private final GroupsRepository groupsRepository;
 
     //Card controller
     private PaymentMethodGuessingController mPaymentMethodGuessingController;
@@ -57,12 +59,9 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     private String mPublicKey;
     private PaymentRecovery mPaymentRecovery;
 
-    private List<PaymentMethod> mPaymentMethodList;
     private Identification mIdentification;
     private boolean mIdentificationNumberRequired;
     private PaymentPreference mPaymentPreference;
-    private String mMerchantBaseUrl;
-    private Boolean mShowDiscount;
 
     //Card Settings
     private int mSecurityCodeLength;
@@ -90,18 +89,17 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
 
     //Discount
     private String mPayerEmail;
-    private BigDecimal mTransactionAmount;
-    private Discount mDiscount;
     private String mPrivateKey;
     private int mCurrentNumberLength;
     private Issuer mIssuer;
 
     public GuessingCardPresenter(@NonNull final AmountRepository amountRepository,
-        @NonNull final UserSelectionRepository userSelectionRepository) {
+        @NonNull final UserSelectionRepository userSelectionRepository,
+        final GroupsRepository groupsRepository) {
         this.amountRepository = amountRepository;
         this.userSelectionRepository = userSelectionRepository;
+        this.groupsRepository = groupsRepository;
         mShowBankDeals = true;
-        mShowDiscount = false;
         mEraseSpace = true;
     }
 
@@ -132,8 +130,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         } else {
             resolveBankDeals();
         }
-        checkToLoadDiscountOrPaymentMethods();
-
+        loadPaymentMethods();
         fillRecoveryFields();
     }
 
@@ -244,14 +241,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         mCardToken = cardToken;
     }
 
-    public List<PaymentMethod> getPaymentMethodList() {
-        return mPaymentMethodList;
-    }
-
-    public void setPaymentMethodList(List<PaymentMethod> paymentMethodList) {
-        mPaymentMethodList = paymentMethodList;
-    }
-
     public void setPaymentTypesList(List<PaymentType> paymentTypesList) {
         mPaymentTypesList = paymentTypesList;
     }
@@ -312,11 +301,27 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     }
 
     public void initializeGuessingCardNumberController() {
-        List<PaymentMethod> supportedPaymentMethods = mPaymentPreference
-            .getSupportedPaymentMethods(mPaymentMethodList);
+        groupsRepository.getGroups().enqueue(new Callback<PaymentMethodSearch>() {
+            @Override
+            public void success(final PaymentMethodSearch paymentMethodSearch) {
+                loadSupportedPaymentMethods(paymentMethodSearch);
+            }
+
+            @Override
+            public void failure(final ApiException apiException) {
+                finishCardFlow();
+            }
+        });
+    }
+
+    /* default */ void loadSupportedPaymentMethods(final PaymentMethodSearch paymentMethodSearch) {
+        final List<PaymentMethod> supportedPaymentMethods =
+            mPaymentPreference.getSupportedPaymentMethods(paymentMethodSearch.getPaymentMethods());
         mPaymentMethodGuessingController = new PaymentMethodGuessingController(
             supportedPaymentMethods, mPaymentPreference.getDefaultPaymentTypeId(),
             mPaymentPreference.getExcludedPaymentTypes());
+
+        startGuessingForm();
     }
 
     public List<PaymentMethod> getAllSupportedPaymentMethods() {
@@ -328,7 +333,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     }
 
     private void startGuessingForm() {
-        initializeGuessingCardNumberController();
         getView().initializeTitle();
         getView().setCardNumberListeners(mPaymentMethodGuessingController);
         getView().setCardholderNameListeners();
@@ -343,7 +347,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         checkPaymentMethodsSupported(false);
     }
 
-    private void checkPaymentMethodsSupported(boolean withAnimation) {
+    private void checkPaymentMethodsSupported(final boolean withAnimation) {
         if (onlyOnePaymentMethodSupported()) {
             getView().setExclusionWithOneElementInfoView(getAllSupportedPaymentMethods().get(0), withAnimation);
         }
@@ -374,29 +378,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         }
     }
 
-    private void checkToLoadDiscountOrPaymentMethods() {
-        if (showDiscount()) {
-            loadDiscount();
-        } else {
-            loadPaymentMethods();
-        }
-    }
-
-    private void loadDiscount() {
-        loadPaymentMethods();
-    }
-
-    public void onDiscountReceived(Discount discount) {
-        setDiscount(discount);
-    }
-
-    public Discount getDiscount() {
-        return mDiscount;
-    }
-
-    public void setDiscount(Discount discount) {
-        mDiscount = discount;
-    }
 
     public void setPayerEmail(String payerEmail) {
         mPayerEmail = payerEmail;
@@ -406,25 +387,9 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         return mPayerEmail;
     }
 
-    public void setMerchantBaseUrl(String merchantBaseUrl) {
-        mMerchantBaseUrl = merchantBaseUrl;
-    }
-
-    public String getMerchantBaseUrl() {
-        return mMerchantBaseUrl;
-    }
-
-    public void setShowDiscount(Boolean showDiscount) {
-        mShowDiscount = showDiscount;
-    }
-
     private void loadPaymentMethods() {
-        if (mPaymentMethodList == null || mPaymentMethodList.isEmpty()) {
-            getPaymentMethodsAsync();
-        } else {
-            getView().showInputContainer();
-            startGuessingForm();
-        }
+        getView().showInputContainer();
+        initializeGuessingCardNumberController();
     }
 
     public void resolveBankDeals() {
@@ -433,35 +398,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         } else {
             getView().hideBankDeals();
         }
-    }
-
-    private void getPaymentMethodsAsync() {
-        getResourcesProvider()
-            .getPaymentMethodsAsync(new TaggedCallback<List<PaymentMethod>>(ApiUtil.RequestOrigin.GET_PAYMENT_METHODS) {
-                @Override
-                public void onSuccess(List<PaymentMethod> paymentMethods) {
-                    resolvePaymentMethodsAsync(paymentMethods);
-                }
-
-                @Override
-                public void onFailure(MercadoPagoError error) {
-                    if (isViewAttached()) {
-                        getView().showError(error, ApiUtil.RequestOrigin.GET_PAYMENT_METHODS);
-                        setFailureRecovery(new FailureRecovery() {
-                            @Override
-                            public void recover() {
-                                getPaymentMethodsAsync();
-                            }
-                        });
-                    }
-                }
-            });
-    }
-
-    private void resolvePaymentMethodsAsync(List<PaymentMethod> paymentMethods) {
-        getView().showInputContainer();
-        mPaymentMethodList = paymentMethods;
-        startGuessingForm();
     }
 
     public void resolvePaymentMethodListSet(List<PaymentMethod> paymentMethodList, String bin) {
@@ -887,16 +823,9 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         }
     }
 
-    private Boolean showDiscount() {
-        return mShowDiscount;
-    }
 
     public void setShowBankDeals(Boolean showBankDeals) {
         mShowBankDeals = showBankDeals;
-    }
-
-    public void setTransactionAmount(BigDecimal transactionAmount) {
-        mTransactionAmount = transactionAmount;
     }
 
     public boolean isDefaultSpaceErasable() {
@@ -1006,7 +935,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
             mIssuer = issuers.get(0);
             getInstallments();
         } else {
-            getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mDiscount, issuers);
+            getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, issuers);
         }
     }
 
@@ -1051,17 +980,16 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     private void resolvePayerCosts(List<PayerCost> payerCosts) {
         PayerCost defaultPayerCost = mPaymentPreference.getDefaultInstallments(payerCosts);
         if (defaultPayerCost != null) {
-            getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mDiscount, mIssuer,
+            getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mIssuer,
                 defaultPayerCost);
         } else if (payerCosts.isEmpty()) {
             getView().showError(new MercadoPagoError(getResourcesProvider().getMissingPayerCostsErrorMessage(), false),
                 ApiUtil.RequestOrigin.GET_INSTALLMENTS);
         } else if (payerCosts.size() == 1) {
-            getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mDiscount, mIssuer,
+            getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mIssuer,
                 payerCosts.get(0));
         } else {
-            getView()
-                .finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mDiscount, mIssuer, payerCosts);
+            getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mIssuer, payerCosts);
         }
     }
 

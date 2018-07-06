@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import com.mercadopago.R;
 import com.mercadopago.model.Campaign;
-import com.mercadopago.internal.di.AmountModule;
+import com.mercadopago.internal.di.Session;
 import com.mercadopago.internal.repository.AmountRepository;
 import com.mercadopago.internal.repository.UserSelectionRepository;
 import com.mercadopago.model.Discount;
@@ -71,11 +71,11 @@ public class ReviewAndConfirmBuilder {
 
         validate(activity);
 
-        final AmountModule amountModule = new AmountModule(activity);
+        final Session session = Session.getSession(activity);
         final UserSelectionRepository userSelectionRepository =
-            amountModule.getConfigurationModule().getUserSelectionRepository();
+            session.getConfigurationModule().getUserSelectionRepository();
 
-        final AmountRepository amountRepository = amountModule.getAmountRepository();
+        final AmountRepository amountRepository = session.getAmountRepository();
 
         final PaymentMethod paymentMethod = userSelectionRepository.getPaymentMethod();
 
@@ -97,7 +97,7 @@ public class ReviewAndConfirmBuilder {
                         merchantPublicKey,
                         LineSeparatorType.TOP_LINE_SEPARATOR) : null;
 
-        TermsAndConditionsModel discountTermsAndConditions =
+        final TermsAndConditionsModel discountTermsAndConditions =
                 campaign != null ? new TermsAndConditionsModel(campaign.getCampaignTermsUrl(),
                         activity.getString(R.string.mpsdk_discount_terms_and_conditions_message),
                         activity.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message),

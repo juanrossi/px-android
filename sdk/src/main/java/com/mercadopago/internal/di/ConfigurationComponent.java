@@ -4,5 +4,5 @@ import com.mercadopago.internal.repository.PaymentSettingRepository;
 
 public interface ConfigurationComponent {
 
-    PaymentSettingRepository getConfiguration();
+    PaymentSettingRepository getPaymentSettings();
 }

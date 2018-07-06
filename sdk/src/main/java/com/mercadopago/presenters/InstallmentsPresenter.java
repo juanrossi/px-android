@@ -6,6 +6,7 @@ import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.internal.repository.AmountRepository;
+import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.internal.repository.UserSelectionRepository;
 import com.mercadopago.model.Campaign;
@@ -30,8 +31,9 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     AmountView.OnClick {
 
     @NonNull private final AmountRepository amountRepository;
-    private final PaymentSettingRepository configuration;
-    private final UserSelectionRepository userSelectionRepository;
+    @NonNull private final PaymentSettingRepository configuration;
+    @NonNull private final UserSelectionRepository userSelectionRepository;
+    @NonNull private final DiscountRepository discountRepository;
 
     private FailureRecovery mFailureRecovery;
 
@@ -50,11 +52,13 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
     private Boolean installmentsReviewEnabled;
 
     public InstallmentsPresenter(@NonNull final AmountRepository amountRepository,
-        final PaymentSettingRepository configuration,
-        final UserSelectionRepository userSelectionRepository) {
+        @NonNull final PaymentSettingRepository configuration,
+        @NonNull final UserSelectionRepository userSelectionRepository,
+        @NonNull final DiscountRepository discountRepository) {
         this.amountRepository = amountRepository;
         this.configuration = configuration;
         this.userSelectionRepository = userSelectionRepository;
+        this.discountRepository = discountRepository;
     }
 
     public void initialize() {
@@ -65,7 +69,7 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
 
     public void initializeAmountRow() {
         if (isViewAttached()) {
-            getView().showAmount(configuration.getDiscount(), configuration.getCampaign(),
+            getView().showAmount(discountRepository,
                 amountRepository.getItemsPlusCharges(), configuration.getCheckoutPreference().getSite());
         }
     }
@@ -187,12 +191,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         return cardInfo != null && paymentMethod != null;
     }
 
-    public void onDiscountReceived(Discount discount) {
-        configuration.configure(discount);
-        initializeAmountRow();
-        getInstallmentsAsync();
-    }
-
     private OnSelectedCallback<Integer> getDpadSelectionCallback() {
         return new OnSelectedCallback<Integer>() {
             @Override
@@ -251,11 +249,6 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
 
     @Override
     public void onDetailClicked(@NonNull final Discount discount, @NonNull final Campaign campaign) {
-        getView().showDetailDialog(discount, campaign);
-    }
-
-    @Override
-    public void onDetailClicked(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign) {
         getView().showDetailDialog(discount, campaign);
     }
 

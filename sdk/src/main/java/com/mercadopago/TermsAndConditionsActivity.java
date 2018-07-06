@@ -61,7 +61,6 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
         initializeToolbar();
     }
 
-
     private void initializeToolbar() {
         mToolbar = findViewById(R.id.mpsdkToolbar);
         setSupportActionBar(mToolbar);

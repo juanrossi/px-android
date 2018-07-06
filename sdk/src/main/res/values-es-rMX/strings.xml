@@ -3,5 +3,4 @@
     <string name="mpsdk_homebanking">banca en línea de</string>
     <string name="mpsdk_card_installments_title">¿En cuántas mensualidades?</string>
     <string name="mpsdk_error_message_invalid_installments">Número de mensualidades inválido</string>
-    <string name="mpsdk_has_a_coupon_discount">¿Tienes un cupón de descuento?</string>
 </resources>

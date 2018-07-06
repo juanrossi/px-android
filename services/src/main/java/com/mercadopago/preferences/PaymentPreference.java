@@ -126,9 +126,9 @@ public class PaymentPreference implements Serializable {
     }
 
     public List<PaymentMethod> getSupportedPaymentMethods(List<PaymentMethod> paymentMethods) {
-        List<PaymentMethod> supportedPaymentMethods = new ArrayList<>();
+        final List<PaymentMethod> supportedPaymentMethods = new ArrayList<>();
         if (paymentMethods != null) {
-            for (PaymentMethod paymentMethod : paymentMethods) {
+            for (final PaymentMethod paymentMethod : paymentMethods) {
                 if (isPaymentMethodSupported(paymentMethod)) {
                     supportedPaymentMethods.add(paymentMethod);
                 }

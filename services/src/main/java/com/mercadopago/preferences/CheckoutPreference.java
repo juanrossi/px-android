@@ -158,11 +158,12 @@ public class CheckoutPreference implements Serializable {
         return Item.getTotalAmountWith(items);
     }
 
+    @NonNull
     public List<String> getExcludedPaymentTypes() {
         if (paymentPreference != null) {
             return paymentPreference.getExcludedPaymentTypes();
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -182,6 +183,7 @@ public class CheckoutPreference implements Serializable {
         return items;
     }
 
+    @NonNull
     public Payer getPayer() {
         return payer;
     }

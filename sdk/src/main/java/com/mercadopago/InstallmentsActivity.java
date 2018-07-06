@@ -3,7 +3,6 @@ package com.mercadopago;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,22 +14,22 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PayerCostsAdapter;
+import com.mercadopago.callbacks.OnDiscountRetrieved;
 import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.codediscount.CodeDiscountDialog;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.MercadoPagoCheckout;
-import com.mercadopago.core.MercadoPagoComponents;
-import com.mercadopago.core.MercadoPagoUI;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.internal.di.AmountModule;
 import com.mercadopago.internal.di.ConfigurationModule;
+import com.mercadopago.internal.di.Session;
+import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.listeners.RecyclerItemClickListener;
 import com.mercadopago.lite.controllers.CustomServicesHandler;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CardInfo;
-import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
@@ -56,11 +55,12 @@ import com.mercadopago.util.ViewUtils;
 import com.mercadopago.views.AmountView;
 import com.mercadopago.views.DiscountDetailDialog;
 import com.mercadopago.views.InstallmentsActivityView;
+import com.mercadopago.views.MercadoPagoUI;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class InstallmentsActivity extends MercadoPagoBaseActivity implements InstallmentsActivityView, TimerObserver {
+public class InstallmentsActivity extends MercadoPagoBaseActivity implements InstallmentsActivityView, OnDiscountRetrieved, TimerObserver {
 
     protected InstallmentsPresenter presenter;
 
@@ -101,11 +101,12 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final AmountModule amountModule = new AmountModule(this);
-        final ConfigurationModule configurationModule = amountModule.getConfigurationModule();
-        configuration = configurationModule.getConfiguration();
-        presenter = new InstallmentsPresenter(amountModule.getAmountRepository(), configuration,
-            configurationModule.getUserSelectionRepository());
+        final Session session = Session.getSession(this);
+        final ConfigurationModule configurationModule = session.getConfigurationModule();
+        configuration = configurationModule.getPaymentSettings();
+        presenter = new InstallmentsPresenter(session.getAmountRepository(), configuration,
+            configurationModule.getUserSelectionRepository(),
+            session.getDiscountRepository());
         privateKey = configuration.getCheckoutPreference().getPayer().getAccessToken();
         getActivityParameters();
         presenter.attachView(this);
@@ -301,7 +302,6 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
                         showInstallmentsRecyclerView();
                     } else {
                         Intent returnIntent = new Intent();
-                        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(configuration.getDiscount()));
                         setResult(RESULT_CANCELED, returnIntent);
                         finish();
                     }
@@ -410,7 +410,6 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
     public void finishWithResult(PayerCost payerCost) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("payerCost", JsonUtil.getInstance().toJson(payerCost));
-        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(configuration.getDiscount()));
         setResult(RESULT_OK, returnIntent);
         finish();
         animateTransitionSlideInSlideOut();
@@ -426,9 +425,8 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
             hideInstallmentsReviewView();
             showInstallmentsRecyclerView();
         } else {
-            Intent returnIntent = new Intent();
+            final Intent returnIntent = new Intent();
             returnIntent.putExtra("backButtonPressed", true);
-            returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(configuration.getDiscount()));
             setResult(RESULT_CANCELED, returnIntent);
             finish();
         }
@@ -444,18 +442,9 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
                 setResult(resultCode, data);
                 finish();
             }
-        } else if (requestCode == MercadoPagoComponents.Activities.DISCOUNTS_REQUEST_CODE) {
-            resolveDiscountRequest(resultCode, data);
         } else {
             setResult(resultCode, data);
             finish();
-        }
-    }
-
-    protected void resolveDiscountRequest(final int resultCode, final Intent data) {
-        if (resultCode == RESULT_OK && configuration.getDiscount() == null) {
-            final Discount discount = JsonUtil.getInstance().fromJson(data.getStringExtra("discount"), Discount.class);
-                presenter.onDiscountReceived(discount);
         }
     }
 
@@ -503,16 +492,10 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
     }
 
     @Override
-    public void showAmount(@Nullable Discount discount, @Nullable Campaign campaign, final BigDecimal totalAmount,
-        final Site site) {
-        //TODO refactor -> should be not null // Quick and dirty implementation.
-        if (discount == null) {
-            amountView.show(totalAmount, site);
-        } else {
-            amountView.show(discount, campaign, totalAmount, site);
-        }
-
+    public void showAmount(@NonNull final DiscountRepository discountRepository,
+        @NonNull final BigDecimal itemsPlusCharges, @NonNull final Site site) {
         amountView.setOnClickListener(presenter);
+        amountView.show(discountRepository, itemsPlusCharges, site);
     }
 
     @Override
@@ -521,14 +504,12 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
     }
 
     @Override
-    public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign) {
-        //TODO - Other dialog.
-        DiscountDetailDialog.showDialog(null, null, getSupportFragmentManager());
+    public void showDiscountInputDialog() {
+        CodeDiscountDialog.showDialog(getSupportFragmentManager());
     }
 
     @Override
-    public void showDiscountInputDialog() {
-        //TODO - Other dialog.
-        DiscountDetailDialog.showDialog(null, null, getSupportFragmentManager());
+    public void onDiscountRetrieved() {
+        //TODO actualizar cuotas
     }
 }

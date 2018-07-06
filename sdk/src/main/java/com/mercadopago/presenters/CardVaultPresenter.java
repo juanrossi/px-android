@@ -37,7 +37,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     //Activity parameters
     private PaymentRecovery paymentRecovery;
-    private List<PaymentMethod> paymentMethodList;
 
     private boolean installmentsEnabled;
     private boolean installmentsReviewEnabled;
@@ -85,10 +84,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     public void setPaymentRecovery(final PaymentRecovery paymentRecovery) {
         this.paymentRecovery = paymentRecovery;
-    }
-
-    public void setPaymentMethodList(final List<PaymentMethod> paymentMethodList) {
-        this.paymentMethodList = paymentMethodList;
     }
 
     public void setInstallmentsEnabled(final boolean installmentsEnabled) {
@@ -139,16 +134,8 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         return paymentRecovery;
     }
 
-    public List<PaymentMethod> getPaymentMethodList() {
-        return paymentMethodList;
-    }
-
     public Card getCard() {
         return card;
-    }
-
-    public String getESC() {
-        return esc;
     }
 
     public void setESC(final String esc) {
@@ -190,10 +177,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     public void setAutomaticSelection(final boolean automaticSelection) {
         this.automaticSelection = automaticSelection;
-    }
-
-    public boolean getAutomaticSelection() {
-        return automaticSelection;
     }
 
     public boolean isInstallmentsListShown() {

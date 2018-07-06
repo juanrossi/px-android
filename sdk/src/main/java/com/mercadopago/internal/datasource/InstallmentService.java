@@ -3,7 +3,10 @@ package com.mercadopago.internal.datasource;
 import android.support.annotation.NonNull;
 import com.mercadopago.internal.repository.InstallmentRepository;
 import com.mercadopago.internal.repository.UserSelectionRepository;
+import com.mercadopago.lite.adapters.MPCall;
+import com.mercadopago.model.Installment;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class InstallmentService implements InstallmentRepository {
 
@@ -25,5 +28,11 @@ public class InstallmentService implements InstallmentRepository {
     public BigDecimal getInstallmentTotalAmount() {
         return userSelectionService.hasPayerCostSelected() ? userSelectionService.getPayerCost().getTotalAmount()
             : BigDecimal.ZERO;
+    }
+
+    @NonNull
+    @Override
+    public MPCall<List<Installment>> getInstallments() {
+        return null;
     }
 }

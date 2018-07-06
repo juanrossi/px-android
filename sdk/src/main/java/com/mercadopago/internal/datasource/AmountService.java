@@ -3,6 +3,7 @@ package com.mercadopago.internal.datasource;
 import android.support.annotation.NonNull;
 import com.mercadopago.internal.repository.AmountRepository;
 import com.mercadopago.internal.repository.ChargeRepository;
+import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.internal.repository.InstallmentRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.model.Discount;
@@ -13,13 +14,16 @@ public class AmountService implements AmountRepository {
     @NonNull private final PaymentSettingRepository paymentSetting;
     @NonNull private final ChargeRepository chargeRepository;
     @NonNull private final InstallmentRepository installmentRepository;
+    @NonNull private final DiscountRepository discountRepository;
 
     public AmountService(@NonNull final PaymentSettingRepository paymentSetting,
         @NonNull final ChargeRepository chargeRepository,
-        @NonNull final InstallmentRepository installmentRepository) {
+        @NonNull final InstallmentRepository installmentRepository,
+        @NonNull final DiscountRepository discountRepository) {
         this.paymentSetting = paymentSetting;
         this.chargeRepository = chargeRepository;
         this.installmentRepository = installmentRepository;
+        this.discountRepository = discountRepository;
     }
 
     @Override
@@ -65,7 +69,7 @@ public class AmountService implements AmountRepository {
 
 
     private BigDecimal getDiscountAmount() {
-        final Discount discount = paymentSetting.getDiscount();
+        final Discount discount = discountRepository.getDiscount();
         return discount == null ? BigDecimal.ZERO : discount.getCouponAmount();
     }
 }

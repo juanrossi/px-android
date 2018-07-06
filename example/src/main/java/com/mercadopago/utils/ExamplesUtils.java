@@ -89,6 +89,7 @@ public final class ExamplesUtils {
     public static List<Pair<String, Builder>> getOptions() {
         final List<Pair<String, Builder>> options = new ArrayList<>(BusinessSamples.getAll());
         ChargesSamples.addAll(options);
+        DiscountSamples.addAll(options);
         options.add(new Pair<>("Review and Confirm - Custom exit", customExitReviewAndConfirm()));
         options.add(new Pair<>("Base flow - Tracks with listener", startBaseFlowWithTrackListener()));
         options.add(new Pair<>("All but debit card", allButDebitCard()));
@@ -100,12 +101,7 @@ public final class ExamplesUtils {
     }
 
     private static Builder allButDebitCard() {
-        final Item item = new Item("Aaaa", 1, new BigDecimal(10));
-        item.setId("123");
-        item.setCurrencyId("ARS");
-
-        final CheckoutPreference.Builder builder = new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a",
-            Collections.singletonList(item));
+        final CheckoutPreference.Builder builder = getBasePreferenceBuilder();
 
         for (final String type : PaymentTypes.getAllPaymentTypes()) {
             if (!PaymentTypes.DEBIT_CARD.equals(type)) {
@@ -115,6 +111,16 @@ public final class ExamplesUtils {
 
         return createBase(builder.build())
             .setFlowPreference(new FlowPreference.Builder().exitOnPaymentMethodChange().build());
+    }
+
+    @NonNull
+    private static CheckoutPreference.Builder getBasePreferenceBuilder() {
+        final Item item = new Item("Aaaa", 1, new BigDecimal(10));
+        item.setId("123");
+        item.setCurrencyId("ARS");
+
+        return new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a",
+            Collections.singletonList(item));
     }
 
     private static Builder customExitReviewAndConfirm() {
@@ -142,67 +148,35 @@ public final class ExamplesUtils {
     }
 
     private static Builder createBase(@NonNull final CheckoutPreference checkoutPreference) {
-        final Map<String, Object> defaultData = new HashMap<>();
-
-        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, checkoutPreference)
-            .setDataInitializationTask(getDataInitializationTask(defaultData));
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, checkoutPreference);
     }
 
     public static Builder createBase() {
-        final Map<String, Object> defaultData = new HashMap<>();
-
-        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID)
-            .setDataInitializationTask(getDataInitializationTask(defaultData));
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID);
     }
 
     private static Builder createBaseWithDecimals() {
-        final Map<String, Object> defaultData = new HashMap<>();
-        defaultData.put("amount", "120");
-
-        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_DECIMALS)
-            .setDataInitializationTask(getDataInitializationTask(defaultData));
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_DECIMALS);
     }
 
     private static Builder createBaseWithTwoItems() {
-        final Map<String, Object> defaultData = new HashMap<>();
-
-        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_TWO_ITEMS)
-            .setDataInitializationTask(getDataInitializationTask(defaultData));
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_TWO_ITEMS);
     }
 
     private static Builder createBaseWithOneItemWithQuantity() {
-        final Map<String, Object> defaultData = new HashMap<>();
-
-        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_ONE_ITEM_WITH_QUANTITY)
-            .setDataInitializationTask(getDataInitializationTask(defaultData));
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_ONE_ITEM_WITH_QUANTITY);
     }
 
     private static Builder createBaseWithTwoItemsAndCollectorIcon() {
-        final Map<String, Object> defaultData = new HashMap<>();
-
         final ReviewAndConfirmPreferences preferences = new ReviewAndConfirmPreferences.Builder()
             .setCollectorIcon(R.drawable.mpsdk_collector_icon)
             .build();
 
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_TWO_ITEMS)
-            .setReviewAndConfirmPreferences(preferences)
-            .setDataInitializationTask(getDataInitializationTask(defaultData));
+            .setReviewAndConfirmPreferences(preferences);
     }
 
     private static Builder createBaseWithOneItemLongTitle() {
-        final Map<String, Object> defaultData = new HashMap<>();
-
-        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_ITEM_LONG_TITLE)
-            .setDataInitializationTask(getDataInitializationTask(defaultData));
-    }
-
-    @NonNull
-    private static DataInitializationTask getDataInitializationTask(final Map<String, Object> defaultData) {
-        return new DataInitializationTask(defaultData) {
-            @Override
-            public void onLoadData(@NonNull final Map<String, Object> data) {
-                data.put("user", "Nico");
-            }
-        };
+        return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_ITEM_LONG_TITLE);
     }
 }

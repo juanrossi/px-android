@@ -11,12 +11,11 @@ import com.google.gson.reflect.TypeToken;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.internal.di.AmountModule;
+import com.mercadopago.internal.di.Session;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
@@ -59,10 +58,10 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
         escEnabled = intent.getBooleanExtra(EXTRA_ESC_ENABLED, false);
         showBankDeals = intent.getBooleanExtra(EXTRA_SHOW_BANK_DEALS, true);
         final Card card = JsonUtil.getInstance().fromJson(intent.getStringExtra(EXTRA_CARD), Card.class);
-        final AmountModule amountModule = new AmountModule(this);
-        configuration = amountModule.getConfigurationModule().getConfiguration();
+        final Session session = Session.getSession(this);
+        configuration = session.getConfigurationModule().getPaymentSettings();
         privateKey = configuration.getCheckoutPreference().getPayer().getAccessToken();
-        presenter = new CardVaultPresenter(amountModule.getAmountRepository(), configuration);
+        presenter = new CardVaultPresenter(session.getAmountRepository(), configuration);
         presenter.attachResourcesProvider(new CardVaultProviderImpl(this, publicKey, privateKey, escEnabled));
         presenter.attachView(this);
         presenter.setCard(card);
@@ -100,17 +99,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
     }
 
     public void restoreInstanceState(Bundle savedInstanceState) {
-
-        List<PaymentMethod> paymentMethods;
-        try {
-            Type listType = new TypeToken<List<PaymentMethod>>() {
-            }.getType();
-            paymentMethods =
-                JsonUtil.getInstance().getGson().fromJson(savedInstanceState.getString("paymentMethodList"), listType);
-        } catch (Exception ex) {
-            paymentMethods = null;
-        }
-
         List<PayerCost> payerCosts;
         try {
             Type listType = new TypeToken<List<Card>>() {
@@ -121,7 +109,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
             payerCosts = null;
         }
 
-        presenter.setPaymentMethodList(paymentMethods);
         presenter.setPayerCostsList(payerCosts);
         presenter.setPaymentRecovery(
             JsonUtil.getInstance().fromJson(savedInstanceState.getString("paymentRecovery"), PaymentRecovery.class));
@@ -165,7 +152,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
         presenter.setInstallmentsEnabled(installmentsEnabled);
         presenter.setPaymentRecovery(paymentRecovery);
-        presenter.setPaymentMethodList(paymentMethods);
         presenter.setInstallmentsReviewEnabled(installmentsReviewEnabled);
         presenter.setAutomaticSelection(automaticSelection);
     }
@@ -258,11 +244,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
                     .putString("payerCostsList", JsonUtil.getInstance().toJson(presenter.getPayerCostList()));
             }
 
-            if (presenter.getPaymentMethodList() != null) {
-                outState.putString("paymentMethodList",
-                    JsonUtil.getInstance().toJson(presenter.getPaymentMethodList()));
-            }
-
             if (presenter.getPaymentMethod() != null) {
                 outState
                     .putString("paymentMethod", JsonUtil.getInstance().toJson(presenter.getPaymentMethod()));
@@ -310,10 +291,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
         if (resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
             PayerCost payerCost = JsonUtil.getInstance().fromJson(bundle.getString("payerCost"), PayerCost.class);
-            Discount discount = JsonUtil.getInstance().fromJson(bundle.getString("discount"), Discount.class);
-            if (discount != null) {
-                configuration.configure(discount);
-            }
             presenter.resolveInstallmentsRequest(payerCost);
         } else if (resultCode == RESULT_CANCELED) {
             presenter.onResultCancel();
@@ -325,7 +302,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
             PaymentMethod paymentMethod =
                 JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethod"), PaymentMethod.class);
             Token token = JsonUtil.getInstance().fromJson(data.getStringExtra("token"), Token.class);
-            Discount discount = JsonUtil.getInstance().fromJson(data.getStringExtra("discount"), Discount.class);
             Issuer issuer = JsonUtil.getInstance().fromJson(data.getStringExtra("issuer"), Issuer.class);
             PayerCost payerCost = JsonUtil.getInstance().fromJson(data.getStringExtra("payerCost"), PayerCost.class);
 
@@ -345,10 +321,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
                 issuers = JsonUtil.getInstance().getGson().fromJson(data.getStringExtra("issuers"), listType);
             } catch (Exception ex) {
                 issuers = null;
-            }
-
-            if (discount != null) {
-                configuration.configure(discount);
             }
 
             presenter.resolveNewCardRequest(paymentMethod, token, payerCost, issuer, payerCosts, issuers);
@@ -415,11 +387,8 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
                     .setMerchantPublicKey(publicKey)
                     .setPayerEmail(configuration.getCheckoutPreference().getPayer().getEmail())
                     .setPayerAccessToken(privateKey)
-                    .setDiscount(configuration.getDiscount())
                     .setShowBankDeals(showBankDeals)
                     .setPaymentPreference(configuration.getCheckoutPreference().getPaymentPreference())
-                    .setAcceptedPaymentMethods(presenter.getPaymentMethodList())
-                    .setShowDiscount(presenter.getAutomaticSelection())
                     .setPaymentRecovery(presenter.getPaymentRecovery())
                     .startActivity();
                 overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
@@ -434,7 +403,6 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
             .setPayerAccessToken(privateKey)
             .setPaymentMethod(presenter.getPaymentMethod())
             .setPayerEmail(configuration.getCheckoutPreference().getPayer().getEmail())
-            .setDiscount(configuration.getDiscount(), configuration.getCampaign())
             .setIssuer(presenter.getIssuer())
             .setPaymentPreference(configuration.getCheckoutPreference().getPaymentPreference())
             .setSite(configuration.getCheckoutPreference().getSite())
@@ -462,19 +430,18 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(presenter.getPaymentMethod()));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(presenter.getToken()));
         returnIntent.putExtra("issuer", JsonUtil.getInstance().toJson(presenter.getIssuer()));
-        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(configuration.getDiscount()));
         returnIntent.putExtra(EXTRA_CARD, JsonUtil.getInstance().toJson(presenter.getCard()));
         setResult(RESULT_OK, returnIntent);
         finish();
     }
 
     @Override
-    public void showApiExceptionError(ApiException exception, String requestOrigin) {
+    public void showApiExceptionError(final ApiException exception, final String requestOrigin) {
         ApiUtil.showApiExceptionError(this, exception, publicKey, requestOrigin);
     }
 
     @Override
-    public void showError(MercadoPagoError error, String requestOrigin) {
+    public void showError(final MercadoPagoError error, final String requestOrigin) {
         if (error != null && error.isApiException()) {
             showApiExceptionError(error.getApiException(), requestOrigin);
         } else {

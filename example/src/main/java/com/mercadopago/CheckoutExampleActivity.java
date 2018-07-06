@@ -3,11 +3,13 @@ package com.mercadopago;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
-
+import com.mercadopago.core.CheckoutLazyBuilder;
 import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.customviews.MPButton;
 import com.mercadopago.example.R;
 import com.mercadopago.lite.core.Settings;
 import com.mercadopago.tracking.constants.TrackingEnvironments;
@@ -19,6 +21,8 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
     private View mRegularLayout;
+    private MPButton continueSimpleCheckout;
+    private CheckoutLazyBuilder checkoutLazyBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +37,15 @@ public class CheckoutExampleActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progressBar);
         mRegularLayout = findViewById(R.id.regularLayout);
 
-        View jsonConfigurationButton = findViewById(R.id.jsonConfigButton);
-        View continueSimpleCheckout = findViewById(R.id.continueButton);
-        View selectCheckoutButton = findViewById(R.id.select_checkout);
+        final View jsonConfigurationButton = findViewById(R.id.jsonConfigButton);
+        continueSimpleCheckout = findViewById(R.id.continueButton);
+
+        final View selectCheckoutButton = findViewById(R.id.select_checkout);
 
         jsonConfigurationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startJsonInput();
-            }
-        });
-
-        continueSimpleCheckout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onContinueClicked();
             }
         });
 
@@ -57,11 +55,32 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 startActivity(new Intent(CheckoutExampleActivity.this, SelectCheckoutActivity.class));
             }
         });
-    }
 
-    private void onContinueClicked() {
-        MercadoPagoCheckout.Builder builder = ExamplesUtils.createBase();
-        builder.build().startForPayment(this);
+        checkoutLazyBuilder = new CheckoutLazyBuilder(ExamplesUtils.createBase()) {
+
+            @Override
+            public void fail(@NonNull final MercadoPagoCheckout mercadoPagoCheckout) {
+                continueSimpleCheckout.setEnabled(true);
+                continueSimpleCheckout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mercadoPagoCheckout.startForPayment(CheckoutExampleActivity.this);
+                    }
+                });
+            }
+
+            @Override
+            public void success(@NonNull final MercadoPagoCheckout mercadoPagoCheckout) {
+                continueSimpleCheckout.setEnabled(true);
+                continueSimpleCheckout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mercadoPagoCheckout.startForPayment(CheckoutExampleActivity.this);
+                    }
+                });
+            }
+        };
+
     }
 
     @Override
@@ -74,6 +93,9 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         showRegularLayout();
+        continueSimpleCheckout.setEnabled(false);
+        checkoutLazyBuilder.cancel();
+        checkoutLazyBuilder.fetch(this);
     }
 
     private void showRegularLayout() {

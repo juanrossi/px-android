@@ -41,7 +41,7 @@ import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.ExceptionHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.internal.di.AmountModule;
+import com.mercadopago.internal.di.Session;
 import com.mercadopago.listeners.card.CardExpiryDateTextWatcher;
 import com.mercadopago.listeners.card.CardIdentificationNumberTextWatcher;
 import com.mercadopago.listeners.card.CardNumberTextWatcher;
@@ -53,7 +53,6 @@ import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.CardToken;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
@@ -107,7 +106,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     public static final String SEC_CODE_LOCATION_BUNDLE = "mSecurityCodeLocation";
     public static final String CARD_TOKEN_BUNDLE = "mCardToken";
     public static final String CARD_INFO_BIN_BUNDLE = "mBin";
-    public static final String PAYMENT_METHOD_LIST_BUNDLE = "mPaymentMethodList";
     public static final String EXPIRY_MONTH_BUNDLE = "mExpiryMonth";
     public static final String EXPIRY_YEAR_BUNDLE = "mExpiryYear";
     public static final String CARD_NUMBER_BUNDLE = "mCardNumber";
@@ -227,17 +225,16 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         if (CustomServicesHandler.getInstance().getServicePreference() != null) {
             mDefaultBaseURL = CustomServicesHandler.getInstance().getServicePreference().getDefaultBaseURL();
         }
-
-        mPresenter.setMerchantBaseUrl(mDefaultBaseURL);
     }
 
     private void getActivityParameters() {
 
         final Intent intent = getIntent();
 
-        final AmountModule amountModule = new AmountModule(this);
-        mPresenter = new GuessingCardPresenter(amountModule.getAmountRepository(),
-            amountModule.getConfigurationModule().getUserSelectionRepository());
+        final Session session = Session.getSession(this);
+        mPresenter = new GuessingCardPresenter(session.getAmountRepository(),
+            session.getConfigurationModule().getUserSelectionRepository(),
+            session.getGroupsRepository());
         mPublicKey = intent.getStringExtra("merchantPublicKey");
         mPrivateKey = intent.getStringExtra("payerAccessToken");
         PaymentPreference paymentPreference =
@@ -246,41 +243,24 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         PaymentRecovery paymentRecovery =
             JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentRecovery"), PaymentRecovery.class);
 
-        BigDecimal transactionAmount =
-            JsonUtil.getInstance().fromJson(intent.getStringExtra("amount"), BigDecimal.class);
-        Discount discount = JsonUtil.getInstance().fromJson(intent.getStringExtra("discount"), Discount.class);
         String payerEmail = intent.getStringExtra("payerEmail");
 
         Token token = null;
 
-        List<PaymentMethod> paymentMethodList;
-        try {
-            Type listType = new TypeToken<List<PaymentMethod>>() {
-            }.getType();
-            paymentMethodList =
-                JsonUtil.getInstance().getGson().fromJson(intent.getStringExtra("paymentMethodList"), listType);
-        } catch (Exception ex) {
-            paymentMethodList = null;
-        }
         Identification identification = new Identification();
         boolean identificationNumberRequired = false;
 
         Boolean showBankDeals = intent.getBooleanExtra("showBankDeals", true);
-        Boolean showDiscount = intent.getBooleanExtra("showDiscount", false);
 
         mPresenter.setPrivateKey(mPrivateKey);
         mPresenter.setPublicKey(mPublicKey);
         mPresenter.setToken(token);
         mPresenter.setShowBankDeals(showBankDeals);
-        mPresenter.setPaymentMethodList(paymentMethodList);
         mPresenter.setIdentification(identification);
         mPresenter.setIdentificationNumberRequired(identificationNumberRequired);
         mPresenter.setPaymentPreference(paymentPreference);
         mPresenter.setPaymentRecovery(paymentRecovery);
         mPresenter.setPayerEmail(payerEmail);
-        mPresenter.setDiscount(discount);
-        mPresenter.setTransactionAmount(transactionAmount);
-        mPresenter.setShowDiscount(showDiscount);
     }
 
     @Override
@@ -298,8 +278,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             outState.putString(SEC_CODE_LOCATION_BUNDLE, mPresenter.getSecurityCodeLocation());
             outState.putString(CARD_TOKEN_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getCardToken()));
             outState.putString(CARD_INFO_BIN_BUNDLE, mPresenter.getSavedBin());
-            outState.putString(PAYMENT_METHOD_LIST_BUNDLE,
-                JsonUtil.getInstance().toJson(mPresenter.getPaymentMethodList()));
             outState.putString(CARD_NUMBER_BUNDLE, mPresenter.getCardNumber());
             outState.putString(CARD_NAME_BUNDLE, mPresenter.getCardholderName());
             outState.putString(EXPIRY_MONTH_BUNDLE, mPresenter.getExpiryMonth());
@@ -327,15 +305,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 PaymentMethod pm = JsonUtil.getInstance()
                     .fromJson(savedInstanceState.getString(PAYMENT_METHOD_BUNDLE), PaymentMethod.class);
                 if (pm != null) {
-                    List<PaymentMethod> paymentMethodList;
-                    try {
-                        Type listType = new TypeToken<List<PaymentMethod>>() {
-                        }.getType();
-                        paymentMethodList = JsonUtil.getInstance().getGson().fromJson(
-                            savedInstanceState.getString(PAYMENT_METHOD_LIST_BUNDLE), listType);
-                    } catch (Exception ex) {
-                        paymentMethodList = null;
-                    }
                     List<PaymentType> paymentTypesList;
                     try {
                         Type listType = new TypeToken<List<PaymentType>>() {
@@ -363,7 +332,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                     } catch (Exception ex) {
                         identificationTypesList = null;
                     }
-                    mPresenter.setPaymentMethodList(paymentMethodList);
                     mPresenter.setPaymentTypesList(paymentTypesList);
                     mPresenter.setIdentificationTypesList(identificationTypesList);
                     mPresenter.setBankDealsList(bankDealsList);
@@ -1614,9 +1582,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             } else if (resultCode == RESULT_CANCELED) {
                 finish();
             }
-        } else if (requestCode == MercadoPagoComponents.Activities.DISCOUNTS_REQUEST_CODE) {
-            setSoftInputMode();
-            resolveDiscountRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_PAYMENT_METHODS_REQUEST_CODE) {
             clearReviewPaymentMethodsMode();
         } else if (requestCode == ErrorUtil.ERROR_REQUEST_CODE) {
@@ -1640,51 +1605,39 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         openKeyboard(mCardNumberEditText);
     }
 
-    private void resolveDiscountRequest(int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (mPresenter.getDiscount() == null) {
-                Discount discount = JsonUtil.getInstance().fromJson(data.getStringExtra("discount"), Discount.class);
-                mPresenter.onDiscountReceived(discount);
-            }
-        }
-    }
-
     @Override
-    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount,
+    public void finishCardFlow(PaymentMethod paymentMethod, Token token,
         List<Issuer> issuers) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuers", JsonUtil.getInstance().toJson(issuers));
-        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 
     @Override
-    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount,
+    public void finishCardFlow(PaymentMethod paymentMethod, Token token,
         Issuer issuer, List<PayerCost> payerCosts) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuer", JsonUtil.getInstance().toJson(issuer));
         returnIntent.putExtra("payerCosts", JsonUtil.getInstance().toJson(payerCosts));
-        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 
     @Override
-    public void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount,
+    public void finishCardFlow(PaymentMethod paymentMethod, Token token,
         Issuer issuer, PayerCost payerCost) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("token", JsonUtil.getInstance().toJson(token));
         returnIntent.putExtra("issuer", JsonUtil.getInstance().toJson(issuer));
         returnIntent.putExtra("payerCost", JsonUtil.getInstance().toJson(payerCost));
-        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
@@ -1693,8 +1646,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     @Override
     public void onBackPressed() {
         checkFlipCardToFront();
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));
+        final Intent returnIntent = new Intent();
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);
         finish();

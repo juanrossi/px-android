@@ -1,7 +1,6 @@
 package com.mercadopago.onetap.components;
 
 import android.content.Context;
-import android.icu.util.CurrencyAmount;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,6 +11,8 @@ import com.mercadopago.components.ButtonPrimary;
 import com.mercadopago.components.CompactComponent;
 import com.mercadopago.components.TermsAndConditionsComponent;
 import com.mercadopago.internal.di.ConfigurationModule;
+import com.mercadopago.internal.di.Session;
+import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Discount;
@@ -25,6 +26,7 @@ import com.mercadopago.viewmodel.OneTapModel;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Actions> {
 
@@ -34,14 +36,16 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        final ConfigurationModule configurationModule = new ConfigurationModule(parent.getContext());
-        final PaymentSettingRepository configuration = configurationModule.getConfiguration();
-        final Discount discount = configuration.getDiscount();
-        final Campaign campaign = configuration.getCampaign();
+        final Session session = Session.getSession(parent.getContext());
+        final ConfigurationModule configurationModule = session.getConfigurationModule();
+        final PaymentSettingRepository configuration = configurationModule.getPaymentSettings();
+        final DiscountRepository discountRepository = session.getDiscountRepository();
+        final Discount discount = discountRepository.getDiscount();
+        final Campaign campaign = discountRepository.getCampaign();
 
         addItem(parent, configuration.getCheckoutPreference().getItems());
-        addAmount(parent, configuration);
-        addPaymentMethod(parent, configuration);
+        addAmount(parent, configuration, discountRepository);
+        addPaymentMethod(parent, configuration, discountRepository);
         addTermsAndConditions(parent, campaign);
         addConfirmButton(parent, discount);
         return parent;
@@ -58,22 +62,24 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
     }
 
     private void addAmount(final ViewGroup parent,
-                           final PaymentSettingRepository configuration) {
-        final Amount.Props props = Amount.Props.from(this.props, configuration);
+                           final PaymentSettingRepository configuration,
+                           final DiscountRepository discountRepository) {
+        final Amount.Props props = Amount.Props.from(this.props, configuration, discountRepository);
         final View view = new Amount(props, getActions())
                 .render(parent);
         parent.addView(view);
     }
 
     private void addPaymentMethod(final ViewGroup parent,
-                                  final PaymentSettingRepository configuration) {
+                                  final PaymentSettingRepository configuration,
+                                  final DiscountRepository discountRepository) {
         final View view =
-                new PaymentMethod(PaymentMethod.Props.createFrom(props, configuration),
+                new PaymentMethod(PaymentMethod.Props.createFrom(props, configuration, discountRepository),
                         getActions()).render(parent);
         parent.addView(view);
     }
 
-    private void addTermsAndConditions(final ViewGroup parent, final Campaign campaign) {
+    private void addTermsAndConditions(final ViewGroup parent, @Nullable final Campaign campaign) {
         if (campaign != null) {
             final Context context = parent.getContext();
             TermsAndConditionsModel model = new TermsAndConditionsModel(campaign.getCampaignTermsUrl(),
@@ -87,7 +93,7 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
         }
     }
 
-    private void addConfirmButton(final @Nonnull ViewGroup parent, final Discount discount) {
+    private void addConfirmButton(final @Nonnull ViewGroup parent, @Nullable final Discount discount) {
         final String confirm = parent.getContext().getString(R.string.mpsdk_confirm);
         final Button.Actions actions = new Button.Actions() {
             @Override
@@ -95,6 +101,7 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
                 getActions().confirmPayment();
             }
         };
+
         final Button button = new ButtonPrimary(new Button.Props(confirm), actions);
         final View view = button.render(parent);
         final int resMargin = discount != null ? R.dimen.mpsdk_zero_height : R.dimen.mpsdk_m_margin;

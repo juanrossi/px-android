@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
@@ -13,10 +12,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PaymentMethodSearchItemAdapter;
+import com.mercadopago.callbacks.OnDiscountRetrieved;
 import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.codediscount.CodeDiscountDialog;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
@@ -27,19 +26,18 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.hooks.HookActivity;
 import com.mercadopago.internal.datasource.PluginService;
-import com.mercadopago.internal.di.AmountModule;
+import com.mercadopago.internal.di.Session;
+import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
-import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
@@ -47,7 +45,6 @@ import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.plugins.PaymentMethodPlugin;
 import com.mercadopago.plugins.PaymentMethodPluginActivity;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
-import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.ServicePreference;
@@ -66,26 +63,16 @@ import com.mercadopago.util.ScaleUtil;
 import com.mercadopago.views.AmountView;
 import com.mercadopago.views.DiscountDetailDialog;
 import com.mercadopago.views.PaymentVaultView;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class PaymentVaultActivity extends MercadoPagoBaseActivity
-    implements PaymentVaultView, TimerObserver {
-
-    private static final String PUBLIC_KEY_BUNDLE = "publicKey";
-    private static final String MERCHANT_BASE_URL_BUNDLE = "mMerchantBaseUrl";
-    private static final String MERCHANT_GET_CUSTOMER_URI_BUNDLE = "mMerchantGetCustomerUri";
-    private static final String MERCHANT_GET_CUSTOMER_ADDITIONAL_INFO = "mMerchantGetCustomerAdditionalInfo";
-    private static final String SHOW_BANK_DEALS_BUNDLE = "mShowBankDeals";
-    private static final String PRESENTER_BUNDLE = "presenter";
+    implements PaymentVaultView, OnDiscountRetrieved, TimerObserver {
 
     public static final int COLUMN_SPACING_DP_VALUE = 20;
     public static final int COLUMNS = 2;
-
-    public static final String EXTRA_PAYMENT_METHODS = "paymentMethodSearch";
 
     // Local vars
     protected boolean mActivityActive;
@@ -118,17 +105,18 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     protected Map<String, String> mMerchantGetCustomerAdditionalInfo;
 
     private AmountView amountView;
-    private PaymentSettingRepository configuration;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final AmountModule amountModule = new AmountModule(this);
-        configuration = amountModule.getConfigurationModule().getConfiguration();
+        final Session session = Session.getSession(this);
+        final PaymentSettingRepository configuration = session.getConfigurationModule().getPaymentSettings();
         mPrivateKey = configuration.getCheckoutPreference().getPayer().getAccessToken();
-        presenter = new PaymentVaultPresenter(amountModule.getAmountRepository(), configuration,
-            amountModule.getConfigurationModule().getUserSelectionRepository(),
-            new PluginService(this));
+        presenter = new PaymentVaultPresenter(configuration,
+            session.getConfigurationModule().getUserSelectionRepository(),
+            new PluginService(this),
+            session.getDiscountRepository(),
+            session.getGroupsRepository());
 
         getActivityParameters();
         configurePresenter();
@@ -138,7 +126,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         cleanPaymentMethodOptions();
 
         //Avoid automatic selection if activity restored on back pressed from next step
-        initialize(savedInstanceState == null);
+        initialize();
     }
 
     private void configurePresenter() {
@@ -183,22 +171,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
             presenter.setSelectedSearchItem(instance
                 .fromJson(intent.getStringExtra("selectedSearchItem"), PaymentMethodSearchItem.class));
         }
-
-        if (extras != null && intent.hasExtra(EXTRA_PAYMENT_METHODS)) {
-            final PaymentMethodSearch paymentMethodSearch =
-                (PaymentMethodSearch) intent.getSerializableExtra(EXTRA_PAYMENT_METHODS);
-            presenter.setPaymentMethodSearch(paymentMethodSearch);
-            try {
-                final Gson gson = new Gson();
-                final Type listType = new TypeToken<List<Card>>() {
-                }.getType();
-                final List<Card> cards = (gson.fromJson(intent.getStringExtra("cards"), listType));
-
-                paymentMethodSearch.setCards(cards, getString(R.string.mpsdk_last_digits_label));
-            } catch (final Exception ex) {
-                //Do nothing...
-            }
-        }
     }
 
     protected void initializeControls() {
@@ -213,9 +185,9 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         initializeToolbar();
     }
 
-    protected void initialize(final boolean selectAutomatically) {
+    protected void initialize() {
         showTimer();
-        presenter.initialize(selectAutomatically);
+        presenter.initialize();
     }
 
     private void showTimer() {
@@ -347,7 +319,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         final Intent intent = new Intent(this, PaymentVaultActivity.class);
         intent.putExtras(getIntent());
         intent.putExtra("selectedSearchItem", JsonUtil.getInstance().toJson(item));
-        intent.putExtra(EXTRA_PAYMENT_METHODS, presenter.getPaymentMethodSearch());
         startActivityForResult(intent, MercadoPagoComponents.Activities.PAYMENT_VAULT_REQUEST_CODE);
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
@@ -380,7 +351,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
 
     private void resolveErrorRequest(int resultCode, Intent data) {
         presenter.onHookReset();
-
         if (resultCode == RESULT_OK) {
             recoverFromFailure();
         } else if (presenter.isItemSelected()) {
@@ -425,12 +395,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
             mSelectedIssuer = JsonUtil.getInstance().fromJson(data.getStringExtra("issuer"), Issuer.class);
             mSelectedPayerCost = JsonUtil.getInstance().fromJson(data.getStringExtra("payerCost"), PayerCost.class);
             mSelectedCard = JsonUtil.getInstance().fromJson(data.getStringExtra("card"), Card.class);
-            final Discount discount = JsonUtil.getInstance().fromJson(data.getStringExtra("discount"), Discount.class);
-            if (discount != null) {
-                configuration.configure(discount);
-                presenter.initializeAmountRow();
-            }
-
             finishWithCardResult();
         } else {
             presenter.trackChildrenScreen();
@@ -440,13 +404,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
                 finish();
             } else {
                 overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
-            }
-            final Discount discount;
-
-            if (data != null && data.getStringExtra("discount") != null) {
-                discount = JsonUtil.getInstance().fromJson(data.getStringExtra("discount"), Discount.class);
-                configuration.configure(discount);
-                presenter.initializeAmountRow();
             }
         }
     }
@@ -479,22 +436,19 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     }
 
     @Override
-    public void finishPaymentMethodSelection(PaymentMethod paymentMethod) {
-        finishWith(paymentMethod, configuration.getDiscount(), null);
+    public void finishPaymentMethodSelection(final PaymentMethod paymentMethod) {
+        finishWith(paymentMethod, null);
     }
 
     @Override
-    public void finishPaymentMethodSelection(PaymentMethod paymentMethod, Payer payer) {
-        finishWith(paymentMethod, configuration.getDiscount(), payer);
+    public void finishPaymentMethodSelection(final PaymentMethod paymentMethod, final Payer payer) {
+        finishWith(paymentMethod, payer);
     }
 
-    private void finishWith(PaymentMethod paymentMethod, Discount discount, Payer payer) {
-        Intent returnIntent = new Intent();
+    private void finishWith(final PaymentMethod paymentMethod, final Payer payer) {
+        final Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
-        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
         returnIntent.putExtra("payer", JsonUtil.getInstance().toJson(payer));
-        returnIntent.putExtra(EXTRA_PAYMENT_METHODS, presenter.getPaymentMethodSearch());
-
         finishWithResult(returnIntent);
     }
 
@@ -505,7 +459,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
             returnIntent.putExtra("issuer", JsonUtil.getInstance().toJson(mSelectedIssuer));
         }
         returnIntent.putExtra("payerCost", JsonUtil.getInstance().toJson(mSelectedPayerCost));
-        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(configuration.getDiscount()));
         returnIntent.putExtra("card", JsonUtil.getInstance().toJson(mSelectedCard));
         finishWithResult(returnIntent);
     }
@@ -548,7 +501,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     public void startCardFlow(final Boolean automaticSelection) {
         getCardVaultActivityBuilder()
             .setAutomaticSelection(automaticSelection)
-            .setAcceptedPaymentMethods(presenter.getPaymentMethodSearch().getPaymentMethods())
             .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
 
         overrideTransitionIn();
@@ -596,7 +548,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
 
         final List<PaymentMethodInfo> toInsert = new ArrayList<>();
 
-        for (PaymentMethodPlugin plugin : items) {
+        for (final PaymentMethodPlugin plugin : items) {
             if (position.equalsIgnoreCase(plugin.displayOrder())) {
                 toInsert.add(plugin.getPaymentMethodInfo(this));
             }
@@ -621,10 +573,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
 
     @Override
     public void onBackPressed() {
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(configuration.getDiscount()));
-        returnIntent.putExtra(EXTRA_PAYMENT_METHODS, presenter.getPaymentMethodSearch());
-        setResult(RESULT_CANCELED, returnIntent);
+        setResult(RESULT_CANCELED);
         finish();
         overrideTransitionOut();
     }
@@ -699,32 +648,20 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     }
 
     @Override
-    public void showDetailDialog(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign) {
-        //TODO - Other dialog.
-        DiscountDetailDialog.showDialog(null, null, getSupportFragmentManager());
-    }
-
-    @Override
     public void showDiscountInputDialog() {
-        //TODO - Other dialog.
-        DiscountDetailDialog.showDialog(null, null, getSupportFragmentManager());
+        CodeDiscountDialog.showDialog(getSupportFragmentManager());
     }
 
     @Override
-    public void showAmount(@Nullable Discount discount, @Nullable Campaign campaign, final BigDecimal totalAmount,
-        final Site site) {
-        //TODO refactor -> should be not null // Quick and dirty implementation.
-        if (discount == null) {
-            amountView.show(totalAmount, site);
-        } else {
-            amountView.show(discount, campaign, totalAmount, site);
-        }
-
+    public void showAmount(@NonNull final DiscountRepository discountRepository,
+        @NonNull final BigDecimal totalAmount,
+        @NonNull final Site site) {
         amountView.setOnClickListener(presenter);
+        amountView.show(discountRepository, totalAmount, site);
     }
 
     @Override
-    public void startDiscountFlow(final CheckoutPreference preference) {
-        // TODO implement discount flow
+    public void onDiscountRetrieved() {
+
     }
 }

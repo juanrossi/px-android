@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
+import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.model.CardPaymentMetadata;
 import com.mercadopago.model.Discount;
@@ -68,12 +69,13 @@ class PaymentMethod extends CompactComponent<PaymentMethod.Props, OneTap.Actions
 
         /* default */
         static Props createFrom(final OneTapModel props,
-            final PaymentSettingRepository configuration) {
+            @NonNull final PaymentSettingRepository configuration,
+            @NonNull final DiscountRepository discountRepository) {
             final OneTapMetadata oneTapMetadata = props.getPaymentMethods().getOneTapMetadata();
 
             return new Props(oneTapMetadata.getPaymentTypeId(), oneTapMetadata.getPaymentMethodId(),
                 oneTapMetadata.getCard(), props.getPaymentMethods(),
-                configuration.getCheckoutPreference().getSite().getCurrencyId(), configuration.getDiscount());
+                configuration.getCheckoutPreference().getSite().getCurrencyId(), discountRepository.getDiscount());
         }
     }
 

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <dimen name="mpsdk_padding_hlf">5dp</dimen>
     <dimen name="mpsdk_regular_text">16dp</dimen>
     <dimen name="mpsdk_small_text">14dp</dimen>
@@ -70,5 +70,8 @@
     <dimen name="mpsdk_s_text">16dp</dimen>
     <dimen name="mpsdk_xs_text">14dp</dimen>
     <dimen name="mpsdk_xxs_text">12dp</dimen>
+
+    <!-- Animation -->
+    <dimen name="mpsdk_camera_distance">2560dp</dimen>
 
 </resources>

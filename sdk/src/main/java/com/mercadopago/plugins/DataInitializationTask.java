@@ -1,9 +1,7 @@
 package com.mercadopago.plugins;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.core.CheckoutStore;
-
 import java.util.Map;
 
 public abstract class DataInitializationTask {
@@ -19,21 +17,27 @@ public abstract class DataInitializationTask {
         data.putAll(defaultData);
     }
 
+    /* async init */
     public void execute(final DataInitializationCallbacks callbacks) {
         taskThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    onLoadData(data);
-                    if (!taskThread.isInterrupted()) {
-                        callbacks.onDataInitialized(data);
-                    }
-                } catch (final Exception e) {
-                    callbacks.onFailure(e, data);
-                }
+                initPlugins(callbacks);
             }
         });
         taskThread.start();
+    }
+
+    /* sync init */
+    public void initPlugins(final DataInitializationCallbacks callback) {
+        try {
+            onLoadData(data);
+            if (!taskThread.isInterrupted()) {
+                callback.onDataInitialized(data);
+            }
+        } catch (final Exception e) {
+            callback.onFailure(e, data);
+        }
     }
 
     public void cancel() {

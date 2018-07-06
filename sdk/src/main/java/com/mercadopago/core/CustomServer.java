@@ -6,7 +6,6 @@ import com.mercadopago.lite.adapters.ErrorHandlingCallAdapter;
 import com.mercadopago.lite.callbacks.Callback;
 import com.mercadopago.lite.util.HttpClientUtil;
 import com.mercadopago.model.Customer;
-import com.mercadopago.model.Discount;
 import com.mercadopago.model.Payment;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.services.CustomService;
@@ -16,6 +15,7 @@ import java.util.Map;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@Deprecated
 public class CustomServer {
 
     public static void createCheckoutPreference(Context context, String url, String uri, Callback<CheckoutPreference> callback) {
@@ -39,7 +39,7 @@ public class CustomServer {
     }
 
     public static void createPayment(Context context, String transactionId, String baseUrl, String uri,
-                                     Map<String, Object> paymentData, @NonNull Map<String, String> query, Callback<Payment> callback) {
+        Map<String, Object> paymentData, @NonNull Map<String, String> query, Callback<Payment> callback) {
         if (query == null) {
             query = new HashMap<>();
         }
@@ -56,15 +56,14 @@ public class CustomServer {
     private static Retrofit getRetrofit(Context context, String baseUrl) {
 
         return new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(HttpClientUtil.getClient(context, 20, 20, 20))
-                .addConverterFactory(GsonConverterFactory.create(JsonUtil.getInstance().getGson()))
-                .addCallAdapterFactory(new ErrorHandlingCallAdapter.ErrorHandlingCallAdapterFactory())
-                .build();
+            .baseUrl(baseUrl)
+            .client(HttpClientUtil.getClient(context, 20, 20, 20))
+            .addConverterFactory(GsonConverterFactory.create(JsonUtil.getInstance().getGson()))
+            .addCallAdapterFactory(new ErrorHandlingCallAdapter.ErrorHandlingCallAdapterFactory())
+            .build();
     }
 
     private static String ripFirstSlash(String uri) {
         return uri.startsWith("/") ? uri.substring(1) : uri;
     }
-
 }

@@ -10,18 +10,21 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.mercadopago.R;
+import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.model.Campaign;
-import com.mercadopago.model.CouponDiscount;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Site;
 import com.mercadopago.util.textformatter.TextFormatter;
+
 import java.math.BigDecimal;
 
 public class AmountView extends LinearLayoutCompat {
 
+    /* default */
     @Nullable
-    private OnClick callback;
+    OnClick callback;
 
     private TextView amountDescription;
     private View amountContainer;
@@ -30,12 +33,11 @@ public class AmountView extends LinearLayoutCompat {
     private TextView finalAmount;
     private View line;
     private View arrow;
+    private View mainContainer;
 
     public interface OnClick {
 
         void onDetailClicked(@NonNull final Discount discount, @NonNull final Campaign campaign);
-
-        void onDetailClicked(@NonNull final CouponDiscount discount, @NonNull final Campaign campaign);
 
         void onInputRequestClicked();
     }
@@ -45,7 +47,7 @@ public class AmountView extends LinearLayoutCompat {
         init();
     }
 
-    public void setOnClickListener(OnClick callback) {
+    public void setOnClickListener(final OnClick callback) {
         this.callback = callback;
     }
 
@@ -59,8 +61,20 @@ public class AmountView extends LinearLayoutCompat {
         init();
     }
 
+    public void show(@NonNull final DiscountRepository discountRepository,
+                     @NonNull final BigDecimal totalAmount, @NonNull final Site site) {
+        final Discount discount = discountRepository.getDiscount();
+        final Campaign campaign = discountRepository.getCampaign();
+        if (discount != null && campaign != null) {
+            show(discount, campaign, totalAmount, site);
+        } else {
+            show(totalAmount, site);
+        }
+    }
+
     private void init() {
         inflate(getContext(), R.layout.mpsdk_amount_layout, this);
+        mainContainer = findViewById(R.id.main_container);
         line = findViewById(R.id.line);
         amountDescription = findViewById(R.id.amount_description);
         amountBeforeDiscount = findViewById(R.id.amount_before_discount);
@@ -81,17 +95,19 @@ public class AmountView extends LinearLayoutCompat {
         }
     }
 
-    public void show(@NonNull final Discount discount,
-        @NonNull final Campaign campaign,
-        @NonNull final BigDecimal totalAmount,
-        @NonNull final Site site) {
+    private void show(@NonNull final Discount discount,
+                      @NonNull final Campaign campaign,
+                      @NonNull final BigDecimal totalAmount,
+                      @NonNull final Site site) {
         showDiscount(discount, campaign, totalAmount, site);
         showEffectiveAmount(totalAmount.subtract(discount.getCouponAmount()), site);
     }
 
-    public void showCouponInput() {
-        //TODO implement -> go to input
-        this.setOnClickListener(new OnClickListener() {
+    private void showCouponInput(final BigDecimal totalAmount, final Site site) {
+        show(totalAmount, site);
+        configureDiscountCouponAmountDescription();
+        configureViewsVisibilityDefault();
+        mainContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
                 if (callback != null) {
@@ -99,10 +115,9 @@ public class AmountView extends LinearLayoutCompat {
                 }
             }
         });
-        throw new UnsupportedOperationException();
     }
 
-    public void show(@NonNull final BigDecimal totalAmount, @NonNull final Site site) {
+    private void show(@NonNull final BigDecimal totalAmount, @NonNull final Site site) {
         configureViewsVisibilityDefault();
         amountDescription.setText(R.string.mpsdk_total_to_pay);
         amountDescription.setTextColor(getResources().getColor(R.color.mpsdk_form_text));
@@ -113,7 +128,7 @@ public class AmountView extends LinearLayoutCompat {
         amountBeforeDiscount.setVisibility(GONE);
         maxCouponAmount.setVisibility(GONE);
 
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) amountContainer.getLayoutParams();
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) amountContainer.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -124,48 +139,21 @@ public class AmountView extends LinearLayoutCompat {
         arrow.setVisibility(GONE);
     }
 
-    public void show(@NonNull final CouponDiscount discount,
-        @NonNull final Campaign campaign,
-        @NonNull final BigDecimal totalAmount,
-        @NonNull final Site site) {
-
-        showDiscount(discount, campaign, totalAmount, site);
-        showEffectiveAmount(totalAmount.subtract(discount.getCouponAmount()), site);
-
-        configureDiscountCouponAmountDescription();
-        configureDiscountCouponViewsVisibility();
-
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                if (callback != null) {
-                    callback.onDetailClicked(discount, campaign);
-                }
-            }
-        });
-        throw new UnsupportedOperationException();
-    }
-
-    private void configureDiscountCouponViewsVisibility() {
-        maxCouponAmount.setVisibility(GONE);
-        amountBeforeDiscount.setVisibility(GONE);
-    }
-
     private void configureDiscountCouponAmountDescription() {
         amountDescription.setVisibility(VISIBLE);
-        amountDescription.setText(R.string.mpsdk_has_a_coupon_discount);
+        amountDescription.setText(R.string.mpsdk_enter_coupon_code);
         amountDescription.setTextColor(getResources().getColor(R.color.mpsdk_discount_coupon));
     }
 
-    private void showDiscount(final @NonNull Discount discount,
-        final @NonNull Campaign campaign,
-        final @NonNull BigDecimal totalAmount,
-        final @NonNull Site site) {
+    private void showDiscount(@NonNull final Discount discount,
+                              @NonNull final Campaign campaign,
+                              @NonNull final BigDecimal totalAmount,
+                              @NonNull final Site site) {
         configureDiscountAmountDescription(discount, campaign);
 
         configureViewsVisibilityWhenDiscount(totalAmount, site);
 
-        this.setOnClickListener(new OnClickListener() {
+        mainContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
                 if (callback != null) {
@@ -175,15 +163,15 @@ public class AmountView extends LinearLayoutCompat {
         });
     }
 
-    private void configureViewsVisibilityWhenDiscount(final @NonNull BigDecimal totalAmount,
-        final @NonNull Site site) {
+    private void configureViewsVisibilityWhenDiscount(@NonNull final BigDecimal totalAmount,
+                                                      @NonNull final Site site) {
         arrow.setVisibility(VISIBLE);
         amountBeforeDiscount.setVisibility(VISIBLE);
         TextFormatter.withCurrencyId(site.getCurrencyId())
-            .withSpace()
-            .amount(totalAmount)
-            .normalDecimals()
-            .into(amountBeforeDiscount);
+                .withSpace()
+                .amount(totalAmount)
+                .normalDecimals()
+                .into(amountBeforeDiscount);
     }
 
     private void configureDiscountAmountDescription(final Discount discount, final Campaign campaign) {
@@ -193,12 +181,12 @@ public class AmountView extends LinearLayoutCompat {
         configureMaxCouponAmountMessage(campaign);
     }
 
-    private void showEffectiveAmount(final @NonNull BigDecimal totalAmount, final @NonNull Site site) {
+    private void showEffectiveAmount(@NonNull final BigDecimal totalAmount, @NonNull final Site site) {
         TextFormatter.withCurrencyId(site.getCurrencyId())
-            .withSpace()
-            .amount(totalAmount)
-            .normalDecimals()
-            .into(finalAmount);
+                .withSpace()
+                .amount(totalAmount)
+                .normalDecimals()
+                .into(finalAmount);
     }
 
     private void configureMaxCouponAmountMessage(final Campaign campaign) {
@@ -213,18 +201,18 @@ public class AmountView extends LinearLayoutCompat {
     private void configureDiscountOffMessage(final Discount discount) {
         if (discount.hasPercentOff()) {
             TextFormatter.withCurrencyId(discount.getCurrencyId())
-                .noSpace().noSymbol()
-                .amount(discount.getPercentOff())
-                .normalDecimals()
-                .into(amountDescription)
-                .holder(R.string.mpsdk_discount_percent_off_percent);
+                    .noSpace().noSymbol()
+                    .amount(discount.getPercentOff())
+                    .normalDecimals()
+                    .into(amountDescription)
+                    .holder(R.string.mpsdk_discount_percent_off_percent);
         } else {
             TextFormatter.withCurrencyId(discount.getCurrencyId())
-                .withSpace()
-                .amount(discount.getAmountOff())
-                .normalDecimals()
-                .into(amountDescription)
-                .holder(R.string.mpsdk_discount_amount_off);
+                    .withSpace()
+                    .amount(discount.getAmountOff())
+                    .normalDecimals()
+                    .into(amountDescription)
+                    .holder(R.string.mpsdk_discount_amount_off);
         }
     }
 }

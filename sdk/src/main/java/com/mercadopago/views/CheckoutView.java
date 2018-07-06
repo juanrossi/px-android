@@ -17,7 +17,7 @@ public interface CheckoutView extends MvpView {
 
     void showProgress();
 
-    void showReviewAndConfirm();
+    void showReviewAndConfirm(final boolean isUniquePaymentMethod);
 
     void showPaymentMethodSelection();
 

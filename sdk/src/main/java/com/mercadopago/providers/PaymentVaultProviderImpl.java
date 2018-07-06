@@ -4,27 +4,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.mercadopago.BuildConfig;
 import com.mercadopago.R;
-import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.lite.callbacks.Callback;
-import com.mercadopago.lite.exceptions.ApiException;
-import com.mercadopago.model.Card;
-import com.mercadopago.model.Customer;
-import com.mercadopago.model.Discount;
-import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
-import com.mercadopago.model.Site;
-import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.tracker.Tracker;
 import com.mercadopago.tracking.tracker.MPTracker;
-import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.MercadoPagoESC;
 import com.mercadopago.util.MercadoPagoESCImpl;
 import com.mercadopago.util.TextUtils;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,88 +26,20 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
     private final MercadoPagoESC mercadoPagoESC;
     private final String merchantPublicKey;
 
-    public PaymentVaultProviderImpl(Context context, String publicKey, String privateKey, String merchantBaseUrl,
-                                    String merchantGetCustomerUri, Map<String, String> merchantGetCustomerAdditionalInfo, boolean escEnabled) {
+    public PaymentVaultProviderImpl(final Context context, final String publicKey, final String privateKey, final String merchantBaseUrl,
+                                    final String merchantGetCustomerUri, final Map<String, String> merchantGetCustomerAdditionalInfo, final boolean escEnabled) {
         this.context = context;
         this.merchantBaseUrl = merchantBaseUrl;
         this.merchantGetCustomerUri = merchantGetCustomerUri;
         this.merchantGetCustomerAdditionalInfo = merchantGetCustomerAdditionalInfo;
-        this.mercadoPagoESC = new MercadoPagoESCImpl(context, escEnabled);
-        this.merchantPublicKey = publicKey;
-
+        mercadoPagoESC = new MercadoPagoESCImpl(context, escEnabled);
+        merchantPublicKey = publicKey;
         mercadoPago = new MercadoPagoServicesAdapter(context, publicKey, privateKey);
-    }
-
-    @Override
-    public void getDirectDiscount(String amount, String payerEmail, final TaggedCallback<Discount> taggedCallback) {
-        mercadoPago.getDirectDiscount(amount, payerEmail, taggedCallback);
-    }
-
-    @Override
-    public void getPaymentMethodSearch(final BigDecimal amount, final PaymentPreference paymentPreference,
-        final Payer payer, final Site site, final List<String> cardsWithEsc, final List<String> supportedPlugins,
-        final TaggedCallback<PaymentMethodSearch> taggedCallback) {
-
-        final List<String> excludedPaymentTypes =
-            paymentPreference == null ? null : paymentPreference.getExcludedPaymentTypes();
-        final List<String> excludedPaymentMethodIds =
-            paymentPreference == null ? null : paymentPreference.getExcludedPaymentMethodIds();
-
-        mercadoPago.getPaymentMethodSearch(amount, excludedPaymentTypes, excludedPaymentMethodIds, cardsWithEsc,
-            supportedPlugins, payer, site,
-            new Callback<PaymentMethodSearch>() {
-                @Override
-                public void success(@NonNull final PaymentMethodSearch paymentMethodSearch) {
-                    if (!paymentMethodSearch.hasSavedCards() && isMerchantServerCustomerAvailable()) {
-                        addCustomerCardsFromMerchantServer(paymentMethodSearch, paymentPreference,
-                            taggedCallback);
-                    } else {
-                        taggedCallback.onSuccess(paymentMethodSearch);
-                    }
-                }
-
-                @Override
-                public void failure(ApiException apiException) {
-                    taggedCallback
-                        .onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_PAYMENT_METHODS));
-                }
-            });
-    }
-
-    private void addCustomerCardsFromMerchantServer(final PaymentMethodSearch paymentMethodSearch,
-                                                    final PaymentPreference paymentPreference,
-                                                    final TaggedCallback<PaymentMethodSearch> taggedCallback) {
-        CustomServer.getCustomer(context, merchantBaseUrl, merchantGetCustomerUri, merchantGetCustomerAdditionalInfo,
-                new Callback<Customer>() {
-                    @Override
-                    public void success(Customer customer) {
-                        List<Card> savedCards = paymentPreference == null ? customer.getCards()
-                                : paymentPreference.getValidCards(customer.getCards());
-                        paymentMethodSearch.setCards(savedCards, context.getString(R.string.mpsdk_last_digits_label));
-                        taggedCallback.onSuccess(paymentMethodSearch);
-                    }
-
-                    @Override
-                    public void failure(ApiException apiException) {
-                        //Avoid failure caused by merchant's server
-                        taggedCallback.onSuccess(paymentMethodSearch);
-                    }
-                });
     }
 
     @Override
     public String getTitle() {
         return context.getString(R.string.mpsdk_title_activity_payment_vault);
-    }
-
-    @Override
-    public String getInvalidSiteConfigurationErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_invalid_currency);
-    }
-
-    @Override
-    public String getInvalidAmountErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_invalid_amount);
     }
 
     @Override

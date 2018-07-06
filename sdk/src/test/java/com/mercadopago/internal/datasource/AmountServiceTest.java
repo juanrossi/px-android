@@ -1,6 +1,7 @@
 package com.mercadopago.internal.datasource;
 
 import com.mercadopago.internal.repository.ChargeRepository;
+import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.internal.repository.InstallmentRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.model.Discount;
@@ -22,15 +23,15 @@ public class AmountServiceTest {
     @Mock private PaymentSettingRepository paymentSettingRepository;
     @Mock private CheckoutPreference checkoutPreference;
     @Mock private InstallmentRepository installmentRepository;
+    @Mock private DiscountRepository discountRepository;
     @Mock private Discount discount;
 
     private AmountService amountService;
 
-    //TODO add test for Installments
-
     @Before
     public void setUp() {
-        amountService = new AmountService(paymentSettingRepository, chargeRepository, installmentRepository);
+        amountService =
+            new AmountService(paymentSettingRepository, chargeRepository, installmentRepository, discountRepository);
         when(paymentSettingRepository.getCheckoutPreference()).thenReturn(checkoutPreference);
         when(checkoutPreference.getTotalAmount()).thenReturn(BigDecimal.TEN);
     }
@@ -40,7 +41,7 @@ public class AmountServiceTest {
         when(installmentRepository.getInstallmentTotalAmount()).thenReturn(BigDecimal.ZERO);
         when(chargeRepository.getChargeAmount()).thenReturn(BigDecimal.ZERO);
         when(discount.getCouponAmount()).thenReturn(BigDecimal.ONE);
-        when(paymentSettingRepository.getDiscount()).thenReturn(discount);
+        when(discountRepository.getDiscount()).thenReturn(discount);
         assertEquals(BigDecimal.TEN.subtract(BigDecimal.ONE), amountService.getAmountToPay());
     }
 
@@ -63,7 +64,7 @@ public class AmountServiceTest {
         when(installmentRepository.getInstallmentTotalAmount()).thenReturn(BigDecimal.ZERO);
         when(chargeRepository.getChargeAmount()).thenReturn(BigDecimal.ONE);
         when(discount.getCouponAmount()).thenReturn(BigDecimal.ONE);
-        when(paymentSettingRepository.getDiscount()).thenReturn(discount);
+        when(discountRepository.getDiscount()).thenReturn(discount);
         assertEquals(BigDecimal.TEN, amountService.getAmountToPay());
     }
 
@@ -95,7 +96,7 @@ public class AmountServiceTest {
     public void whenGetAppliedChargesAndCardChargesReturnSumOfThem() {
         when(chargeRepository.getChargeAmount()).thenReturn(BigDecimal.ONE);
         when(checkoutPreference.getTotalAmount()).thenReturn(BigDecimal.ONE);
-        when(paymentSettingRepository.getDiscount()).thenReturn(null);
+        when(discountRepository.getDiscount()).thenReturn(null);
         when(installmentRepository.getInstallmentTotalAmount()).thenReturn(BigDecimal.TEN);
         assertEquals(new BigDecimal("9"), amountService.getAppliedCharges());
     }
@@ -104,7 +105,7 @@ public class AmountServiceTest {
     public void whenGetAmountToPayChargesAndCardChargesReturnCardTotal() {
         when(chargeRepository.getChargeAmount()).thenReturn(BigDecimal.ONE);
         when(checkoutPreference.getTotalAmount()).thenReturn(BigDecimal.ONE);
-        when(paymentSettingRepository.getDiscount()).thenReturn(null);
+        when(discountRepository.getDiscount()).thenReturn(null);
         when(installmentRepository.getInstallmentTotalAmount()).thenReturn(BigDecimal.TEN);
         assertEquals(BigDecimal.TEN, amountService.getAmountToPay());
     }

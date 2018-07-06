@@ -59,7 +59,7 @@ public class CardVaultActivityTest {
         final Item item = new Item("sarasa", 1, new BigDecimal(100));
         item.setId("someId");
         final PaymentSettingRepository configuration =
-            new ConfigurationModule(InstrumentationRegistry.getContext()).getConfiguration();
+            new ConfigurationModule(InstrumentationRegistry.getContext()).getPaymentSettings();
         configuration.configure(new CheckoutPreference.Builder(Sites.ARGENTINA, "a@a.a",
             Collections.singletonList(item)).build());
         configuration.configure(new ArrayList<ChargeRule>());

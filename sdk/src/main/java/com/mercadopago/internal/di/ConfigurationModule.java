@@ -8,9 +8,14 @@ import com.mercadopago.internal.repository.ChargeRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.internal.repository.UserSelectionRepository;
 
-public class ConfigurationModule extends ActivityModule implements ConfigurationComponent,
+public final class ConfigurationModule extends ApplicationModule implements ConfigurationComponent,
     UserSelectionComponent,
     ChargeSolverComponent {
+
+    //Mem cache
+    private UserSelectionRepository userSelectionRepository;
+    private PaymentSettingRepository paymentSettingRepository;
+    private ChargeRepository chargeRepository;
 
     public ConfigurationModule(final Context context) {
         super(context);
@@ -18,16 +23,30 @@ public class ConfigurationModule extends ActivityModule implements Configuration
 
     @Override
     public UserSelectionRepository getUserSelectionRepository() {
-        return new UserSelectionService(getSharedPreferences(), getJsonUtil());
+        if (userSelectionRepository == null) {
+            userSelectionRepository = new UserSelectionService(getSharedPreferences(), getJsonUtil());
+        }
+        return userSelectionRepository;
     }
 
     @Override
-    public PaymentSettingRepository getConfiguration() {
-        return new PaymentSettingService(getSharedPreferences(), getJsonUtil());
+    public PaymentSettingRepository getPaymentSettings() {
+        if (paymentSettingRepository == null) {
+            paymentSettingRepository = new PaymentSettingService(getSharedPreferences(), getJsonUtil());
+        }
+        return paymentSettingRepository;
     }
 
     @Override
     public ChargeRepository getChargeSolver() {
-        return new ChargeService(getUserSelectionRepository(), getConfiguration());
+        if (chargeRepository == null) {
+            chargeRepository = new ChargeService(getUserSelectionRepository(), getPaymentSettings());
+        }
+        return chargeRepository;
+    }
+
+    public void reset() {
+        getUserSelectionRepository().reset();
+        getPaymentSettings().reset();
     }
 }

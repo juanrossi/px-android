@@ -9,10 +9,7 @@ import android.support.annotation.Nullable;
 import com.mercadopago.CheckoutActivity;
 import com.mercadopago.callbacks.CallbackHolder;
 import com.mercadopago.hooks.CheckoutHooks;
-import com.mercadopago.internal.di.AmountModule;
-import com.mercadopago.internal.di.ConfigurationModule;
-import com.mercadopago.internal.repository.PaymentSettingRepository;
-import com.mercadopago.internal.repository.UserSelectionRepository;
+import com.mercadopago.internal.di.Session;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PaymentData;
@@ -28,7 +25,6 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.uicontrollers.FontCache;
-import com.mercadopago.util.TextUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
+import static com.mercadopago.util.TextUtils.isEmpty;
 
 public class MercadoPagoCheckout implements Serializable {
 
@@ -81,7 +78,9 @@ public class MercadoPagoCheckout implements Serializable {
     @NonNull
     private final ArrayList<ChargeRule> charges;
 
-    private MercadoPagoCheckout(final Builder builder) {
+    /* default */ boolean prefetch = false;
+
+    /* default */ MercadoPagoCheckout(final Builder builder) {
         publicKey = builder.publicKey;
         checkoutPreference = builder.checkoutPreference;
         flowPreference = builder.flowPreference;
@@ -177,16 +176,9 @@ public class MercadoPagoCheckout implements Serializable {
 
     private void startIntent(@NonNull final Context context, @NonNull final Intent checkoutIntent) {
 
-        final AmountModule amountModule = new AmountModule(context);
-        final ConfigurationModule configurationModule = amountModule.getConfigurationModule();
-        final PaymentSettingRepository configuration = configurationModule.getConfiguration();
-        final UserSelectionRepository userSelectionRepository = configurationModule.getUserSelectionRepository();
-        userSelectionRepository.reset();
-        configuration.reset();
-        configuration.configure(getCharges());
-        configuration.configure(getCampaign());
-        configuration.configure(getDiscount());
-        configuration.configure(getCheckoutPreference());
+        if (!prefetch) {
+            Session.getSession(context).init(this);
+        }
 
         if (context instanceof Activity) {
             ((Activity) context).startActivityForResult(checkoutIntent, MercadoPagoCheckout.CHECKOUT_REQUEST_CODE);
@@ -251,7 +243,7 @@ public class MercadoPagoCheckout implements Serializable {
 
     @NonNull
     public String getPrivateKey() {
-        return TextUtils.isEmpty(privateKey) ? "" : privateKey;
+        return isEmpty(privateKey) ? "" : privateKey;
     }
 
     public static class Builder {
@@ -385,6 +377,15 @@ public class MercadoPagoCheckout implements Serializable {
             return this;
         }
 
+        /**
+         * If enableBinaryMode is called, processed payment can only be APPROVED or REJECTED.
+         * <p>
+         * Non compatible with PaymentProcessor.
+         * <p>
+         * Non compatible with off payments methods
+         *
+         * @return builder
+         */
         @SuppressWarnings("unused")
         public Builder enableBinaryMode() {
             binaryMode = true;
@@ -399,13 +400,13 @@ public class MercadoPagoCheckout implements Serializable {
          * @return builder to keep operating
          */
         @SuppressWarnings("unused")
-        public Builder setReviewAndConfirmPreferences(ReviewAndConfirmPreferences reviewAndConfirmPreferences) {
+        public Builder setReviewAndConfirmPreferences(final ReviewAndConfirmPreferences reviewAndConfirmPreferences) {
             this.reviewAndConfirmPreferences = reviewAndConfirmPreferences;
             return this;
         }
 
         @SuppressWarnings("unused")
-        public Builder setPaymentResult(PaymentResult paymentResult) {
+        public Builder setPaymentResult(final PaymentResult paymentResult) {
             this.paymentResult = paymentResult;
             return this;
         }

@@ -1,4 +1,4 @@
-package com.mercadopago.core;
+package com.mercadopago.views;
 
 import android.content.Context;
 import com.mercadopago.model.PayerCost;

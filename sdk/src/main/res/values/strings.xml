@@ -127,14 +127,12 @@
     <string name="mpsdk_text_card_enabled">I already enabled my card</string>
 
     <!-- Error messages -->
-    <string name="mpsdk_error_message_invalid_amount">Invalid amount</string>
     <string name="mpsdk_error_message_invalid_item">Invalid item</string>
     <string name="mpsdk_error_message_expired_preference">Expired preference</string>
     <string name="mpsdk_error_message_inactive_preference">Inactive preference</string>
     <string name="mpsdk_error_message_invalid_default_installments">Invalid installments number by default</string>
     <string name="mpsdk_error_message_invalid_max_installments">Invalid max installments number</string>
     <string name="mpsdk_error_message_excluded_all_payment_type">All payments types excluded</string>
-    <string name="mpsdk_error_message_invalid_currency">Invalid currency</string>
     <string name="mpsdk_error_message_invalid_installments">Invalid installments number</string>
     <string name="mpsdk_error_title">Oops! Something went wrong</string>
     <string name="mpsdk_standard_error_message">We are going to fix it. Try later.</string>
@@ -245,10 +243,15 @@
     <string name="mpsdk_max_coupon_amount">Discount cap %1$s</string>
     <string name="mpsdk_with_max_coupon_amount">With max coupon amount</string>
     <string name="mpsdk_total_to_pay">Total to pay</string>
-    <string name="mpsdk_has_a_coupon_discount">Do you have any discount coupon?</string>
+    <string name="mpsdk_enter_coupon_code">Enter your discount coupon</string>
+    <string name="mpsdk_enter_coupon_code_title">Enter your coupon</string>
 
     <string name="mpsdk_interest_label">Does\'t include bank interest</string>
     <string name="mpsdk_discount_dialog_title">My Discount</string>
+    <string name="mpsdk_excellent">¡Excellent!</string>
+    <string name="mpsdk_get_your_discount_amount">Now pay your purchase and get\n %1$s discount</string>
+    <string name="mpsdk_get_your_discount_percent">Now pay your purchase and get %1$s%% discount</string>
+    <string name="mpsdk_discount_error_check_this_data">Check this data</string>
 
     <!-- Unlock Card -->
     <string name="mpsdk_text_unlock_card_start">Remember to</string>
@@ -268,7 +271,6 @@
     <string name="mpsdk_ticket_card_holder_identification_hint" translatable="false">*** *** *** **</string>
 
     <string name="mpsdk_empty_string"></string>
-
 
 
 </resources>

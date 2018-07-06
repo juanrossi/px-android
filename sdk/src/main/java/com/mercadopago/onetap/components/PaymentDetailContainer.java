@@ -7,14 +7,27 @@ import com.mercadopago.R;
 import com.mercadopago.components.CompactComponent;
 import com.mercadopago.components.DetailDirectDiscount;
 import com.mercadopago.customviews.MPTextView;
-import com.mercadopago.internal.repository.PaymentSettingRepository;
+import com.mercadopago.internal.repository.DiscountRepository;
+import com.mercadopago.model.Campaign;
+import com.mercadopago.model.Discount;
 import com.mercadopago.model.Item;
+import java.util.List;
 import javax.annotation.Nonnull;
 
-public class PaymentDetailContainer extends CompactComponent<PaymentSettingRepository, Void> {
+public class PaymentDetailContainer extends CompactComponent<PaymentDetailContainer.Props, Void> {
 
-    public PaymentDetailContainer(@NonNull final PaymentSettingRepository configuration) {
-        super(configuration);
+    public static class Props {
+        /* default */ final DiscountRepository discountRepository;
+        /* default */ final List<Item> items;
+
+        public Props(final DiscountRepository discountRepository, final List<Item> items) {
+            this.discountRepository = discountRepository;
+            this.items = items;
+        }
+    }
+
+    public PaymentDetailContainer(@NonNull final PaymentDetailContainer.Props props) {
+        super(props);
     }
 
     @Override
@@ -25,15 +38,17 @@ public class PaymentDetailContainer extends CompactComponent<PaymentSettingRepos
     }
 
     private void addItemDetails(@NonNull final ViewGroup parent) {
-        for (Item item : props.getCheckoutPreference().getItems()) {
+        for (final Item item : props.items) {
             parent.addView(new DetailItem(item).render(parent));
         }
     }
 
     private void addDiscount(@NonNull final ViewGroup parent) {
-        if (props.getDiscount() != null && props.getCampaign() != null) {
+        final Discount discount = props.discountRepository.getDiscount();
+        final Campaign campaign = props.discountRepository.getCampaign();
+        if (discount != null && campaign != null) {
             final View discountView =
-                new DetailDirectDiscount(new DetailDirectDiscount.Props(props.getDiscount(), props.getCampaign()))
+                new DetailDirectDiscount(new DetailDirectDiscount.Props(discount, campaign))
                     .render(parent);
 
             parent.addView(addDiscountTitle(parent));
