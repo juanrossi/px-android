@@ -60,7 +60,7 @@ public class SavedCardRowView implements SavedCardView {
     @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_row_payment_method_card, parent, attachToRoot);
+            .inflate(R.layout.px_row_payment_method_card, parent, attachToRoot);
         return mView;
     }
 
@@ -78,7 +78,7 @@ public class SavedCardRowView implements SavedCardView {
             mDescription.setText(mPaymentMethod.getName());
         } else {
             mDescription.setText(
-                new StringBuilder().append(mContext.getString(R.string.mpsdk_last_digits_label)).append(" ")
+                new StringBuilder().append(mContext.getString(R.string.px_last_digits_label)).append(" ")
                     .append(getLastFourDigits()).toString());
         }
         int resourceId = MercadoPagoUtil.getPaymentMethodIcon(mContext, mPaymentMethod.getId());

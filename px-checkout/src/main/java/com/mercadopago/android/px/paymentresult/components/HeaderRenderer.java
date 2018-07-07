@@ -19,7 +19,7 @@ public class HeaderRenderer extends Renderer<Header> {
 
     @Override
     public View render(@NonNull final Header component, @NonNull final Context context, final ViewGroup parent) {
-        final View headerView = inflate(R.layout.mpsdk_payment_result_header, parent);
+        final View headerView = inflate(R.layout.px_payment_result_header, parent);
         final ViewGroup headerContainer = headerView.findViewById(R.id.mpsdkPaymentResultContainerHeader);
         final MPTextView titleTextView = headerView.findViewById(R.id.mpsdkHeaderTitle);
         final ViewGroup iconParentViewGroup = headerView.findViewById(R.id.iconContainer);

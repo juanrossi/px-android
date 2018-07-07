@@ -13,19 +13,19 @@
     <application android:allowBackup="true">
         <activity
             android:name=".CustomerCardsActivity"
-            android:label="@string/mpsdk_title_activity_customer_pms"
+            android:label="@string/px_title_activity_customer_pms"
             android:theme="@style/Theme.MercadoPagoTheme.NoActionBar"/>
         <activity
             android:name=".PaymentMethodsActivity"
-            android:label="@string/mpsdk_title_activity_payment_methods"
+            android:label="@string/px_title_activity_payment_methods"
             android:theme="@style/Theme.MercadoPagoTheme.NoActionBar"/>
         <activity
             android:name=".BankDealsActivity"
-            android:label="@string/mpsdk_title_activity_bank_deals"
+            android:label="@string/px_title_activity_bank_deals"
             android:theme="@style/Theme.MercadoPagoTheme.NoActionBar"/>
         <activity
             android:name=".TermsAndConditionsActivity"
-            android:label="@string/mpsdk_title_activity_terms_and_conditions"
+            android:label="@string/px_title_activity_terms_and_conditions"
             android:theme="@style/Theme.MercadoPagoTheme.NoActionBar"/>
         <activity
             android:name=".CheckoutActivity"

@@ -48,18 +48,18 @@ public class DiscountDetailDialog extends MeliDialog {
 
     @Override
     public int getContentView() {
-        return R.layout.mpsdk_dialog_detail_discount;
+        return R.layout.px_dialog_detail_discount;
     }
 
     @Nullable
     @Override
     public String getTitle() {
-        return getContext().getString(R.string.mpsdk_discount_dialog_title);
+        return getContext().getString(R.string.px_discount_dialog_title);
     }
 
     @Nullable
     @Override
     public String getSecondaryExitString() {
-        return getString(R.string.mpsdk_terms_and_conditions);
+        return getString(R.string.px_terms_and_conditions);
     }
 }

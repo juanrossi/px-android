@@ -11,11 +11,11 @@ import java.lang.annotation.RetentionPolicy;
 public class Badge {
 
     //armar componente Badge que va como hijo
-    public static final String DEFAULT_BADGE_IMAGE = "mpsdk_badge_pending";
-    public static final String ERROR_BADGE_IMAGE = "mpsdk_badge_error";
-    public static final String WARNING_BADGE_IMAGE = "mpsdk_badge_warning";
-    public static final String CHECK_BADGE_IMAGE = "mpsdk_badge_check";
-    public static final String PENDING_BADGE_IMAGE = "mpsdk_badge_pending";
+    public static final String DEFAULT_BADGE_IMAGE = "px_badge_pending";
+    public static final String ERROR_BADGE_IMAGE = "px_badge_error";
+    public static final String WARNING_BADGE_IMAGE = "px_badge_warning";
+    public static final String CHECK_BADGE_IMAGE = "px_badge_check";
+    public static final String PENDING_BADGE_IMAGE = "px_badge_pending";
 
     public Badge(@Badges String value) {
     }

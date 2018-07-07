@@ -55,11 +55,11 @@ public class PayerCostRow {
 
     public void setSmallTextSize() {
         mInstallmentsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-            mContext.getResources().getDimension(R.dimen.mpsdk_payer_cost_small_text));
+            mContext.getResources().getDimension(R.dimen.px_payer_cost_small_text));
         mZeroRateText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-            mContext.getResources().getDimension(R.dimen.mpsdk_payer_cost_total_small_text));
+            mContext.getResources().getDimension(R.dimen.px_payer_cost_total_small_text));
         mTotalText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-            mContext.getResources().getDimension(R.dimen.mpsdk_payer_cost_total_small_text));
+            mContext.getResources().getDimension(R.dimen.px_payer_cost_total_small_text));
     }
 
     private void setAmountWithRateText(BigDecimal totalAmount) {
@@ -72,7 +72,7 @@ public class PayerCostRow {
     private void setInstallmentsText(Integer installments, BigDecimal installmentsAmount) {
         final Spanned spannedInstallmentsText =
             CurrenciesUtil.getSpannedAmountWithCurrencySymbol(installmentsAmount, mCurrencyId);
-        final String x = mInstallmentsTextView.getContext().getString(R.string.mpsdk_installments_by);
+        final String x = mInstallmentsTextView.getContext().getString(R.string.px_installments_by);
         mInstallmentsTextView
             .setText(new SpannableStringBuilder(installments.toString()).append(x).append(" ")
                 .append(spannedInstallmentsText));
@@ -90,7 +90,7 @@ public class PayerCostRow {
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_row_payer_cost_list, parent, attachToRoot);
+            .inflate(R.layout.px_row_payer_cost_list, parent, attachToRoot);
         return mView;
     }
 

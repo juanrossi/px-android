@@ -20,7 +20,7 @@ class DetailItem extends CompactComponent<Item, Void> {
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        final View row = inflate(parent, R.layout.mpsdk_view_onetap_item_detail_row);
+        final View row = inflate(parent, R.layout.px_view_onetap_item_detail_row);
         final TextView title = row.findViewById(R.id.title);
         ViewUtils.loadOrGone(resolveItemTitle(parent.getContext()), title);
         final TextView description = row.findViewById(R.id.description);
@@ -39,7 +39,7 @@ class DetailItem extends CompactComponent<Item, Void> {
 
     private String resolveItemTitle(final Context context) {
         return props.hasCardinality() ? context
-            .getString(R.string.mpsdk_quantity_modal, props.getQuantity(), props.getTitle()) :
+            .getString(R.string.px_quantity_modal, props.getQuantity(), props.getTitle()) :
             props.getTitle();
     }
 }

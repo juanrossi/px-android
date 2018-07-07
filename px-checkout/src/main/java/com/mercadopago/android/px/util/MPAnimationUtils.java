@@ -94,7 +94,7 @@ public class MPAnimationUtils {
 
             @Override
             public void run() {
-                final Animation mAnimFadeIn = AnimationUtils.loadAnimation(context, R.anim.mpsdk_fade_in);
+                final Animation mAnimFadeIn = AnimationUtils.loadAnimation(context, R.anim.px_fade_in);
                 mAnimFadeIn.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -122,7 +122,7 @@ public class MPAnimationUtils {
 
             @Override
             public void run() {
-                Animation mAnimFadeOut = AnimationUtils.loadAnimation(context, R.anim.mpsdk_fade_out);
+                Animation mAnimFadeOut = AnimationUtils.loadAnimation(context, R.anim.px_fade_out);
                 mAnimFadeOut.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -160,9 +160,9 @@ public class MPAnimationUtils {
         final BackCardView backCardView) {
 
         AnimatorSet animFront =
-            (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.mpsdk_card_flip_left_out);
+            (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.px_card_flip_left_out);
         AnimatorSet animBack =
-            (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.mpsdk_card_flip_right_in);
+            (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.px_card_flip_right_in);
 
         frontView.setCameraDistance(cameraDistance);
         animFront.setTarget(frontView);
@@ -224,9 +224,9 @@ public class MPAnimationUtils {
     public static void flipToFront(Context context, float cameraDistance, final View frontView, final View backView) {
 
         AnimatorSet animFront =
-            (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.mpsdk_card_flip_left_in);
+            (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.px_card_flip_left_in);
         AnimatorSet animBack =
-            (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.mpsdk_card_flip_right_out);
+            (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.px_card_flip_right_out);
 
         frontView.setCameraDistance(cameraDistance);
         animFront.setTarget(frontView);
@@ -278,8 +278,8 @@ public class MPAnimationUtils {
     }
 
     public static void flipToBack(Context context, final FrontCardView frontCardView, BackCardView backCardView) {
-        Animation animBack = AnimationUtils.loadAnimation(context, R.anim.mpsdk_from_middle_left);
-        Animation animFront = AnimationUtils.loadAnimation(context, R.anim.mpsdk_to_middle_left);
+        Animation animBack = AnimationUtils.loadAnimation(context, R.anim.px_from_middle_left);
+        Animation animFront = AnimationUtils.loadAnimation(context, R.anim.px_to_middle_left);
 
         frontCardView.getView().startAnimation(animFront);
 
@@ -306,8 +306,8 @@ public class MPAnimationUtils {
 
     public static void flipToFront(Context context, final FrontCardView frontCardView,
         final BackCardView backCardView) {
-        final Animation animFront = AnimationUtils.loadAnimation(context, R.anim.mpsdk_from_middle_left);
-        final Animation animBack = AnimationUtils.loadAnimation(context, R.anim.mpsdk_to_middle_left);
+        final Animation animFront = AnimationUtils.loadAnimation(context, R.anim.px_from_middle_left);
+        final Animation animBack = AnimationUtils.loadAnimation(context, R.anim.px_to_middle_left);
 
         backCardView.getView().startAnimation(animBack);
 
@@ -335,8 +335,8 @@ public class MPAnimationUtils {
     public static void transitionCardAppear(Context context, final CardView cardView,
         IdentificationCardView identificationCardView) {
 
-        Animation animAppear = AnimationUtils.loadAnimation(context, R.anim.mpsdk_appear_from_right);
-        Animation animDisappear = AnimationUtils.loadAnimation(context, R.anim.mpsdk_dissapear_to_left);
+        Animation animAppear = AnimationUtils.loadAnimation(context, R.anim.px_appear_from_right);
+        Animation animDisappear = AnimationUtils.loadAnimation(context, R.anim.px_dissapear_to_left);
 
         cardView.getView().startAnimation(animDisappear);
 
@@ -364,8 +364,8 @@ public class MPAnimationUtils {
     public static void transitionCardDisappear(Context context, final CardView cardView,
         final IdentificationCardView identificationCardView) {
 
-        Animation animAppear = AnimationUtils.loadAnimation(context, R.anim.mpsdk_appear_from_left);
-        Animation animDisappear = AnimationUtils.loadAnimation(context, R.anim.mpsdk_dissapear_to_right);
+        Animation animAppear = AnimationUtils.loadAnimation(context, R.anim.px_appear_from_left);
+        Animation animDisappear = AnimationUtils.loadAnimation(context, R.anim.px_dissapear_to_right);
 
         identificationCardView.getView().startAnimation(animDisappear);
 

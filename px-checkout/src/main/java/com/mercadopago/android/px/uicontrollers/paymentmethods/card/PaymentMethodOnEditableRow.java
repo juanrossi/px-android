@@ -33,13 +33,13 @@ public class PaymentMethodOnEditableRow extends PaymentMethodOnView {
     @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_row_payment_method_card, parent, attachToRoot);
+            .inflate(R.layout.px_row_payment_method_card, parent, attachToRoot);
         return mView;
     }
 
     @Override
     public void draw() {
         super.draw();
-        mEditHint.setImageResource(R.drawable.mpsdk_arrow_right_grey);
+        mEditHint.setImageResource(R.drawable.px_arrow_right_grey);
     }
 }

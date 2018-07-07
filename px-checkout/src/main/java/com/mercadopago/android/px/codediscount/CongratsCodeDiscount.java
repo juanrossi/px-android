@@ -29,7 +29,7 @@ class CongratsCodeDiscount extends CompactComponent<CongratsCodeDiscount.Props, 
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        final View mainContainer = inflate(parent, R.layout.mpsdk_view_congrats_discount);
+        final View mainContainer = inflate(parent, R.layout.px_view_congrats_discount);
         configureTitle(mainContainer);
         configureSubtitle(mainContainer);
         configureButton(mainContainer);
@@ -38,27 +38,27 @@ class CongratsCodeDiscount extends CompactComponent<CongratsCodeDiscount.Props, 
 
     private void configureTitle(final View mainContainer) {
         final TextView title = mainContainer.findViewById(R.id.title);
-        title.setText(R.string.mpsdk_excellent);
+        title.setText(R.string.px_excellent);
     }
 
     private void configureSubtitle(final View mainContainer) {
         final TextView subtitle = mainContainer.findViewById(R.id.subtitle);
         if (props.discount.hasPercentOff()) {
             subtitle.setText(subtitle.getContext()
-                .getString(R.string.mpsdk_get_your_discount_percent, props.discount.getPercentOff()));
+                .getString(R.string.px_get_your_discount_percent, props.discount.getPercentOff()));
         } else {
             TextFormatter.withCurrencyId(props.discount.getCurrencyId())
                 .withSpace()
                 .amount(props.discount.getAmountOff())
                 .normalDecimals()
                 .into(subtitle)
-                .holder(R.string.mpsdk_get_your_discount_amount);
+                .holder(R.string.px_get_your_discount_amount);
         }
     }
 
     private void configureButton(final View mainContainer) {
         final MeliButton button = mainContainer.findViewById(R.id.button);
-        button.setText(R.string.mpsdk_continue_label);
+        button.setText(R.string.px_continue_label);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {

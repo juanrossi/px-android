@@ -76,7 +76,7 @@ public class PaymentMethodsActivity extends MercadoPagoBaseActivity implements P
     }
 
     protected void setContentView() {
-        setContentView(R.layout.mpsdk_activity_payment_methods);
+        setContentView(R.layout.px_activity_payment_methods);
     }
 
     protected void initializeControls() {

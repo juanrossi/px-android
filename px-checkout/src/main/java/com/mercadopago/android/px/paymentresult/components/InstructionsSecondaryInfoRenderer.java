@@ -16,7 +16,7 @@ public class InstructionsSecondaryInfoRenderer extends Renderer<InstructionsSeco
 
     @Override
     public View render(final InstructionsSecondaryInfo component, final Context context, final ViewGroup parent) {
-        final View secondaryInfoView = inflate(R.layout.mpsdk_payment_result_instructions_secondary_info, parent);
+        final View secondaryInfoView = inflate(R.layout.px_payment_result_instructions_secondary_info, parent);
         final MPTextView secondaryInfoTextView = secondaryInfoView.findViewById(R.id.msdpkSecondaryInfo);
 
         setText(secondaryInfoTextView, getSecondaryInfoText(component.props.secondaryInfo));

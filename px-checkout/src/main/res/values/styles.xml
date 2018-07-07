@@ -1,75 +1,75 @@
 <resources>
 
-    <style name="mpsdk_collapsing_toolbar_text_large" parent="Base.TextAppearance.AppCompat.Large">
-        <item name="android:textColor">@color/mpsdk_toolbar_text</item>
+    <style name="px_collapsing_toolbar_text_large" parent="Base.TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/px_toolbar_text</item>
     </style>
 
-    <style name="mpsdk_collapsing_toolbar_text_medium" parent="Base.TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/mpsdk_toolbar_text</item>
+    <style name="px_collapsing_toolbar_text_medium" parent="Base.TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/px_toolbar_text</item>
     </style>
 
-    <style name="mpsdk_collapsing_review_toolbar_text_large" parent="Base.TextAppearance.AppCompat.Large">
-        <item name="android:textColor">@color/mpsdk_review_toolbar_text</item>
+    <style name="px_collapsing_review_toolbar_text_large" parent="Base.TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/px_review_toolbar_text</item>
     </style>
 
-    <style name="mpsdk_collapsing_review_toolbar_text_medium" parent="Base.TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/mpsdk_review_toolbar_text</item>
+    <style name="px_collapsing_review_toolbar_text_medium" parent="Base.TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/px_review_toolbar_text</item>
     </style>
 
-    <style name="mpsdk_toolbar_text">
-        <item name="android:textColor">@color/mpsdk_toolbar_text</item>
+    <style name="px_toolbar_text">
+        <item name="android:textColor">@color/px_toolbar_text</item>
     </style>
 
-    <style name="mpsdk_toolbar_text_large" parent="mpsdk_toolbar_text">
-        <item name="android:textSize">@dimen/mpsdk_l_text</item>
+    <style name="px_toolbar_text_large" parent="px_toolbar_text">
+        <item name="android:textSize">@dimen/px_l_text</item>
     </style>
 
-    <style name="mpsdk_toolbar_text_medium" parent="mpsdk_toolbar_text">
-        <item name="android:textSize">@dimen/mpsdk_m_text</item>
+    <style name="px_toolbar_text_medium" parent="px_toolbar_text">
+        <item name="android:textSize">@dimen/px_m_text</item>
     </style>
 
-    <style name="mpsdk_toolbar_text_small" parent="mpsdk_toolbar_text">
-        <item name="android:textSize">@dimen/mpsdk_s_text</item>
+    <style name="px_toolbar_text_small" parent="px_toolbar_text">
+        <item name="android:textSize">@dimen/px_s_text</item>
     </style>
 
-    <style name="mpsdk_toolbar_text_xx_small" parent="mpsdk_toolbar_text">
-        <item name="android:textSize">@dimen/mpsdk_xxs_text</item>
+    <style name="px_toolbar_text_xx_small" parent="px_toolbar_text">
+        <item name="android:textSize">@dimen/px_xxs_text</item>
     </style>
 
-    <style name="mpsdk_button_normal" parent="@android:style/Widget.Button">
-        <item name="android:background">@drawable/mpsdk_button</item>
-        <item name="android:textSize">@dimen/mpsdk_big_text</item>
-        <item name="android:textColor">@color/mpsdk_white</item>
+    <style name="px_button_normal" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/px_button</item>
+        <item name="android:textSize">@dimen/px_big_text</item>
+        <item name="android:textColor">@color/px_white</item>
     </style>
 
-    <style name="mpsdk_title_text">
-        <item name="android:textSize">@dimen/mpsdk_title_text</item>
-        <item name="android:textColor">@color/mpsdk_toolbar_text</item>
+    <style name="px_title_text">
+        <item name="android:textSize">@dimen/px_title_text</item>
+        <item name="android:textColor">@color/px_toolbar_text</item>
     </style>
 
     <!-- bold -->
-    <style name="mpsdk_list_label">
-        <item name="android:textSize">@dimen/mpsdk_regular_text</item>
-        <item name="android:textColor">@color/mpsdk_form_text</item>
+    <style name="px_list_label">
+        <item name="android:textSize">@dimen/px_regular_text</item>
+        <item name="android:textColor">@color/px_form_text</item>
     </style>
 
-    <style name="mpsdk_list_label_comment">
-        <item name="android:textSize">@dimen/mpsdk_small_text</item>
-        <item name="android:textColor">@color/mpsdk_comment_color</item>
+    <style name="px_list_label_comment">
+        <item name="android:textSize">@dimen/px_small_text</item>
+        <item name="android:textColor">@color/px_comment_color</item>
     </style>
 
-    <style name="mpsdk_simple_spinner">
-        <item name="android:textSize">@dimen/mpsdk_regular_text</item>
-        <item name="android:textColor">@color/mpsdk_base_text</item>
+    <style name="px_simple_spinner">
+        <item name="android:textSize">@dimen/px_regular_text</item>
+        <item name="android:textColor">@color/px_base_text</item>
     </style>
 
-    <style name="mpsdk_small_white_text">
-        <item name="android:textSize">@dimen/mpsdk_small_text</item>
-        <item name="android:textColor">@color/mpsdk_white</item>
+    <style name="px_small_white_text">
+        <item name="android:textSize">@dimen/px_small_text</item>
+        <item name="android:textColor">@color/px_white</item>
     </style>
 
-    <style name="mpsdk_big_text_light">
-        <item name="android:textSize">@dimen/mpsdk_big_text</item>
+    <style name="px_big_text_light">
+        <item name="android:textSize">@dimen/px_big_text</item>
         <item name="android:textColor">#999999</item>
     </style>
 
@@ -79,9 +79,9 @@
     </style>
 
     <style name="ThemeMercadoPagoAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/mpsdk_blue_button</item>
-        <item name="android:textColorPrimary">@color/mpsdk_real_black</item>
-        <item name="android:background">@color/mpsdk_white</item>
+        <item name="colorAccent">@color/px_blue_button</item>
+        <item name="android:textColorPrimary">@color/px_real_black</item>
+        <item name="android:background">@color/px_white</item>
     </style>
 
     <style name="MPTransparentActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -92,51 +92,51 @@
 
     <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">19dp</item>
-        <item name="android:textColor">@color/mpsdk_white</item>
+        <item name="android:textColor">@color/px_white</item>
     </style>
 
     <style name="HeaderTitleText">
-        <item name="android:textSize">@dimen/mpsdk_l_text</item>
+        <item name="android:textSize">@dimen/px_l_text</item>
         <item name="android:textColor">@color/ui_meli_black</item>
     </style>
 
     <style name="TimeText">
         <item name="android:textColor">@color/ui_meli_dark_grey</item>
-        <item name="android:textSize">@dimen/mpsdk_xs_text</item>
-        <item name="android:drawablePadding">@dimen/mpsdk_xxxs_margin</item>
-        <item name="android:drawableLeft">@drawable/mpsdk_time</item>
-        <item name="android:drawableStart">@drawable/mpsdk_time</item>
+        <item name="android:textSize">@dimen/px_xs_text</item>
+        <item name="android:drawablePadding">@dimen/px_xxxs_margin</item>
+        <item name="android:drawableLeft">@drawable/px_time</item>
+        <item name="android:drawableStart">@drawable/px_time</item>
     </style>
 
     <style name="HeaderSubtitleText">
-        <item name="android:textSize">@dimen/mpsdk_s_text</item>
+        <item name="android:textSize">@dimen/px_s_text</item>
         <item name="android:textColor">@color/ui_meli_dark_grey</item>
     </style>
 
     <style name="DealsLogoName">
-        <item name="android:textSize">@dimen/mpsdk_title_text</item>
+        <item name="android:textSize">@dimen/px_title_text</item>
         <item name="android:textColor">@color/ui_meli_grey</item>
         <item name="android:lines">2</item>
         <item name="android:ellipsize">end</item>
     </style>
 
     <style name="DealsListTitle">
-        <item name="android:textSize">@dimen/mpsdk_regular_text</item>
-        <item name="android:textColor">@color/mpsdk_real_black</item>
+        <item name="android:textSize">@dimen/px_regular_text</item>
+        <item name="android:textColor">@color/px_real_black</item>
     </style>
 
     <style name="DealsDescription">
-        <item name="android:textSize">@dimen/mpsdk_small_text</item>
+        <item name="android:textSize">@dimen/px_small_text</item>
         <item name="android:textColor">@color/ui_meli_grey</item>
     </style>
 
     <style name="DealsDetailTitle">
-        <item name="android:textSize">@dimen/mpsdk_title_text</item>
+        <item name="android:textSize">@dimen/px_title_text</item>
         <item name="android:textColor">@color/ui_meli_black</item>
     </style>
 
     <style name="DealsLegal">
-        <item name="android:textSize">@dimen/mpsdk_smaller_text</item>
+        <item name="android:textSize">@dimen/px_smaller_text</item>
         <item name="android:textColor">@color/ui_meli_grey</item>
     </style>
 

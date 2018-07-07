@@ -19,22 +19,22 @@ public class PayerInformationProviderImpl implements PayerInformationProvider {
 
     @Override
     public String getInvalidIdentificationNumberErrorMessage() {
-        return context.getString(R.string.mpsdk_invalid_identification_number);
+        return context.getString(R.string.px_invalid_identification_number);
     }
 
     @Override
     public String getInvalidIdentificationNameErrorMessage() {
-        return context.getString(R.string.mpsdk_invalid_identification_name);
+        return context.getString(R.string.px_invalid_identification_name);
     }
 
     @Override
     public String getInvalidIdentificationLastNameErrorMessage() {
-        return context.getString(R.string.mpsdk_invalid_identification_last_name);
+        return context.getString(R.string.px_invalid_identification_last_name);
     }
 
     @Override
     public String getInvalidIdentificationBusinessNameErrorMessage() {
-        return context.getString(R.string.mpsdk_invalid_identification_last_name);
+        return context.getString(R.string.px_invalid_identification_last_name);
     }
 
     @Override
@@ -44,11 +44,11 @@ public class PayerInformationProviderImpl implements PayerInformationProvider {
 
     @Override
     public String getMissingPublicKeyErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_public_key);
+        return context.getString(R.string.px_error_message_missing_public_key);
     }
 
     @Override
     public String getMissingIdentificationTypesErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_identification_types);
+        return context.getString(R.string.px_error_message_missing_identification_types);
     }
 }

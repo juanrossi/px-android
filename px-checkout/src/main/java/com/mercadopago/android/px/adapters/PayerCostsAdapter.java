@@ -39,7 +39,7 @@ public class PayerCostsAdapter extends RecyclerView.Adapter<PayerCostsAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View adapterView = inflater.inflate(R.layout.mpsdk_adapter_payer_cost, parent, false);
+        View adapterView = inflater.inflate(R.layout.px_adapter_payer_cost, parent, false);
         return new ViewHolder(adapterView);
     }
 

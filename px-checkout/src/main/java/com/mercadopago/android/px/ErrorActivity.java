@@ -32,7 +32,7 @@ public class ErrorActivity extends MercadoPagoBaseActivity {
         if (CheckoutErrorHandler.getInstance().hasCustomErrorLayout()) {
             setContentView(CheckoutErrorHandler.getInstance().getCustomErrorLayout());
         } else {
-            setContentView(R.layout.mpsdk_activity_error);
+            setContentView(R.layout.px_activity_error);
         }
 
         getActivityParameters();
@@ -48,7 +48,7 @@ public class ErrorActivity extends MercadoPagoBaseActivity {
     }
 
     private void animateErrorScreenLaunch() {
-        overridePendingTransition(R.anim.mpsdk_fade_in_seamless, R.anim.mpsdk_fade_out_seamless);
+        overridePendingTransition(R.anim.px_fade_in_seamless, R.anim.px_fade_out_seamless);
     }
 
     private boolean validParameters() {

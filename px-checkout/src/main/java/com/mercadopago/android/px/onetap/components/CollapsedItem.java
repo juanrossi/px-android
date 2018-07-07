@@ -29,7 +29,7 @@ class CollapsedItem extends CompactComponent<CollapsedItem.Props, Void> {
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        final View layout = inflate(parent, R.layout.mpsdk_view_onetap_item);
+        final View layout = inflate(parent, R.layout.px_view_onetap_item);
         final TextView itemTitle = layout.findViewById(R.id.item_title);
         final ImageView itemImage = layout.findViewById(R.id.item_image);
         itemImage.setImageResource(props.icon);

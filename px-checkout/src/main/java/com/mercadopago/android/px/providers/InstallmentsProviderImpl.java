@@ -28,7 +28,7 @@ public class InstallmentsProviderImpl implements InstallmentsProvider {
     @Override
     public MercadoPagoError getNoInstallmentsFoundError() {
         String message = getStandardErrorMessage();
-        String detail = context.getString(R.string.mpsdk_error_message_detail_no_installments);
+        String detail = context.getString(R.string.px_error_message_detail_no_installments);
 
         return new MercadoPagoError(message, detail, false);
     }
@@ -36,7 +36,7 @@ public class InstallmentsProviderImpl implements InstallmentsProvider {
     @Override
     public MercadoPagoError getMultipleInstallmentsFoundForAnIssuerError() {
         String message = getStandardErrorMessage();
-        String detail = context.getString(R.string.mpsdk_error_message_detail_multiple_installments);
+        String detail = context.getString(R.string.px_error_message_detail_multiple_installments);
 
         return new MercadoPagoError(message, detail, false);
     }
@@ -44,12 +44,12 @@ public class InstallmentsProviderImpl implements InstallmentsProvider {
     @Override
     public MercadoPagoError getNoPayerCostFoundError() {
         String message = getStandardErrorMessage();
-        String detail = context.getString(R.string.mpsdk_error_message_detail_no_payer_cost_found);
+        String detail = context.getString(R.string.px_error_message_detail_no_payer_cost_found);
 
         return new MercadoPagoError(message, detail, false);
     }
 
     public String getStandardErrorMessage() {
-        return context.getString(R.string.mpsdk_standard_error_message);
+        return context.getString(R.string.px_standard_error_message);
     }
 }

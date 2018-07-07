@@ -13,6 +13,6 @@ public class LoadingRenderer extends Renderer<LoadingComponent> {
 
     @Override
     public View render(final LoadingComponent component, final Context context, final ViewGroup parent) {
-        return inflate(R.layout.mpsdk_view_progress_bar, parent);
+        return inflate(R.layout.px_view_progress_bar, parent);
     }
 }

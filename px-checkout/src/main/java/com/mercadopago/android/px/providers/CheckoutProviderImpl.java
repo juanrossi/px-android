@@ -188,7 +188,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
     @Override
     public String getCheckoutExceptionMessage(IllegalStateException exception) {
-        return context.getString(R.string.mpsdk_standard_error_message);
+        return context.getString(R.string.px_standard_error_message);
     }
 
     @Override

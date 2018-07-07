@@ -16,11 +16,11 @@ public class ReceiptRenderer extends Renderer<Receipt> {
 
     @Override
     public View render(@NonNull final Receipt component, @NonNull final Context context, final ViewGroup parent) {
-        final View receiptView = inflate(R.layout.mpsdk_payment_receipt_component, parent);
+        final View receiptView = inflate(R.layout.px_payment_receipt_component, parent);
         final MPTextView descriptionTextView = receiptView.findViewById(R.id.mpsdkReceiptDescription);
         final MPTextView dateTextView = receiptView.findViewById(R.id.mpsdkReceiptDate);
 
-        final String divider = context.getResources().getString(R.string.mpsdk_date_divider);
+        final String divider = context.getResources().getString(R.string.px_date_divider);
         final Calendar calendar = Calendar.getInstance();
         final Locale locale = context.getResources().getConfiguration().locale;
 
@@ -41,7 +41,7 @@ public class ReceiptRenderer extends Renderer<Receipt> {
     @VisibleForTesting
     String getReceiptDescription(@NonNull final Context context, @Nullable final String receiptId) {
         if (receiptId != null) {
-            return context.getString(R.string.mpsdk_receipt, String.valueOf(receiptId));
+            return context.getString(R.string.px_receipt, String.valueOf(receiptId));
         }
         return "";
     }

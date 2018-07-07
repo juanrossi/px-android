@@ -32,7 +32,7 @@ public class PaymentMethodSearchCustomOption implements PaymentMethodSearchViewC
     @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_row_pm_search_item, parent, attachToRoot);
+            .inflate(R.layout.px_row_pm_search_item, parent, attachToRoot);
         if (mListener != null) {
             mView.setOnClickListener(mListener);
         }

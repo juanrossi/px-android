@@ -70,9 +70,9 @@ public class ReviewItems extends CompactComponent<ReviewItems.Props, Void> {
     @DrawableRes
     int getIcon(final ReviewItems.Props props) {
         if (props.getItemsModel().hasUniqueItem()) {
-            return props.getCollectorIcon() == null ? R.drawable.mpsdk_review_item_default : props.getCollectorIcon();
+            return props.getCollectorIcon() == null ? R.drawable.px_review_item_default : props.getCollectorIcon();
         } else {
-            return R.drawable.mpsdk_review_item_default;
+            return R.drawable.px_review_item_default;
         }
     }
 

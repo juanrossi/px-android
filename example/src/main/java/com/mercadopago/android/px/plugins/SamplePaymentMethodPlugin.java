@@ -20,7 +20,7 @@ public class SamplePaymentMethodPlugin extends PaymentMethodPlugin {
         return new PaymentMethodInfo(
                 getId(),
                 "Dinero en cuenta",
-                R.drawable.mpsdk_sample,
+                R.drawable.px_sample,
                 "Custom payment method"
         );
     }

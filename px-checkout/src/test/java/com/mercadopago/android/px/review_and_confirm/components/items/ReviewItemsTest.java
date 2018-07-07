@@ -43,7 +43,7 @@ public class ReviewItemsTest {
         when(props.getCollectorIcon()).thenReturn(null);
 
         final int icon = renderer.getIcon(props);
-        assertEquals(R.drawable.mpsdk_review_item_default, icon);
+        assertEquals(R.drawable.px_review_item_default, icon);
     }
 
     @Test
@@ -51,6 +51,6 @@ public class ReviewItemsTest {
         when(itemsModel.hasUniqueItem()).thenReturn(false);
 
         final int icon = renderer.getIcon(props);
-        assertEquals(R.drawable.mpsdk_review_item_default, icon);
+        assertEquals(R.drawable.px_review_item_default, icon);
     }
 }

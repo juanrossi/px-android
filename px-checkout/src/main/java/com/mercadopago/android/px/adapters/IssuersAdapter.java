@@ -36,7 +36,7 @@ public class IssuersAdapter extends RecyclerView.Adapter<IssuersAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View adapterView = inflater.inflate(R.layout.mpsdk_adapter_issuer, parent, false);
+        View adapterView = inflater.inflate(R.layout.px_adapter_issuer, parent, false);
         return new ViewHolder(adapterView);
     }
 

@@ -18,8 +18,8 @@ import com.mercadopago.util.ScaleUtil;
 
 public abstract class IdentificationView {
 
-    public static final int NORMAL_TEXT_VIEW_COLOR = R.color.mpsdk_base_text;
-    public static final int ALPHA_TEXT_VIEW_COLOR = R.color.mpsdk_base_text_alpha;
+    public static final int NORMAL_TEXT_VIEW_COLOR = R.color.px_base_text;
+    public static final int ALPHA_TEXT_VIEW_COLOR = R.color.px_base_text_alpha;
 
     protected Context mContext;
     protected View mView;
@@ -67,7 +67,7 @@ public abstract class IdentificationView {
 
     public void decorateCardBorder(int borderColor) {
         GradientDrawable cardShadowRounded =
-            (GradientDrawable) ContextCompat.getDrawable(mContext, R.drawable.mpsdk_card_shadow_rounded);
+            (GradientDrawable) ContextCompat.getDrawable(mContext, R.drawable.px_card_shadow_rounded);
         cardShadowRounded.setStroke(ScaleUtil.getPxFromDp(6, mContext), borderColor);
         mCardBorder.setImageDrawable(cardShadowRounded);
     }

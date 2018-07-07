@@ -17,7 +17,7 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
 
     @Override
     public View render(final BodyError component, final Context context, final ViewGroup parent) {
-        final View bodyErrorView = inflate(R.layout.mpsdk_payment_result_body_error, parent);
+        final View bodyErrorView = inflate(R.layout.px_payment_result_body_error, parent);
         final ViewGroup bodyViewGroup = bodyErrorView.findViewById(R.id.bodyErrorContainer);
         final MPTextView titleTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorTitle);
         final MPTextView descriptionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorDescription);
@@ -35,7 +35,7 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
         if (component.getTitle().isEmpty()) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-            int marginTop = (int) context.getResources().getDimension(R.dimen.mpsdk_l_margin);
+            int marginTop = (int) context.getResources().getDimension(R.dimen.px_l_margin);
             params.setMargins(0, marginTop, 0, 0);
             descriptionTextView.setLayoutParams(params);
         }

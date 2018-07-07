@@ -83,7 +83,7 @@ public class PayerCostColumn {
     private void setInstallmentsText() {
         final Spanned spannedInstallmentsText =
             CurrenciesUtil.getSpannedAmountWithCurrencySymbol(installmentsAmount, mCurrencyId);
-        final String x = mInstallmentsTextView.getContext().getString(R.string.mpsdk_installments_by);
+        final String x = mInstallmentsTextView.getContext().getString(R.string.px_installments_by);
         mInstallmentsTextView
             .setText(new SpannableStringBuilder(installments.toString()).append(x).append(" ")
                 .append(spannedInstallmentsText));
@@ -101,7 +101,7 @@ public class PayerCostColumn {
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_column_payer_cost, parent, attachToRoot);
+            .inflate(R.layout.px_column_payer_cost, parent, attachToRoot);
         return mView;
     }
 

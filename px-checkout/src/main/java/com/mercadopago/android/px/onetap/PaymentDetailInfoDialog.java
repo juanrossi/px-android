@@ -34,12 +34,12 @@ public class PaymentDetailInfoDialog extends MeliDialog {
 
     @Override
     public int getContentView() {
-        return R.layout.mpsdk_onetap_fragment_dialog;
+        return R.layout.px_onetap_fragment_dialog;
     }
 
     @Nullable
     @Override
     public String getTitle() {
-        return getContext().getString(R.string.mpsdk_payment_detail_title_modal);
+        return getContext().getString(R.string.px_payment_detail_title_modal);
     }
 }

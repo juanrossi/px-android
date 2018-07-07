@@ -211,12 +211,12 @@ public class BusinessPayment implements PluginPayment, Parcelable {
 
     public enum Decorator {
         APPROVED("APPROVED", R.color.ui_components_success_color,
-            R.drawable.mpsdk_badge_check, 0),
+            R.drawable.px_badge_check, 0),
         REJECTED("REJECTED", R.color.ui_components_error_color,
-            R.drawable.mpsdk_badge_error,
-            R.string.mpsdk_rejection_label),
-        PENDING("PENDING", R.color.mpsdk_ui_components_warning_color,
-            R.drawable.mpsdk_badge_pending_orange, 0);
+            R.drawable.px_badge_error,
+            R.string.px_rejection_label),
+        PENDING("PENDING", R.color.px_ui_components_warning_color,
+            R.drawable.px_badge_pending_orange, 0);
 
         public final String name;
         public final int resColor;
@@ -287,7 +287,7 @@ public class BusinessPayment implements PluginPayment, Parcelable {
             @NonNull final String paymentStatusDetail,
             @NonNull final String imageUrl,
             @NonNull final String title) {
-            this(decorator, paymentStatus, paymentStatusDetail, R.drawable.mpsdk_icon_default, title);
+            this(decorator, paymentStatus, paymentStatusDetail, R.drawable.px_icon_default, title);
             this.imageUrl = imageUrl;
         }
 

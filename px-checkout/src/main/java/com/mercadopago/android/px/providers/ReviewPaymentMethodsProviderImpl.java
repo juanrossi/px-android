@@ -17,11 +17,11 @@ public class ReviewPaymentMethodsProviderImpl implements ReviewPaymentMethodsPro
 
     @Override
     public String getEmptyPaymentMethodsListError() {
-        return context.getString(R.string.mpsdk_error_message_detail_no_payment_method_list);
+        return context.getString(R.string.px_error_message_detail_no_payment_method_list);
     }
 
     @Override
     public String getStandardErrorMessage() {
-        return context.getString(R.string.mpsdk_standard_error_message);
+        return context.getString(R.string.px_standard_error_message);
     }
 }

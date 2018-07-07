@@ -21,7 +21,7 @@ public class IdentificationCardView extends IdentificationView {
 
     @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
-        mView = LayoutInflater.from(mContext).inflate(R.layout.mpsdk_card_identification, parent, attachToRoot);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.px_card_identification, parent, attachToRoot);
         return mView;
     }
 

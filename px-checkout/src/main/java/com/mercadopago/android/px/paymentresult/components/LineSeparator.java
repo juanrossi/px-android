@@ -24,7 +24,7 @@ public class LineSeparator extends CompactComponent<LineSeparator.Props, Void> {
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        View view = inflate(parent, R.layout.mpsdk_view_separator);
+        View view = inflate(parent, R.layout.px_view_separator);
         view.setBackgroundColor(parent.getContext().getResources().getColor(props.color));
         return view;
     }

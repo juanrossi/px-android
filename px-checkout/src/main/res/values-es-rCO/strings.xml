@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mpsdk_homebanking">Banca en línea de</string>
+    <string name="px_homebanking">Banca en línea de</string>
 </resources>

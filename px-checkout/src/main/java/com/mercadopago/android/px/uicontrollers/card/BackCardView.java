@@ -26,7 +26,7 @@ public class BackCardView {
 
     public static final String BASE_BACK_SECURITY_CODE = "•••";
 
-    public static final int NEUTRAL_CARD_COLOR = R.color.mpsdk_white;
+    public static final int NEUTRAL_CARD_COLOR = R.color.px_white;
 
     private final Context mContext;
     private View mView;
@@ -74,14 +74,14 @@ public class BackCardView {
             return;
         }
         if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
-            resizeCard(mCardContainer, R.dimen.mpsdk_card_size_medium_height, R.dimen.mpsdk_card_size_medium_width,
+            resizeCard(mCardContainer, R.dimen.px_card_size_medium_height, R.dimen.px_card_size_medium_width,
                 CardRepresentationModes.CARD_SECURITY_CODE_BACK_SIZE_MEDIUM);
         } else if (mSize.equals(CardRepresentationModes.BIG_SIZE)) {
-            resizeCard(mCardContainer, R.dimen.mpsdk_card_size_big_height, R.dimen.mpsdk_card_size_big_width,
+            resizeCard(mCardContainer, R.dimen.px_card_size_big_height, R.dimen.px_card_size_big_width,
                 CardRepresentationModes.CARD_SECURITY_CODE_BACK_SIZE_BIG);
         } else if (mSize.equals(CardRepresentationModes.EXTRA_BIG_SIZE)) {
-            resizeCard(mCardContainer, R.dimen.mpsdk_card_size_extra_big_height,
-                R.dimen.mpsdk_card_size_extra_big_width,
+            resizeCard(mCardContainer, R.dimen.px_card_size_extra_big_height,
+                R.dimen.px_card_size_extra_big_width,
                 CardRepresentationModes.CARD_SECURITY_CODE_BACK_SIZE_EXTRA_BIG);
         }
     }
@@ -93,7 +93,7 @@ public class BackCardView {
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_card_back, parent, attachToRoot);
+            .inflate(R.layout.px_card_back, parent, attachToRoot);
         return mView;
     }
 
@@ -103,7 +103,7 @@ public class BackCardView {
 
     public void decorateCardBorder(int borderColor) {
         GradientDrawable cardShadowRounded =
-            (GradientDrawable) ContextCompat.getDrawable(mContext, R.drawable.mpsdk_card_shadow_rounded);
+            (GradientDrawable) ContextCompat.getDrawable(mContext, R.drawable.px_card_shadow_rounded);
         cardShadowRounded.setStroke(ScaleUtil.getPxFromDp(6, mContext), borderColor);
         mCardBorder.setImageDrawable(cardShadowRounded);
     }
@@ -134,7 +134,7 @@ public class BackCardView {
     }
 
     private int getCardColor(PaymentMethod paymentMethod) {
-        String colorName = "mpsdk_" + paymentMethod.getId().toLowerCase();
+        String colorName = "px_" + paymentMethod.getId().toLowerCase();
         int color = mContext.getResources().getIdentifier(colorName, "color", mContext.getPackageName());
         if (color == 0) {
             color = NEUTRAL_CARD_COLOR;

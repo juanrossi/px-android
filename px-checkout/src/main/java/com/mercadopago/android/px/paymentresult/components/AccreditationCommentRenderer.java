@@ -15,7 +15,7 @@ public class AccreditationCommentRenderer extends Renderer<AccreditationComment>
 
     @Override
     public View render(final AccreditationComment component, final Context context, final ViewGroup parent) {
-        final View accreditationCommentView = inflate(R.layout.mpsdk_accreditation_comment, parent);
+        final View accreditationCommentView = inflate(R.layout.px_accreditation_comment, parent);
         final MPTextView commentTextView = accreditationCommentView.findViewById(R.id.mpsdkAccreditationTimeComment);
         setText(commentTextView, component.props.comment);
         return accreditationCommentView;

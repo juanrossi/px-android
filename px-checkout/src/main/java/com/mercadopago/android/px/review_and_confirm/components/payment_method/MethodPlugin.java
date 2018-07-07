@@ -36,7 +36,7 @@ class MethodPlugin extends CompactComponent<MethodPlugin.Props, Void> {
     @Override
     public View render(@NonNull final ViewGroup parent) {
 
-        final View paymentView = inflate(parent, R.layout.mpsdk_payment_method_plugin);
+        final View paymentView = inflate(parent, R.layout.px_payment_method_plugin);
         final ImageView imageView = paymentView.findViewById(R.id.icon);
         final TextView title = paymentView.findViewById(R.id.title);
         final TextView description = paymentView.findViewById(R.id.description);

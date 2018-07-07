@@ -85,7 +85,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     public View onCreateView(@NonNull final LayoutInflater inflater,
         @Nullable final ViewGroup container,
         @Nullable final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.mpsdk_onetap_fragment, container, false);
+        return inflater.inflate(R.layout.px_onetap_fragment, container, false);
     }
 
     @Override

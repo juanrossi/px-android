@@ -111,7 +111,7 @@ public class FrontCardView {
     public void initializeControls() {
         mCardContainer = mView.findViewById(R.id.mpsdkCardFrontContainer);
         mCardBorder = mView.findViewById(R.id.mpsdkCardShadowBorder);
-        mAnimFadeIn = AnimationUtils.loadAnimation(mContext, R.anim.mpsdk_fade_in);
+        mAnimFadeIn = AnimationUtils.loadAnimation(mContext, R.anim.px_fade_in);
         mCardNumberTextView = mView.findViewById(R.id.mpsdkCardNumberTextView);
         mCardholderNameTextView = mView.findViewById(R.id.mpsdkCardholderNameView);
         mCardExpiryMonthTextView = mView.findViewById(R.id.mpsdkCardHolderExpiryMonth);
@@ -138,7 +138,7 @@ public class FrontCardView {
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_card_front, parent, attachToRoot);
+            .inflate(R.layout.px_card_front, parent, attachToRoot);
         return mView;
     }
 
@@ -148,7 +148,7 @@ public class FrontCardView {
 
     public void decorateCardBorder(int borderColor) {
         GradientDrawable cardShadowRounded =
-            (GradientDrawable) ContextCompat.getDrawable(mContext, R.drawable.mpsdk_card_shadow_rounded);
+            (GradientDrawable) ContextCompat.getDrawable(mContext, R.drawable.px_card_shadow_rounded);
         cardShadowRounded.setStroke(ScaleUtil.getPxFromDp(6, mContext), borderColor);
         mCardBorder.setImageDrawable(cardShadowRounded);
     }
@@ -200,7 +200,7 @@ public class FrontCardView {
 
     public void drawEditingCardHolderName(String cardholderName) {
         if (cardholderName == null || cardholderName.length() == 0) {
-            mCardholderNameTextView.setText(mContext.getResources().getString(R.string.mpsdk_cardholder_name_short));
+            mCardholderNameTextView.setText(mContext.getResources().getString(R.string.px_cardholder_name_short));
         } else {
             mCardholderNameTextView.setText(cardholderName.toUpperCase());
         }
@@ -215,7 +215,7 @@ public class FrontCardView {
     public void drawEditingExpiryMonth(String cardMonth) {
         if (cardMonth == null || cardMonth.length() == 0) {
             mCardExpiryMonthTextView.setText(mContext.getResources()
-                .getString(R.string.mpsdk_card_expiry_month_hint));
+                .getString(R.string.px_card_expiry_month_hint));
         } else {
             mCardExpiryMonthTextView.setText(cardMonth);
         }
@@ -229,7 +229,7 @@ public class FrontCardView {
 
     public void drawEditingExpiryYear(String cardYear) {
         if (cardYear == null || cardYear.length() == 0) {
-            mCardExpiryYearTextView.setText(mContext.getResources().getString(R.string.mpsdk_card_expiry_year_hint));
+            mCardExpiryYearTextView.setText(mContext.getResources().getString(R.string.px_card_expiry_year_hint));
         } else {
             mCardExpiryYearTextView.setText(cardYear);
         }
@@ -270,7 +270,7 @@ public class FrontCardView {
 
     public void fillCardHolderName(String cardholderName) {
         if (cardholderName == null || cardholderName.length() == 0) {
-            mCardholderNameTextView.setText(mContext.getResources().getString(R.string.mpsdk_cardholder_name_short));
+            mCardholderNameTextView.setText(mContext.getResources().getString(R.string.px_cardholder_name_short));
         } else {
             mCardholderNameTextView.setText(cardholderName.toUpperCase());
         }
@@ -293,9 +293,9 @@ public class FrontCardView {
     private void drawEmptyCard() {
         String number = BASE_NUMBER_CARDHOLDER;
         mCardNumberTextView.setText(number);
-        mCardholderNameTextView.setText(mContext.getResources().getString(R.string.mpsdk_cardholder_name_short));
-        mCardExpiryMonthTextView.setText(mContext.getResources().getString(R.string.mpsdk_card_expiry_month_hint));
-        mCardExpiryYearTextView.setText(mContext.getResources().getString(R.string.mpsdk_card_expiry_year_hint));
+        mCardholderNameTextView.setText(mContext.getResources().getString(R.string.px_cardholder_name_short));
+        mCardExpiryMonthTextView.setText(mContext.getResources().getString(R.string.px_card_expiry_month_hint));
+        mCardExpiryYearTextView.setText(mContext.getResources().getString(R.string.px_card_expiry_year_hint));
         mCardSecurityCodeTextView.setText("");
         clearImage();
     }
@@ -354,7 +354,7 @@ public class FrontCardView {
     }
 
     private int getCardImage(PaymentMethod paymentMethod) {
-        String imageName = "mpsdk_ico_card_" + paymentMethod.getId().toLowerCase();
+        String imageName = "px_ico_card_" + paymentMethod.getId().toLowerCase();
         return mContext.getResources().getIdentifier(imageName, "drawable", mContext.getPackageName());
     }
 
@@ -363,18 +363,18 @@ public class FrontCardView {
             return;
         }
         if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
-            resizeCard(mCardContainer, R.dimen.mpsdk_card_size_medium_height, R.dimen.mpsdk_card_size_medium_width,
+            resizeCard(mCardContainer, R.dimen.px_card_size_medium_height, R.dimen.px_card_size_medium_width,
                 CardRepresentationModes.CARD_HOLDER_NAME_SIZE_MEDIUM,
                 CardRepresentationModes.CARD_EXPIRY_DATE_SIZE_MEDIUM,
                 CardRepresentationModes.CARD_SECURITY_CODE_FRONT_SIZE_MEDIUM);
         } else if (mSize.equals(CardRepresentationModes.BIG_SIZE)) {
-            resizeCard(mCardContainer, R.dimen.mpsdk_card_size_big_height, R.dimen.mpsdk_card_size_big_width,
+            resizeCard(mCardContainer, R.dimen.px_card_size_big_height, R.dimen.px_card_size_big_width,
                 CardRepresentationModes.CARD_HOLDER_NAME_SIZE_BIG,
                 CardRepresentationModes.CARD_EXPIRY_DATE_SIZE_BIG,
                 CardRepresentationModes.CARD_SECURITY_CODE_FRONT_SIZE_BIG);
         } else if (mSize.equals(CardRepresentationModes.EXTRA_BIG_SIZE)) {
-            resizeCard(mCardContainer, R.dimen.mpsdk_card_size_extra_big_height,
-                R.dimen.mpsdk_card_size_extra_big_width,
+            resizeCard(mCardContainer, R.dimen.px_card_size_extra_big_height,
+                R.dimen.px_card_size_extra_big_width,
                 CardRepresentationModes.CARD_HOLDER_NAME_SIZE_EXTRA_BIG,
                 CardRepresentationModes.CARD_EXPIRY_DATE_SIZE_EXTRA_BIG,
                 CardRepresentationModes.CARD_SECURITY_CODE_FRONT_SIZE_EXTRA_BIG);

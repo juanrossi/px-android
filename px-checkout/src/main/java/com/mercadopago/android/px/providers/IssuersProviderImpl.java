@@ -30,14 +30,14 @@ public class IssuersProviderImpl implements IssuersProvider {
 
     @Override
     public MercadoPagoError getEmptyIssuersError() {
-        String message = context.getString(R.string.mpsdk_standard_error_message);
-        String detail = context.getString(R.string.mpsdk_error_message_detail_issuers);
+        String message = context.getString(R.string.px_standard_error_message);
+        String detail = context.getString(R.string.px_error_message_detail_issuers);
 
         return new MercadoPagoError(message, detail, false);
     }
 
     @Override
     public String getCardIssuersTitle() {
-        return context.getString(R.string.mpsdk_card_issuers_title);
+        return context.getString(R.string.px_card_issuers_title);
     }
 }

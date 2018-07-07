@@ -55,7 +55,7 @@ public class CardView {
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_card_view, parent, attachToRoot);
+            .inflate(R.layout.px_card_view, parent, attachToRoot);
         return mView;
     }
 
@@ -178,7 +178,7 @@ public class CardView {
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
-        float distance = cardBackground.getResources().getDimension(R.dimen.mpsdk_card_camera_distance);
+        float distance = cardBackground.getResources().getDimension(R.dimen.px_card_camera_distance);
         float scale = mContext.getResources().getDisplayMetrics().density;
         float cameraDistance = scale * distance;
 
@@ -200,7 +200,7 @@ public class CardView {
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
-        float distance = cardBackground.getResources().getDimension(R.dimen.mpsdk_card_camera_distance);
+        float distance = cardBackground.getResources().getDimension(R.dimen.px_card_camera_distance);
         float scale = mContext.getResources().getDisplayMetrics().density;
         float cameraDistance = scale * distance;
 

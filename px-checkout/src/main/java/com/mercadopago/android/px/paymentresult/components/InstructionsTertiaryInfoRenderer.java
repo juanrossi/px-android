@@ -16,7 +16,7 @@ public class InstructionsTertiaryInfoRenderer extends Renderer<InstructionsTerti
 
     @Override
     public View render(final InstructionsTertiaryInfo component, final Context context, final ViewGroup parent) {
-        final View secondaryInfoView = inflate(R.layout.mpsdk_payment_result_instructions_tertiary_info, parent);
+        final View secondaryInfoView = inflate(R.layout.px_payment_result_instructions_tertiary_info, parent);
         final MPTextView secondaryInfoTextView = secondaryInfoView.findViewById(R.id.msdpkTertiaryInfo);
 
         setText(secondaryInfoTextView, getTertiaryInfoText(component.props.tertiaryInfo));

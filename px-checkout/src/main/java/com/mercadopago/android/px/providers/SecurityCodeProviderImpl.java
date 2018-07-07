@@ -40,7 +40,7 @@ public class SecurityCodeProviderImpl implements SecurityCodeProvider {
 
     @Override
     public String getStandardErrorMessageGotten() {
-        return mContext.getString(R.string.mpsdk_standard_error_message);
+        return mContext.getString(R.string.px_standard_error_message);
     }
 
     @Override

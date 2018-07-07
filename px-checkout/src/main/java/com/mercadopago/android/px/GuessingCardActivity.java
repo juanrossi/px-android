@@ -393,11 +393,11 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     private void setContentViewLowRes() {
-        setContentView(R.layout.mpsdk_activity_form_card_lowres);
+        setContentView(R.layout.px_activity_form_card_lowres);
     }
 
     private void setContentViewNormal() {
-        setContentView(R.layout.mpsdk_activity_form_card_normal);
+        setContentView(R.layout.px_activity_form_card_normal);
     }
 
     @Override
@@ -542,8 +542,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mInfoTextView = findViewById(R.id.mpsdkBlackInfoTextView);
         mErrorTextView = findViewById(R.id.mpsdkErrorTextView);
         mScrollView = findViewById(R.id.mpsdkScrollViewContainer);
-        mContainerUpAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.mpsdk_slide_bottom_up);
-        mContainerDownAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.mpsdk_slide_bottom_down);
+        mContainerUpAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.px_slide_bottom_up);
+        mContainerDownAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.px_slide_bottom_down);
 
         mInputContainer.setVisibility(View.GONE);
         mProgressLayout.setVisibility(View.VISIBLE);
@@ -650,11 +650,11 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     private void decorateLowRes() {
-        mBackInactiveButtonText.setTextColor(ContextCompat.getColor(this, R.color.mpsdk_warm_grey_with_alpha));
+        mBackInactiveButtonText.setTextColor(ContextCompat.getColor(this, R.color.px_warm_grey_with_alpha));
     }
 
     private void decorateNormal() {
-        mBackInactiveButtonText.setTextColor(ContextCompat.getColor(this, R.color.mpsdk_warm_grey_with_alpha));
+        mBackInactiveButtonText.setTextColor(ContextCompat.getColor(this, R.color.px_warm_grey_with_alpha));
     }
 
     private String getCardNumberTextTrimmed() {
@@ -665,16 +665,16 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     public void initializeTitle() {
         if (mLowResActive) {
             String paymentTypeId = mPresenter.getPaymentTypeId();
-            String paymentTypeText = getString(R.string.mpsdk_form_card_title);
+            String paymentTypeText = getString(R.string.px_form_card_title);
             if (paymentTypeId != null) {
                 if (paymentTypeId.equals(PaymentTypes.CREDIT_CARD)) {
-                    paymentTypeText = getString(R.string.mpsdk_form_card_title_payment_type,
-                        getString(R.string.mpsdk_credit_payment_type));
+                    paymentTypeText = getString(R.string.px_form_card_title_payment_type,
+                        getString(R.string.px_credit_payment_type));
                 } else if (paymentTypeId.equals(PaymentTypes.DEBIT_CARD)) {
-                    paymentTypeText = getString(R.string.mpsdk_form_card_title_payment_type,
-                        getString(R.string.mpsdk_debit_payment_type));
+                    paymentTypeText = getString(R.string.px_form_card_title_payment_type,
+                        getString(R.string.px_debit_payment_type));
                 } else if (paymentTypeId.equals(PaymentTypes.PREPAID_CARD)) {
-                    paymentTypeText = getString(R.string.mpsdk_form_card_title_payment_type_prepaid);
+                    paymentTypeText = getString(R.string.px_form_card_title_payment_type_prepaid);
                 }
             }
             mLowResTitleToolbar.setText(paymentTypeText);
@@ -687,9 +687,9 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             hideBankDeals();
         } else {
             if (mLowResActive) {
-                mBankDealsTextView.setText(getString(R.string.mpsdk_bank_deals_lowres));
+                mBankDealsTextView.setText(getString(R.string.px_bank_deals_lowres));
             } else {
-                mBankDealsTextView.setText(getString(R.string.mpsdk_bank_deals_action));
+                mBankDealsTextView.setText(getString(R.string.px_bank_deals_action));
             }
 
             mBankDealsTextView.setVisibility(View.VISIBLE);
@@ -842,7 +842,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             .setPublicKey(mPresenter.getPublicKey())
             .setPaymentMethods(supportedPaymentMethods)
             .startActivity();
-        overridePendingTransition(R.anim.mpsdk_slide_up_activity, R.anim.mpsdk_no_change_animation);
+        overridePendingTransition(R.anim.px_slide_up_activity, R.anim.px_no_change_animation);
     }
 
     @Override
@@ -1215,7 +1215,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         openKeyboard(mIdentificationNumberEditText);
         checkTransitionCardToId();
         if (mLowResActive) {
-            mLowResTitleToolbar.setText(getResources().getString(R.string.mpsdk_form_identification_title));
+            mLowResTitleToolbar.setText(getResources().getString(R.string.px_form_identification_title));
         }
     }
 
@@ -1277,7 +1277,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void setInvalidCardOnePaymentMethodErrorView() {
-        mBlackInfoContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.mpsdk_error_red_pink));
+        mBlackInfoContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.px_error_red_pink));
         setErrorState(ERROR_STATE);
         setErrorCardNumber();
     }
@@ -1290,7 +1290,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         }
         mBlackInfoContainer.setVisibility(View.VISIBLE);
         mInfoTextView
-            .setText(getResources().getString(R.string.mpsdk_exclusion_one_element, supportedPaymentMethod.getName()));
+            .setText(getResources().getString(R.string.px_exclusion_one_element, supportedPaymentMethod.getName()));
         if (!withAnimation) {
             mButtonContainer.setVisibility(View.GONE);
         }
@@ -1556,7 +1556,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             .setPaymentTypes(paymentTypes)
             .setCardInfo(new CardInfo(mPresenter.getCardToken()))
             .startActivity();
-        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     @Override
@@ -1613,7 +1613,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         returnIntent.putExtra("issuers", JsonUtil.getInstance().toJson(issuers));
         setResult(RESULT_OK, returnIntent);
         finish();
-        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     @Override
@@ -1626,7 +1626,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         returnIntent.putExtra("payerCosts", JsonUtil.getInstance().toJson(payerCosts));
         setResult(RESULT_OK, returnIntent);
         finish();
-        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     @Override
@@ -1639,7 +1639,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         returnIntent.putExtra("payerCost", JsonUtil.getInstance().toJson(payerCost));
         setResult(RESULT_OK, returnIntent);
         finish();
-        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     @Override

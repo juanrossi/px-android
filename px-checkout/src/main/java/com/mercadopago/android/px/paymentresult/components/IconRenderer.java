@@ -21,7 +21,7 @@ public class IconRenderer extends Renderer<Icon> {
 
     @Override
     public View render(final Icon component, final Context context, final ViewGroup parent) {
-        final View iconView = inflate(R.layout.mpsdk_icon, parent);
+        final View iconView = inflate(R.layout.px_icon, parent);
         final ImageView iconImageView = iconView.findViewById(R.id.mpsdkIconProduct);
         final ImageView iconBadgeView = iconView.findViewById(R.id.mpsdkIconBadge);
 

@@ -16,7 +16,7 @@ public class InstructionsInfoRenderer extends Renderer<InstructionsInfo> {
 
     @Override
     public View render(final InstructionsInfo component, final Context context, final ViewGroup parent) {
-        final View infoView = inflate(R.layout.mpsdk_payment_result_instructions_info, parent);
+        final View infoView = inflate(R.layout.px_payment_result_instructions_info, parent);
         final MPTextView infoTitle = infoView.findViewById(R.id.mpsdkInstructionsInfoTitle);
         final MPTextView infoContent = infoView.findViewById(R.id.mpsdkInstructionsInfoContent);
         final View bottomDivider = infoView.findViewById(R.id.mpsdkInstructionsInfoDividerBottom);

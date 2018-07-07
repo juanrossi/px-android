@@ -75,7 +75,7 @@ public class ReviewPaymentMethodsActivity extends MercadoPagoBaseActivity implem
     }
 
     protected void setContentView() {
-        setContentView(R.layout.mpsdk_activity_review_payment_methods);
+        setContentView(R.layout.px_activity_review_payment_methods);
     }
 
     protected void initializeControls() {
@@ -95,7 +95,7 @@ public class ReviewPaymentMethodsActivity extends MercadoPagoBaseActivity implem
             @Override
             public void onClick(View view) {
                 finish();
-                overridePendingTransition(R.anim.mpsdk_no_change_animation, R.anim.mpsdk_slide_down_activity);
+                overridePendingTransition(R.anim.px_no_change_animation, R.anim.px_slide_down_activity);
             }
         });
     }

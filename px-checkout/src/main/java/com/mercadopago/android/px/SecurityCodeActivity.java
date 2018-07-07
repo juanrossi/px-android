@@ -179,7 +179,7 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
     }
 
     public void setContentView() {
-        setContentView(R.layout.mpsdk_activity_security_code);
+        setContentView(R.layout.px_activity_security_code);
     }
 
     private void initializeControls() {
@@ -314,13 +314,13 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
 
     @Override
     public void showBackSecurityCodeCardView() {
-        mSecurityCodeCardIcon.setImageResource(R.drawable.mpsdk_tiny_card_cvv_screen);
+        mSecurityCodeCardIcon.setImageResource(R.drawable.px_tiny_card_cvv_screen);
         setSecurityCodeCardColorFilter();
     }
 
     @Override
     public void showFrontSecurityCodeCardView() {
-        mSecurityCodeCardIcon.setImageResource(R.drawable.mpsdk_amex_tiny_card_cvv_screen);
+        mSecurityCodeCardIcon.setImageResource(R.drawable.px_amex_tiny_card_cvv_screen);
         setSecurityCodeCardColorFilter();
     }
 

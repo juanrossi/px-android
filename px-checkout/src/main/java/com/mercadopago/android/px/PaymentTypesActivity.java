@@ -164,11 +164,11 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
     }
 
     private void setContentViewLowRes() {
-        setContentView(R.layout.mpsdk_activity_payment_types_lowres);
+        setContentView(R.layout.px_activity_payment_types_lowres);
     }
 
     private void setContentViewNormal() {
-        setContentView(R.layout.mpsdk_activity_payment_types_normal);
+        setContentView(R.layout.px_activity_payment_types_normal);
     }
 
     private void initializeViews() {
@@ -240,7 +240,7 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
 
     private void loadLowResViews() {
         loadToolbarArrow(mLowResToolbar);
-        mLowResTitleToolbar.setText(getString(R.string.mpsdk_payment_types_title));
+        mLowResTitleToolbar.setText(getString(R.string.px_payment_types_title));
         if (FontCache.hasTypeface(FontCache.CUSTOM_REGULAR_FONT)) {
             mLowResTitleToolbar.setTypeface(FontCache.getTypeface(FontCache.CUSTOM_REGULAR_FONT));
         }
@@ -248,7 +248,7 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
 
     private void loadNormalViews() {
         loadToolbarArrow(mNormalToolbar);
-        mNormalToolbar.setTitle(getString(R.string.mpsdk_payment_types_title));
+        mNormalToolbar.setTitle(getString(R.string.px_payment_types_title));
         setCustomFontNormal();
         mFrontCardView = new FrontCardView(mActivity, CardRepresentationModes.SHOW_FULL_FRONT_ONLY);
         mFrontCardView.setSize(CardRepresentationModes.MEDIUM_SIZE);
@@ -305,7 +305,7 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
         returnIntent.putExtra("paymentType", JsonUtil.getInstance().toJson(paymentType));
         setResult(RESULT_OK, returnIntent);
         finish();
-        overridePendingTransition(R.anim.mpsdk_hold, R.anim.mpsdk_hold);
+        overridePendingTransition(R.anim.px_hold, R.anim.px_hold);
     }
 
     @Override

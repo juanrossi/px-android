@@ -39,7 +39,7 @@ public class PaymentMethodComponent extends CompactComponent<PaymentModel, Payme
         ViewGroup paymentMethodView = (ViewGroup) resolveComponent().render(parent);
 
         if (shouldShowPaymentMethodButton()) {
-            String changeLabel = parent.getContext().getString(R.string.mpsdk_change_payment);
+            String changeLabel = parent.getContext().getString(R.string.px_change_payment);
             ButtonLink buttonLink = new ButtonLink(new Button.Props(changeLabel, null), new Button.Actions() {
                 @Override
                 public void onClick(final Action action) {

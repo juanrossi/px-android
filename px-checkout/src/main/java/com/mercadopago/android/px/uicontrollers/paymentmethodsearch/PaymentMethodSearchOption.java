@@ -33,7 +33,7 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
     @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_row_pm_search_item, parent, attachToRoot);
+            .inflate(R.layout.px_row_pm_search_item, parent, attachToRoot);
         if (mListener != null) {
             mView.setOnClickListener(mListener);
         }
@@ -93,14 +93,14 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
         }
 
         if (needsTint) {
-            mIcon.setColorFilter(ContextCompat.getColor(mContext, R.color.mpsdk_main_color),
+            mIcon.setColorFilter(ContextCompat.getColor(mContext, R.color.px_main_color),
                 PorterDuff.Mode.MULTIPLY);
         }
     }
 
     private boolean needsTint() {
-        final int originalColor = ContextCompat.getColor(mContext, R.color.mpsdk_original_main_color);
-        final int realColor = ContextCompat.getColor(mContext, R.color.mpsdk_main_color);
+        final int originalColor = ContextCompat.getColor(mContext, R.color.px_original_main_color);
+        final int realColor = ContextCompat.getColor(mContext, R.color.px_main_color);
         return (originalColor != realColor) && (mItem.isGroup() || mItem.isPaymentType());
     }
 

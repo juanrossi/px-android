@@ -24,7 +24,6 @@
 -keep class com.mercadopago.android.px.plugins.PaymentResultAction { *; } #dtos
 -keep class com.mercadopago.android.px.plugins.model.** { *; } #dtos
 
--dontnote com.mercadopago.android.px.presenters.CheckoutPresenter
 -dontnote com.mercadopago.android.px.preferences.**
 -dontnote com.mercadopago.android.px.model.**
 -dontnote com.mercadopago.android.px.viewmodel.**

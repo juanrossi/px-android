@@ -132,12 +132,12 @@ public class JsonSetupActivity extends AppCompatActivity {
 
     private void updateSetupStatus(boolean ok) {
         if (ok) {
-            Drawable okImage = getResources().getDrawable(R.drawable.mpsdk_ok_sign);
+            Drawable okImage = getResources().getDrawable(R.drawable.px_ok_sign);
             okImage.setColorFilter(ContextCompat.getColor(this, R.color.examples_green), PorterDuff.Mode.SRC_ATOP);
             mStatusImageView.setImageDrawable(okImage);
             mStartCheckoutButton.setEnabled(true);
         } else {
-            mStatusImageView.setImageResource(R.drawable.mpsdk_icon_error);
+            mStatusImageView.setImageResource(R.drawable.px_icon_error);
             mStartCheckoutButton.setEnabled(false);
         }
     }

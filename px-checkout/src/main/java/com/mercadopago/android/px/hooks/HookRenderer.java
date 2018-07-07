@@ -13,7 +13,7 @@ public abstract class HookRenderer<T extends HookComponent> extends Renderer<T> 
 
     @Override
     public View render(@NonNull final T component, @NonNull final Context context, final ViewGroup parent) {
-        final ViewGroup view = (ViewGroup) inflate(R.layout.mpsdk_hooks_layout, parent);
+        final ViewGroup view = (ViewGroup) inflate(R.layout.px_hooks_layout, parent);
 
         RendererFactory.create(context, component.getToolbarComponent()).render(view);
 

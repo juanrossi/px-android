@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mpsdk_amex"
+    android:background="@color/px_amex"
     android:fillViewport="true"
     android:orientation="vertical">
 
@@ -52,13 +52,13 @@
 
         <Button
             android:id="@+id/button"
-            style="@style/mpsdk_button_normal"
+            style="@style/px_button_normal"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="25dp"
             android:background="@drawable/button"
             android:text="Continuar"
-            android:textColor="@color/mpsdk_white_background"
+            android:textColor="@color/px_white_background"
             android:textSize="16dp" />
 
     </LinearLayout>

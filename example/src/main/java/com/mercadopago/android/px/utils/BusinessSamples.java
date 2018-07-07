@@ -42,7 +42,7 @@ final class BusinessSamples {
         final BusinessPayment payment =
             new BusinessPayment.Builder(BusinessPayment.Decorator.REJECTED, Payment.StatusCodes.STATUS_REJECTED,
                 Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER,
-                R.drawable.mpsdk_icon_card, "Title")
+                R.drawable.px_icon_card, "Title")
                 .setHelp("Help description!")
                 .setReceiptId("#123455")
                 .setTopFragment(SampleTopFragment.class, args)
@@ -77,7 +77,7 @@ final class BusinessSamples {
         final BusinessPayment payment =
             new BusinessPayment.Builder(BusinessPayment.Decorator.APPROVED,
                 Payment.StatusCodes.STATUS_APPROVED,
-                Payment.StatusDetail.STATUS_DETAIL_ACCREDITED, R.drawable.mpsdk_icon_card, "Title")
+                Payment.StatusDetail.STATUS_DETAIL_ACCREDITED, R.drawable.px_icon_card, "Title")
                 .setReceiptId("#123455")
                 .setPaymentMethodVisibility(true)
                 .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))
@@ -91,7 +91,7 @@ final class BusinessSamples {
             new BusinessPayment.Builder(BusinessPayment.Decorator.PENDING,
                 Payment.StatusCodes.STATUS_PENDING,
                 Payment.StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT,
-                R.drawable.mpsdk_icon_card, "Title")
+                R.drawable.px_icon_card, "Title")
                 .setHelp("Help description!")
                 .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                 .build();
@@ -104,7 +104,7 @@ final class BusinessSamples {
             new BusinessPayment.Builder(BusinessPayment.Decorator.PENDING,
                 Payment.StatusCodes.STATUS_PENDING,
                 Payment.StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT,
-                R.drawable.mpsdk_icon_card, "Title")
+                R.drawable.px_icon_card, "Title")
                 .setReceiptId("#123455")
                 .setPrimaryButton(new ExitAction(BUTTON_PRIMARY_NAME, 23))
                 .setSecondaryButton(new ExitAction(BUTTON_SECONDARY_NAME, 34))

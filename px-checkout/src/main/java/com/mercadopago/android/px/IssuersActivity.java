@@ -131,11 +131,11 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
     }
 
     private void setContentViewLowRes() {
-        setContentView(R.layout.mpsdk_activity_issuers_lowres);
+        setContentView(R.layout.px_activity_issuers_lowres);
     }
 
     private void setContentViewNormal() {
-        setContentView(R.layout.mpsdk_activity_issuers_normal);
+        setContentView(R.layout.px_activity_issuers_normal);
     }
 
     private void initializeControls() {
@@ -367,7 +367,7 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
     }
 
     public void animateTransitionSlideInSlideOut() {
-        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     @Override

@@ -49,9 +49,9 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
     }
 
     private void addItem(final ViewGroup parent, final List<Item> items) {
-        final String defaultMultipleTitle = parent.getContext().getString(R.string.mpsdk_review_summary_products);
+        final String defaultMultipleTitle = parent.getContext().getString(R.string.px_review_summary_products);
         final int icon =
-            props.getCollectorIcon() == null ? R.drawable.mpsdk_review_item_default : props.getCollectorIcon();
+            props.getCollectorIcon() == null ? R.drawable.px_review_item_default : props.getCollectorIcon();
         final String itemsTitle = com.mercadopago.android.px.model.Item
             .getItemsTitle(items, defaultMultipleTitle);
         final View render = new CollapsedItem(new CollapsedItem.Props(icon, itemsTitle)).render(parent);
@@ -80,8 +80,8 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
         if (campaign != null) {
             final Context context = parent.getContext();
             TermsAndConditionsModel model = new TermsAndConditionsModel(campaign.getCampaignTermsUrl(),
-                context.getString(R.string.mpsdk_discount_terms_and_conditions_message),
-                context.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message),
+                context.getString(R.string.px_discount_terms_and_conditions_message),
+                context.getString(R.string.px_discount_terms_and_conditions_linked_message),
                 props.getPublicKey(),
                 LineSeparatorType.NONE);
             final View view = new TermsAndConditionsComponent(model)
@@ -91,7 +91,7 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
     }
 
     private void addConfirmButton(final @Nonnull ViewGroup parent, @Nullable final Discount discount) {
-        final String confirm = parent.getContext().getString(R.string.mpsdk_confirm);
+        final String confirm = parent.getContext().getString(R.string.px_confirm);
         final Button.Actions actions = new Button.Actions() {
             @Override
             public void onClick(final Action action) {
@@ -101,7 +101,7 @@ public class OneTapContainer extends CompactComponent<OneTapModel, OneTap.Action
 
         final Button button = new ButtonPrimary(new Button.Props(confirm), actions);
         final View view = button.render(parent);
-        final int resMargin = discount != null ? R.dimen.mpsdk_zero_height : R.dimen.mpsdk_m_margin;
+        final int resMargin = discount != null ? R.dimen.px_zero_height : R.dimen.px_m_margin;
         ViewUtils.setMarginTopInView(view, parent.getContext().getResources().getDimensionPixelSize(resMargin));
         parent.addView(view);
     }

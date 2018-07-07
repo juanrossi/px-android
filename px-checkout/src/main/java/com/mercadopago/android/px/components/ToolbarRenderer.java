@@ -14,7 +14,7 @@ public class ToolbarRenderer extends Renderer<ToolbarComponent> {
     @Override
     @CallSuper
     public View render(final ToolbarComponent component, final Context context, final ViewGroup parent) {
-        final View view = inflate(R.layout.mpsdk_toolbar_renderer, parent);
+        final View view = inflate(R.layout.px_toolbar_renderer, parent);
         renderToolbar(view, component, context);
         return view;
     }

@@ -38,18 +38,18 @@ public class DiscountProviderImpl implements DiscountsProvider {
     public String getApiErrorMessage(String error) {
         String message;
         if (error == null) {
-            message = context.getString(R.string.mpsdk_something_went_wrong);
+            message = context.getString(R.string.px_something_went_wrong);
         } else {
             if (error.equals(DISCOUNT_ERROR_CAMPAIGN_DOESNT_MATCH)) {
-                message = context.getString(R.string.mpsdk_merchant_without_discount_available);
+                message = context.getString(R.string.px_merchant_without_discount_available);
             } else if (error.equals(DISCOUNT_ERROR_RUN_OUT_OF_USES)) {
-                message = context.getString(R.string.mpsdk_ran_out_of_quantity_uses_quantity);
+                message = context.getString(R.string.px_ran_out_of_quantity_uses_quantity);
             } else if (error.equals(DISCOUNT_ERROR_AMOUNT_DOESNT_MATCH)) {
-                message = context.getString(R.string.mpsdk_amount_doesnt_match);
+                message = context.getString(R.string.px_amount_doesnt_match);
             } else if (error.equals(DISCOUNT_ERROR_CAMPAIGN_EXPIRED)) {
-                message = context.getString(R.string.mpsdk_campaign_expired);
+                message = context.getString(R.string.px_campaign_expired);
             } else {
-                message = context.getString(R.string.mpsdk_invalid_code);
+                message = context.getString(R.string.px_invalid_code);
             }
         }
         return message;
@@ -57,6 +57,6 @@ public class DiscountProviderImpl implements DiscountsProvider {
 
     @Override
     public String getStandardErrorMessage() {
-        return context.getString(R.string.mpsdk_standard_error_message);
+        return context.getString(R.string.px_standard_error_message);
     }
 }

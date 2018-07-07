@@ -45,7 +45,7 @@ public class ReviewAndConfirmPage extends PageObject<CheckoutValidator> {
 
     @NonNull
     public PaymentMethodPage clickChangePaymentMethod() {
-        onView(withText(R.string.mpsdk_change_payment)).perform(NestedScroll.nestedScrollTo()).perform(click());
+        onView(withText(R.string.px_change_payment)).perform(NestedScroll.nestedScrollTo()).perform(click());
         return new PaymentMethodPage(validator);
     }
 }

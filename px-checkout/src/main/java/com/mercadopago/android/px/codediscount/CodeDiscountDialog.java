@@ -58,7 +58,7 @@ public class CodeDiscountDialog extends MeliDialog implements View.OnClickListen
 
     @Override
     public void showCodeError() {
-        input.setError(R.string.mpsdk_discount_error_check_this_data);
+        input.setError(R.string.px_discount_error_check_this_data);
     }
 
     private boolean isValidInput() {
@@ -73,7 +73,7 @@ public class CodeDiscountDialog extends MeliDialog implements View.OnClickListen
 
     @Override
     public int getContentView() {
-        return R.layout.mpsdk_dialog_code_discount;
+        return R.layout.px_dialog_code_discount;
     }
 
     @Override

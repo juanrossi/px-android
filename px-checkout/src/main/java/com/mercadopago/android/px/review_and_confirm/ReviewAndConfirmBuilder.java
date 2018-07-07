@@ -84,22 +84,22 @@ public class ReviewAndConfirmBuilder {
         final Site site = checkoutPreference.getSite();
 
         final String title = SummaryModel.resolveTitle(items,
-            activity.getResources().getString(R.string.mpsdk_review_summary_product),
-            activity.getResources().getString(R.string.mpsdk_review_summary_products));
+            activity.getResources().getString(R.string.px_review_summary_product),
+            activity.getResources().getString(R.string.px_review_summary_products));
 
         boolean termsAndConditionsEnabled = TextUtils.isEmpty(checkoutPreference.getPayer().getAccessToken());
 
         final TermsAndConditionsModel mercadoPagoTermsAndConditions =
             termsAndConditionsEnabled ? new TermsAndConditionsModel(site.getTermsAndConditionsUrl(),
-                activity.getString(R.string.mpsdk_terms_and_conditions_message),
-                activity.getString(R.string.mpsdk_terms_and_conditions_linked_message),
+                activity.getString(R.string.px_terms_and_conditions_message),
+                activity.getString(R.string.px_terms_and_conditions_linked_message),
                 merchantPublicKey,
                 LineSeparatorType.TOP_LINE_SEPARATOR) : null;
 
         final TermsAndConditionsModel discountTermsAndConditions =
             campaign != null ? new TermsAndConditionsModel(campaign.getCampaignTermsUrl(),
-                activity.getString(R.string.mpsdk_discount_terms_and_conditions_message),
-                activity.getString(R.string.mpsdk_discount_terms_and_conditions_linked_message),
+                activity.getString(R.string.px_discount_terms_and_conditions_message),
+                activity.getString(R.string.px_discount_terms_and_conditions_linked_message),
                 merchantPublicKey,
                 LineSeparatorType.BOTTOM_LINE_SEPARATOR) : null;
 

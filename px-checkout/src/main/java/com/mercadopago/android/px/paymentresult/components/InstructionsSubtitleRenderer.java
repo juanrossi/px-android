@@ -15,7 +15,7 @@ public class InstructionsSubtitleRenderer extends Renderer<InstructionsSubtitle>
 
     @Override
     public View render(final InstructionsSubtitle component, final Context context, final ViewGroup parent) {
-        final View instructionsView = inflate(R.layout.mpsdk_payment_result_instructions_subtitle, parent);
+        final View instructionsView = inflate(R.layout.px_payment_result_instructions_subtitle, parent);
 
         final MPTextView subtitleTextView = instructionsView.findViewById(R.id.msdpkInstructionsSubtitle);
         subtitleTextView.setText(component.props.subtitle);

@@ -55,9 +55,9 @@
 
     <com.mercadopago.android.px.customviews.MPButton
         android:id="@+id/button_continue"
-        style="@style/mpsdk_button_normal"
+        style="@style/px_button_normal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/mpsdk_button_height"
+        android:layout_height="@dimen/px_button_height"
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
         android:text="Continuar" />

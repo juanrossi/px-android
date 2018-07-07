@@ -66,7 +66,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mpsdk_view_container_review_and_confirm);
+        setContentView(R.layout.px_view_container_review_and_confirm);
         initializeViews();
     }
 
@@ -91,7 +91,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
             }
         });
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle(getString(R.string.mpsdk_activity_checkout_title));
+        collapsingToolbarLayout.setTitle(getString(R.string.px_activity_checkout_title));
         if (FontCache.hasTypeface(FontCache.CUSTOM_REGULAR_FONT)) {
             collapsingToolbarLayout.setCollapsedTitleTypeface(FontCache.getTypeface(FontCache.CUSTOM_REGULAR_FONT));
             collapsingToolbarLayout.setExpandedTitleTypeface(FontCache.getTypeface(FontCache.CUSTOM_REGULAR_FONT));
@@ -198,7 +198,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     private void setFloatingElevationVisibility(final View floatingConfirmLayout, final boolean visible) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final float elevationInPixels =
-                visible ? getBaseContext().getResources().getDimension(R.dimen.mpsdk_xxs_margin) : 0;
+                visible ? getBaseContext().getResources().getDimension(R.dimen.px_xxs_margin) : 0;
             floatingConfirmLayout.setElevation(elevationInPixels);
         }
     }

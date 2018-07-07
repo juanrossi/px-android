@@ -29,17 +29,17 @@ public class CustomerCardsProviderImpl implements CustomerCardsProvider {
 
     @Override
     public String getLastDigitsLabel() {
-        return context.getString(R.string.mpsdk_last_digits_label);
+        return context.getString(R.string.px_last_digits_label);
     }
 
     @Override
     public String getConfirmPromptYes() {
-        return context.getString(R.string.mpsdk_confirm_prompt_yes);
+        return context.getString(R.string.px_confirm_prompt_yes);
     }
 
     @Override
     public String getConfirmPromptNo() {
-        return context.getString(R.string.mpsdk_confirm_prompt_no);
+        return context.getString(R.string.px_confirm_prompt_no);
     }
 
     @Override

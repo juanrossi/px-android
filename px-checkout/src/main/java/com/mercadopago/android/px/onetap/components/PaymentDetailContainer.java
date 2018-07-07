@@ -57,8 +57,8 @@ public class PaymentDetailContainer extends CompactComponent<PaymentDetailContai
     }
 
     private View addDiscountTitle(final ViewGroup parent) {
-        MPTextView title = (MPTextView) inflate(parent, R.layout.mpsdk_view_modal_title);
-        title.setText(R.string.mpsdk_discount_dialog_title);
+        MPTextView title = (MPTextView) inflate(parent, R.layout.px_view_modal_title);
+        title.setText(R.string.px_discount_dialog_title);
         return title;
     }
 }

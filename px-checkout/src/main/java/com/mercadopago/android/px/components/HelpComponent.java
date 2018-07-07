@@ -14,11 +14,11 @@ public class HelpComponent extends CompactComponent<String, Void> {
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        final ViewGroup bodyErrorView = (ViewGroup) inflate(parent, R.layout.mpsdk_payment_result_body_error);
+        final ViewGroup bodyErrorView = (ViewGroup) inflate(parent, R.layout.px_payment_result_body_error);
         TextView errorTitle = bodyErrorView.findViewById(R.id.paymentResultBodyErrorTitle);
         TextView errorDescription = bodyErrorView.findViewById(R.id.paymentResultBodyErrorDescription);
         bodyErrorView.findViewById(R.id.paymentResultBodyErrorSecondDescription).setVisibility(View.GONE);
-        errorTitle.setText(parent.getContext().getString(R.string.mpsdk_what_can_do));
+        errorTitle.setText(parent.getContext().getString(R.string.px_what_can_do));
         errorDescription.setText(props);
         return bodyErrorView;
     }

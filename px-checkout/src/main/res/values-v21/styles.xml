@@ -4,8 +4,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/mpsdk_status_bar</item>
-        <item name="android:colorPrimary">@color/mpsdk_colorPrimary</item>
+        <item name="android:statusBarColor">@color/px_status_bar</item>
+        <item name="android:colorPrimary">@color/px_colorPrimary</item>
     </style>
 
 </resources>

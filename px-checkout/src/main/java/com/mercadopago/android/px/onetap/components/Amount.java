@@ -81,7 +81,7 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        final View content = inflate(parent, R.layout.mpsdk_compact_amount);
+        final View content = inflate(parent, R.layout.px_compact_amount);
         final ViewGroup discountLayout = content.findViewById(R.id.discount_detail_layout);
         resolveSmallAmountPlusDiscount(content);
         resolveBigAmount(content);
@@ -111,14 +111,14 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
                 .amount(props.discountRepository.getDiscount().getPercentOff())
                 .normalDecimals()
                 .into(discountMessage)
-                .holder(R.string.mpsdk_discount_percent_off_percent);
+                .holder(R.string.px_discount_percent_off_percent);
         } else if (props.hasDiscount()) {
             TextFormatter.withCurrencyId(props.getCurrencyId())
                 .withSpace()
                 .amount(props.discountRepository.getDiscount().getAmountOff())
                 .normalDecimals()
                 .into(discountMessage)
-                .holder(R.string.mpsdk_discount_percent_off_amount);
+                .holder(R.string.px_discount_percent_off_amount);
         }
 
         ViewUtils.showOrGone(discountMessage, props.hasDiscount());
@@ -156,7 +156,7 @@ class Amount extends CompactComponent<Amount.Props, OneTap.Actions> {
             .toSpannable();
 
         if (props.hasMultipleInstallments()) {
-            final String x = amountWithDiscount.getContext().getString(R.string.mpsdk_installments_by);
+            final String x = amountWithDiscount.getContext().getString(R.string.px_installments_by);
             final SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
             spannableStringBuilder.append(props.payerCost.getInstallments().toString())
                 .append(x)

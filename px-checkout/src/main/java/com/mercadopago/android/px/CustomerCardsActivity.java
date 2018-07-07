@@ -100,7 +100,7 @@ public class CustomerCardsActivity extends MercadoPagoBaseActivity implements Cu
     }
 
     protected void setContentView() {
-        setContentView(R.layout.mpsdk_activity_customer_cards);
+        setContentView(R.layout.px_activity_customer_cards);
     }
 
     protected void initializeControls() {

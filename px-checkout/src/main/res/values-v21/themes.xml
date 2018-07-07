@@ -2,10 +2,10 @@
 <resources>
 
     <style name="Theme.MercadoPagoTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/mpsdk_colorPrimary</item>
+        <item name="colorPrimary">@color/px_colorPrimary</item>
         <item name="colorPrimaryDark">@color/ui_meli_grey</item>
-        <item name="colorControlNormal">@color/mpsdk_color_new_card_text</item>
-        <item name="actionMenuTextColor">@color/mpsdk_white</item>
+        <item name="colorControlNormal">@color/px_color_new_card_text</item>
+        <item name="actionMenuTextColor">@color/px_white</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 </resources>

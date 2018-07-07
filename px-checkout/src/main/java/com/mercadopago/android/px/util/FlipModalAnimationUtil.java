@@ -42,7 +42,7 @@ public final class FlipModalAnimationUtil {
     private static void setCameraDistance(@Nonnull final ViewGroup containerView, @Nonnull final View frontView,
         @Nonnull final View backView) {
         //Set the camera distance
-        final float distance = containerView.getResources().getDimension(R.dimen.mpsdk_camera_distance);
+        final float distance = containerView.getResources().getDimension(R.dimen.px_camera_distance);
         containerView.setCameraDistance(distance);
         frontView.setCameraDistance(distance);
         backView.setCameraDistance(distance);

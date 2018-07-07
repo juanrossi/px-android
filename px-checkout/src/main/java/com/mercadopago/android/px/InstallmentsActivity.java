@@ -176,11 +176,11 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity
     }
 
     public void setContentViewLowRes() {
-        setContentView(R.layout.mpsdk_activity_installments_lowres);
+        setContentView(R.layout.px_activity_installments_lowres);
     }
 
     public void setContentViewNormal() {
-        setContentView(R.layout.mpsdk_activity_installments_normal);
+        setContentView(R.layout.px_activity_installments_normal);
     }
 
     private void initializeControls() {
@@ -257,12 +257,12 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity
         mNoInstallmentsRate.setVisibility(View.VISIBLE);
         mNoInstallmentsRateTextView = findViewById(R.id.mpsdkNoInstallmentsRateTextView);
         mNoInstallmentsRateTextView.setVisibility(View.VISIBLE);
-        mNoInstallmentsRateTextView.setText(R.string.mpsdk_interest_label);
+        mNoInstallmentsRateTextView.setText(R.string.px_interest_label);
     }
 
     public void loadLowResViews() {
         loadToolbarArrow(mLowResToolbar);
-        mLowResTitleToolbar.setText(getString(R.string.mpsdk_card_installments_title));
+        mLowResTitleToolbar.setText(getString(R.string.px_card_installments_title));
 
         if (FontCache.hasTypeface(FontCache.CUSTOM_REGULAR_FONT)) {
             mLowResTitleToolbar.setTypeface(FontCache.getTypeface(FontCache.CUSTOM_REGULAR_FONT));
@@ -271,7 +271,7 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity
 
     public void loadNormalViews() {
         loadToolbarArrow(mNormalToolbar);
-        mNormalToolbar.setTitle(getString(R.string.mpsdk_card_installments_title));
+        mNormalToolbar.setTitle(getString(R.string.px_card_installments_title));
         setCustomFontNormal();
 
         mFrontCardView = new FrontCardView(this, CardRepresentationModes.SHOW_FULL_FRONT_ONLY);
@@ -339,7 +339,7 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity
         if (mLowResActive) {
             mLowResToolbar.setVisibility(View.VISIBLE);
         } else {
-            mNormalToolbar.setTitle(getString(R.string.mpsdk_card_installments_title));
+            mNormalToolbar.setTitle(getString(R.string.px_card_installments_title));
             setCustomFontNormal();
         }
     }
@@ -417,7 +417,7 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity
     }
 
     public void animateTransitionSlideInSlideOut() {
-        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     @Override

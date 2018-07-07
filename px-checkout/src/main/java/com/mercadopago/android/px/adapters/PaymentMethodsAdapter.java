@@ -46,7 +46,7 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
         int viewType) {
 
         View v = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.mpsdk_row_simple_list, parent, false);
+            .inflate(R.layout.px_row_simple_list, parent, false);
 
         return new ViewHolder(v, mListener);
     }

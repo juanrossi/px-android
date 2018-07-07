@@ -40,7 +40,7 @@ public class PaymentTypesAdapter extends RecyclerView.Adapter<PaymentTypesAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View adapterView = inflater.inflate(R.layout.mpsdk_adapter_payment_types, parent, false);
+        View adapterView = inflater.inflate(R.layout.px_adapter_payment_types, parent, false);
         return new ViewHolder(adapterView);
     }
 
@@ -54,11 +54,11 @@ public class PaymentTypesAdapter extends RecyclerView.Adapter<PaymentTypesAdapte
         final Context context) {
         String ans = "";
         if (paymentType.getId().equals(PaymentTypes.CREDIT_CARD)) {
-            ans = context.getString(R.string.mpsdk_credit_payment_type);
+            ans = context.getString(R.string.px_credit_payment_type);
         } else if (paymentType.getId().equals(PaymentTypes.DEBIT_CARD)) {
-            ans = context.getString(R.string.mpsdk_debit_payment_type);
+            ans = context.getString(R.string.px_debit_payment_type);
         } else if (paymentType.getId().equals(PaymentTypes.PREPAID_CARD)) {
-            ans = context.getString(R.string.mpsdk_form_card_title_payment_type_prepaid);
+            ans = context.getString(R.string.px_form_card_title_payment_type_prepaid);
         }
         return ans;
     }

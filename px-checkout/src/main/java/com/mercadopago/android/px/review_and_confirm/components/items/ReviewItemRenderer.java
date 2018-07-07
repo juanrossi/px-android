@@ -27,7 +27,7 @@ public class ReviewItemRenderer extends Renderer<ReviewItem> {
 
         // Cannot use raw inflate because it replaces the old item by the new one, instead of attaching both to the parent
         final View itemView =
-            LayoutInflater.from(parent.getContext()).inflate(R.layout.mpsdk_review_item, parent, false);
+            LayoutInflater.from(parent.getContext()).inflate(R.layout.px_review_item, parent, false);
 
         final ImageView itemImage = itemView.findViewById(R.id.item_image);
         final MPTextView itemTitle = itemView.findViewById(R.id.item_title);
@@ -53,7 +53,7 @@ public class ReviewItemRenderer extends Renderer<ReviewItem> {
 
     private void drawItemFromUrl(final ImageView itemImage, final ReviewItem component, final Context context) {
         final int dimen =
-            ScaleUtil.getPxFromDp((int) context.getResources().getDimension(R.dimen.mpsdk_m_height), context);
+            ScaleUtil.getPxFromDp((int) context.getResources().getDimension(R.dimen.px_m_height), context);
         Picasso.with(context)
             .load(component.props.itemModel.imageUrl)
             .transform(new CircleTransform())
@@ -83,7 +83,7 @@ public class ReviewItemRenderer extends Renderer<ReviewItem> {
             } else {
                 productQuantityText = String.format(Locale.getDefault(),
                     "%s %d",
-                    context.getResources().getString(R.string.mpsdk_review_item_quantity),
+                    context.getResources().getString(R.string.px_review_item_quantity),
                     props.itemModel.quantity);
             }
             itemQuantity.setText(productQuantityText);
@@ -103,7 +103,7 @@ public class ReviewItemRenderer extends Renderer<ReviewItem> {
                     props.unitPriceLabel,
                     props.itemModel.getPrice());
             } else {
-                priceText = context.getString(R.string.mpsdk_review_product_price, props.itemModel.getPrice());
+                priceText = context.getString(R.string.px_review_product_price, props.itemModel.getPrice());
             }
             itemPrice.setText(priceText);
 
@@ -112,7 +112,7 @@ public class ReviewItemRenderer extends Renderer<ReviewItem> {
                 final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, (int) context.getResources().getDimension(R.dimen.mpsdk_s_margin), 0, 0);
+                params.setMargins(0, (int) context.getResources().getDimension(R.dimen.px_s_margin), 0, 0);
                 params.gravity = Gravity.CENTER_HORIZONTAL;
                 itemPrice.setLayoutParams(params);
             }

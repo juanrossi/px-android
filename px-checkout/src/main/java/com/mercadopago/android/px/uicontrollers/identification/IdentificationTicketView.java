@@ -43,7 +43,7 @@ public class IdentificationTicketView extends IdentificationView {
 
     @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
-        mView = LayoutInflater.from(mContext).inflate(R.layout.mpsdk_ticket_identification, parent, attachToRoot);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.px_ticket_identification, parent, attachToRoot);
         return mView;
     }
 
@@ -70,7 +70,7 @@ public class IdentificationTicketView extends IdentificationView {
     private void drawIdentificationName() {
         if (isEmpty(mName)) {
             if (isEmpty(mLastName)) {
-                mNameTextView.setText(mContext.getText(R.string.mpsdk_name_and_lastname_identification_label));
+                mNameTextView.setText(mContext.getText(R.string.px_name_and_lastname_identification_label));
             } else {
                 mNameTextView.setText("");
             }

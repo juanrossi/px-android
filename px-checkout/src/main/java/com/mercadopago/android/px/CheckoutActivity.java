@@ -95,7 +95,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            setContentView(R.layout.mpsdk_activity_checkout);
+            setContentView(R.layout.px_activity_checkout);
             presenter = getActivityParameters();
             configurePresenter();
             presenter.initialize();

@@ -30,7 +30,7 @@ public class AccreditationTimeRenderer extends Renderer<AccreditationTime> {
     @Override
     public View render(final AccreditationTime component, final Context context, final ViewGroup parent) {
 
-        final View accreditationTimeView = inflate(R.layout.mpsdk_accreditation_time, parent);
+        final View accreditationTimeView = inflate(R.layout.px_accreditation_time, parent);
         final MPTextView messageTextView = accreditationTimeView.findViewById(R.id.mpsdkAccreditationTimeMessage);
         final ViewGroup accreditationCommentsContainer =
             accreditationTimeView.findViewById(R.id.mpsdkAccreditationTimeComments);
@@ -54,11 +54,11 @@ public class AccreditationTimeRenderer extends Renderer<AccreditationTime> {
         } else {
             SpannableStringBuilder textspan = new SpannableStringBuilder("  " + accreditationMessage);
 
-            final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.mpsdk_time);
+            final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.px_time);
             Bitmap resizedBitmap = BitmapUtils.scaleDown(bitmap, ScaleUtil.getPxFromDp(13, context), true);
             Drawable drawable = new BitmapDrawable(context.getResources(), resizedBitmap);
             PorterDuff.Mode mode = PorterDuff.Mode.SRC_ATOP;
-            drawable.setColorFilter(ContextCompat.getColor(context, R.color.mpsdk_warm_grey_with_alpha), mode);
+            drawable.setColorFilter(ContextCompat.getColor(context, R.color.px_warm_grey_with_alpha), mode);
 
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 

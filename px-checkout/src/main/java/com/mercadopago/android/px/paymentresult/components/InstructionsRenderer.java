@@ -15,7 +15,7 @@ public class InstructionsRenderer extends Renderer<Instructions> {
 
     @Override
     public View render(final Instructions component, final Context context, final ViewGroup parent) {
-        final View instructionsView = inflate(R.layout.mpsdk_payment_result_instructions, parent);
+        final View instructionsView = inflate(R.layout.px_payment_result_instructions, parent);
         final ViewGroup parentViewGroup = instructionsView.findViewById(R.id.mpsdkInstructionsContainer);
 
         if (component.hasSubtitle()) {

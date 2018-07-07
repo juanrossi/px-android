@@ -46,7 +46,7 @@ public class InstallmentsReviewView implements InstallmentsView {
 
     private void setInstallmentAmountText() {
         String installments = mPayerCost.getInstallments().toString();
-        final String x = mContext.getString(R.string.mpsdk_installments_by);
+        final String x = mContext.getString(R.string.px_installments_by);
         final Spanned spannedInstallmentsText =
             CurrenciesUtil.getSpannedAmountWithCurrencySymbol(mPayerCost.getInstallmentAmount(), mCurrencyId);
 
@@ -61,7 +61,7 @@ public class InstallmentsReviewView implements InstallmentsView {
     }
 
     private void setCFTPercentText() {
-        String cftPercent = mContext.getString(R.string.mpsdk_installments_cft, mPayerCost.getCFTPercent());
+        String cftPercent = mContext.getString(R.string.px_installments_cft, mPayerCost.getCFTPercent());
         mCftpercent.setText(cftPercent);
     }
 
@@ -82,7 +82,7 @@ public class InstallmentsReviewView implements InstallmentsView {
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         parent.removeAllViews();
 
-        mView = LayoutInflater.from(mContext).inflate(R.layout.mpsdk_installments_review_view, parent, attachToRoot);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.px_installments_review_view, parent, attachToRoot);
 
         return mView;
     }

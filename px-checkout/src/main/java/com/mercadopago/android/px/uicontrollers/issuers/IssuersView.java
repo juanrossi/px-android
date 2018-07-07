@@ -15,7 +15,7 @@ import com.mercadopago.android.px.model.Issuer;
 
 public class IssuersView implements IssuersViewController {
 
-    public static final String CARD_IMAGE_PREFIX = "mpsdk_issuer_";
+    public static final String CARD_IMAGE_PREFIX = "px_issuer_";
 
     private final Context mContext;
     private View mView;
@@ -35,7 +35,7 @@ public class IssuersView implements IssuersViewController {
     @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-            .inflate(R.layout.mpsdk_view_issuer, parent, attachToRoot);
+            .inflate(R.layout.px_view_issuer, parent, attachToRoot);
         return mView;
     }
 

@@ -220,11 +220,11 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     }
 
     private void setContentViewLowRes() {
-        setContentView(R.layout.mpsdk_activity_payer_information_lowres);
+        setContentView(R.layout.px_activity_payer_information_lowres);
     }
 
     private void setContentViewNormal() {
-        setContentView(R.layout.mpsdk_activity_payer_information_normal);
+        setContentView(R.layout.px_activity_payer_information_normal);
     }
 
     private void initializeControls() {
@@ -259,7 +259,7 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
         if (mLowResActive) {
             mLowResToolbar = findViewById(R.id.mpsdkLowResToolbar);
             mLowResTitleToolbar = findViewById(R.id.mpsdkTitle);
-            mLowResTitleToolbar.setText(getResources().getText(R.string.mpsdk_fill_your_data));
+            mLowResTitleToolbar.setText(getResources().getText(R.string.px_fill_your_data));
             mLowResToolbar.setVisibility(View.VISIBLE);
         } else {
             mNormalToolbar = findViewById(R.id.mpsdkTransparentToolbar);

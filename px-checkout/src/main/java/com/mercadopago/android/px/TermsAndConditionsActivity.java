@@ -48,7 +48,7 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void setContentView() {
-        setContentView(R.layout.mpsdk_activity_terms_and_conditions);
+        setContentView(R.layout.px_activity_terms_and_conditions);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void onInvalidStart(String message) {
-        ErrorUtil.startErrorActivity(this, getString(R.string.mpsdk_standard_error_message), message, false, "");
+        ErrorUtil.startErrorActivity(this, getString(R.string.px_standard_error_message), message, false, "");
     }
 
     private void showMPTermsAndConditions() {

@@ -2,17 +2,17 @@
 <resources>
 
     <style name="Theme.MercadoPagoTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/mpsdk_colorPrimary</item>
-        <item name="colorControlNormal">@color/mpsdk_color_new_card_text</item>
-        <item name="actionMenuTextColor">@color/mpsdk_white</item>
+        <item name="colorPrimary">@color/px_colorPrimary</item>
+        <item name="colorControlNormal">@color/px_color_new_card_text</item>
+        <item name="actionMenuTextColor">@color/px_white</item>
     </style>
 
     <style name="ToolbarTheme" parent="Theme.MercadoPagoTheme.NoActionBar">
-        <item name="colorControlNormal">@color/mpsdk_toolbar_text</item>
+        <item name="colorControlNormal">@color/px_toolbar_text</item>
     </style>
 
     <style name="ReviewToolbarTheme" parent="Theme.MercadoPagoTheme.NoActionBar">
-        <item name="colorControlNormal">@color/mpsdk_review_toolbar_text</item>
+        <item name="colorControlNormal">@color/px_review_toolbar_text</item>
     </style>
 
 </resources>

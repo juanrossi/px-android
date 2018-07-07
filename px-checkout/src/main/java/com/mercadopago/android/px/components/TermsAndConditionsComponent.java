@@ -22,7 +22,7 @@ public class TermsAndConditionsComponent extends CompactComponent<TermsAndCondit
         final Context context = parent.getContext();
         final LinearLayout linearContainer = CompactComponent.createLinearContainer(context);
 
-        final View discountTermsAndConditionsView = inflate(parent, R.layout.mpsdk_view_terms_and_conditions);
+        final View discountTermsAndConditionsView = inflate(parent, R.layout.px_view_terms_and_conditions);
         final MPTextView mTermsAndConditionsMessageView =
             discountTermsAndConditionsView.findViewById(R.id.terms_and_conditions_message);
         final MPTextView mTermsAndConditionsLinkView =
@@ -38,7 +38,7 @@ public class TermsAndConditionsComponent extends CompactComponent<TermsAndCondit
             }
         });
 
-        final LineSeparator lineSeparator = new LineSeparator(new LineSeparator.Props(R.color.mpsdk_med_light_gray));
+        final LineSeparator lineSeparator = new LineSeparator(new LineSeparator.Props(R.color.px_med_light_gray));
 
         switch (props.getLineSeparatorType()) {
         case TOP_LINE_SEPARATOR:

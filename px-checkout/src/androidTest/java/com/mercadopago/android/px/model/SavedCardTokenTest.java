@@ -100,7 +100,7 @@ public class SavedCardTokenTest {
         } catch (CardTokenException ex) {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_FIELD);
             String message = ExceptionHandler.getErrorMessage(InstrumentationRegistry.getContext(), ex);
-            String expectedMessage = InstrumentationRegistry.getContext().getString(R.string.mpsdk_invalid_field);
+            String expectedMessage = InstrumentationRegistry.getContext().getString(R.string.px_invalid_field);
             assertEquals(message, expectedMessage);
         }
 
@@ -113,7 +113,7 @@ public class SavedCardTokenTest {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_CVV_LENGTH);
             String message = ExceptionHandler.getErrorMessage(InstrumentationRegistry.getContext(), ex);
             String expectedMessage =
-                InstrumentationRegistry.getContext().getString(R.string.mpsdk_invalid_cvv_length, String.valueOf(3));
+                InstrumentationRegistry.getContext().getString(R.string.px_invalid_cvv_length, String.valueOf(3));
             assertEquals(message, expectedMessage);
         }
 

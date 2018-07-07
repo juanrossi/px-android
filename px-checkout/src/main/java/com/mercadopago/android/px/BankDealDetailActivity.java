@@ -101,7 +101,7 @@ public class BankDealDetailActivity extends AppCompatActivity implements Callbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mpsdk_activity_bank_deal_detail);
+        setContentView(R.layout.px_activity_bank_deal_detail);
         BankDealDetailModel model = getIntent().getParcelableExtra(EXTRA_MODEL);
         initView(model);
     }

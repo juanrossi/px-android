@@ -28,32 +28,32 @@ public class CardVaultProviderImpl implements CardVaultProvider {
 
     @Override
     public String getMultipleInstallmentsForIssuerErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_multiple_installments_for_issuer);
+        return context.getString(R.string.px_error_message_multiple_installments_for_issuer);
     }
 
     @Override
     public String getMissingInstallmentsForIssuerErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_installment_for_issuer);
+        return context.getString(R.string.px_error_message_missing_installment_for_issuer);
     }
 
     @Override
     public String getMissingPayerCostsErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_payer_cost);
+        return context.getString(R.string.px_error_message_missing_payer_cost);
     }
 
     @Override
     public String getMissingAmountErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_amount);
+        return context.getString(R.string.px_error_message_missing_amount);
     }
 
     @Override
     public String getMissingPublicKeyErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_public_key);
+        return context.getString(R.string.px_error_message_missing_public_key);
     }
 
     @Override
     public String getMissingSiteErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_site);
+        return context.getString(R.string.px_error_message_missing_site);
     }
 
     @Override

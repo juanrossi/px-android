@@ -18,7 +18,7 @@ public class DisclaimerRenderer extends Renderer<DisclaimerComponent> {
     @Override
     protected View render(@NonNull DisclaimerComponent component, @NonNull Context context,
         @Nullable ViewGroup parent) {
-        final View disclaimerView = inflate(R.layout.mpsdk_disclaimer, parent);
+        final View disclaimerView = inflate(R.layout.px_disclaimer, parent);
         final MPTextView disclaimerTextView = disclaimerView.findViewById(R.id.cftText);
 
         setText(disclaimerTextView, component.props.disclaimer);

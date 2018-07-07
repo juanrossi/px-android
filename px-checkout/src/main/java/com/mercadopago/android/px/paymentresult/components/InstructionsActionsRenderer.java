@@ -16,7 +16,7 @@ public class InstructionsActionsRenderer extends Renderer<InstructionsActions> {
 
     @Override
     public View render(final InstructionsActions component, final Context context, final ViewGroup parent) {
-        final View actionsView = inflate(R.layout.mpsdk_payment_result_instructions_actions, parent);
+        final View actionsView = inflate(R.layout.px_payment_result_instructions_actions, parent);
         final ViewGroup parentViewGroup = actionsView.findViewById(R.id.mpsdkInstructionsActionsContainer);
 
         List<InstructionsAction> actionComponentList = component.getActionComponents();

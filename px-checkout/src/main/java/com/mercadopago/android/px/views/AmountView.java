@@ -71,7 +71,7 @@ public class AmountView extends LinearLayoutCompat {
     }
 
     private void init() {
-        inflate(getContext(), R.layout.mpsdk_amount_layout, this);
+        inflate(getContext(), R.layout.px_amount_layout, this);
         mainContainer = findViewById(R.id.main_container);
         line = findViewById(R.id.line);
         amountDescription = findViewById(R.id.amount_description);
@@ -86,7 +86,7 @@ public class AmountView extends LinearLayoutCompat {
 
     private void configureElevation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setElevation(getContext().getResources().getDimension(R.dimen.mpsdk_xxs_margin));
+            setElevation(getContext().getResources().getDimension(R.dimen.px_xxs_margin));
             line.setVisibility(GONE);
         } else {
             line.setVisibility(VISIBLE);
@@ -117,8 +117,8 @@ public class AmountView extends LinearLayoutCompat {
 
     private void show(@NonNull final BigDecimal totalAmount, @NonNull final Site site) {
         configureViewsVisibilityDefault();
-        amountDescription.setText(R.string.mpsdk_total_to_pay);
-        amountDescription.setTextColor(getResources().getColor(R.color.mpsdk_form_text));
+        amountDescription.setText(R.string.px_total_to_pay);
+        amountDescription.setTextColor(getResources().getColor(R.color.px_form_text));
         showEffectiveAmount(totalAmount, site);
     }
 
@@ -139,8 +139,8 @@ public class AmountView extends LinearLayoutCompat {
 
     private void configureDiscountCouponAmountDescription() {
         amountDescription.setVisibility(VISIBLE);
-        amountDescription.setText(R.string.mpsdk_enter_coupon_code);
-        amountDescription.setTextColor(getResources().getColor(R.color.mpsdk_discount_coupon));
+        amountDescription.setText(R.string.px_enter_coupon_code);
+        amountDescription.setTextColor(getResources().getColor(R.color.px_discount_coupon));
     }
 
     private void showDiscount(@NonNull final Discount discount,
@@ -174,7 +174,7 @@ public class AmountView extends LinearLayoutCompat {
 
     private void configureDiscountAmountDescription(final Discount discount, final Campaign campaign) {
         amountDescription.setVisibility(VISIBLE);
-        amountDescription.setTextColor(getResources().getColor(R.color.mpsdk_discount_description));
+        amountDescription.setTextColor(getResources().getColor(R.color.px_discount_description));
         configureDiscountOffMessage(discount);
         configureMaxCouponAmountMessage(campaign);
     }
@@ -190,7 +190,7 @@ public class AmountView extends LinearLayoutCompat {
     private void configureMaxCouponAmountMessage(final Campaign campaign) {
         if (campaign.hasMaxCouponAmount()) {
             maxCouponAmount.setVisibility(VISIBLE);
-            maxCouponAmount.setText(R.string.mpsdk_with_max_coupon_amount);
+            maxCouponAmount.setText(R.string.px_with_max_coupon_amount);
         } else {
             maxCouponAmount.setVisibility(GONE);
         }
@@ -203,14 +203,14 @@ public class AmountView extends LinearLayoutCompat {
                 .amount(discount.getPercentOff())
                 .normalDecimals()
                 .into(amountDescription)
-                .holder(R.string.mpsdk_discount_percent_off_percent);
+                .holder(R.string.px_discount_percent_off_percent);
         } else {
             TextFormatter.withCurrencyId(discount.getCurrencyId())
                 .withSpace()
                 .amount(discount.getAmountOff())
                 .normalDecimals()
                 .into(amountDescription)
-                .holder(R.string.mpsdk_discount_amount_off);
+                .holder(R.string.px_discount_amount_off);
         }
     }
 }

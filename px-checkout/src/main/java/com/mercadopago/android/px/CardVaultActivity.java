@@ -157,7 +157,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
     }
 
     private void setContentView() {
-        setContentView(R.layout.mpsdk_activity_card_vault);
+        setContentView(R.layout.px_activity_card_vault);
     }
 
     @Override
@@ -391,7 +391,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
                     .setPaymentPreference(configuration.getCheckoutPreference().getPaymentPreference())
                     .setPaymentRecovery(presenter.getPaymentRecovery())
                     .startActivity();
-                overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+                overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
             }
         });
     }
@@ -415,12 +415,12 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
     @Override
     public void animateTransitionSlideInSlideOut() {
-        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     @Override
     public void transitionWithNoAnimation() {
-        overridePendingTransition(R.anim.mpsdk_no_change_animation, R.anim.mpsdk_no_change_animation);
+        overridePendingTransition(R.anim.px_no_change_animation, R.anim.px_no_change_animation);
     }
 
     @Override

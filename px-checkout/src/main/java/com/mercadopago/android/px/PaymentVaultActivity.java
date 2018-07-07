@@ -146,7 +146,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     }
 
     protected void setContentView() {
-        setContentView(R.layout.mpsdk_activity_payment_vault);
+        setContentView(R.layout.px_activity_payment_vault);
     }
 
     protected void getActivityParameters() {
@@ -320,7 +320,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
         intent.putExtras(getIntent());
         intent.putExtra("selectedSearchItem", JsonUtil.getInstance().toJson(item));
         startActivityForResult(intent, MercadoPagoComponents.Activities.PAYMENT_VAULT_REQUEST_CODE);
-        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     @Override
@@ -403,7 +403,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
                 setResult(Activity.RESULT_CANCELED, data);
                 finish();
             } else {
-                overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
+                overridePendingTransition(R.anim.px_slide_left_to_right_in, R.anim.px_slide_left_to_right_out);
             }
         }
     }
@@ -414,7 +414,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
             final Payer payer = JsonUtil.getInstance().fromJson(data.getStringExtra("payer"), Payer.class);
             presenter.onPayerInformationReceived(payer);
         } else {
-            overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
+            overridePendingTransition(R.anim.px_slide_left_to_right_in, R.anim.px_slide_left_to_right_out);
         }
     }
 

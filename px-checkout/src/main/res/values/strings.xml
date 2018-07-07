@@ -2,275 +2,275 @@
 <resources>
 
     <!-- One tap -->
-    <string name="mpsdk_total_amount_holder" translatable="false">(%1$s)</string>
-    <string name="mpsdk_string_holder" translatable="false">%1$s</string>
-    <string name="mpsdk_payment_detail_title_modal">Detail</string>
-    <string name="mpsdk_quantity_modal" translatable="false">%1$d %2$s</string>
+    <string name="px_total_amount_holder" translatable="false">(%1$s)</string>
+    <string name="px_string_holder" translatable="false">%1$s</string>
+    <string name="px_payment_detail_title_modal">Detail</string>
+    <string name="px_quantity_modal" translatable="false">%1$d %2$s</string>
 
     <!-- Banks deals -->
-    <string name="mpsdk_empty_bank_deals">No promotions available for you</string>
-    <string name="mpsdk_bank">bank</string>
-    <string name="mpsdk_title_activity_bank_deals">Promotions</string>
+    <string name="px_empty_bank_deals">No promotions available for you</string>
+    <string name="px_bank">bank</string>
+    <string name="px_title_activity_bank_deals">Promotions</string>
     <string name="bank_deal_details_title">Conditions</string>
     <string name="bank_deal_details_date_format">Up to %s</string>
 
     <!-- Payment Methods -->
-    <string name="mpsdk_title_activity_payment_methods">How do you want to pay?</string>
+    <string name="px_title_activity_payment_methods">How do you want to pay?</string>
 
     <!-- Customer cards -->
-    <string name="mpsdk_title_activity_customer_pms">Which card?</string>
+    <string name="px_title_activity_customer_pms">Which card?</string>
     <string name="other_payment_method">Other payment method…</string>
 
     <!-- Vault -->
-    <string name="mpsdk_last_digits_label">Ending in</string>
-    <string name="mpsdk_confirm">Confirm</string>
-    <string name="mpsdk_title_activity_payment_vault">How do you want to pay?</string>
-    <string name="mpsdk_no_payment_methods_found">There are no available payment methods</string>
+    <string name="px_last_digits_label">Ending in</string>
+    <string name="px_confirm">Confirm</string>
+    <string name="px_title_activity_payment_vault">How do you want to pay?</string>
+    <string name="px_no_payment_methods_found">There are no available payment methods</string>
 
     <!-- Issuers -->
-    <string name="mpsdk_card_issuers_title">Which is your bank?</string>
+    <string name="px_card_issuers_title">Which is your bank?</string>
 
     <!-- Installments -->
-    <string name="mpsdk_card_installments_title">How many installments?</string>
+    <string name="px_card_installments_title">How many installments?</string>
 
-    <string name="mpsdk_installments_by" translatable="false">x</string>
-    <string name="mpsdk_installments_cft" translatable="false">CFT: %1$s</string>
+    <string name="px_installments_by" translatable="false">x</string>
+    <string name="px_installments_cft" translatable="false">CFT: %1$s</string>
 
     <!-- Terms And Conditions -->
-    <string name="mpsdk_terms_and_conditions_message">By paying, I claim to be an adult and that I accept the</string>
-    <string name="mpsdk_terms_and_conditions_linked_message">Terms and conditions.</string>
-    <string name="mpsdk_terms_and_conditions">Terms and conditions</string>
-    <string name="mpsdk_discount_terms_and_conditions_message">Mercado Libre and Mercado Pago\'s exclusive discount.</string>
-    <string name="mpsdk_discount_terms_and_conditions_linked_message">See conditions</string>
+    <string name="px_terms_and_conditions_message">By paying, I claim to be an adult and that I accept the</string>
+    <string name="px_terms_and_conditions_linked_message">Terms and conditions.</string>
+    <string name="px_terms_and_conditions">Terms and conditions</string>
+    <string name="px_discount_terms_and_conditions_message">Mercado Libre and Mercado Pago\'s exclusive discount.</string>
+    <string name="px_discount_terms_and_conditions_linked_message">See conditions</string>
 
     <!-- Card token and guessing -->
-    <string name="mpsdk_invalid_card_number_incomplete">Enter all the numbers of the card</string>
-    <string name="mpsdk_invalid_empty_name">Enter the name and last name printed on the card</string>
-    <string name="mpsdk_invalid_expiry_date">The date you entered is not valid</string>
-    <string name="mpsdk_invalid_identification_number">Enter all numbers</string>
-    <string name="mpsdk_invalid_identification_name">Enter your name</string>
-    <string name="mpsdk_invalid_identification_last_name">Enter your last name</string>
-    <string name="mpsdk_invalid_payment_method">You can\'t pay with this payment method</string>
-    <string name="mpsdk_card_number_label">Card number</string>
-    <string name="mpsdk_card_expire_date_label">Expiration date</string>
-    <string name="mpsdk_cardholder_name">Name and surname</string>
-    <string name="mpsdk_name">Name</string>
-    <string name="mpsdk_lastname">Surname</string>
-    <string name="mpsdk_bank_deals_action">See deals</string>
-    <string name="mpsdk_security_code">Security code</string>
-    <string name="mpsdk_continue_label">Continue</string>
+    <string name="px_invalid_card_number_incomplete">Enter all the numbers of the card</string>
+    <string name="px_invalid_empty_name">Enter the name and last name printed on the card</string>
+    <string name="px_invalid_expiry_date">The date you entered is not valid</string>
+    <string name="px_invalid_identification_number">Enter all numbers</string>
+    <string name="px_invalid_identification_name">Enter your name</string>
+    <string name="px_invalid_identification_last_name">Enter your last name</string>
+    <string name="px_invalid_payment_method">You can\'t pay with this payment method</string>
+    <string name="px_card_number_label">Card number</string>
+    <string name="px_card_expire_date_label">Expiration date</string>
+    <string name="px_cardholder_name">Name and surname</string>
+    <string name="px_name">Name</string>
+    <string name="px_lastname">Surname</string>
+    <string name="px_bank_deals_action">See deals</string>
+    <string name="px_security_code">Security code</string>
+    <string name="px_continue_label">Continue</string>
 
-    <string name="mpsdk_invalid_card_bin">The card number you entered does not match with the card type</string>
-    <string name="mpsdk_invalid_card_luhn">The card number you entered is incorrect</string>
-    <string name="mpsdk_invalid_card_length">Enter the %1$s card numbers</string>
-    <string name="mpsdk_invalid_cvv_length">Enter the %1$s security code numbers</string>
-    <string name="mpsdk_invalid_field">Check this information</string>
-    <string name="mpsdk_invalid_empty_card">Enter the credit card number</string>
-    <string name="mpsdk_card_expiry_month_hint">MM</string>
-    <string name="mpsdk_card_expiry_divider_hint">/</string>
-    <string name="mpsdk_card_expiry_year_hint">YY</string>
-    <string name="mpsdk_card_identification_label">CARD HOLDER DOCUMENT</string>
-    <string name="mpsdk_ticket_identification_label">DATA TO VALIDATE YOUR PAYMENT</string>
-    <string name="mpsdk_name_and_lastname_identification_label">NAME AND SURNAME</string>
-    <string name="mpsdk_card_identification_number">Number</string>
-    <string name="mpsdk_card_identification_type">Type</string>
-    <string name="mpsdk_card_hint" translatable="false">%1$s ···· %2$s</string>
-    <string name="mpsdk_identification_card_holder_hint" translatable="false">•• ••• •••</string>
-    <string name="mpsdk_cardholder_name_short">NAME SURNAME</string>
+    <string name="px_invalid_card_bin">The card number you entered does not match with the card type</string>
+    <string name="px_invalid_card_luhn">The card number you entered is incorrect</string>
+    <string name="px_invalid_card_length">Enter the %1$s card numbers</string>
+    <string name="px_invalid_cvv_length">Enter the %1$s security code numbers</string>
+    <string name="px_invalid_field">Check this information</string>
+    <string name="px_invalid_empty_card">Enter the credit card number</string>
+    <string name="px_card_expiry_month_hint">MM</string>
+    <string name="px_card_expiry_divider_hint">/</string>
+    <string name="px_card_expiry_year_hint">YY</string>
+    <string name="px_card_identification_label">CARD HOLDER DOCUMENT</string>
+    <string name="px_ticket_identification_label">DATA TO VALIDATE YOUR PAYMENT</string>
+    <string name="px_name_and_lastname_identification_label">NAME AND SURNAME</string>
+    <string name="px_card_identification_number">Number</string>
+    <string name="px_card_identification_type">Type</string>
+    <string name="px_card_hint" translatable="false">%1$s ···· %2$s</string>
+    <string name="px_identification_card_holder_hint" translatable="false">•• ••• •••</string>
+    <string name="px_cardholder_name_short">NAME SURNAME</string>
 
-    <string name="mpsdk_more_info">MORE INFO</string>
-    <string name="mpsdk_try_other_card">Enter card</string>
-    <string name="mpsdk_you_can_finish_your_payment_with_cards">Don\'t worry, you can still pay with:</string>
-    <string name="mpsdk_invalid_card_payment_method">Credit card not supported</string>
-    <string name="mpsdk_exclusion_one_element">You can only pay with %1$s</string>
+    <string name="px_more_info">MORE INFO</string>
+    <string name="px_try_other_card">Enter card</string>
+    <string name="px_you_can_finish_your_payment_with_cards">Don\'t worry, you can still pay with:</string>
+    <string name="px_invalid_card_payment_method">Credit card not supported</string>
+    <string name="px_exclusion_one_element">You can only pay with %1$s</string>
 
     <!-- Congrats -->
-    <string name="mpsdk_title_approved_payment">Done! Your payment was accredited</string>
-    <string name="mpsdk_text_state_account_activity_congrats">On your statement you will see the charge as\n %s</string>
-    <string name="mpsdk_ending_in">ending in</string>
-    <string name="mpsdk_receipt">Transaction number %1$s</string>
-    <string name="mpsdk_date_divider">of</string>
+    <string name="px_title_approved_payment">Done! Your payment was accredited</string>
+    <string name="px_text_state_account_activity_congrats">On your statement you will see the charge as\n %s</string>
+    <string name="px_ending_in">ending in</string>
+    <string name="px_receipt">Transaction number %1$s</string>
+    <string name="px_date_divider">of</string>
 
     <!-- CallForAuthorize -->
-    <string name="mpsdk_title_activity_call_for_authorize">You must authorize with %1$s the payment of %2$s to Mercado Pago</string>
-    <string name="mpsdk_text_authorized_call_for_authorize">Already talked with %1$s and I am authorized</string>
+    <string name="px_title_activity_call_for_authorize">You must authorize with %1$s the payment of %2$s to Mercado Pago</string>
+    <string name="px_text_authorized_call_for_authorize">Already talked with %1$s and I am authorized</string>
 
     <!-- Pending -->
-    <string name="mpsdk_title_pending_payment">We are processing the payment</string>
-    <string name="mpsdk_error_description_contingency">In a few hours we will notify you via e-mail if it is accredited.</string>
-    <string name="mpsdk_error_description_review_manual">Within the next 24 hours we will notify you via e-mail if it was accredited.</string>
-    <string name="mpsdk_pending_label">Hurry to pay!</string>
+    <string name="px_title_pending_payment">We are processing the payment</string>
+    <string name="px_error_description_contingency">In a few hours we will notify you via e-mail if it is accredited.</string>
+    <string name="px_error_description_review_manual">Within the next 24 hours we will notify you via e-mail if it was accredited.</string>
+    <string name="px_pending_label">Hurry to pay!</string>
 
     <!-- Rejection -->
-    <string name="mpsdk_text_pay_with_other_method">Change payment method</string>
-    <string name="mpsdk_text_enter_again">Enter again</string>
-    <string name="mpsdk_title_other_reason_rejection">%1$s did not process the payment</string>
-    <string name="mpsdk_title_bad_filled_other">Oops, we could not process your payment</string>
-    <string name="mpsdk_text_some_card_data_is_incorrect">Any datum of your %1$s is incorrect</string>
-    <string name="mpsdk_text_insufficient_amount">Yours %1$s has insufficient funds</string>
-    <string name="mpsdk_text_active_card">Calls to %1$s for activate your card</string>
-    <string name="mpsdk_title_rejection_high_risk">For security reasons, we had to reject your payment</string>
-    <string name="mpsdk_title_rejection_max_attempts">You reached the limit of attempts allowed</string>
-    <string name="mpsdk_rejection_label">Something went wrong…</string>
-    <string name="mpsdk_error_secondary_title_call">Could not authorize it?</string>
-    <string name="mpsdk_error_description_call">The phone number is on the back of your card.</string>
-    <string name="mpsdk_error_description_card_disabled">Use another payment method or call %1$s to activate your card.</string>
-    <string name="mpsdk_error_description_insufficient_amount">Do not be discouraged! Recharge it in any bank or from your internet banking and try again.</string>
-    <string name="mpsdk_error_description_second_insufficient_amount">Or if you prefer, you can choose another payment method.</string>
-    <string name="mpsdk_error_description_other_reason">Use another card or other payment method.</string>
-    <string name="mpsdk_error_description_by_bank">Please try to pay with other payment method.</string>
-    <string name="mpsdk_error_description_insufficient_data">Please try to pay with other payment method.</string>
-    <string name="mpsdk_error_description_duplicated_payment">Don\'t worry, your previous payment was approved.</string>
-    <string name="mpsdk_error_description_max_attempts">As you reached the limit of attempts with this card, use another payment method.</string>
-    <string name="mpsdk_error_description_high_risk">Use a payment method other than a card.</string>
-    <string name="mpsdk_text_card_data_invalid">Review card data</string>
-    <string name="mpsdk_text_card_enabled">I already enabled my card</string>
+    <string name="px_text_pay_with_other_method">Change payment method</string>
+    <string name="px_text_enter_again">Enter again</string>
+    <string name="px_title_other_reason_rejection">%1$s did not process the payment</string>
+    <string name="px_title_bad_filled_other">Oops, we could not process your payment</string>
+    <string name="px_text_some_card_data_is_incorrect">Any datum of your %1$s is incorrect</string>
+    <string name="px_text_insufficient_amount">Yours %1$s has insufficient funds</string>
+    <string name="px_text_active_card">Calls to %1$s for activate your card</string>
+    <string name="px_title_rejection_high_risk">For security reasons, we had to reject your payment</string>
+    <string name="px_title_rejection_max_attempts">You reached the limit of attempts allowed</string>
+    <string name="px_rejection_label">Something went wrong…</string>
+    <string name="px_error_secondary_title_call">Could not authorize it?</string>
+    <string name="px_error_description_call">The phone number is on the back of your card.</string>
+    <string name="px_error_description_card_disabled">Use another payment method or call %1$s to activate your card.</string>
+    <string name="px_error_description_insufficient_amount">Do not be discouraged! Recharge it in any bank or from your internet banking and try again.</string>
+    <string name="px_error_description_second_insufficient_amount">Or if you prefer, you can choose another payment method.</string>
+    <string name="px_error_description_other_reason">Use another card or other payment method.</string>
+    <string name="px_error_description_by_bank">Please try to pay with other payment method.</string>
+    <string name="px_error_description_insufficient_data">Please try to pay with other payment method.</string>
+    <string name="px_error_description_duplicated_payment">Don\'t worry, your previous payment was approved.</string>
+    <string name="px_error_description_max_attempts">As you reached the limit of attempts with this card, use another payment method.</string>
+    <string name="px_error_description_high_risk">Use a payment method other than a card.</string>
+    <string name="px_text_card_data_invalid">Review card data</string>
+    <string name="px_text_card_enabled">I already enabled my card</string>
 
     <!-- Error messages -->
-    <string name="mpsdk_error_message_invalid_item">Invalid item</string>
-    <string name="mpsdk_error_message_expired_preference">Expired preference</string>
-    <string name="mpsdk_error_message_inactive_preference">Inactive preference</string>
-    <string name="mpsdk_error_message_invalid_default_installments">Invalid installments number by default</string>
-    <string name="mpsdk_error_message_invalid_max_installments">Invalid max installments number</string>
-    <string name="mpsdk_error_message_excluded_all_payment_type">All payments types excluded</string>
-    <string name="mpsdk_error_message_invalid_installments">Invalid installments number</string>
-    <string name="mpsdk_error_title">Oops! Something went wrong</string>
-    <string name="mpsdk_standard_error_message">We are going to fix it. Try later.</string>
-    <string name="mpsdk_error_message_email_required">Email is required</string>
-    <string name="mpsdk_error_message_missing_public_key">Public key is required</string>
-    <string name="mpsdk_error_message_missing_amount">Amount is required</string>
-    <string name="mpsdk_error_message_missing_site">Site is required</string>
-    <string name="mpsdk_error_message_missing_payer_cost">No installments found</string>
-    <string name="mpsdk_error_message_missing_installment_for_issuer">No installments found for this issuer</string>
-    <string name="mpsdk_error_message_multiple_installments_for_issuer">Multiple installments have been found for this issuer</string>
-    <string name="mpsdk_error_message_missing_identification_types">No identification type found</string>
-    <string name="mpsdk_error_message_missing_setting_for_bin">No setting found for that bin</string>
+    <string name="px_error_message_invalid_item">Invalid item</string>
+    <string name="px_error_message_expired_preference">Expired preference</string>
+    <string name="px_error_message_inactive_preference">Inactive preference</string>
+    <string name="px_error_message_invalid_default_installments">Invalid installments number by default</string>
+    <string name="px_error_message_invalid_max_installments">Invalid max installments number</string>
+    <string name="px_error_message_excluded_all_payment_type">All payments types excluded</string>
+    <string name="px_error_message_invalid_installments">Invalid installments number</string>
+    <string name="px_error_title">Oops! Something went wrong</string>
+    <string name="px_standard_error_message">We are going to fix it. Try later.</string>
+    <string name="px_error_message_email_required">Email is required</string>
+    <string name="px_error_message_missing_public_key">Public key is required</string>
+    <string name="px_error_message_missing_amount">Amount is required</string>
+    <string name="px_error_message_missing_site">Site is required</string>
+    <string name="px_error_message_missing_payer_cost">No installments found</string>
+    <string name="px_error_message_missing_installment_for_issuer">No installments found for this issuer</string>
+    <string name="px_error_message_multiple_installments_for_issuer">Multiple installments have been found for this issuer</string>
+    <string name="px_error_message_missing_identification_types">No identification type found</string>
+    <string name="px_error_message_missing_setting_for_bin">No setting found for that bin</string>
 
 
     <!-- API exception messages -->
-    <string name="mpsdk_empty_card_expiration_month">The month of the card\'s expiration date is not entered</string>
-    <string name="mpsdk_empty_card_expiration_year">The year of the card\'s expiration date is not entered</string>
-    <string name="mpsdk_empty_card_holder_name">The card holder name is not entered</string>
-    <string name="mpsdk_empty_document_number">The card holder document number is not entered</string>
-    <string name="mpsdk_empty_document_type">The card holder document type is not entered</string>
-    <string name="mpsdk_invalid_payment_type_id">Invalid payment method type</string>
-    <string name="mpsdk_invalid_card_expiration_month">Invalid card expiration month</string>
-    <string name="mpsdk_invalid_card_expiration_year">Invalid card expiration year</string>
-    <string name="mpsdk_invalid_payer_email">Invalid customer email</string>
-    <string name="mpsdk_customer_not_allowed_to_operate">You are not allowed to operate</string>
-    <string name="mpsdk_collector_not_allowed_to_operate">The seller is not allowed to operate</string>
-    <string name="mpsdk_invalid_users_involved">Invalid users</string>
-    <string name="mpsdk_customer_equal_to_collector">Same user customer and seller</string>
-    <string name="mpsdk_invalid_card_holder_name">Invalid card holder name</string>
-    <string name="mpsdk_unauthorized_client">Unauthorized client</string>
-    <string name="mpsdk_payment_method_not_found">Selected payment method not found</string>
-    <string name="mpsdk_invalid_security_code">Invalid security code</string>
-    <string name="mpsdk_security_code_required">Required security code</string>
-    <string name="mpsdk_invalid_card_number">Invalid card number</string>
-    <string name="mpsdk_api_invalid_identification_number">Invalid identification number</string>
+    <string name="px_empty_card_expiration_month">The month of the card\'s expiration date is not entered</string>
+    <string name="px_empty_card_expiration_year">The year of the card\'s expiration date is not entered</string>
+    <string name="px_empty_card_holder_name">The card holder name is not entered</string>
+    <string name="px_empty_document_number">The card holder document number is not entered</string>
+    <string name="px_empty_document_type">The card holder document type is not entered</string>
+    <string name="px_invalid_payment_type_id">Invalid payment method type</string>
+    <string name="px_invalid_card_expiration_month">Invalid card expiration month</string>
+    <string name="px_invalid_card_expiration_year">Invalid card expiration year</string>
+    <string name="px_invalid_payer_email">Invalid customer email</string>
+    <string name="px_customer_not_allowed_to_operate">You are not allowed to operate</string>
+    <string name="px_collector_not_allowed_to_operate">The seller is not allowed to operate</string>
+    <string name="px_invalid_users_involved">Invalid users</string>
+    <string name="px_customer_equal_to_collector">Same user customer and seller</string>
+    <string name="px_invalid_card_holder_name">Invalid card holder name</string>
+    <string name="px_unauthorized_client">Unauthorized client</string>
+    <string name="px_payment_method_not_found">Selected payment method not found</string>
+    <string name="px_invalid_security_code">Invalid security code</string>
+    <string name="px_security_code_required">Required security code</string>
+    <string name="px_invalid_card_number">Invalid card number</string>
+    <string name="px_api_invalid_identification_number">Invalid identification number</string>
 
     <!-- Low Res -->
-    <string name="mpsdk_form_card_title">Card</string>
-    <string name="mpsdk_form_identification_title">Card holder document</string>
-    <string name="mpsdk_bank_deals_lowres">Promotions</string>
+    <string name="px_form_card_title">Card</string>
+    <string name="px_form_identification_title">Card holder document</string>
+    <string name="px_bank_deals_lowres">Promotions</string>
 
     <!-- PaymentTypes -->
-    <string name="mpsdk_form_card_title_payment_type">Card of %1$s</string>
-    <string name="mpsdk_credit_payment_type">Credit</string>
-    <string name="mpsdk_form_card_title_payment_type_prepaid">Prepaid card</string>
-    <string name="mpsdk_payment_types_title">Which type of card is it?</string>
-    <string name="mpsdk_debit_payment_type">Debit</string>
+    <string name="px_form_card_title_payment_type">Card of %1$s</string>
+    <string name="px_credit_payment_type">Credit</string>
+    <string name="px_form_card_title_payment_type_prepaid">Prepaid card</string>
+    <string name="px_payment_types_title">Which type of card is it?</string>
+    <string name="px_debit_payment_type">Debit</string>
 
     <!-- Utils -->
-    <string name="mpsdk_continue_shopping">Continue</string>
-    <string name="mpsdk_zero_rate">Interest free</string>
-    <string name="mpsdk_exit_label">Exit</string>
-    <string name="mpsdk_cancel_payment">Cancel payment</string>
-    <string name="mpsdk_input_button_back">Previous</string>
-    <string name="mpsdk_input_button_next">Continue</string>
-    <string name="mpsdk_hour">hour</string>
-    <string name="mpsdk_working_day">business day</string>
-    <string name="mpsdk_working_days">business days</string>
-    <string name="mpsdk_refresh_message">Retry</string>
-    <string name="mpsdk_title_activity_terms_and_conditions">Terms and conditions</string>
-    <string name="mpsdk_no_connection_message">No connection</string>
-    <string name="mpsdk_instant_accreditation_time">Will be accredited instantly</string>
-    <string name="mpsdk_accreditation_time">Will be accredited in</string>
-    <string name="mpsdk_what_can_do">What can I do?</string>
-    <string name="mpsdk_confirm_prompt_yes">Yes</string>
-    <string name="mpsdk_confirm_prompt_no">No</string>
+    <string name="px_continue_shopping">Continue</string>
+    <string name="px_zero_rate">Interest free</string>
+    <string name="px_exit_label">Exit</string>
+    <string name="px_cancel_payment">Cancel payment</string>
+    <string name="px_input_button_back">Previous</string>
+    <string name="px_input_button_next">Continue</string>
+    <string name="px_hour">hour</string>
+    <string name="px_working_day">business day</string>
+    <string name="px_working_days">business days</string>
+    <string name="px_refresh_message">Retry</string>
+    <string name="px_title_activity_terms_and_conditions">Terms and conditions</string>
+    <string name="px_no_connection_message">No connection</string>
+    <string name="px_instant_accreditation_time">Will be accredited instantly</string>
+    <string name="px_accreditation_time">Will be accredited in</string>
+    <string name="px_what_can_do">What can I do?</string>
+    <string name="px_confirm_prompt_yes">Yes</string>
+    <string name="px_confirm_prompt_no">No</string>
 
     <!-- Review and Confirm -->
-    <string name="mpsdk_change_payment">Change payment method</string>
-    <string name="mpsdk_your_atm">ATM of</string>
-    <string name="mpsdk_review_off_text_default">You will pay %1$s\n%2$s</string>
-    <string name="mpsdk_review_off_text">You will pay %1$s in a\n%2$s</string>
-    <string name="mpsdk_review_off_text_2">You will pay %1$s in\n%2$s</string>
-    <string name="mpsdk_review_off_text_3">You will pay %1$s in your\n%2$s</string>
-    <string name="mpsdk_review_off_text_4">You will pay %1$s with\n%2$s</string>
-    <string name="mpsdk_review_off_text_5">You will pay %1$s through\n%2$s</string>
-    <string name="mpsdk_review_off_text_6">You will pay %1$s at\n%2$s</string>
-    <string name="mpsdk_homebanking">Home Banking of</string>
-    <string name="mpsdk_review_summary_total">Total</string>
-    <string name="mpsdk_review_item_quantity">Quantity:</string>
-    <string name="mpsdk_review_summary_subtotal">Subtotal</string>
-    <string name="mpsdk_review_summary_pay">You will pay</string>
-    <string name="mpsdk_review_product_price">Unit price: %1$s</string>
-    <string name="mpsdk_activity_checkout_title">Check your payment</string>
-    <string name="mpsdk_review_summary_products">Products</string>
-    <string name="mpsdk_review_summary_product">Product</string>
-    <string name="mpsdk_review_summary_charges">Charges</string>
-    <string name="mpsdk_review_summary_taxes">Taxes</string>
-    <string name="mpsdk_review_summary_shipping">Shipping</string>
-    <string name="mpsdk_review_summary_arrear">Arrear</string>
-    <string name="mpsdk_review_summary_discount">Discount</string>
-    <string name="mpsdk_ryc_account_money_description">With your account money</string>
+    <string name="px_change_payment">Change payment method</string>
+    <string name="px_your_atm">ATM of</string>
+    <string name="px_review_off_text_default">You will pay %1$s\n%2$s</string>
+    <string name="px_review_off_text">You will pay %1$s in a\n%2$s</string>
+    <string name="px_review_off_text_2">You will pay %1$s in\n%2$s</string>
+    <string name="px_review_off_text_3">You will pay %1$s in your\n%2$s</string>
+    <string name="px_review_off_text_4">You will pay %1$s with\n%2$s</string>
+    <string name="px_review_off_text_5">You will pay %1$s through\n%2$s</string>
+    <string name="px_review_off_text_6">You will pay %1$s at\n%2$s</string>
+    <string name="px_homebanking">Home Banking of</string>
+    <string name="px_review_summary_total">Total</string>
+    <string name="px_review_item_quantity">Quantity:</string>
+    <string name="px_review_summary_subtotal">Subtotal</string>
+    <string name="px_review_summary_pay">You will pay</string>
+    <string name="px_review_product_price">Unit price: %1$s</string>
+    <string name="px_activity_checkout_title">Check your payment</string>
+    <string name="px_review_summary_products">Products</string>
+    <string name="px_review_summary_product">Product</string>
+    <string name="px_review_summary_charges">Charges</string>
+    <string name="px_review_summary_taxes">Taxes</string>
+    <string name="px_review_summary_shipping">Shipping</string>
+    <string name="px_review_summary_arrear">Arrear</string>
+    <string name="px_review_summary_discount">Discount</string>
+    <string name="px_ryc_account_money_description">With your account money</string>
 
     <!-- Discount -->
-    <string name="mpsdk_discount_percent_off" translatable="false">%1$s%% OFF</string>
-    <string name="mpsdk_discount_amount_off" translatable="false">- %1$s OFF</string>
+    <string name="px_discount_percent_off" translatable="false">%1$s%% OFF</string>
+    <string name="px_discount_amount_off" translatable="false">- %1$s OFF</string>
 
-    <string name="mpsdk_invalid_code">Invalid code</string>
-    <string name="mpsdk_merchant_without_discount_available">Merchant without discount available</string>
-    <string name="mpsdk_ran_out_of_quantity_uses_quantity">Ran out of quantity uses of discount </string>
-    <string name="mpsdk_amount_doesnt_match">Amount out of reach</string>
-    <string name="mpsdk_campaign_expired">Campaign expired</string>
-    <string name="mpsdk_discount_percent_off_percent" translatable="false">%1$s%% OFF</string>
-    <string name="mpsdk_discount_percent_off_amount" translatable="false">- %1$s OFF</string>
+    <string name="px_invalid_code">Invalid code</string>
+    <string name="px_merchant_without_discount_available">Merchant without discount available</string>
+    <string name="px_ran_out_of_quantity_uses_quantity">Ran out of quantity uses of discount </string>
+    <string name="px_amount_doesnt_match">Amount out of reach</string>
+    <string name="px_campaign_expired">Campaign expired</string>
+    <string name="px_discount_percent_off_percent" translatable="false">%1$s%% OFF</string>
+    <string name="px_discount_percent_off_amount" translatable="false">- %1$s OFF</string>
 
-    <string name="mpsdk_something_went_wrong">Oops! Something went wrong…</string>
-    <string name="mpsdk_we_apply_the_best_available_discount">Discounts are not cumulative. We apply the best available discount</string>
-    <string name="mpsdk_max_coupon_amount">Discount cap %1$s</string>
-    <string name="mpsdk_with_max_coupon_amount">With max coupon amount</string>
-    <string name="mpsdk_total_to_pay">Total to pay</string>
-    <string name="mpsdk_enter_coupon_code">Enter your discount coupon</string>
-    <string name="mpsdk_enter_coupon_code_title">Enter your coupon</string>
+    <string name="px_something_went_wrong">Oops! Something went wrong…</string>
+    <string name="px_we_apply_the_best_available_discount">Discounts are not cumulative. We apply the best available discount</string>
+    <string name="px_max_coupon_amount">Discount cap %1$s</string>
+    <string name="px_with_max_coupon_amount">With max coupon amount</string>
+    <string name="px_total_to_pay">Total to pay</string>
+    <string name="px_enter_coupon_code">Enter your discount coupon</string>
+    <string name="px_enter_coupon_code_title">Enter your coupon</string>
 
-    <string name="mpsdk_interest_label">Does\'t include bank interest</string>
-    <string name="mpsdk_discount_dialog_title">My Discount</string>
-    <string name="mpsdk_excellent">¡Excellent!</string>
-    <string name="mpsdk_get_your_discount_amount">Now pay your purchase and get\n %1$s discount</string>
-    <string name="mpsdk_get_your_discount_percent">Now pay your purchase and get %1$s%% discount</string>
-    <string name="mpsdk_discount_error_check_this_data">Check this data</string>
+    <string name="px_interest_label">Does\'t include bank interest</string>
+    <string name="px_discount_dialog_title">My Discount</string>
+    <string name="px_excellent">¡Excellent!</string>
+    <string name="px_get_your_discount_amount">Now pay your purchase and get\n %1$s discount</string>
+    <string name="px_get_your_discount_percent">Now pay your purchase and get %1$s%% discount</string>
+    <string name="px_discount_error_check_this_data">Check this data</string>
 
     <!-- Unlock Card -->
-    <string name="mpsdk_text_unlock_card_start">Remember to</string>
-    <string name="mpsdk_text_unlock_card_linked">unlock your card</string>
-    <string name="mpsdk_text_unlock_card_end">before you confirm the payment.</string>
+    <string name="px_text_unlock_card_start">Remember to</string>
+    <string name="px_text_unlock_card_linked">unlock your card</string>
+    <string name="px_text_unlock_card_end">before you confirm the payment.</string>
 
-    <string name="mpsdk_error_message_detail_no_installments">No installments found for an issuer at InstallmentsActivity</string>
-    <string name="mpsdk_error_message_detail_no_payer_cost_found">No payer costs found at InstallmentsActivity</string>
-    <string name="mpsdk_error_message_detail_multiple_installments">Multiple installments found for an issuer at InstallmentsActivity</string>
-    <string name="mpsdk_error_message_detail_issuers">No issuers found at IssuersActivity</string>
-    <string name="mpsdk_error_message_detail_no_payment_method_list">No payment method list found at ReviewPaymentMethodsActivity</string>
+    <string name="px_error_message_detail_no_installments">No installments found for an issuer at InstallmentsActivity</string>
+    <string name="px_error_message_detail_no_payer_cost_found">No payer costs found at InstallmentsActivity</string>
+    <string name="px_error_message_detail_multiple_installments">Multiple installments found for an issuer at InstallmentsActivity</string>
+    <string name="px_error_message_detail_issuers">No issuers found at IssuersActivity</string>
+    <string name="px_error_message_detail_no_payment_method_list">No payment method list found at ReviewPaymentMethodsActivity</string>
 
 
     <!-- Boleto -->
-    <string name="mpsdk_fill_your_data">Enter your data…</string>
-    <string name="mpsdk_bolbradesco_rejection">Payment could not be processed</string>
-    <string name="mpsdk_ticket_card_holder_identification_hint" translatable="false">*** *** *** **</string>
+    <string name="px_fill_your_data">Enter your data…</string>
+    <string name="px_bolbradesco_rejection">Payment could not be processed</string>
+    <string name="px_ticket_card_holder_identification_hint" translatable="false">*** *** *** **</string>
 
-    <string name="mpsdk_empty_string"></string>
+    <string name="px_empty_string"></string>
 
 
 </resources>

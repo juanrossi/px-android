@@ -53,12 +53,12 @@ class MethodCard extends CompactComponent<MethodCard.Props, Void> {
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        final View main = inflate(parent, R.layout.mpsdk_payment_method_card_compact);
+        final View main = inflate(parent, R.layout.px_payment_method_card_compact);
         final ImageView logo = main.findViewById(R.id.icon);
         final TextView name = main.findViewById(R.id.name);
         final String cardDescription =
             parent.getContext()
-                .getString(R.string.mpsdk_card_hint, props.card.getIssuer().getName(), props.card.getLastFourDigits());
+                .getString(R.string.px_card_hint, props.card.getIssuer().getName(), props.card.getLastFourDigits());
         name.setText(cardDescription);
         logo.setImageResource(ResourceUtil.getIconResource(parent.getContext(), props.paymentMethodId));
         resolveCft(main);
@@ -96,7 +96,7 @@ class MethodCard extends CompactComponent<MethodCard.Props, Void> {
             .amount(autoSelectedInstallment.getTotalAmount())
             .normalDecimals()
             .into(amountLessDiscountText)
-            .holder(R.string.mpsdk_total_amount_holder);
+            .holder(R.string.px_total_amount_holder);
     }
 
     private void resolveCft(@NonNull final View main) {
@@ -104,6 +104,6 @@ class MethodCard extends CompactComponent<MethodCard.Props, Void> {
         final Context context = main.getContext();
         cft.setVisibility(props.payerCost.hasCFT() ? View.VISIBLE : View.GONE);
         cft.setText(props.payerCost.hasCFT() ? context
-            .getString(R.string.mpsdk_installments_cft, props.payerCost.getCFTPercent()) : "");
+            .getString(R.string.px_installments_cft, props.payerCost.getCFTPercent()) : "");
     }
 }

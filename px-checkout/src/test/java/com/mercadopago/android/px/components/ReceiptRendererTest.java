@@ -36,7 +36,7 @@ public class ReceiptRendererTest {
     public void whenReceiptIdIsNotNuThenDescriptionIsEmptyString() {
         String longReceipt = String.valueOf(120L);
         String expected = String.format(MOCK_RECEIPT_PLACEHOLDER, String.valueOf(longReceipt));
-        when(context.getString(R.string.mpsdk_receipt, String.valueOf(longReceipt))).thenReturn(expected);
+        when(context.getString(R.string.px_receipt, String.valueOf(longReceipt))).thenReturn(expected);
         String receiptDescription = receiptRenderer.getReceiptDescription(context, longReceipt);
         assertEquals(expected, receiptDescription);
     }

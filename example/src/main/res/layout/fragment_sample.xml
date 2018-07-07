@@ -8,7 +8,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center"
-        android:background="@color/mpsdk_colorPrimary" />
+        android:background="@color/px_colorPrimary" />
 
     <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/textView"
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/app_name"
-        android:textColor="@color/mpsdk_colorPrimary" />
+        android:textColor="@color/px_colorPrimary" />
 
 
 </LinearLayout>

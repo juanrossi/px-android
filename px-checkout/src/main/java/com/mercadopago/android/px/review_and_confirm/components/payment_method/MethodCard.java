@@ -48,7 +48,7 @@ class MethodCard extends CompactComponent<MethodCard.Props, Void> {
     @Override
     public View render(@NonNull final ViewGroup parent) {
 
-        View paymentView = inflate(parent, R.layout.mpsdk_payment_method_card);
+        View paymentView = inflate(parent, R.layout.px_payment_method_card);
 
         TextView title = paymentView.findViewById(R.id.title);
         title.setText(formatTitle(title.getContext()));
@@ -70,7 +70,7 @@ class MethodCard extends CompactComponent<MethodCard.Props, Void> {
     }
 
     private String formatTitle(Context context) {
-        String ending = context.getString(R.string.mpsdk_ending_in);
+        String ending = context.getString(R.string.px_ending_in);
         return String.format(Locale.getDefault(), "%s %s %s",
             props.cardName,
             ending,

@@ -29,7 +29,7 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
 
     @Override
     public View render(@NonNull final FullSummary component, @NonNull final Context context, final ViewGroup parent) {
-        final View summaryView = inflate(R.layout.mpsdk_full_summary_component, parent);
+        final View summaryView = inflate(R.layout.px_full_summary_component, parent);
         final MPTextView totalAmountTextView = summaryView.findViewById(R.id.mpsdkReviewSummaryTotalText);
         final FrameLayout payerCostContainer = summaryView.findViewById(R.id.mpsdkReviewSummaryPayerCostContainer);
         final MPTextView disclaimerTextView = summaryView.findViewById(R.id.mpsdkDisclaimer);
@@ -101,6 +101,6 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
     }
 
     public String getDisclaimer(FullSummary component, Context context) {
-        return context.getString(R.string.mpsdk_installments_cft, component.props.summaryModel.getCftPercent());
+        return context.getString(R.string.px_installments_cft, component.props.summaryModel.getCftPercent());
     }
 }

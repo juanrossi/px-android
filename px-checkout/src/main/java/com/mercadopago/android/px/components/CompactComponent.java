@@ -77,7 +77,7 @@ public abstract class CompactComponent<Props, Actions> {
         scrollView.setBackgroundColor(scrollView
             .getContext()
             .getResources()
-            .getColor(R.color.mpsdk_white_background));
+            .getColor(R.color.px_white_background));
         return scrollView;
     }
 }

@@ -65,7 +65,7 @@ public class BankDealsActivity extends MercadoPagoActivity implements OnSelected
 
     @Override
     protected void setContentView() {
-        setContentView(R.layout.mpsdk_activity_bank_deals);
+        setContentView(R.layout.px_activity_bank_deals);
     }
 
     @Override

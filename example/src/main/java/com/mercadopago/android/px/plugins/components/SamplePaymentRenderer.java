@@ -11,6 +11,6 @@ public class SamplePaymentRenderer extends Renderer<SamplePayment> {
 
     @Override
     public View render(final SamplePayment component, final Context context, final ViewGroup parent) {
-        return inflate(R.layout.mpsdk_sample_payment_procesor, parent);
+        return inflate(R.layout.px_sample_payment_procesor, parent);
     }
 }

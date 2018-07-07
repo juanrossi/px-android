@@ -12,6 +12,6 @@ public class MainPaymentRenderer extends Renderer<MainPayment> {
 
     @Override
     public View render(@NonNull final MainPayment component, @NonNull final Context context, final ViewGroup parent) {
-        return inflate(com.mercadopago.android.px.R.layout.mpsdk_view_progress_bar, parent);
+        return inflate(com.mercadopago.android.px.R.layout.px_view_progress_bar, parent);
     }
 }

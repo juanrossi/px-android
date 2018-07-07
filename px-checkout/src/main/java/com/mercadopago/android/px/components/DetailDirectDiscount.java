@@ -31,7 +31,7 @@ public class DetailDirectDiscount extends CompactComponent<DetailDirectDiscount.
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        final View mainContainer = inflate(parent, R.layout.mpsdk_view_detail_discount_direct);
+        final View mainContainer = inflate(parent, R.layout.px_view_detail_discount_direct);
         configureDetailMessage(mainContainer);
         configureOffMessage(mainContainer);
         return mainContainer;
@@ -45,7 +45,7 @@ public class DetailDirectDiscount extends CompactComponent<DetailDirectDiscount.
                 .amount(props.campaign.getMaxCouponAmount())
                 .normalDecimals()
                 .into(detailMessage)
-                .holder(R.string.mpsdk_max_coupon_amount);
+                .holder(R.string.px_max_coupon_amount);
         } else {
             detailMessage.setVisibility(View.GONE);
         }
@@ -55,14 +55,14 @@ public class DetailDirectDiscount extends CompactComponent<DetailDirectDiscount.
         final TextView subtitle = mainContainer.findViewById(R.id.subtitle);
         if (props.discount.hasPercentOff()) {
             subtitle.setText(subtitle.getContext()
-                .getString(R.string.mpsdk_discount_percent_off, props.discount.getPercentOff()));
+                .getString(R.string.px_discount_percent_off, props.discount.getPercentOff()));
         } else {
             TextFormatter.withCurrencyId(props.discount.getCurrencyId())
                 .withSpace()
                 .amount(props.discount.getAmountOff())
                 .normalDecimals()
                 .into(subtitle)
-                .holder(R.string.mpsdk_discount_amount_off);
+                .holder(R.string.px_discount_amount_off);
         }
     }
 }

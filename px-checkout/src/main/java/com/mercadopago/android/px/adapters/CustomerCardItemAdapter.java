@@ -36,9 +36,9 @@ public class CustomerCardItemAdapter extends RecyclerView.Adapter<CustomerCardIt
         View view;
 
         if (viewType == ITEM_TYPE_CARD) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mpsdk_row_pm_search_item, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.px_row_pm_search_item, parent, false);
         } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mpsdk_custom_text_row, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.px_custom_text_row, parent, false);
         }
 
         return new ViewHolder(view);
@@ -116,7 +116,7 @@ public class CustomerCardItemAdapter extends RecyclerView.Adapter<CustomerCardIt
         private void setCardDescription(Card card) {
 
             if (!isEmpty(card.getLastFourDigits())) {
-                String digitsLabel = itemView.getContext().getString(R.string.mpsdk_last_digits_label);
+                String digitsLabel = itemView.getContext().getString(R.string.px_last_digits_label);
                 String formattedDigitsLabel = String.format(Locale.getDefault(), "%s%s%s",
                     digitsLabel, "\n", card.getLastFourDigits());
                 mDescription.setText(formattedDigitsLabel);

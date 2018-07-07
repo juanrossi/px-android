@@ -42,29 +42,29 @@
 
     <!-- Customized colors -->
     <!-- Toolbar and status bar default -->
-    <color name="mpsdk_background">#FFEA78</color>
-    <color name="mpsdk_toolbar_text">#333333</color>
-    <color name="mpsdk_status_bar">#FFDB15</color>
+    <color name="px_background">#FFEA78</color>
+    <color name="px_toolbar_text">#333333</color>
+    <color name="px_status_bar">#FFDB15</color>
 
     <!-- Discount modal and discount description -->
-    <color name="mpsdk_discount_summary_background">#FFDB15</color>
-    <color name="mpsdk_modal_status_bar">#FFDB15</color>
-    <color name="mpsdk_discount_description">#39B54A</color>
+    <color name="px_discount_summary_background">#FFDB15</color>
+    <color name="px_modal_status_bar">#FFDB15</color>
+    <color name="px_discount_description">#39B54A</color>
 
     <!-- Inputs -->
-    <color name="mpsdk_input">#3483FA</color>
+    <color name="px_input">#3483FA</color>
 
     <!-- R&C toolbar -->
-    <color name="mpsdk_review_background">#FFEA78</color>
-    <color name="mpsdk_review_toolbar_text">#333333</color>
+    <color name="px_review_background">#FFEA78</color>
+    <color name="px_review_toolbar_text">#333333</color>
     <!-- R&C summary -->
-    <color name="mpsdk_review_summary_background">#FFEA78</color>
-    <color name="mpsdk_summary_text_color">#333333</color>
-    <color name="mpsdk_summary_separator_color">#33000000</color>
+    <color name="px_review_summary_background">#FFEA78</color>
+    <color name="px_summary_text_color">#333333</color>
+    <color name="px_summary_separator_color">#33000000</color>
     <!-- R&C components -->
-    <color name="mpsdk_detailed_background">#FFFFFF</color>
+    <color name="px_detailed_background">#FFFFFF</color>
     <!-- Spinner background -->
-    <color name="mpsdk_background_loading">#FFEA78</color>
+    <color name="px_background_loading">#FFEA78</color>
 
 
 </resources>

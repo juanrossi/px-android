@@ -25,7 +25,7 @@ public class ReviewPaymentMethodsAdapter extends RecyclerView.Adapter<ReviewPaym
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.mpsdk_review_payment_method, parent, false);
+            .inflate(R.layout.px_review_payment_method, parent, false);
         return new ViewHolder(v);
     }
 

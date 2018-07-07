@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MercadoPagoUtil {
 
-    private static final String SDK_PREFIX = "mpsdk_";
+    private static final String SDK_PREFIX = "px_";
 
     public static int getPaymentMethodIcon(Context context, String paymentMethodId) {
 
@@ -60,28 +60,28 @@ public class MercadoPagoUtil {
         String accreditationMessage;
 
         if (milliseconds == 0) {
-            accreditationMessage = context.getString(R.string.mpsdk_instant_accreditation_time);
+            accreditationMessage = context.getString(R.string.px_instant_accreditation_time);
         } else {
             StringBuilder accreditationTimeMessageBuilder = new StringBuilder();
             if (milliseconds > 1440 && milliseconds < 2880) {
 
-                accreditationTimeMessageBuilder.append(context.getString(R.string.mpsdk_accreditation_time));
+                accreditationTimeMessageBuilder.append(context.getString(R.string.px_accreditation_time));
                 accreditationTimeMessageBuilder.append(" 1 ");
-                accreditationTimeMessageBuilder.append(context.getString(R.string.mpsdk_working_day));
+                accreditationTimeMessageBuilder.append(context.getString(R.string.px_working_day));
             } else if (milliseconds < 1440) {
 
-                accreditationTimeMessageBuilder.append(context.getString(R.string.mpsdk_accreditation_time));
+                accreditationTimeMessageBuilder.append(context.getString(R.string.px_accreditation_time));
                 accreditationTimeMessageBuilder.append(" ");
                 accreditationTimeMessageBuilder.append(milliseconds / 60);
                 accreditationTimeMessageBuilder.append(" ");
-                accreditationTimeMessageBuilder.append(context.getString(R.string.mpsdk_hour));
+                accreditationTimeMessageBuilder.append(context.getString(R.string.px_hour));
             } else {
 
-                accreditationTimeMessageBuilder.append(context.getString(R.string.mpsdk_accreditation_time));
+                accreditationTimeMessageBuilder.append(context.getString(R.string.px_accreditation_time));
                 accreditationTimeMessageBuilder.append(" ");
                 accreditationTimeMessageBuilder.append(milliseconds / (60 * 24));
                 accreditationTimeMessageBuilder.append(" ");
-                accreditationTimeMessageBuilder.append(context.getString(R.string.mpsdk_working_days));
+                accreditationTimeMessageBuilder.append(context.getString(R.string.px_working_days));
             }
             accreditationMessage = accreditationTimeMessageBuilder.toString();
         }

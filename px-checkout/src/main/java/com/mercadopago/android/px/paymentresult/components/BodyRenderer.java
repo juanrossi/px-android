@@ -15,7 +15,7 @@ import com.mercadopago.android.px.components.RendererFactory;
 public class BodyRenderer extends Renderer<Body> {
     @Override
     public View render(@NonNull final Body component, @NonNull final Context context, final ViewGroup parent) {
-        final View bodyView = inflate(R.layout.mpsdk_payment_result_body, parent);
+        final View bodyView = inflate(R.layout.px_payment_result_body, parent);
         final ViewGroup bodyViewGroup = bodyView.findViewById(R.id.mpsdkPaymentResultContainerBody);
 
         if (component.hasInstructions()) {

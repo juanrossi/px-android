@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/px_xs_margin">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/px_item_grey_circle">
+
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="@dimen/px_l_height"
+            android:layout_height="@dimen/px_l_height"
+            android:layout_gravity="center_horizontal"
+            android:padding="3dp"
+            tools:src="@drawable/px_review_item_default"/>
+    </FrameLayout>
+
+    <com.mercadopago.android.px.customviews.MPTextView
+        android:id="@+id/item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/px_s_margin"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="2"
+        android:textAppearance="@style/MLFont.Bold.Semi"
+        android:textColor="@color/ui_meli_black"
+        android:textSize="@dimen/px_m_text"
+        app:font_style="bold"
+        tools:text="Titulo"/>
+
+</LinearLayout>

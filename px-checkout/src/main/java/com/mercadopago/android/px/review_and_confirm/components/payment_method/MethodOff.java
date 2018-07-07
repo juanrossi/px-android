@@ -38,7 +38,7 @@ class MethodOff extends CompactComponent<MethodOff.Props, Void> {
 
     @Override
     public View render(@NonNull final ViewGroup parent) {
-        View paymentView = inflate(parent, R.layout.mpsdk_payment_method_off);
+        View paymentView = inflate(parent, R.layout.px_payment_method_off);
 
         TextView time = paymentView.findViewById(R.id.time);
         time.setText(MercadoPagoUtil.getAccreditationTimeMessage(time.getContext(), props.time));

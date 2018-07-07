@@ -32,7 +32,7 @@ public class PaymentMethodInfoController implements PaymentMethodSearchViewContr
     @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         view = LayoutInflater.from(context)
-            .inflate(R.layout.mpsdk_row_pm_info_item, parent, attachToRoot);
+            .inflate(R.layout.px_row_pm_info_item, parent, attachToRoot);
         if (listener != null) {
             view.setOnClickListener(listener);
         }
@@ -47,9 +47,9 @@ public class PaymentMethodInfoController implements PaymentMethodSearchViewContr
 
     @Override
     public void initializeControls() {
-        name = view.findViewById(R.id.mpsdk_name);
-        description = view.findViewById(R.id.mpsdk_description);
-        icon = view.findViewById(R.id.mpsdk_image);
+        name = view.findViewById(R.id.px_name);
+        description = view.findViewById(R.id.px_description);
+        icon = view.findViewById(R.id.px_image);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class PaymentMethodInfoController implements PaymentMethodSearchViewContr
             description.setText(item.getDescription());
         }
 
-        if (item.getIcon() == R.drawable.mpsdk_none) {
+        if (item.getIcon() == R.drawable.px_none) {
             icon.setVisibility(View.GONE);
         } else {
             icon.setVisibility(View.VISIBLE);

@@ -25,7 +25,7 @@ public class SummaryProviderImpl implements SummaryProvider {
         if (!isEmpty(reviewAndConfirmPreferences.getProductTitle())) {
             summaryProductTitle = reviewAndConfirmPreferences.getProductTitle();
         } else {
-            summaryProductTitle = context.getString(R.string.mpsdk_review_summary_product);
+            summaryProductTitle = context.getString(R.string.px_review_summary_product);
         }
 
         return summaryProductTitle;
@@ -33,32 +33,32 @@ public class SummaryProviderImpl implements SummaryProvider {
 
     @Override
     public int getDefaultTextColor() {
-        return ContextCompat.getColor(context, R.color.mpsdk_summary_text_color);
+        return ContextCompat.getColor(context, R.color.px_summary_text_color);
     }
 
     @Override
     public String getSummaryShippingTitle() {
-        return context.getString(R.string.mpsdk_review_summary_shipping);
+        return context.getString(R.string.px_review_summary_shipping);
     }
 
     @Override
     public int getDiscountTextColor() {
-        return ContextCompat.getColor(context, R.color.mpsdk_discount_description);
+        return ContextCompat.getColor(context, R.color.px_discount_description);
     }
 
     @Override
     public String getSummaryArrearTitle() {
-        return context.getString(R.string.mpsdk_review_summary_arrear);
+        return context.getString(R.string.px_review_summary_arrear);
     }
 
     @Override
     public String getSummaryTaxesTitle() {
-        return context.getString(R.string.mpsdk_review_summary_taxes);
+        return context.getString(R.string.px_review_summary_taxes);
     }
 
     @Override
     public String getSummaryDiscountsTitle() {
-        return context.getString(R.string.mpsdk_review_summary_discount);
+        return context.getString(R.string.px_review_summary_discount);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SummaryProviderImpl implements SummaryProvider {
         int disclaimerTextColor;
 
         if (isEmpty(reviewAndConfirmPreferences.getDisclaimerTextColor())) {
-            disclaimerTextColor = ContextCompat.getColor(context, R.color.mpsdk_default_disclaimer);
+            disclaimerTextColor = ContextCompat.getColor(context, R.color.px_default_disclaimer);
         } else {
             disclaimerTextColor = Color.parseColor(reviewAndConfirmPreferences.getDisclaimerTextColor());
         }
@@ -76,6 +76,6 @@ public class SummaryProviderImpl implements SummaryProvider {
 
     @Override
     public String getSummaryChargesTitle() {
-        return context.getString(R.string.mpsdk_review_summary_charges);
+        return context.getString(R.string.px_review_summary_charges);
     }
 }

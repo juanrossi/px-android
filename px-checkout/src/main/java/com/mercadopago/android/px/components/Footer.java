@@ -34,11 +34,11 @@ public class Footer extends CompactComponent<Footer.Props, ActionDispatcher> {
     public View render(@Nonnull final ViewGroup parent) {
         final Context context = parent.getContext();
         final LinearLayout linearContainer = CompactComponent.createLinearContainer(context);
-        linearContainer.setBackgroundColor(context.getResources().getColor(R.color.mpsdk_white_background));
-        final int padding = context.getResources().getDimensionPixelSize(R.dimen.mpsdk_s_margin);
+        linearContainer.setBackgroundColor(context.getResources().getColor(R.color.px_white_background));
+        final int padding = context.getResources().getDimensionPixelSize(R.dimen.px_s_margin);
         linearContainer.setPadding(0, 0, 0, padding);
 
-        final LineSeparator lineSeparator = new LineSeparator(new LineSeparator.Props(R.color.mpsdk_med_light_gray));
+        final LineSeparator lineSeparator = new LineSeparator(new LineSeparator.Props(R.color.px_med_light_gray));
         linearContainer.addView(lineSeparator.render(linearContainer));
 
         if (props.buttonAction != null) {

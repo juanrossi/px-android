@@ -44,18 +44,18 @@ public abstract class MercadoPagoBaseActivity extends AppCompatActivity {
     }
 
     public void overrideTransitionIn() {
-        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     public void overrideTransitionOut() {
-        overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
+        overridePendingTransition(R.anim.px_slide_left_to_right_in, R.anim.px_slide_left_to_right_out);
     }
 
     public void overrideTransitionFadeInFadeOut() {
-        overridePendingTransition(R.anim.mpsdk_fade_in_seamless, R.anim.mpsdk_fade_out_seamless);
+        overridePendingTransition(R.anim.px_fade_in_seamless, R.anim.px_fade_out_seamless);
     }
 
     public void overrideTransitionWithNoAnimation() {
-        overridePendingTransition(R.anim.mpsdk_no_change_animation, R.anim.mpsdk_no_change_animation);
+        overridePendingTransition(R.anim.px_no_change_animation, R.anim.px_no_change_animation);
     }
 }

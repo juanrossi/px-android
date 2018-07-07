@@ -97,7 +97,7 @@ class PaymentMethod extends CompactComponent<PaymentMethod.Props, OneTap.Actions
 
     @Override
     public View render(@Nonnull final ViewGroup parent) {
-        final ViewGroup main = (ViewGroup) inflate(parent, R.layout.mpsdk_payment_method_compact_container);
+        final ViewGroup main = (ViewGroup) inflate(parent, R.layout.px_payment_method_compact_container);
         final View view = resolveComponent().render(main);
         main.addView(view);
         main.setOnClickListener(new View.OnClickListener() {

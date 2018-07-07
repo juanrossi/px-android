@@ -15,7 +15,7 @@ public class InstructionReferenceRenderer extends Renderer<InstructionReferenceC
 
     @Override
     public View render(final InstructionReferenceComponent component, final Context context, final ViewGroup parent) {
-        final View referenceView = inflate(R.layout.mpsdk_payment_result_instruction_reference, parent);
+        final View referenceView = inflate(R.layout.px_payment_result_instruction_reference, parent);
         final MPTextView labelTextView = referenceView.findViewById(R.id.mpsdkReferenceLabel);
         final MPTextView valueTextView = referenceView.findViewById(R.id.mpsdkReferenceValue);
         final MPTextView commentTextView = referenceView.findViewById(R.id.mpsdkReferenceComment);

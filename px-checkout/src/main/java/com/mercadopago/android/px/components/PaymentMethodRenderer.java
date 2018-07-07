@@ -21,7 +21,7 @@ public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
     public View render(@NonNull final PaymentMethodComponent component, @NonNull final Context context,
         final ViewGroup parent) {
 
-        final View paymentMethodView = inflate(R.layout.mpsdk_payment_method_component, parent);
+        final View paymentMethodView = inflate(R.layout.px_payment_method_component, parent);
         final ViewGroup paymentMethodViewGroup = paymentMethodView.findViewById(R.id.mpsdkPaymentMethodContainer);
         final ImageView imageView = paymentMethodView.findViewById(R.id.mpsdkPaymentMethodIcon);
         final MPTextView descriptionTextView = paymentMethodView.findViewById(R.id.mpsdkPaymentMethodDescription);
@@ -58,7 +58,7 @@ public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
     @VisibleForTesting
     String getDisclaimer(final String paymentMethodTypeId, final String disclaimer, final Context context) {
         if (PaymentTypes.isCardPaymentType(paymentMethodTypeId) && TextUtils.isNotEmpty(disclaimer)) {
-            return String.format(context.getString(R.string.mpsdk_text_state_account_activity_congrats), disclaimer);
+            return String.format(context.getString(R.string.px_text_state_account_activity_congrats), disclaimer);
         }
         return "";
     }
@@ -71,7 +71,7 @@ public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
         if (PaymentTypes.isCardPaymentType(paymentMethodType)) {
             return String.format(Locale.getDefault(), "%s %s %s",
                 paymentMethodName,
-                context.getString(R.string.mpsdk_ending_in),
+                context.getString(R.string.px_ending_in),
                 lastFourDigits);
         } else {
             return paymentMethodName;

@@ -22,7 +22,7 @@ public class PaymentResultRenderer extends Renderer<PaymentResultContainer> {
             view = RendererFactory.create(context, component.getLoadingComponent()).render(parent);
         } else {
 
-            view = inflate(R.layout.mpsdk_payment_result_container, parent);
+            view = inflate(R.layout.px_payment_result_container, parent);
             final ViewGroup parentViewGroup = view.findViewById(R.id.mpsdkPaymentResultContainer);
 
             RendererFactory.create(context, component.getHeaderComponent()).render(parentViewGroup);

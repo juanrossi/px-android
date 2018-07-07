@@ -29,7 +29,7 @@ public class BankDealsAdapter extends RecyclerView.Adapter<BankDealsAdapter.View
     @Override
     public BankDealsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.mpsdk_row_bank_deals, parent, false));
+            .inflate(R.layout.px_row_bank_deals, parent, false));
     }
 
     @Override

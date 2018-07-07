@@ -29,9 +29,9 @@ public class PaymentMethodRendererTest {
     @Before
     public void setUp() throws Exception {
         renderer = new PaymentMethodRenderer();
-        when(context.getString(R.string.mpsdk_text_state_account_activity_congrats))
+        when(context.getString(R.string.px_text_state_account_activity_congrats))
             .thenReturn(STUB_R_STRING_TEXT_STATE);
-        when(context.getString(R.string.mpsdk_ending_in)).thenReturn(STUB_R_STRING_ENDING);
+        when(context.getString(R.string.px_ending_in)).thenReturn(STUB_R_STRING_ENDING);
     }
 
     @Test

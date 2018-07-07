@@ -88,7 +88,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         } catch (CardTokenException ex) {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_EMPTY_CARD);
             String message = ExceptionHandler.getErrorMessage(getApplicationContext(), ex);
-            String expectedMessage = getApplicationContext().getString(R.string.mpsdk_invalid_empty_card);
+            String expectedMessage = getApplicationContext().getString(R.string.px_invalid_empty_card);
             assertEquals(message, expectedMessage);
         }
     }
@@ -104,7 +104,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         } catch (CardTokenException ex) {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_CARD_BIN);
             String message = ExceptionHandler.getErrorMessage(getApplicationContext(), ex);
-            String expectedMessage = getApplicationContext().getString(R.string.mpsdk_invalid_card_bin);
+            String expectedMessage = getApplicationContext().getString(R.string.px_invalid_card_bin);
             assertEquals(message, expectedMessage);
         }
     }
@@ -121,7 +121,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_CARD_LENGTH);
             String message = ExceptionHandler.getErrorMessage(getApplicationContext(), ex);
             String expectedMessage =
-                getApplicationContext().getString(R.string.mpsdk_invalid_card_length, String.valueOf(16));
+                getApplicationContext().getString(R.string.px_invalid_card_length, String.valueOf(16));
             assertEquals(message, expectedMessage);
         }
     }
@@ -137,7 +137,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         } catch (CardTokenException ex) {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_CARD_LUHN);
             String message = ExceptionHandler.getErrorMessage(getApplicationContext(), ex);
-            String expectedMessage = getApplicationContext().getString(R.string.mpsdk_invalid_card_luhn);
+            String expectedMessage = getApplicationContext().getString(R.string.px_invalid_card_luhn);
             assertEquals(message, expectedMessage);
         }
     }
@@ -192,7 +192,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         } catch (CardTokenException ex) {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_FIELD);
             String message = ExceptionHandler.getErrorMessage(getApplicationContext(), ex);
-            String expectedMessage = getApplicationContext().getString(R.string.mpsdk_invalid_field);
+            String expectedMessage = getApplicationContext().getString(R.string.px_invalid_field);
             assertEquals(message, expectedMessage);
         }
     }
@@ -209,7 +209,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_CVV_LENGTH);
             String message = ExceptionHandler.getErrorMessage(getApplicationContext(), ex);
             String expectedMessage =
-                getApplicationContext().getString(R.string.mpsdk_invalid_cvv_length, String.valueOf(3));
+                getApplicationContext().getString(R.string.px_invalid_cvv_length, String.valueOf(3));
             assertEquals(message, expectedMessage);
         }
     }

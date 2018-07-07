@@ -72,51 +72,51 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
 
     @Override
     public String getMissingInstallmentsForIssuerErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_installment_for_issuer);
+        return context.getString(R.string.px_error_message_missing_installment_for_issuer);
     }
 
     @Override
     public String getMultipleInstallmentsForIssuerErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_multiple_installments_for_issuer);
+        return context.getString(R.string.px_error_message_multiple_installments_for_issuer);
     }
 
     @Override
     public String getMissingPayerCostsErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_payer_cost);
+        return context.getString(R.string.px_error_message_missing_payer_cost);
     }
 
     @Override
     public String getMissingIdentificationTypesErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_identification_types);
+        return context.getString(R.string.px_error_message_missing_identification_types);
     }
 
     @Override
     public String getMissingPublicKeyErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_public_key);
+        return context.getString(R.string.px_error_message_missing_public_key);
     }
 
     @Override
     public String getInvalidIdentificationNumberErrorMessage() {
-        return context.getString(R.string.mpsdk_invalid_identification_number);
+        return context.getString(R.string.px_invalid_identification_number);
     }
 
     @Override
     public String getInvalidExpiryDateErrorMessage() {
-        return context.getString(R.string.mpsdk_invalid_expiry_date);
+        return context.getString(R.string.px_invalid_expiry_date);
     }
 
     @Override
     public String getInvalidEmptyNameErrorMessage() {
-        return context.getString(R.string.mpsdk_invalid_empty_name);
+        return context.getString(R.string.px_invalid_empty_name);
     }
 
     @Override
     public String getSettingNotFoundForBinErrorMessage() {
-        return context.getString(R.string.mpsdk_error_message_missing_setting_for_bin);
+        return context.getString(R.string.px_error_message_missing_setting_for_bin);
     }
 
     @Override
     public String getInvalidFieldErrorMessage() {
-        return context.getString(R.string.mpsdk_invalid_field);
+        return context.getString(R.string.px_invalid_field);
     }
 }

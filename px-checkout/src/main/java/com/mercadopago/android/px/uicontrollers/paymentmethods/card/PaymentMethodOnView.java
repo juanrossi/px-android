@@ -29,7 +29,7 @@ public abstract class PaymentMethodOnView implements PaymentMethodViewController
             mDescription.setText(mPaymentMethod.getName());
         } else {
             mDescription.setText(
-                new StringBuilder().append(mContext.getString(R.string.mpsdk_last_digits_label)).append(" ")
+                new StringBuilder().append(mContext.getString(R.string.px_last_digits_label)).append(" ")
                     .append(getLastFourDigits()).toString());
         }
         int resourceId = MercadoPagoUtil.getPaymentMethodIcon(mContext, mPaymentMethod.getId());
