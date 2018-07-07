@@ -179,8 +179,7 @@ public class CreditCardTestFlow extends TestFlow {
             .enterCardholderName(card.cardHolderName())
             .enterExpiryDate(card.expDate())
             .enterSecurityCode(card.escNumber())
-            .enterIdentificationNumberToIssuer(card.cardHolderIdentityNumber())
-            .enterBankOptionToInstallments(0)
+            .enterIdentificationNumberToInstallments(card.cardHolderIdentityNumber())
             .selectInstallments(NO_INSTALLMENTS_OPTION)
             .pressConfirmButton();
     }
