@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
-import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.util.MercadoPagoUtil;
 import java.util.List;
@@ -24,7 +24,8 @@ public class CustomerCardItemAdapter extends RecyclerView.Adapter<CustomerCardIt
     private final String mActionMessage;
     private final OnSelectedCallback<Card> mOnSelectedCallback;
 
-    public CustomerCardItemAdapter(List<Card> cards, String actionMessage, OnSelectedCallback<Card> onSelectedCallback) {
+    public CustomerCardItemAdapter(List<Card> cards, String actionMessage,
+        OnSelectedCallback<Card> onSelectedCallback) {
         mCards = cards;
         mActionMessage = actionMessage;
         mOnSelectedCallback = onSelectedCallback;
@@ -117,7 +118,7 @@ public class CustomerCardItemAdapter extends RecyclerView.Adapter<CustomerCardIt
             if (!isEmpty(card.getLastFourDigits())) {
                 String digitsLabel = itemView.getContext().getString(R.string.mpsdk_last_digits_label);
                 String formattedDigitsLabel = String.format(Locale.getDefault(), "%s%s%s",
-                        digitsLabel, "\n", card.getLastFourDigits());
+                    digitsLabel, "\n", card.getLastFourDigits());
                 mDescription.setText(formattedDigitsLabel);
             } else {
                 mDescription.setVisibility(View.GONE);

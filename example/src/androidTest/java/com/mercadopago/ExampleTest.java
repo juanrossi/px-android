@@ -8,15 +8,15 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
 import com.mercadopago.example.R;
-import com.mercadopago.testcheckout.idleresources.CheckoutResource;
-import com.mercadopago.testcheckout.assertions.DefaultValidator;
-import com.mercadopago.testcheckout.flows.CreditCardTestFlow;
-import com.mercadopago.testcheckout.input.Card;
-import com.mercadopago.testcheckout.input.Country;
-import com.mercadopago.testcheckout.input.FakeCard;
-import com.mercadopago.testcheckout.input.Visa;
-import com.mercadopago.testcheckout.pages.CongratsPage;
-import com.mercadopago.testcheckout.pages.NamePage;
+import com.mercadopago.android.px.testcheckout.idleresources.CheckoutResource;
+import com.mercadopago.android.px.testcheckout.assertions.DefaultValidator;
+import com.mercadopago.android.px.testcheckout.flows.CreditCardTestFlow;
+import com.mercadopago.android.px.testcheckout.input.Card;
+import com.mercadopago.android.px.testcheckout.input.Country;
+import com.mercadopago.android.px.testcheckout.input.FakeCard;
+import com.mercadopago.android.px.testcheckout.input.Visa;
+import com.mercadopago.android.px.testcheckout.pages.CongratsPage;
+import com.mercadopago.android.px.testcheckout.pages.NamePage;
 import com.mercadopago.testlib.HttpResource;
 
 import org.hamcrest.Matcher;
@@ -63,7 +63,7 @@ public class ExampleTest {
                 @Override
                 public void validate(@NonNull NamePage namePage) {
                     super.validate(namePage);
-                    Matcher<View> cardCardholderNameEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardholderName);
+                    Matcher<View> cardCardholderNameEditTextMatcher = withId(R.id.mpsdkCardholderName);
                     onView(cardCardholderNameEditTextMatcher)
                         .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
                 }

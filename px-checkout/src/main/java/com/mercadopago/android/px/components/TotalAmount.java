@@ -1,9 +1,9 @@
 package com.mercadopago.android.px.components;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.services.util.CurrenciesUtil;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.PayerCost;
+import com.mercadopago.android.px.services.util.CurrenciesUtil;
 import java.math.BigDecimal;
 import java.util.Locale;
 

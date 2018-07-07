@@ -2,9 +2,7 @@ package com.mercadopago.test;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
-
 import com.google.gson.reflect.TypeToken;
-import com.mercadopago.services.exceptions.ApiException;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardToken;
@@ -22,8 +20,8 @@ import com.mercadopago.android.px.model.SavedCardToken;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.PaymentPreference;
+import com.mercadopago.services.exceptions.ApiException;
 import com.mercadopago.util.JsonUtil;
-
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -99,13 +97,14 @@ public class StaticMock {
     public static CardToken getCardToken() {
 
         return new CardToken(DUMMY_CARD_NUMBER, DUMMY_EXPIRATION_MONTH,
-                DUMMY_EXPIRATION_YEAR_SHORT, DUMMY_SECURITY_CODE, DUMMY_CARDHOLDER_NAME,
-                DUMMY_IDENTIFICATION_TYPE, DUMMY_IDENTIFICATION_NUMBER);
+            DUMMY_EXPIRATION_YEAR_SHORT, DUMMY_SECURITY_CODE, DUMMY_CARDHOLDER_NAME,
+            DUMMY_IDENTIFICATION_TYPE, DUMMY_IDENTIFICATION_NUMBER);
     }
 
     public static CardToken getCardToken(Context context, String flavor) {
 
-        return JsonUtil.getInstance().fromJson(getFile(context, "mocks/card_token" + flavor + ".json"), CardToken.class);
+        return JsonUtil.getInstance()
+            .fromJson(getFile(context, "mocks/card_token" + flavor + ".json"), CardToken.class);
     }
 
     public static SavedCardToken getSavedCardToken() {
@@ -120,53 +119,47 @@ public class StaticMock {
 
     public static PaymentMethod getPaymentMethod(Context context, String flavor) {
 
-        return JsonUtil.getInstance().fromJson(getFile(context, "mocks/payment_method_on" + flavor + ".json"), PaymentMethod.class);
+        return JsonUtil.getInstance()
+            .fromJson(getFile(context, "mocks/payment_method_on" + flavor + ".json"), PaymentMethod.class);
     }
 
     public static IdentificationType getIdentificationType() {
 
         return new IdentificationType(DUMMI_IDENTIFICATION_TYPE_ID, DUMMI_IDENTIFICATION_TYPE_NAME,
-                DUMMI_IDENTIFICATION_TYPE_TYPE, DUMMI_IDENTIFICATION_TYPE_MIN_LENGTH,
-                DUMMI_IDENTIFICATION_TYPE_MAX_LENGTH);
+            DUMMI_IDENTIFICATION_TYPE_TYPE, DUMMI_IDENTIFICATION_TYPE_MIN_LENGTH,
+            DUMMI_IDENTIFICATION_TYPE_MAX_LENGTH);
     }
 
     public static String getIdentificationTypeList() {
 
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/identification_types.json");
-
         } catch (Exception ex) {
             return null;
         }
-
     }
 
     public static String getIdentificationTypeCPF() {
 
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/identification_type_cpf.json");
-
         } catch (Exception ex) {
             return null;
         }
-
     }
 
     public static String getIdentificationTypeCNPJ() {
 
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/identification_type_cnpj.json");
-
         } catch (Exception ex) {
             return null;
         }
-
     }
 
     public static String getPaymentMethodListMLM() {
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_list_mlm.json");
-
         } catch (Exception ex) {
             return null;
         }
@@ -174,28 +167,32 @@ public class StaticMock {
 
     public static List<PayerCost> getPayerCosts() {
 
-        Installment installment = JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/installment.json"), Installment.class);
+        Installment installment = JsonUtil.getInstance()
+            .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/installment.json"), Installment.class);
         return installment.getPayerCosts();
     }
 
-
     public static PayerCost getPayerCostWithInterests() {
-        return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payerCostWithInterest.json"), PayerCost.class);
+        return JsonUtil.getInstance()
+            .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payerCostWithInterest.json"),
+                PayerCost.class);
     }
 
     public static PayerCost getPayerCostWithoutInterests() {
-        return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payerCostWithoutInterest.json"), PayerCost.class);
+        return JsonUtil.getInstance()
+            .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payerCostWithoutInterest.json"),
+                PayerCost.class);
     }
 
     public static Issuer getIssuer() {
-        return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/issuer.json"), Issuer.class);
+        return JsonUtil.getInstance()
+            .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/issuer.json"), Issuer.class);
     }
 
     public static String getIssuersJson() {
 
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/issuers.json");
-
         } catch (Exception ex) {
             return null;
         }
@@ -222,7 +219,6 @@ public class StaticMock {
 
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/installments.json");
-
         } catch (Exception ex) {
             return null;
         }
@@ -232,7 +228,6 @@ public class StaticMock {
 
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/installments_unique.json");
-
         } catch (Exception ex) {
             return null;
         }
@@ -242,18 +237,15 @@ public class StaticMock {
 
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/installments_multiple.json");
-
         } catch (Exception ex) {
             return null;
         }
     }
 
-
     public static String getPayerCostsJson() {
 
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/payerCosts.json");
-
         } catch (Exception ex) {
             return null;
         }
@@ -262,7 +254,6 @@ public class StaticMock {
     public static String getPaymentMethodList() {
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_list.json");
-
         } catch (Exception ex) {
             return null;
         }
@@ -288,7 +279,6 @@ public class StaticMock {
 
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/payerCostsInvalid.json");
-
         } catch (Exception ex) {
             return null;
         }
@@ -297,7 +287,8 @@ public class StaticMock {
     public static Token getToken() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/token.json"), Token.class);
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/token.json"), Token.class);
         } catch (Exception ex) {
             return null;
         }
@@ -306,7 +297,8 @@ public class StaticMock {
     public static Token getClonedToken() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/cloned_token.json"), Token.class);
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/cloned_token.json"), Token.class);
         } catch (Exception ex) {
             return null;
         }
@@ -315,7 +307,8 @@ public class StaticMock {
     public static Token getTokenAmex() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/token_amex.json"), Token.class);
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/token_amex.json"), Token.class);
         } catch (Exception ex) {
             return null;
         }
@@ -324,7 +317,8 @@ public class StaticMock {
     public static Token getClonedTokenAmex() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/cloned_token_amex.json"), Token.class);
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/cloned_token_amex.json"), Token.class);
         } catch (Exception ex) {
             return null;
         }
@@ -333,7 +327,9 @@ public class StaticMock {
     public static Token getTokenMasterIssuers() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/token_master_issuers.json"), Token.class);
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/token_master_issuers.json"),
+                    Token.class);
         } catch (Exception ex) {
             return null;
         }
@@ -342,11 +338,17 @@ public class StaticMock {
     public static Customer getCustomer(int cardsAmount) {
         try {
             if (cardsAmount == 1) {
-                return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/customer_one_card.json"), Customer.class);
+                return JsonUtil.getInstance()
+                    .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/customer_one_card.json"),
+                        Customer.class);
             } else if (cardsAmount == 2) {
-                return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/customer_two_cards.json"), Customer.class);
+                return JsonUtil.getInstance()
+                    .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/customer_two_cards.json"),
+                        Customer.class);
             } else if (cardsAmount == 3) {
-                return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/customer_three_cards.json"), Customer.class);
+                return JsonUtil.getInstance()
+                    .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/customer_three_cards.json"),
+                        Customer.class);
             }
         } catch (Exception ex) {
             return null;
@@ -357,9 +359,10 @@ public class StaticMock {
     public static List<Card> getCards() {
 
         try {
-            Customer customer = JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/customer_three_cards.json"), Customer.class);
+            Customer customer = JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/customer_three_cards.json"),
+                    Customer.class);
             return customer.getCards();
-
         } catch (Exception ex) {
             return null;
         }
@@ -370,7 +373,6 @@ public class StaticMock {
         try {
             List<Card> cards = getCards();
             return cards.get(0);
-
         } catch (Exception ex) {
             return null;
         }
@@ -380,7 +382,6 @@ public class StaticMock {
 
         try {
             return JsonUtil.getInstance().fromJson(getFile(context, "mocks/payment.json"), Payment.class);
-
         } catch (Exception ex) {
             return null;
         }
@@ -389,8 +390,8 @@ public class StaticMock {
     public static Payment getPayment() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment.json"), Payment.class);
-
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment.json"), Payment.class);
         } catch (Exception ex) {
             return null;
         }
@@ -399,8 +400,9 @@ public class StaticMock {
     public static Payment getPaymentApprovedVisa() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_approved_visa.json"), Payment.class);
-
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_approved_visa.json"),
+                    Payment.class);
         } catch (Exception ex) {
             return null;
         }
@@ -409,8 +411,9 @@ public class StaticMock {
     public static Payment getPaymentRejectedCallForAuthorize() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_rejected_call_for_authorize.json"), Payment.class);
-
+            return JsonUtil.getInstance().fromJson(
+                getFile(InstrumentationRegistry.getContext(), "mocks/payment_rejected_call_for_authorize.json"),
+                Payment.class);
         } catch (Exception ex) {
             return null;
         }
@@ -419,8 +422,9 @@ public class StaticMock {
     public static Payment getPaymentRejectedBadFilledSecurityCode() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_rejected_bad_filled_security_code.json"), Payment.class);
-
+            return JsonUtil.getInstance().fromJson(
+                getFile(InstrumentationRegistry.getContext(), "mocks/payment_rejected_bad_filled_security_code.json"),
+                Payment.class);
         } catch (Exception ex) {
             return null;
         }
@@ -429,8 +433,8 @@ public class StaticMock {
     public static Payment getAmexPaymentRejectedBadFilledSecurityCode() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_rejected_bad_filled_security_code_amex.json"), Payment.class);
-
+            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(),
+                "mocks/payment_rejected_bad_filled_security_code_amex.json"), Payment.class);
         } catch (Exception ex) {
             return null;
         }
@@ -439,7 +443,6 @@ public class StaticMock {
     public static String getPaymentMethodSearchWithoutCustomOptionsAsJson() {
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_search_all.json");
-
         } catch (Exception ex) {
             return null;
         }
@@ -447,8 +450,8 @@ public class StaticMock {
 
     public static String getPaymentMethodSearchWithOnlyAccountMoneyAndNewCard() {
         try {
-            return getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_search_account_money_and_new_card.json");
-
+            return getFile(InstrumentationRegistry.getContext(),
+                "mocks/payment_method_search_account_money_and_new_card.json");
         } catch (Exception ex) {
             return null;
         }
@@ -457,7 +460,6 @@ public class StaticMock {
     public static String getPaymentMethodSearchWithOnlyAccountMoney() {
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_search_only_account_money.json");
-
         } catch (Exception ex) {
             return null;
         }
@@ -466,7 +468,6 @@ public class StaticMock {
     public static String getPaymentMethodSearchWithCardsAsJson() {
         try {
             return getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_search_with_cards");
-
         } catch (Exception ex) {
             return null;
         }
@@ -474,8 +475,9 @@ public class StaticMock {
 
     public static PaymentMethodSearch getPaymentMethodSearchWithUniquePaymentMethodOff() {
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_search_unique_item_off.json"), PaymentMethodSearch.class);
-
+            return JsonUtil.getInstance().fromJson(
+                getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_search_unique_item_off.json"),
+                PaymentMethodSearch.class);
         } catch (Exception ex) {
             return null;
         }
@@ -483,8 +485,8 @@ public class StaticMock {
 
     public static PaymentMethodSearch getPaymentMethodSearchWithUniqueItemCreditCard() {
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_search_unique_item_credit_card.json"), PaymentMethodSearch.class);
-
+            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(),
+                "mocks/payment_method_search_unique_item_credit_card.json"), PaymentMethodSearch.class);
         } catch (Exception ex) {
             return null;
         }
@@ -492,7 +494,8 @@ public class StaticMock {
 
     public static List<PaymentMethod> getPaymentMethods() {
         try {
-            Type listType = new TypeToken<List<PaymentMethod>>(){}.getType();
+            Type listType = new TypeToken<List<PaymentMethod>>() {
+            }.getType();
             String json = getFile(InstrumentationRegistry.getContext(), "mocks/payment_methods.json");
             return JsonUtil.getInstance().getGson().fromJson(json, listType);
         } catch (Exception ex) {
@@ -500,10 +503,11 @@ public class StaticMock {
         }
     }
 
-
     public static PaymentMethod getPaymentMethodOff() {
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_off.json"), PaymentMethod.class);
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_off.json"),
+                    PaymentMethod.class);
         } catch (Exception ex) {
 
             return null;
@@ -512,7 +516,9 @@ public class StaticMock {
 
     public static PaymentMethod getPaymentMethodOn() {
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_on.json"), PaymentMethod.class);
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_on.json"),
+                    PaymentMethod.class);
         } catch (Exception ex) {
 
             return null;
@@ -521,7 +527,9 @@ public class StaticMock {
 
     public static PaymentMethod getAmexPaymentMethodOn() {
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_on_amex.json"), PaymentMethod.class);
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_on_amex.json"),
+                    PaymentMethod.class);
         } catch (Exception ex) {
 
             return null;
@@ -548,7 +556,8 @@ public class StaticMock {
 
     public static CheckoutPreference getPreferenceWithOffUniquePaymentMethod() {
         try {
-            String json = getFile(InstrumentationRegistry.getContext(), "mocks/preference_with_one_off_payment_method.json");
+            String json =
+                getFile(InstrumentationRegistry.getContext(), "mocks/preference_with_one_off_payment_method.json");
             return JsonUtil.getInstance().fromJson(json, CheckoutPreference.class);
         } catch (Exception ex) {
             return null;
@@ -557,7 +566,9 @@ public class StaticMock {
 
     public static PaymentMethod getPaymentMethodWithIdentificationNotRequired() {
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_identification_not_required.json"), PaymentMethod.class);
+            return JsonUtil.getInstance().fromJson(
+                getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_identification_not_required.json"),
+                PaymentMethod.class);
         } catch (Exception ex) {
 
             return null;
@@ -566,7 +577,8 @@ public class StaticMock {
 
     public static PaymentMethod getPaymentMethodWithIdentificationAndCVVNotRequired() {
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/payment_method_id_number_sec_code_not_required.json"), PaymentMethod.class);
+            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(),
+                "mocks/payment_method_id_number_sec_code_not_required.json"), PaymentMethod.class);
         } catch (Exception ex) {
 
             return null;
@@ -629,7 +641,8 @@ public class StaticMock {
 
     public static Instructions getInstructionWithActionButEmptyUrl() {
         try {
-            String json = getFile(InstrumentationRegistry.getContext(), "mocks/instructions_action_with_empty_url.json");
+            String json =
+                getFile(InstrumentationRegistry.getContext(), "mocks/instructions_action_with_empty_url.json");
             return JsonUtil.getInstance().fromJson(json, Instructions.class);
         } catch (Exception ex) {
             return null;
@@ -665,7 +678,8 @@ public class StaticMock {
 
     public static Instructions getInstructionWithoutSecondaryInfo() {
         try {
-            String json = getFile(InstrumentationRegistry.getContext(), "mocks/instructions_cash_no_secondary_info.json");
+            String json =
+                getFile(InstrumentationRegistry.getContext(), "mocks/instructions_cash_no_secondary_info.json");
             return JsonUtil.getInstance().fromJson(json, Instructions.class);
         } catch (Exception ex) {
             return null;
@@ -674,7 +688,8 @@ public class StaticMock {
 
     public static Instructions getInstructionWithoutTertiaryInfo() {
         try {
-            String json = getFile(InstrumentationRegistry.getContext(), "mocks/instructions_cash_no_tertiary_info.json");
+            String json =
+                getFile(InstrumentationRegistry.getContext(), "mocks/instructions_cash_no_tertiary_info.json");
             return JsonUtil.getInstance().fromJson(json, Instructions.class);
         } catch (Exception ex) {
             return null;
@@ -683,7 +698,8 @@ public class StaticMock {
 
     public static Instructions getInstructionWithInvalidReference() {
         try {
-            String json = getFile(InstrumentationRegistry.getContext(), "mocks/instruction_with_invalid_reference.json");
+            String json =
+                getFile(InstrumentationRegistry.getContext(), "mocks/instruction_with_invalid_reference.json");
             return JsonUtil.getInstance().fromJson(json, Instructions.class);
         } catch (Exception ex) {
             return null;
@@ -701,7 +717,8 @@ public class StaticMock {
     public static List<BankDeal> getBankDeals() {
         try {
             String json = getFile(InstrumentationRegistry.getContext(), "mocks/bank_deals.json");
-            Type listType = new TypeToken<List<BankDeal>>(){}.getType();
+            Type listType = new TypeToken<List<BankDeal>>() {
+            }.getType();
             return JsonUtil.getInstance().getGson().fromJson(json, listType);
         } catch (Exception ex) {
             return null;
@@ -728,7 +745,8 @@ public class StaticMock {
 
     public static ApiException getApiExceptionDiscountCodeNotMatch() {
         try {
-            String json = getFile(InstrumentationRegistry.getContext(), "mocks/discount_error_campaign_code_does_not_match.json");
+            String json =
+                getFile(InstrumentationRegistry.getContext(), "mocks/discount_error_campaign_code_does_not_match.json");
             return JsonUtil.getInstance().fromJson(json, ApiException.class);
         } catch (Exception ex) {
             return null;
@@ -738,18 +756,19 @@ public class StaticMock {
     public static ApiException getApiExceptionWithoutStatus() {
 
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/api_exception_without_status.json"), ApiException.class);
-
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/api_exception_without_status.json"),
+                    ApiException.class);
         } catch (Exception ex) {
             return null;
         }
     }
 
-
     public static ApiException getApiExceptionNotFound() {
         try {
-            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/api_exception_not_found.json"), ApiException.class);
-
+            return JsonUtil.getInstance()
+                .fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/api_exception_not_found.json"),
+                    ApiException.class);
         } catch (Exception ex) {
             return null;
         }
@@ -765,7 +784,6 @@ public class StaticMock {
             is.close();
 
             return new String(buffer);
-
         } catch (Exception e) {
 
             return "";

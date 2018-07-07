@@ -19,7 +19,7 @@
         android:paddingRight="@dimen/mpsdk_xl_margin"
         android:paddingStart="@dimen/mpsdk_xl_margin">
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/paymentResultBodyErrorTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,9 +28,9 @@
             android:gravity="center_horizontal"
             android:textColor="@color/ui_meli_black"
             android:textSize="@dimen/mpsdk_l_text"
-            tools:text="Title" />
+            tools:text="Title"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/paymentResultBodyErrorDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,9 +39,9 @@
             android:gravity="center_horizontal"
             android:textColor="@color/ui_meli_dark_grey"
             android:textSize="@dimen/mpsdk_s_text"
-            tools:text="Description" />
+            tools:text="Description"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/paymentResultBodyErrorSecondDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             android:gravity="center_horizontal"
             android:textColor="@color/ui_meli_dark_grey"
             android:textSize="@dimen/mpsdk_s_text"
-            tools:text="Description" />
+            tools:text="Description"/>
 
         <com.mercadolibre.android.ui.widgets.MeliButton
             android:id="@+id/paymentResultBodyErrorAction"
@@ -71,9 +71,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/mpsdk_xxxs_height"
         android:background="@color/mpsdk_med_light_gray"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/bodyErrorSecondaryTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,13 +88,13 @@
         android:textColor="@color/ui_meli_black"
         android:textSize="@dimen/mpsdk_l_text"
         android:visibility="gone"
-        tools:text="¿No pudiste autorizarlo?" />
+        tools:text="¿No pudiste autorizarlo?"/>
 
     <View
         android:id="@+id/bodyErrorBottomDivider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mpsdk_xxxs_height"
         android:background="@color/mpsdk_med_light_gray"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </LinearLayout>

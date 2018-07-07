@@ -10,7 +10,6 @@ public class MerchantPayment {
     private Integer installments;
     private String paymentMethodId;
 
-
     public MerchantPayment(@NonNull PaymentData paymentData) {
         if (paymentData.getPayerCost() != null) {
             installments = paymentData.getPayerCost().getInstallments();

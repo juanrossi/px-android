@@ -2,15 +2,12 @@ package com.mercadopago.android.px.model;
 
 import com.mercadopago.test.StaticMock;
 import com.mercadopago.util.JsonUtil;
-
+import java.util.Arrays;
+import java.util.Collection;
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Created by mreverter on 27/4/16.
@@ -26,15 +23,15 @@ public class PaymentMethodSearchGetPaymentMethodTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {"oxxo", "oxxo", "ticket"},
-                {"bancomer_bank_transfer", "bancomer", "bank_transfer"},
-                {"bancomer.ticket", "bancomer", "ticket"},
-                {"banamex.bank_transfer", "banamex", "bank_transfer"},
-                {"banamex_ticket", "banamex", "ticket"},
-                {"serfin_bank_transfer", "serfin", "bank_transfer"},
-                {"serfin.ticket", "serfin", "ticket"},
-                {"invalid_item", "invalid_item", ""}
+        return Arrays.asList(new Object[][] {
+            { "oxxo", "oxxo", "ticket" },
+            { "bancomer_bank_transfer", "bancomer", "bank_transfer" },
+            { "bancomer.ticket", "bancomer", "ticket" },
+            { "banamex.bank_transfer", "banamex", "bank_transfer" },
+            { "banamex_ticket", "banamex", "ticket" },
+            { "serfin_bank_transfer", "serfin", "bank_transfer" },
+            { "serfin.ticket", "serfin", "ticket" },
+            { "invalid_item", "invalid_item", "" }
         });
     }
 

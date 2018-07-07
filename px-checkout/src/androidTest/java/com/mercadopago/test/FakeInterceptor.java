@@ -2,7 +2,6 @@ package com.mercadopago.test;
 
 import com.mercadopago.services.util.FakeAPI;
 import java.io.IOException;
-
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
@@ -23,9 +22,9 @@ public class FakeInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Response response = null;
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             FakeAPI.QueuedResponse nextResponse = targetAPI.getNextResponse();
-            if(nextResponse.hasDelay()) {
+            if (nextResponse.hasDelay()) {
                 try {
                     Thread.sleep(nextResponse.getDelay());
                 } catch (InterruptedException e) {
@@ -34,15 +33,14 @@ public class FakeInterceptor implements Interceptor {
             }
             String responseString = nextResponse.getBodyAsJson();
             response = new Response.Builder()
-                    .code(nextResponse.getStatusCode())
-                    .message(responseString)
-                    .request(chain.request())
-                    .protocol(Protocol.HTTP_1_0)
-                    .body(ResponseBody.create(MediaType.parse("application/json"), responseString.getBytes()))
-                    .addHeader("content-type", "application/json")
-                    .build();
-        }
-        else {
+                .code(nextResponse.getStatusCode())
+                .message(responseString)
+                .request(chain.request())
+                .protocol(Protocol.HTTP_1_0)
+                .body(ResponseBody.create(MediaType.parse("application/json"), responseString.getBytes()))
+                .addHeader("content-type", "application/json")
+                .build();
+        } else {
             response = chain.proceed(chain.request());
         }
 

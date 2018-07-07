@@ -5,8 +5,8 @@ import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-import com.mercadopago.R;
-import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.util.textformatter.TextFormatter;
 
 public class TotalAmountRenderer extends Renderer<TotalAmount> {

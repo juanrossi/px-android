@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
 
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:background="@color/ui_components_success_color">
+             xmlns:tools="http://schemas.android.com/tools"
+             tools:background="@color/ui_components_success_color">
 
     <ImageView
         android:id="@+id/mpsdkIconProduct"
@@ -20,6 +20,6 @@
         android:layout_height="@dimen/mpsdk_l_alternative_margin"
         android:layout_marginBottom="@dimen/mpsdk_xs_alternative_1_margin"
         android:layout_gravity="bottom|right"
-        tools:src="@drawable/mpsdk_badge_check" />
+        tools:src="@drawable/mpsdk_badge_check"/>
 
 </FrameLayout>

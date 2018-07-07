@@ -1,13 +1,6 @@
 package com.mercadopago.securitycode;
 
-import com.mercadopago.services.exceptions.ApiException;
-import com.mercadopago.services.exceptions.CardTokenException;
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.mocks.Cards;
-import com.mercadopago.mocks.Issuers;
-import com.mercadopago.mocks.PayerCosts;
-import com.mercadopago.mocks.PaymentMethods;
-import com.mercadopago.mocks.Tokens;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.Issuer;
@@ -19,13 +12,19 @@ import com.mercadopago.android.px.model.SavedCardToken;
 import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.SecurityCode;
 import com.mercadopago.android.px.model.Token;
-import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.presenters.SecurityCodePresenter;
-import com.mercadopago.providers.SecurityCodeProvider;
+import com.mercadopago.android.px.mvp.TaggedCallback;
+import com.mercadopago.android.px.presenters.SecurityCodePresenter;
+import com.mercadopago.android.px.providers.SecurityCodeProvider;
+import com.mercadopago.android.px.views.SecurityCodeActivityView;
+import com.mercadopago.mocks.Cards;
+import com.mercadopago.mocks.Issuers;
+import com.mercadopago.mocks.PayerCosts;
+import com.mercadopago.mocks.PaymentMethods;
+import com.mercadopago.mocks.Tokens;
+import com.mercadopago.services.exceptions.ApiException;
+import com.mercadopago.services.exceptions.CardTokenException;
 import com.mercadopago.util.TextUtils;
 import com.mercadopago.utils.MVPStructure;
-import com.mercadopago.views.SecurityCodeActivityView;
-
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -48,7 +47,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void showErrorWhenInvalidParameters() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
         mvp.getPresenter().setCardInfo(new CardInfo(Tokens.getVisaToken()));
 
         mvp.getPresenter().initialize();
@@ -61,7 +61,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void ifPaymentMethodNotSetShowError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         mvp.getPresenter().setCard(Cards.getCard());
 
@@ -75,7 +76,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void ifCardAndTokenNotSetShowError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         mvp.getPresenter().initialize();
 
@@ -87,7 +89,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void ifCardAndTokenWithoutRecoverySetShowError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         mvp.getPresenter().setCard(Cards.getCard());
         mvp.getPresenter().setToken(Tokens.getToken());
@@ -102,7 +105,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void ifCardInfoNotSetThenShowError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         mvp.getPresenter().setCard(Cards.getCard());
         mvp.getPresenter().setPaymentMethod(PaymentMethods.getPaymentMethodOnMaster());
@@ -117,7 +121,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void ifCardAndTokenWithRecoverySetDontShowError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPM = PaymentMethods.getPaymentMethodOnVisa();
 
@@ -136,7 +141,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void whenInitializedThenSetInputMaxLength() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
 
@@ -153,7 +159,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void whenInitializedWithoutSecurityCodeSettingsThenSetDefaultInputMaxLength() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMasterWithoutSecurityCodeSettings();
         Card mockedCard = Cards.getCardWithoutSecurityCodeSettings();
@@ -171,7 +178,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onCallForAuthRecoveryCloneToken() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Token mockedToken = Tokens.getToken();
@@ -194,7 +202,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onCallForAuthRecoveryCloneTokenThenPutSecurityCode() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Token mockedToken = Tokens.getToken();
@@ -219,7 +228,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onCallForAuthRecoveryCloneTokenError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Token mockedToken = Tokens.getToken();
@@ -245,7 +255,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onCallForAuthRecoveryPutSecurityCodeAndGetError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Token mockedToken = Tokens.getToken();
@@ -274,7 +285,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onCloneTokenAndSecurityCodeInputIsNotValidThenShowError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Token mockedToken = Tokens.getToken();
@@ -299,7 +311,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onSaveCardWithESCEnabledThenCreateESCToken() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Card mockedCard = Cards.getCard();
@@ -324,11 +337,12 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onSaveCardWithESCEnabledThenCreateESCTokenHasError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Card mockedCard = Cards.getCard();
-      
+
         mvp.getPresenter().setCard(mockedCard);
         mvp.getPresenter().setPaymentMethod(mockedPaymentMethod);
         mvp.getPresenter().setCardInfo(new CardInfo(mockedCard));
@@ -353,7 +367,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onESCRecoverFromPaymentThenCreateESCToken() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Token mockedToken = Tokens.getTokenWithESC();
@@ -381,7 +396,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onSavedCardWithoutESCEnabledThenCreateToken() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Card mockedCard = Cards.getCard();
@@ -406,7 +422,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onSavedCardWithoutESCEnabledThenCreateTokenHasError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Card mockedCard = Cards.getCard();
@@ -433,7 +450,8 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void onESCRecoverFromPaymentWithPaymentResultIntegrationThenCreateESCToken() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp =
+            getMVPStructure();
 
         PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnMaster();
         Token mockedToken = Tokens.getTokenWithESC();
@@ -467,18 +485,21 @@ public class SecurityCodePresenterTest {
         Token mockedToken = Tokens.getTokenWithESC();
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
         Issuer mockedIssuer = Issuers.getIssuerMLA();
-        return new PaymentRecovery(mockedToken, paymentMethod, mockedPayerCost, mockedIssuer, Payment.StatusCodes.STATUS_REJECTED, Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC);
+        return new PaymentRecovery(mockedToken, paymentMethod, mockedPayerCost, mockedIssuer,
+            Payment.StatusCodes.STATUS_REJECTED, Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC);
     }
 
     private PaymentRecovery getPaymentRecoveryForCallForAuth(PaymentMethod paymentMethod) {
         Token mockedToken = Tokens.getToken();
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
         Issuer mockedIssuer = Issuers.getIssuerMLA();
-        return new PaymentRecovery(mockedToken, paymentMethod, mockedPayerCost, mockedIssuer, Payment.StatusCodes.STATUS_REJECTED, Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE);
+        return new PaymentRecovery(mockedToken, paymentMethod, mockedPayerCost, mockedIssuer,
+            Payment.StatusCodes.STATUS_REJECTED, Payment.StatusDetail.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE);
     }
 
     private MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> getMVPStructure() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvpStructure = new MVPStructure<>();
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode>
+            mvpStructure = new MVPStructure<>();
 
         SecurityCodeMockedView view = new SecurityCodeMockedView();
 
@@ -624,9 +645,9 @@ public class SecurityCodePresenterTest {
             return isEscEnabled;
         }
 
-
         @Override
-        public void validateSecurityCodeFromToken(String mSecurityCode, PaymentMethod mPaymentMethod, String firstSixDigits) throws CardTokenException {
+        public void validateSecurityCodeFromToken(String mSecurityCode, PaymentMethod mPaymentMethod,
+            String firstSixDigits) throws CardTokenException {
             if (shouldFailSecurityCodeValidation) {
                 throw new CardTokenException(CARD_TOKEN_INVALID_SECURITY_CODE);
             }
@@ -643,9 +664,7 @@ public class SecurityCodePresenterTest {
                 throw new CardTokenException(CARD_TOKEN_INVALID_SECURITY_CODE);
             }
         }
-
     }
-
 
     private class SecurityCodeMockedView implements SecurityCodeActivityView {
         private boolean screenTracked = false;
@@ -665,7 +684,6 @@ public class SecurityCodePresenterTest {
         public void initialize() {
             initializeDone = true;
         }
-
 
         @Override
         public void setSecurityCodeInputMaxLength(int length) {
@@ -725,6 +743,5 @@ public class SecurityCodePresenterTest {
         @Override
         public void showFrontSecurityCodeCardView() {
         }
-
     }
 }

@@ -6,9 +6,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
-import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.PaymentType;
 import com.mercadopago.android.px.model.PaymentTypes;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class PaymentTypesAdapter extends RecyclerView.Adapter<PaymentTypesAdapte
     }
 
     public String paymentTypeName(final PaymentType paymentType,
-                                  final Context context) {
+        final Context context) {
         String ans = "";
         if (paymentType.getId().equals(PaymentTypes.CREDIT_CARD)) {
             ans = context.getString(R.string.mpsdk_credit_payment_type);
@@ -79,7 +79,7 @@ public class PaymentTypesAdapter extends RecyclerView.Adapter<PaymentTypesAdapte
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (event != null && event.getAction() == KeyEvent.ACTION_DOWN
-                            && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                        && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
                         mCallback.onSelected(getLayoutPosition());
                         return true;
                     }
@@ -88,5 +88,4 @@ public class PaymentTypesAdapter extends RecyclerView.Adapter<PaymentTypesAdapte
             });
         }
     }
-
 }

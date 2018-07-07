@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import com.mercadopago.android.px.core.CheckoutLazyBuilder;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
-import com.mercadopago.customviews.MPButton;
+import com.mercadopago.android.px.customviews.MPButton;
 import com.mercadopago.example.R;
 import com.mercadopago.android.px.services.core.Settings;
 import com.mercadopago.android.px.tracking.constants.TrackingEnvironments;

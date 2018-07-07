@@ -6,11 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.Site;
-import com.mercadopago.uicontrollers.payercosts.PayerCostRow;
+import com.mercadopago.android.px.uicontrollers.payercosts.PayerCostRow;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +48,9 @@ public class PayerCostsAdapter extends RecyclerView.Adapter<PayerCostsAdapter.Vi
         PayerCost payerCost = mInstallmentsList.get(position);
         holder.mPayerCostRow.setSmallTextSize();
         holder.mPayerCostRow.drawPayerCost(payerCost.getInstallmentRate(),
-                payerCost.getInstallments(),
-                payerCost.getTotalAmount(),
-                payerCost.getInstallmentAmount());
+            payerCost.getInstallments(),
+            payerCost.getTotalAmount(),
+            payerCost.getInstallmentAmount());
     }
 
     @Override
@@ -74,7 +74,7 @@ public class PayerCostsAdapter extends RecyclerView.Adapter<PayerCostsAdapter.Vi
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (event != null && event.getAction() == KeyEvent.ACTION_DOWN
-                            && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                        && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
                         mCallback.onSelected(getLayoutPosition());
                         return true;
                     }
@@ -83,6 +83,4 @@ public class PayerCostsAdapter extends RecyclerView.Adapter<PayerCostsAdapter.Vi
             });
         }
     }
-
-
 }

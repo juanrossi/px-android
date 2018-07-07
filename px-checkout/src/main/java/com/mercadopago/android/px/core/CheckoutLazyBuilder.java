@@ -2,7 +2,7 @@ package com.mercadopago.android.px.core;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.mercadopago.internal.di.Session;
+import com.mercadopago.android.px.internal.di.Session;
 
 public abstract class CheckoutLazyBuilder {
 

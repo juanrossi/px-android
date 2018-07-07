@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.utils.ResourcesUtil;
-
 import java.lang.reflect.Type;
 import java.util.List;
 

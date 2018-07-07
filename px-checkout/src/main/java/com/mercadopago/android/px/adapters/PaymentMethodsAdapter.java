@@ -7,11 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.util.MercadoPagoUtil;
-
 import java.util.List;
 
 public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAdapter.ViewHolder> {
@@ -45,10 +43,10 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
 
     @Override
     public PaymentMethodsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                               int viewType) {
+        int viewType) {
 
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.mpsdk_row_simple_list, parent, false);
+            .inflate(R.layout.mpsdk_row_simple_list, parent, false);
 
         return new ViewHolder(v, mListener);
     }
@@ -58,7 +56,8 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
 
         PaymentMethod paymentMethod = mData.get(position);
 
-        holder.mPaymentMethodImage.setImageResource(MercadoPagoUtil.getPaymentMethodIcon(mActivity, paymentMethod.getId()));
+        holder.mPaymentMethodImage
+            .setImageResource(MercadoPagoUtil.getPaymentMethodIcon(mActivity, paymentMethod.getId()));
         holder.mPaymentMethodName.setText(paymentMethod.getName());
         // Set view tag item
         holder.itemView.setTag(paymentMethod);

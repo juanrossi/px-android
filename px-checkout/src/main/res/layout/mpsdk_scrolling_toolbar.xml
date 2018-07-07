@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CollapsingToolbarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mpsdkCollapsingToolbar"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    app:contentScrim="@color/mpsdk_background"
-    android:minHeight="@dimen/mpsdk_toolbar_height"
-    app:expandedTitleTextAppearance="@style/mpsdk_collapsing_toolbar_text_medium"
-    app:collapsedTitleTextAppearance="@style/mpsdk_collapsing_toolbar_text_medium"
-    app:expandedTitleMarginTop="45dp"
-    app:expandedTitleMarginBottom="25dp"
-    app:expandedTitleGravity="top|center_horizontal"
-    app:layout_scrollFlags="scroll|exitUntilCollapsed"
-    android:background="@color/mpsdk_transparent">
+                                                       xmlns:android="http://schemas.android.com/apk/res/android"
+                                                       android:id="@+id/mpsdkCollapsingToolbar"
+                                                       android:layout_width="match_parent"
+                                                       android:layout_height="match_parent"
+                                                       android:fitsSystemWindows="true"
+                                                       app:contentScrim="@color/mpsdk_background"
+                                                       android:minHeight="@dimen/mpsdk_toolbar_height"
+                                                       app:expandedTitleTextAppearance="@style/mpsdk_collapsing_toolbar_text_medium"
+                                                       app:collapsedTitleTextAppearance="@style/mpsdk_collapsing_toolbar_text_medium"
+                                                       app:expandedTitleMarginTop="45dp"
+                                                       app:expandedTitleMarginBottom="25dp"
+                                                       app:expandedTitleGravity="top|center_horizontal"
+                                                       app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                                                       android:background="@color/mpsdk_transparent">
 
     <FrameLayout
         android:id="@+id/mpsdkActivityCardContainer"
@@ -38,13 +38,13 @@
         app:layout_collapseMode="pin">
 
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/mpsdk_title_text"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkTimerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

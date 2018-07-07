@@ -7,5 +7,5 @@
         <item name="android:statusBarColor">@color/mpsdk_status_bar</item>
         <item name="android:colorPrimary">@color/mpsdk_colorPrimary</item>
     </style>
-    
+
 </resources>

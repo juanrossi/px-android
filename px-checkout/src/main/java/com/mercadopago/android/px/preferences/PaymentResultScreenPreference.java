@@ -3,13 +3,11 @@ package com.mercadopago.android.px.preferences;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.callbacks.CallbackHolder;
 import com.mercadopago.android.px.callbacks.PaymentResultCallback;
 import com.mercadopago.android.px.core.CheckoutStore;
 import com.mercadopago.android.px.model.Payment;
-import com.mercadopago.paymentresult.model.Badge;
-
+import com.mercadopago.android.px.paymentresult.model.Badge;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -181,8 +179,7 @@ public class PaymentResultScreenPreference implements Serializable {
     }
 
     @Badge.ApprovedBadges
-    public
-    String getApprovedBadge() {
+    public String getApprovedBadge() {
         return approvedBadge;
     }
 
@@ -482,7 +479,7 @@ public class PaymentResultScreenPreference implements Serializable {
 
         //body
         public Builder setApprovedCustomComponentFactory(@NonNull final CustomComponentFactory factory,
-                                                         @NonNull final String position) {
+            @NonNull final String position) {
             approvedCustomComponents.put(position, factory);
             return this;
         }
@@ -587,7 +584,8 @@ public class PaymentResultScreenPreference implements Serializable {
         @Deprecated
         public Builder setPendingSecondaryExitButton(String title, PaymentResultCallback paymentResultCallback) {
             secondaryPendingExitButtonTitle = title;
-            CallbackHolder.getInstance().addPaymentResultCallback(CallbackHolder.PENDING_PAYMENT_RESULT_CALLBACK, paymentResultCallback);
+            CallbackHolder.getInstance()
+                .addPaymentResultCallback(CallbackHolder.PENDING_PAYMENT_RESULT_CALLBACK, paymentResultCallback);
             return this;
         }
 
@@ -601,7 +599,8 @@ public class PaymentResultScreenPreference implements Serializable {
         @Deprecated
         public Builder setApprovedSecondaryExitButton(String title, PaymentResultCallback paymentResultCallback) {
             secondaryCongratsExitButtonTitle = title;
-            CallbackHolder.getInstance().addPaymentResultCallback(CallbackHolder.CONGRATS_PAYMENT_RESULT_CALLBACK, paymentResultCallback);
+            CallbackHolder.getInstance()
+                .addPaymentResultCallback(CallbackHolder.CONGRATS_PAYMENT_RESULT_CALLBACK, paymentResultCallback);
             return this;
         }
 
@@ -622,7 +621,8 @@ public class PaymentResultScreenPreference implements Serializable {
         @Deprecated
         public Builder setRejectedSecondaryExitButton(String title, PaymentResultCallback paymentResultCallback) {
             secondaryRejectedExitButtonTitle = title;
-            CallbackHolder.getInstance().addPaymentResultCallback(CallbackHolder.REJECTED_PAYMENT_RESULT_CALLBACK, paymentResultCallback);
+            CallbackHolder.getInstance()
+                .addPaymentResultCallback(CallbackHolder.REJECTED_PAYMENT_RESULT_CALLBACK, paymentResultCallback);
             return this;
         }
 

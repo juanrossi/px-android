@@ -2,11 +2,9 @@ package com.mercadopago.android.px.preferences;
 
 import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.PaymentMethod;
-
-import junit.framework.Assert;
-
 import java.util.ArrayList;
 import java.util.List;
+import junit.framework.Assert;
 
 /**
  * Created by mreverter on 29/12/15.
@@ -29,7 +27,6 @@ public class PaymentPreferenceTest {
         PaymentPreference paymentPreference = new PaymentPreference();
 
         Assert.assertTrue(paymentPreference.getDefaultInstallments(payerCosts) == null);
-
     }
 
     public void testIfDefaultInstallmentSetButDoesNotExistReturnNull() {
@@ -64,7 +61,6 @@ public class PaymentPreferenceTest {
 
         Assert.assertTrue(filteredPayerCosts.equals(originalPayerCosts));
     }
-
 
     public void testWhenPaymentMethodTypeIsExcludedReturnNotSupported() {
 
@@ -165,11 +161,13 @@ public class PaymentPreferenceTest {
 
         paymentPreference.setExcludedPaymentTypeIds(excludedPaymentMethodTypes);
 
-        List<PaymentMethod> filteredPaymentMethods = paymentPreference.getSupportedPaymentMethods(originalPaymentMethods);
+        List<PaymentMethod> filteredPaymentMethods =
+            paymentPreference.getSupportedPaymentMethods(originalPaymentMethods);
 
         Assert.assertTrue(filteredPaymentMethods.size() != 0);
         for (PaymentMethod pm : filteredPaymentMethods) {
-            Assert.assertTrue(!(pm.getPaymentTypeId().equals("prepaid_card") || pm.getPaymentTypeId().equals("credit_card")));
+            Assert.assertTrue(
+                !(pm.getPaymentTypeId().equals("prepaid_card") || pm.getPaymentTypeId().equals("credit_card")));
         }
     }
 
@@ -185,7 +183,8 @@ public class PaymentPreferenceTest {
 
         paymentPreference.setExcludedPaymentMethodIds(excludedPaymentMethodIds);
 
-        List<PaymentMethod> filteredPaymentMethods = paymentPreference.getSupportedPaymentMethods(originalPaymentMethods);
+        List<PaymentMethod> filteredPaymentMethods =
+            paymentPreference.getSupportedPaymentMethods(originalPaymentMethods);
 
         Assert.assertTrue(filteredPaymentMethods.size() != 0);
         for (PaymentMethod pm : filteredPaymentMethods) {
@@ -228,8 +227,9 @@ public class PaymentPreferenceTest {
     private int getMaxPayerCost(List<PayerCost> payerCosts) {
         int max = 0;
         for (PayerCost pc : payerCosts) {
-            if (pc.getInstallments() > max)
+            if (pc.getInstallments() > max) {
                 max = pc.getInstallments();
+            }
         }
         return max;
     }

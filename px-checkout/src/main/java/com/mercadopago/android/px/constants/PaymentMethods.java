@@ -97,5 +97,6 @@ public class PaymentMethods {
         public static final String KHIPU = "khipu";
     }
 
-    private PaymentMethods(){}
+    private PaymentMethods() {
+    }
 }

@@ -17,7 +17,7 @@ public class PaymentMethodGuessingController {
     private final String mPaymentTypeId;
 
     public PaymentMethodGuessingController(List<PaymentMethod> paymentMethods,
-                                           String paymentTypeId, List<String> excludedPaymentTypes) {
+        String paymentTypeId, List<String> excludedPaymentTypes) {
         mAllPaymentMethods = paymentMethods;
         mExcludedPaymentTypes = excludedPaymentTypes;
         mPaymentTypeId = paymentTypeId;
@@ -36,7 +36,7 @@ public class PaymentMethodGuessingController {
         List<PaymentMethod> supportedPaymentMethods = new ArrayList<>();
         for (PaymentMethod paymentMethod : mAllPaymentMethods) {
             if (isCardPaymentType(paymentMethod) &&
-                    ((mPaymentTypeId == null) || (mPaymentTypeId.equals(paymentMethod.getPaymentTypeId())))) {
+                ((mPaymentTypeId == null) || (mPaymentTypeId.equals(paymentMethod.getPaymentTypeId())))) {
                 supportedPaymentMethods.add(paymentMethod);
             }
         }
@@ -46,8 +46,8 @@ public class PaymentMethodGuessingController {
     private boolean isCardPaymentType(PaymentMethod paymentMethod) {
         String paymentTypeId = paymentMethod.getPaymentTypeId();
         return paymentTypeId.equals(PaymentTypes.CREDIT_CARD) ||
-                paymentTypeId.equals(PaymentTypes.DEBIT_CARD) ||
-                paymentTypeId.equals(PaymentTypes.PREPAID_CARD);
+            paymentTypeId.equals(PaymentTypes.DEBIT_CARD) ||
+            paymentTypeId.equals(PaymentTypes.PREPAID_CARD);
     }
 
     public List<PaymentMethod> guessPaymentMethodsByBin(String bin) {
@@ -56,7 +56,7 @@ public class PaymentMethodGuessingController {
         }
         saveBin(bin);
         mGuessedPaymentMethods = MercadoPagoUtil
-                .getValidPaymentMethodsForBin(mSavedBin, mAllPaymentMethods);
+            .getValidPaymentMethodsForBin(mSavedBin, mAllPaymentMethods);
         mGuessedPaymentMethods = getValidPaymentMethodForType(mPaymentTypeId, mGuessedPaymentMethods);
         if (mGuessedPaymentMethods.size() > 1) {
             mGuessedPaymentMethods = filterByPaymentType(mExcludedPaymentTypes, mGuessedPaymentMethods);
@@ -73,21 +73,22 @@ public class PaymentMethodGuessingController {
     }
 
     private List<PaymentMethod> getValidPaymentMethodForType(String paymentTypeId,
-                                                             List<PaymentMethod> paymentMethods) {
+        List<PaymentMethod> paymentMethods) {
         if (paymentTypeId == null) {
             return paymentMethods;
         } else {
             List<PaymentMethod> validPaymentMethodsForType = new ArrayList<>();
             for (PaymentMethod pm : paymentMethods) {
-                if (pm.getPaymentTypeId().equals(paymentTypeId))
+                if (pm.getPaymentTypeId().equals(paymentTypeId)) {
                     validPaymentMethodsForType.add(pm);
+                }
             }
             return validPaymentMethodsForType;
         }
     }
 
     public List<PaymentMethod> filterByPaymentType(List<String> excludedPaymentTypes,
-                                                   List<PaymentMethod> guessingPaymentMethods) {
+        List<PaymentMethod> guessingPaymentMethods) {
         if (excludedPaymentTypes == null) {
             return guessingPaymentMethods;
         }

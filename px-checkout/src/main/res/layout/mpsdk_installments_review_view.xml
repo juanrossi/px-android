@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkInstallmentsAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,9 +21,9 @@
             android:textColor="@color/mpsdk_base_text"
             android:textSize="24dp"
             app:font_style="regular"
-            tools:text="9 x $ 911" />
+            tools:text="9 x $ 911"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkReviewTotalAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,9 +32,9 @@
             android:textColor="@color/mpsdk_base_text"
             android:textSize="17dp"
             app:font_style="regular"
-            tools:text="($ 9567)" />
+            tools:text="($ 9567)"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkCftpercent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:gravity="center"
             android:textSize="24dp"
             app:font_style="default_light"
-            tools:text="CFT 109,00%" />
+            tools:text="CFT 109,00%"/>
     </LinearLayout>
 
     <com.mercadolibre.android.ui.widgets.MeliButton

@@ -2,15 +2,11 @@ package com.mercadopago.installments;
 
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.internal.repository.AmountRepository;
-import com.mercadopago.internal.repository.DiscountRepository;
-import com.mercadopago.internal.repository.PaymentSettingRepository;
-import com.mercadopago.internal.repository.UserSelectionRepository;
-import com.mercadopago.mocks.Installments;
-import com.mercadopago.mocks.Issuers;
-import com.mercadopago.mocks.PayerCosts;
-import com.mercadopago.mocks.PaymentMethods;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.internal.repository.AmountRepository;
+import com.mercadopago.android.px.internal.repository.DiscountRepository;
+import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
+import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardInfo;
@@ -21,12 +17,16 @@ import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.Site;
 import com.mercadopago.android.px.model.Sites;
-import com.mercadopago.mvp.TaggedCallback;
+import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.PaymentPreference;
-import com.mercadopago.presenters.InstallmentsPresenter;
-import com.mercadopago.providers.InstallmentsProvider;
-import com.mercadopago.views.InstallmentsActivityView;
+import com.mercadopago.android.px.presenters.InstallmentsPresenter;
+import com.mercadopago.android.px.providers.InstallmentsProvider;
+import com.mercadopago.android.px.views.InstallmentsActivityView;
+import com.mercadopago.mocks.Installments;
+import com.mercadopago.mocks.Issuers;
+import com.mercadopago.mocks.PayerCosts;
+import com.mercadopago.mocks.PaymentMethods;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -529,7 +529,6 @@ public class InstallmentsPresenterTest {
             this.installmentSelectionCallback = onSelectedCallback;
             this.installmentsShown = true;
         }
-
 
         @Override
         public void finishWithResult(PayerCost payerCost) {

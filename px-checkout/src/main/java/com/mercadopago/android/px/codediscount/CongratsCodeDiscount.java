@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mercadolibre.android.ui.widgets.MeliButton;
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.util.textformatter.TextFormatter;
@@ -44,14 +44,15 @@ class CongratsCodeDiscount extends CompactComponent<CongratsCodeDiscount.Props, 
     private void configureSubtitle(final View mainContainer) {
         final TextView subtitle = mainContainer.findViewById(R.id.subtitle);
         if (props.discount.hasPercentOff()) {
-            subtitle.setText(subtitle.getContext().getString(R.string.mpsdk_get_your_discount_percent, props.discount.getPercentOff()));
+            subtitle.setText(subtitle.getContext()
+                .getString(R.string.mpsdk_get_your_discount_percent, props.discount.getPercentOff()));
         } else {
             TextFormatter.withCurrencyId(props.discount.getCurrencyId())
-                    .withSpace()
-                    .amount(props.discount.getAmountOff())
-                    .normalDecimals()
-                    .into(subtitle)
-                    .holder(R.string.mpsdk_get_your_discount_amount);
+                .withSpace()
+                .amount(props.discount.getAmountOff())
+                .normalDecimals()
+                .into(subtitle)
+                .holder(R.string.mpsdk_get_your_discount_amount);
         }
     }
 

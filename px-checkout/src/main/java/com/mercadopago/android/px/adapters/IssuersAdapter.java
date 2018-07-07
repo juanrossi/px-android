@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.model.Issuer;
-import com.mercadopago.uicontrollers.issuers.IssuersView;
-
+import com.mercadopago.android.px.uicontrollers.issuers.IssuersView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +67,7 @@ public class IssuersAdapter extends RecyclerView.Adapter<IssuersAdapter.ViewHold
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (event != null && event.getAction() == KeyEvent.ACTION_DOWN
-                            && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                        && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
                         mCallback.onSelected(getLayoutPosition());
                         return true;
                     }
@@ -78,5 +76,4 @@ public class IssuersAdapter extends RecyclerView.Adapter<IssuersAdapter.ViewHold
             });
         }
     }
-
 }

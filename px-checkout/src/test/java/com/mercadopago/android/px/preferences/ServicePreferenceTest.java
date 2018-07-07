@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.preferences;
 
 import com.mercadopago.services.constants.ProcessingModes;
-
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
@@ -16,8 +15,8 @@ public class ServicePreferenceTest {
     @Test
     public void testSetAggregatorAsProcessingModeAndEnableBankDealsAndEnableEmailConfirmationCell() {
         ServicePreference servicePreference = new ServicePreference.Builder()
-                .setAggregatorAsProcessingMode()
-                .build();
+            .setAggregatorAsProcessingMode()
+            .build();
         assertTrue(servicePreference.getProcessingModeString().equals(ProcessingModes.AGGREGATOR));
         assertTrue(servicePreference.shouldShowBankDeals());
         assertTrue(servicePreference.shouldShowEmailConfirmationCell());
@@ -26,8 +25,8 @@ public class ServicePreferenceTest {
     @Test
     public void testSetGatewayAsProcessingModeAndDisableBankDealsAndDisableEmailConfirmationCell() {
         ServicePreference servicePreference = new ServicePreference.Builder()
-                .setGatewayAsProcessingMode()
-                .build();
+            .setGatewayAsProcessingMode()
+            .build();
         assertTrue(servicePreference.getProcessingModeString().equals(ProcessingModes.GATEWAY));
         assertFalse(servicePreference.shouldShowBankDeals());
         assertFalse(servicePreference.shouldShowEmailConfirmationCell());
@@ -36,8 +35,8 @@ public class ServicePreferenceTest {
     @Test
     public void testSetHybridAsProcessingModeAndDisableBankDealsAndDisableEmailConfirmationCell() {
         ServicePreference servicePreference = new ServicePreference.Builder()
-                .setHybridAsProcessingMode()
-                .build();
+            .setHybridAsProcessingMode()
+            .build();
         assertTrue(servicePreference.getProcessingModeString().equals(ProcessingModes.HYBRID));
         assertFalse(servicePreference.shouldShowBankDeals());
         assertFalse(servicePreference.shouldShowEmailConfirmationCell());

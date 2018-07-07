@@ -33,7 +33,7 @@ public class CardInfo {
 
     public static boolean canCreateCardInfo(Token token) {
         return token.getCardNumberLength() != null && token.getLastFourDigits() != null
-                && token.getFirstSixDigits() != null;
+            && token.getFirstSixDigits() != null;
     }
 
     public Integer getCardNumberLength() {

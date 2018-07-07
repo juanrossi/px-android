@@ -6,7 +6,7 @@ import java.util.List;
  * Created by marlanti on 7/6/17.
  */
 
-public class MVPStructure <P,R,V,T>{
+public class MVPStructure<P, R, V, T> {
 
     private P presenter;
     private V view;

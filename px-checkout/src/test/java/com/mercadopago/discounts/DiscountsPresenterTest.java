@@ -1,18 +1,15 @@
 package com.mercadopago.discounts;
 
 import com.mercadopago.android.px.model.Discount;
-import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.presenters.DiscountsPresenter;
-import com.mercadopago.providers.DiscountsProvider;
-import com.mercadopago.views.DiscountsActivityView;
-
-import org.junit.Test;
-
+import com.mercadopago.android.px.mvp.TaggedCallback;
+import com.mercadopago.android.px.presenters.DiscountsPresenter;
+import com.mercadopago.android.px.providers.DiscountsProvider;
+import com.mercadopago.android.px.views.DiscountsActivityView;
 import java.math.BigDecimal;
+import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
 
 /**
  * Created by mromar on 1/24/17.
@@ -132,12 +129,14 @@ public class DiscountsPresenterTest {
     private class DiscountMockedResourcesProvider implements DiscountsProvider {
 
         @Override
-        public void getDirectDiscount(String transactionAmount, String payerEmail, TaggedCallback<Discount> taggedCallback) {
+        public void getDirectDiscount(String transactionAmount, String payerEmail,
+            TaggedCallback<Discount> taggedCallback) {
             taggedCallback.onSuccess(mock(Discount.class));
         }
 
         @Override
-        public void getCodeDiscount(String transactionAmount, String payerEmail, String discountCode, TaggedCallback<Discount> taggedCallback) {
+        public void getCodeDiscount(String transactionAmount, String payerEmail, String discountCode,
+            TaggedCallback<Discount> taggedCallback) {
             taggedCallback.onSuccess(mock(Discount.class));
         }
 

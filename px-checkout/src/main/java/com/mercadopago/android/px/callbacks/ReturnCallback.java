@@ -1,6 +1,6 @@
 package com.mercadopago.android.px.callbacks;
 
-import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
 
 /**
  * Created by vaserber on 1/20/17.
@@ -8,5 +8,6 @@ import com.mercadopago.exceptions.MercadoPagoError;
 
 public interface ReturnCallback {
     void onCancel();
+
     void onFailure(MercadoPagoError error);
 }

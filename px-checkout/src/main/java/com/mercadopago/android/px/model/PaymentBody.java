@@ -1,6 +1,5 @@
 package com.mercadopago.android.px.model;
 
-
 import com.google.gson.annotations.SerializedName;
 
 public class PaymentBody {

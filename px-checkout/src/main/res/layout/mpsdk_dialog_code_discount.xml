@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:padding="@dimen/mpsdk_m_margin">
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/mpsdk_xl_margin"

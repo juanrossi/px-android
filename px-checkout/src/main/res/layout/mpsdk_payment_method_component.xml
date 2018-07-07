@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mpsdkPaymentMethodContainer"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/mpsdk_white"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/mpsdk_l_alternative_margin">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/mpsdkPaymentMethodContainer"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/mpsdk_white"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/mpsdk_l_alternative_margin">
 
     <FrameLayout
         android:layout_width="@dimen/mpsdk_m_height"
@@ -22,16 +22,16 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:padding="@dimen/mpsdk_xxs_margin"
-            tools:src="@drawable/mpsdk_amex" />
+            tools:src="@drawable/mpsdk_amex"/>
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/mpsdkTotalAmountContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/mpsdk_s_alternative_1_margin" />
+        android:layout_marginTop="@dimen/mpsdk_s_alternative_1_margin"/>
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/mpsdkPaymentMethodDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,9 +41,9 @@
         android:paddingRight="@dimen/mpsdk_m_margin"
         android:textColor="@color/ui_meli_dark_grey"
         android:textSize="@dimen/mpsdk_s_text"
-        tools:text="Master terminada en 1234" />
+        tools:text="Master terminada en 1234"/>
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/mpsdkStatementDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,5 +51,5 @@
         android:gravity="center"
         android:textColor="@color/ui_meli_dark_grey"
         android:textSize="@dimen/mpsdk_xxs_text"
-        tools:text="En tu estado de cuenta verás el cargo como\n MERCADOPAGO" />
+        tools:text="En tu estado de cuenta verás el cargo como\n MERCADOPAGO"/>
 </LinearLayout>

@@ -11,7 +11,6 @@ public class StubSuccessMpCall<T> implements MPCall<T> {
         this.value = value;
     }
 
-
     @Override
     public void enqueue(final Callback<T> callback) {
         callback.success(value);

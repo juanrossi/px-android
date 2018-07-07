@@ -1,17 +1,14 @@
 package com.mercadopago.android.px.components;
 
 import android.content.Context;
-
 import com.mercadopago.R;
 import com.mercadopago.android.px.model.PaymentTypes;
-
+import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -32,7 +29,8 @@ public class PaymentMethodRendererTest {
     @Before
     public void setUp() throws Exception {
         renderer = new PaymentMethodRenderer();
-        when(context.getString(R.string.mpsdk_text_state_account_activity_congrats)).thenReturn(STUB_R_STRING_TEXT_STATE);
+        when(context.getString(R.string.mpsdk_text_state_account_activity_congrats))
+            .thenReturn(STUB_R_STRING_TEXT_STATE);
         when(context.getString(R.string.mpsdk_ending_in)).thenReturn(STUB_R_STRING_ENDING);
     }
 
@@ -72,7 +70,8 @@ public class PaymentMethodRendererTest {
         String stubName = "stubName";
         String stub4Digits = "1234";
         String description = renderer.getDescription(stubName, PaymentTypes.CREDIT_CARD, stub4Digits, context);
-        assertEquals(String.format(Locale.getDefault(), "%s %s %s", stubName, STUB_R_STRING_ENDING, stub4Digits), description);
+        assertEquals(String.format(Locale.getDefault(), "%s %s %s", stubName, STUB_R_STRING_ENDING, stub4Digits),
+            description);
     }
 
     @Test
@@ -81,6 +80,4 @@ public class PaymentMethodRendererTest {
         String description = renderer.getDescription(stubName, PaymentTypes.PLUGIN, null, context);
         assertEquals(stubName, description);
     }
-
-
 }

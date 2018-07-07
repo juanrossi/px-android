@@ -32,7 +32,7 @@
             android:maxLines="400"
             android:textColor="@color/black" />
 
-        <com.mercadopago.customviews.MPButton
+        <com.mercadopago.android.px.customviews.MPButton
             android:id="@+id/checkoutStartButton"
             style="@style/mpsdk_button_normal"
             android:layout_width="match_parent"

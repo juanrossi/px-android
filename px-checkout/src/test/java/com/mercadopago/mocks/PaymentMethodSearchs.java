@@ -10,7 +10,8 @@ import com.mercadopago.utils.ResourcesUtil;
 
 public class PaymentMethodSearchs {
 
-    private PaymentMethodSearchs() {}
+    private PaymentMethodSearchs() {
+    }
 
     public static PaymentMethodSearch getCompletePaymentMethodSearchMLA() {
         String json = ResourcesUtil.getStringResource("complete_payment_method_search_MLA.json");

@@ -1,18 +1,16 @@
 package com.mercadopago.customerCards;
 
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.mocks.Cards;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Customer;
-import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.presenters.CustomerCardsPresenter;
-import com.mercadopago.providers.CustomerCardsProvider;
-import com.mercadopago.views.CustomerCardsView;
-
-import org.junit.Test;
-
+import com.mercadopago.android.px.mvp.TaggedCallback;
+import com.mercadopago.android.px.presenters.CustomerCardsPresenter;
+import com.mercadopago.android.px.providers.CustomerCardsProvider;
+import com.mercadopago.android.px.views.CustomerCardsView;
+import com.mercadopago.mocks.Cards;
 import java.util.List;
+import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -138,7 +136,6 @@ public class CustomerCardsPresenterTest {
 
         assertTrue(mockedView.finishWithOkResult);
     }
-
 
     private class MockedProvider implements CustomerCardsProvider {
 

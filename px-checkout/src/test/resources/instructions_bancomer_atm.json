@@ -1,4 +1,5 @@
-{ "accreditation_message": "It will be accredited in 1 hour",
+{
+  "accreditation_message": "It will be accredited in 1 hour",
   "actions": [
   ],
   "geolocation": {

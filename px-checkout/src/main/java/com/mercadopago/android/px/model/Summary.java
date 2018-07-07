@@ -143,7 +143,7 @@ public class Summary {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Summary){
+        if (obj instanceof Summary) {
             Summary other = (Summary) obj;
             return disclaimer.equals(other.disclaimer);
         }

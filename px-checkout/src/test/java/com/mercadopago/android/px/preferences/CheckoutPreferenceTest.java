@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.preferences;
 
 import com.mercadopago.services.exceptions.CheckoutPreferenceException;
-
 import org.junit.Test;
 
 import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubActivePreferenceAndPayer;
@@ -38,13 +37,15 @@ public class CheckoutPreferenceTest {
     ///////////////////INSTALLMENTS tests///////////////////
     @Test
     public void testWhenValidatePreferenceWithPositiveDefaultInstallmentsNumberAndNegativeMaxInstallmentsNumberReturnFalse() {
-        CheckoutPreference preference = stubPreferenceWithPositiveDefaultInstallmentsNumberAndNegativeMaxInstallmentsNumber();
+        CheckoutPreference preference =
+            stubPreferenceWithPositiveDefaultInstallmentsNumberAndNegativeMaxInstallmentsNumber();
         assertFalse(preference.validInstallmentsPreference());
     }
 
     @Test
     public void testWhenValidatePreferenceWithPositiveMaxInstallmentsNumberAndNegativeDefaultInstallmentsNumberReturnFalse() {
-        CheckoutPreference preference = stubPreferenceWithPositiveMaxInstallmentsNumberAndNegativeDefaultInstallmentsNumber();
+        CheckoutPreference preference =
+            stubPreferenceWithPositiveMaxInstallmentsNumberAndNegativeDefaultInstallmentsNumber();
         assertFalse(preference.validInstallmentsPreference());
     }
 
@@ -89,7 +90,8 @@ public class CheckoutPreferenceTest {
 
     @Test
     public void testWhenValidatePreferenceWithInstallmentsDefaultNumberAndInstallmentsNumberNegativeThrowExceptionReturnTrue() {
-        CheckoutPreference preference = stubPreferenceWithOneItemValidButInstallmentsDefaultNumberAndInstallmentsNumberNegative();
+        CheckoutPreference preference =
+            stubPreferenceWithOneItemValidButInstallmentsDefaultNumberAndInstallmentsNumberNegative();
 
         try {
             preference.validate();

@@ -19,13 +19,11 @@ public class CheckoutErrorHandler {
     }
 
     /**
-     *
-     * @param layout
-     * Add a layout to show when an error occurs.
+     * @param layout Add a layout to show when an error occurs.
      * The layout MUST have the following views:
-     *   TextView with ID: mpsdkErrorMessage - Message shown to the user.
-     *   View with ID: mpsdkErrorRetry - Any view giving the user the chance to retry.
-     *   View with ID: mpsdkExit - Any view that will cancel the action in progress.
+     * TextView with ID: mpsdkErrorMessage - Message shown to the user.
+     * View with ID: mpsdkErrorRetry - Any view giving the user the chance to retry.
+     * View with ID: mpsdkExit - Any view that will cancel the action in progress.
      */
     public void setCustomErrorLayout(@LayoutRes int layout) {
         customErrorLayout = layout;

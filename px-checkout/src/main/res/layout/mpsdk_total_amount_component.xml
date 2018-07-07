@@ -7,7 +7,7 @@
               android:gravity="center"
               android:orientation="vertical">
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/mpsdkAmountTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:layout_marginTop="@dimen/mpsdk_xxs_margin"
         android:orientation="horizontal">
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkAmountDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:textSize="@dimen/mpsdk_xs_text"
             tools:text="($1459,00)"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkTotalAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

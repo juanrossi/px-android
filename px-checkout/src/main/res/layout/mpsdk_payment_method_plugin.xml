@@ -17,7 +17,7 @@
         android:layout_width="@dimen/mpsdk_m_height"
         android:layout_height="@dimen/mpsdk_m_height"/>
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/title"
         style="@style/HeaderTitleText"
         android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
         android:gravity="center_horizontal"
         tools:text="Lorem ipsum"/>
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/description"
         style="@style/HeaderSubtitleText"
         android:layout_width="wrap_content"

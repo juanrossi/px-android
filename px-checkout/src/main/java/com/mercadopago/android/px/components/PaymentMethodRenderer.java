@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.mercadopago.R;
-import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.util.ResourceUtil;
 import com.mercadopago.util.TextUtils;
@@ -18,7 +18,8 @@ import java.util.Locale;
 public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
 
     @Override
-    public View render(@NonNull final PaymentMethodComponent component, @NonNull final Context context, final ViewGroup parent) {
+    public View render(@NonNull final PaymentMethodComponent component, @NonNull final Context context,
+        final ViewGroup parent) {
 
         final View paymentMethodView = inflate(R.layout.mpsdk_payment_method_component, parent);
         final ViewGroup paymentMethodViewGroup = paymentMethodView.findViewById(R.id.mpsdkPaymentMethodContainer);
@@ -29,19 +30,21 @@ public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
         addTotalAmountContainer(component, context, paymentMethodView);
 
         final PaymentMethodComponent.PaymentMethodProps props = component.props;
-        imageView.setImageDrawable(ContextCompat.getDrawable(context, ResourceUtil.getIconResource(context, props.paymentMethod.getId())));
-        setText(descriptionTextView, getDescription(props.paymentMethod.getName(), props.paymentMethod.getPaymentTypeId(),
+        imageView.setImageDrawable(
+            ContextCompat.getDrawable(context, ResourceUtil.getIconResource(context, props.paymentMethod.getId())));
+        setText(descriptionTextView,
+            getDescription(props.paymentMethod.getName(), props.paymentMethod.getPaymentTypeId(),
                 props.lastFourDigits, context));
         setText(statementDescriptionTextView, getDisclaimer(props.paymentMethod.getPaymentTypeId(),
-                props.disclaimer, context));
+            props.disclaimer, context));
 
         stretchHeight(paymentMethodViewGroup);
         return paymentMethodView;
     }
 
     private void addTotalAmountContainer(final @NonNull PaymentMethodComponent component,
-                                         final @NonNull Context context,
-                                         final View paymentMethodView) {
+        final @NonNull Context context,
+        final View paymentMethodView) {
 
         final FrameLayout totalAmountContainer = paymentMethodView.findViewById(R.id.mpsdkTotalAmountContainer);
         RendererFactory.create(context, getTotalAmountComponent(component.props.totalAmountProps))
@@ -62,14 +65,14 @@ public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {
 
     @VisibleForTesting
     String getDescription(final String paymentMethodName,
-                          final String paymentMethodType,
-                          final String lastFourDigits,
-                          final Context context) {
+        final String paymentMethodType,
+        final String lastFourDigits,
+        final Context context) {
         if (PaymentTypes.isCardPaymentType(paymentMethodType)) {
             return String.format(Locale.getDefault(), "%s %s %s",
-                    paymentMethodName,
-                    context.getString(R.string.mpsdk_ending_in),
-                    lastFourDigits);
+                paymentMethodName,
+                context.getString(R.string.mpsdk_ending_in),
+                lastFourDigits);
         } else {
             return paymentMethodName;
         }

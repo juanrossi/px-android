@@ -3,8 +3,7 @@ package com.mercadopago.android.px.components;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 
 /**
  * Created by nfortuna on 11/1/17.

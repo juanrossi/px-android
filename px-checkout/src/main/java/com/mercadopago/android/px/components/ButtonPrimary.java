@@ -1,6 +1,5 @@
 package com.mercadopago.android.px.components;
 
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.mercadolibre.android.ui.widgets.MeliButton;

@@ -2,13 +2,13 @@ package com.mercadopago.android.px.core;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.services.adapters.ErrorHandlingCallAdapter;
-import com.mercadopago.android.px.services.callbacks.Callback;
-import com.mercadopago.android.px.services.util.HttpClientUtil;
+import com.mercadopago.android.px.internal.datasource.CustomService;
 import com.mercadopago.android.px.model.Customer;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
-import com.mercadopago.internal.datasource.CustomService;
+import com.mercadopago.android.px.services.adapters.ErrorHandlingCallAdapter;
+import com.mercadopago.android.px.services.callbacks.Callback;
+import com.mercadopago.android.px.services.util.HttpClientUtil;
 import com.mercadopago.util.JsonUtil;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,12 +18,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Deprecated
 public class CustomServer {
 
-    public static void createCheckoutPreference(Context context, String url, String uri, Callback<CheckoutPreference> callback) {
+    public static void createCheckoutPreference(Context context, String url, String uri,
+        Callback<CheckoutPreference> callback) {
         CustomService service = getService(context, url);
         service.createPreference(uri, null).enqueue(callback);
     }
 
-    public static void createCheckoutPreference(Context context, String url, String uri, Map<String, Object> bodyInfo, Callback<CheckoutPreference> callback) {
+    public static void createCheckoutPreference(Context context, String url, String uri, Map<String, Object> bodyInfo,
+        Callback<CheckoutPreference> callback) {
         CustomService service = getService(context, url);
         service.createPreference(uri, bodyInfo).enqueue(callback);
     }
@@ -33,7 +35,8 @@ public class CustomServer {
         service.getCustomer(uri, null).enqueue(callback);
     }
 
-    public static void getCustomer(Context context, String url, String uri, @NonNull Map<String, String> additionalInfo, Callback<Customer> callback) {
+    public static void getCustomer(Context context, String url, String uri, @NonNull Map<String, String> additionalInfo,
+        Callback<Customer> callback) {
         CustomService service = getService(context, url);
         service.getCustomer(uri, additionalInfo).enqueue(callback);
     }

@@ -2,7 +2,6 @@ package com.mercadopago.android.px.components;
 
 import android.support.annotation.NonNull;
 
-
 public class Receipt extends Component<Receipt.ReceiptProps, Void> {
 
     static {

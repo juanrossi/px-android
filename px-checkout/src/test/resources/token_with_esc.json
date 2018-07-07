@@ -1,7 +1,7 @@
 {
   "public_key": "TEST-fc427b57-199c-4e58-b859-165c24f74dca",
   "card_id": "12345",
-  "esc":"1244542534",
+  "esc": "1244542534",
   "first_six_digits": "450995",
   "luhn_validation": true,
   "date_used": null,

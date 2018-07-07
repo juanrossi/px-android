@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
-import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.util.TextUtils;
 import com.mercadopago.util.ViewUtils;
@@ -29,7 +29,7 @@ public class BankDealsAdapter extends RecyclerView.Adapter<BankDealsAdapter.View
     @Override
     public BankDealsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.mpsdk_row_bank_deals, parent, false));
+            .inflate(R.layout.mpsdk_row_bank_deals, parent, false));
     }
 
     @Override
@@ -58,9 +58,11 @@ public class BankDealsAdapter extends RecyclerView.Adapter<BankDealsAdapter.View
             logoName = v.findViewById(R.id.logo_name);
         }
 
-        /* default */ void populate(final BankDeal bankDeal, final OnSelectedCallback<BankDeal> bankDealOnSelectedCallback) {
+        /* default */ void populate(final BankDeal bankDeal,
+            final OnSelectedCallback<BankDeal> bankDealOnSelectedCallback) {
             final String prettyExpirationDate = bankDeal.getPrettyExpirationDate();
-            bankDescView.setText(bankDescView.getContext().getString(R.string.bank_deal_details_date_format, prettyExpirationDate));
+            bankDescView.setText(
+                bankDescView.getContext().getString(R.string.bank_deal_details_date_format, prettyExpirationDate));
             final String issuerName = bankDeal.getIssuer() != null ? bankDeal.getIssuer().getName() : "";
             logoName.setText(issuerName);
             logoName.setVisibility(View.VISIBLE);

@@ -1,17 +1,17 @@
-package com.mercadopago.testcheckout.flows;
+package com.mercadopago.android.px.testcheckout.flows;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
-import com.mercadopago.testcheckout.assertions.CheckoutValidator;
-import com.mercadopago.testcheckout.input.Card;
-import com.mercadopago.testcheckout.pages.CongratsPage;
-import com.mercadopago.testcheckout.pages.CreditCardPage;
-import com.mercadopago.testcheckout.pages.NamePage;
-import com.mercadopago.testcheckout.pages.PaymentMethodPage;
-import com.mercadopago.testcheckout.pages.ReviewAndConfirmPage;
-import com.mercadopago.testcheckout.pages.ReviewPaymentMethodsPage;
+import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.android.px.testcheckout.input.Card;
+import com.mercadopago.android.px.testcheckout.pages.CongratsPage;
+import com.mercadopago.android.px.testcheckout.pages.CreditCardPage;
+import com.mercadopago.android.px.testcheckout.pages.NamePage;
+import com.mercadopago.android.px.testcheckout.pages.PaymentMethodPage;
+import com.mercadopago.android.px.testcheckout.pages.ReviewAndConfirmPage;
+import com.mercadopago.android.px.testcheckout.pages.ReviewPaymentMethodsPage;
 
 public class CreditCardTestFlow extends TestFlow {
 

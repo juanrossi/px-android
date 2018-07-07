@@ -1,16 +1,14 @@
 package com.mercadopago.guessing;
 
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.mocks.PaymentMethods;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.PaymentMethod;
-import com.mercadopago.presenters.ReviewPaymentMethodsPresenter;
-import com.mercadopago.providers.ReviewPaymentMethodsProvider;
-import com.mercadopago.views.ReviewPaymentMethodsView;
-
-import org.junit.Test;
-
+import com.mercadopago.android.px.presenters.ReviewPaymentMethodsPresenter;
+import com.mercadopago.android.px.providers.ReviewPaymentMethodsProvider;
+import com.mercadopago.android.px.views.ReviewPaymentMethodsView;
+import com.mercadopago.mocks.PaymentMethods;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;

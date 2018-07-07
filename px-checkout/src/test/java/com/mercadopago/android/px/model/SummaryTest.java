@@ -1,10 +1,9 @@
 package com.mercadopago.android.px.model;
 
-import org.junit.Test;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
@@ -21,8 +20,8 @@ public class SummaryTest {
         Integer textColor = 16777215;
 
         Summary summary = new Summary.Builder()
-                .addSummaryProductDetail(amount, productTitle, textColor)
-                .build();
+            .addSummaryProductDetail(amount, productTitle, textColor)
+            .build();
 
         List<SummaryDetail> summaryDetails = summary.getSummaryDetails();
 
@@ -38,9 +37,9 @@ public class SummaryTest {
         Integer textColor = 16777215;
 
         Summary summary = new Summary.Builder()
-                .addSummaryProductDetail(amount, productTitle, textColor)
-                .addSummaryDiscountDetail(amount, testTitle, textColor)
-                .build();
+            .addSummaryProductDetail(amount, productTitle, textColor)
+            .addSummaryDiscountDetail(amount, testTitle, textColor)
+            .build();
 
         List<SummaryDetail> summaryDetails = summary.getSummaryDetails();
 
@@ -61,18 +60,17 @@ public class SummaryTest {
         String shippingTitle = "Envio";
         String taxesTitle = "Impuestos";
 
-
         Integer textColor = 16777215;
 
         Summary summary = new Summary.Builder()
-                .addSummaryProductDetail(amount, productTitle, textColor)
-                .addSummaryDiscountDetail(amount, discountTitle, textColor)
-                .addSummaryChargeDetail(amount, chargeTitle, textColor)
-                .addSummaryArrearsDetail(amount, arrearTitle, textColor)
-                .addSummaryShippingDetail(amount, shippingTitle, textColor)
-                .addSummaryTaxesDetail(amount, taxesTitle, textColor)
-                .setSummaryDetailsOrder(getCustomSummaryDetailsOrder())
-                .build();
+            .addSummaryProductDetail(amount, productTitle, textColor)
+            .addSummaryDiscountDetail(amount, discountTitle, textColor)
+            .addSummaryChargeDetail(amount, chargeTitle, textColor)
+            .addSummaryArrearsDetail(amount, arrearTitle, textColor)
+            .addSummaryShippingDetail(amount, shippingTitle, textColor)
+            .addSummaryTaxesDetail(amount, taxesTitle, textColor)
+            .setSummaryDetailsOrder(getCustomSummaryDetailsOrder())
+            .build();
 
         List<SummaryDetail> summaryDetails = summary.getSummaryDetails();
 

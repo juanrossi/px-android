@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/mpsdk_light_gray">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@color/mpsdk_light_gray">
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/mpsdkAccreditationTimeComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,6 +14,6 @@
         android:gravity="center_horizontal"
         android:textColor="@color/ui_meli_dark_grey"
         android:textSize="@dimen/mpsdk_xxs_text"
-        tools:text="Comentario" />
+        tools:text="Comentario"/>
 
 </FrameLayout>

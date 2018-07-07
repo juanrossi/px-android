@@ -2,9 +2,7 @@ package com.mercadopago.utils;
 
 import android.app.Activity;
 import android.content.Intent;
-
 import com.mercadopago.test.ActivityResult;
-
 import java.lang.reflect.Field;
 
 import static junit.framework.Assert.assertTrue;
@@ -23,7 +21,9 @@ public class ActivityResultUtil {
             int actualResultCode = (Integer) field.get(activity);
             assertTrue(actualResultCode == resultCode);
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException("Looks like the Android Activity class has changed it's private fields for mResultCode or mResultData.Time to update the reflection code.", e);
+            throw new RuntimeException(
+                "Looks like the Android Activity class has changed it's private fields for mResultCode or mResultData.Time to update the reflection code.",
+                e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -47,7 +47,9 @@ public class ActivityResultUtil {
             // Return
             return activityResult;
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException("Looks like the Android Activity class has changed it's private fields for mResultCode or mResultData.Time to update the reflection code.", e);
+            throw new RuntimeException(
+                "Looks like the Android Activity class has changed it's private fields for mResultCode or mResultData.Time to update the reflection code.",
+                e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

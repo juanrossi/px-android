@@ -1,20 +1,10 @@
 package com.mercadopago.guessing;
 
 import com.mercadopago.android.px.controllers.PaymentMethodGuessingController;
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.internal.repository.AmountRepository;
-import com.mercadopago.internal.repository.GroupsRepository;
-import com.mercadopago.internal.repository.UserSelectionRepository;
-import com.mercadopago.services.exceptions.ApiException;
-import com.mercadopago.services.exceptions.CardTokenException;
-import com.mercadopago.mocks.BankDeals;
-import com.mercadopago.mocks.Cards;
-import com.mercadopago.mocks.DummyCard;
-import com.mercadopago.mocks.IdentificationTypes;
-import com.mercadopago.mocks.Issuers;
-import com.mercadopago.mocks.PayerCosts;
-import com.mercadopago.mocks.PaymentMethods;
-import com.mercadopago.mocks.Tokens;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.internal.repository.AmountRepository;
+import com.mercadopago.android.px.internal.repository.GroupsRepository;
+import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.Discount;
@@ -29,16 +19,26 @@ import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.android.px.model.Token;
-import com.mercadopago.mvp.TaggedCallback;
+import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.preferences.PaymentPreference;
-import com.mercadopago.presenters.GuessingCardPresenter;
-import com.mercadopago.providers.GuessingCardProvider;
-import com.mercadopago.tracker.MPTrackingContext;
-import com.mercadopago.uicontrollers.card.CardView;
+import com.mercadopago.android.px.presenters.GuessingCardPresenter;
+import com.mercadopago.android.px.providers.GuessingCardProvider;
+import com.mercadopago.android.px.tracker.MPTrackingContext;
+import com.mercadopago.android.px.uicontrollers.card.CardView;
+import com.mercadopago.android.px.views.GuessingCardActivityView;
+import com.mercadopago.mocks.BankDeals;
+import com.mercadopago.mocks.Cards;
+import com.mercadopago.mocks.DummyCard;
+import com.mercadopago.mocks.IdentificationTypes;
+import com.mercadopago.mocks.Issuers;
+import com.mercadopago.mocks.PayerCosts;
+import com.mercadopago.mocks.PaymentMethods;
+import com.mercadopago.mocks.Tokens;
+import com.mercadopago.services.exceptions.ApiException;
+import com.mercadopago.services.exceptions.CardTokenException;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.utils.CardTestUtils;
 import com.mercadopago.utils.StubSuccessMpCall;
-import com.mercadopago.views.GuessingCardActivityView;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,8 +88,6 @@ public class GuessingCardPresenterTest {
     @Test
     public void ifPublicKeySetThenCheckValidStart() {
 
-
-
         PaymentPreference paymentPreference = new PaymentPreference();
         presenter.setPaymentPreference(paymentPreference);
 
@@ -105,8 +103,6 @@ public class GuessingCardPresenterTest {
 
     @Test
     public void ifPaymentRecoverySetThenSaveCardholderNameAndIdentification() {
-
-
 
         PaymentPreference paymentPreference = new PaymentPreference();
         presenter.setPaymentPreference(paymentPreference);
@@ -139,8 +135,6 @@ public class GuessingCardPresenterTest {
 
     @Test
     public void ifPaymentMethodListSetWithOnePaymentMethodThenSelectIt() {
-
-
 
         List<IdentificationType> identificationTypesList = IdentificationTypes.getIdentificationTypes();
         provider.setIdentificationTypesResponse(identificationTypesList);

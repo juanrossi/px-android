@@ -6,10 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.mercadopago.R;
-import com.mercadopago.customviews.MPTextView;
-
+import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.customviews.MPTextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -31,8 +29,8 @@ public class ReceiptRenderer extends Renderer<Receipt> {
         final String year = String.valueOf(calendar.get(Calendar.YEAR));
 
         final StringBuilder builder = new StringBuilder()
-                .append(day).append(" ").append(divider).append(" ").append(month).append(" ")
-                .append(divider).append(" ").append(year);
+            .append(day).append(" ").append(divider).append(" ").append(month).append(" ")
+            .append(divider).append(" ").append(year);
 
         setText(dateTextView, builder.toString());
         setText(descriptionTextView, getReceiptDescription(context, component.props.receiptId));

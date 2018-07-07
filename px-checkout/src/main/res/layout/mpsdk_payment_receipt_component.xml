@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/mpsdk_white"
-    android:gravity="center"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/mpsdk_white"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,29 +17,29 @@
         android:gravity="center"
         android:paddingBottom="@dimen/mpsdk_s_margin">
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkReceiptDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/ui_meli_dark_grey"
             android:textSize="14dp"
-            tools:text="4 de diciembre de 2017" />
+            tools:text="4 de diciembre de 2017"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkReceiptDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/ui_meli_dark_grey"
             android:textSize="14dp"
-            tools:text="Numero de operacion 1234" />
+            tools:text="Numero de operacion 1234"/>
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/mpsdk_xxxs_height"
-        android:background="@color/mpsdk_med_light_gray" />
+        android:background="@color/mpsdk_med_light_gray"/>
 
 </LinearLayout>

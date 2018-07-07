@@ -1,6 +1,6 @@
-package com.mercadopago.testcheckout.pages;
+package com.mercadopago.android.px.testcheckout.pages;
 
-import com.mercadopago.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testlib.pages.PageObject;
 
 public class CongratsPage extends PageObject<CheckoutValidator> {

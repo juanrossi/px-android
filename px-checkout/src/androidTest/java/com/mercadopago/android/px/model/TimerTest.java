@@ -1,9 +1,7 @@
 package com.mercadopago.android.px.model;
 
 import android.os.Looper;
-
 import com.mercadopago.android.px.controllers.CheckoutTimer;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,7 +15,7 @@ import static junit.framework.Assert.assertTrue;
 public class TimerTest {
 
     @BeforeClass
-    static public void initialize(){
+    static public void initialize() {
         Looper.prepare();
     }
 

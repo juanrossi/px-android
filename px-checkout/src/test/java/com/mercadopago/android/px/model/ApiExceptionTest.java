@@ -1,11 +1,9 @@
 package com.mercadopago.android.px.model;
 
 import com.mercadopago.services.exceptions.ApiException;
-
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -62,5 +60,4 @@ public class ApiExceptionTest {
 
         assertTrue(apiException.containsCause("Some cause"));
     }
-
 }

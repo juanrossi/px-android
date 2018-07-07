@@ -5,7 +5,7 @@
         android:valueFrom="1.0"
         android:valueTo="0.0"
         android:propertyName="alpha"
-        android:duration="0" />
+        android:duration="0"/>
 
     <!-- Rotate. -->
     <objectAnimator
@@ -13,7 +13,7 @@
         android:valueTo="0"
         android:propertyName="rotationY"
         android:interpolator="@anim/mpsdk_anticipate_overshoot_interpolator"
-        android:duration="@integer/mpsdk_card_flip_time_full" />
+        android:duration="@integer/mpsdk_card_flip_time_full"/>
 
     <!-- Half-way through the rotation (see startOffset), set the alpha to 1. -->
     <objectAnimator
@@ -21,6 +21,6 @@
         android:valueTo="1.0"
         android:propertyName="alpha"
         android:startOffset="@integer/mpsdk_card_flip_time_half"
-        android:duration="1" />
+        android:duration="1"/>
 
 </set>

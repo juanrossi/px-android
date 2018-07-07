@@ -1,6 +1,5 @@
 package com.mercadopago.test;
 
-
 import android.graphics.Rect;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.test.espresso.PerformException;
@@ -11,7 +10,6 @@ import android.support.test.espresso.util.HumanReadables;
 import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.View;
-
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
@@ -39,7 +37,8 @@ public final class NestedScrollViewScrollToAction implements ViewAction {
     @SuppressWarnings("unchecked")
     @Override
     public Matcher<View> getConstraints() {
-        return allOf(withEffectiveVisibility(Visibility.VISIBLE), isDescendantOfA(anyOf(isAssignableFrom(NestedScrollView.class))));
+        return allOf(withEffectiveVisibility(Visibility.VISIBLE),
+            isDescendantOfA(anyOf(isAssignableFrom(NestedScrollView.class))));
     }
 
     @Override
@@ -67,11 +66,11 @@ public final class NestedScrollViewScrollToAction implements ViewAction {
 
         if (!isDisplayingAtLeast(90).matches(view)) {
             throw new PerformException.Builder()
-                    .withActionDescription(this.getDescription())
-                    .withViewDescription(HumanReadables.describe(view))
-                    .withCause(new RuntimeException(
-                            "Scrolling to view was attempted, but the view is not displayed"))
-                    .build();
+                .withActionDescription(this.getDescription())
+                .withViewDescription(HumanReadables.describe(view))
+                .withCause(new RuntimeException(
+                    "Scrolling to view was attempted, but the view is not displayed"))
+                .build();
         }
     }
 
@@ -84,11 +83,11 @@ public final class NestedScrollViewScrollToAction implements ViewAction {
             return findScrollView(parent);
         }
         throw new PerformException.Builder()
-                .withActionDescription(this.getDescription())
-                .withViewDescription(HumanReadables.describe(view))
-                .withCause(new RuntimeException(
-                        "Scrolling aborted due to not being NestedScrollView child"))
-                .build();
+            .withActionDescription(this.getDescription())
+            .withViewDescription(HumanReadables.describe(view))
+            .withCause(new RuntimeException(
+                "Scrolling aborted due to not being NestedScrollView child"))
+            .build();
     }
 
     @Override

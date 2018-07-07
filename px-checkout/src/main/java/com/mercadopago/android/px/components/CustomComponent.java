@@ -1,9 +1,7 @@
 package com.mercadopago.android.px.components;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.preferences.CheckoutPreference;
-
 import java.util.Map;
 
 public class CustomComponent extends Component<CustomComponent.Props, Void> {

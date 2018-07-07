@@ -1,13 +1,13 @@
 package com.mercadopago.mocks;
 
-
-import com.mercadopago.services.exceptions.ApiException;
 import com.mercadopago.android.px.model.Token;
+import com.mercadopago.services.exceptions.ApiException;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.utils.ResourcesUtil;
 
 public class Tokens {
-    private Tokens() {}
+    private Tokens() {
+    }
 
     public static Token getVisaToken() {
         String json = ResourcesUtil.getStringResource("token_visa.json");

@@ -3,12 +3,10 @@ package com.mercadopago.android.px.core;
 import com.mercadopago.android.px.callbacks.CallbackHolder;
 import com.mercadopago.android.px.callbacks.PaymentCallback;
 import com.mercadopago.android.px.callbacks.PaymentDataCallback;
-import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
-
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 

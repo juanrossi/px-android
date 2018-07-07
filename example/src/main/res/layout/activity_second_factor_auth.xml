@@ -53,7 +53,7 @@
 
     </LinearLayout>
 
-    <com.mercadopago.customviews.MPButton
+    <com.mercadopago.android.px.customviews.MPButton
         android:id="@+id/button_continue"
         style="@style/mpsdk_button_normal"
         android:layout_width="match_parent"

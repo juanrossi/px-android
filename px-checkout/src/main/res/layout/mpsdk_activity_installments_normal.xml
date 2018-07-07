@@ -47,7 +47,7 @@
                     android:gravity="center_horizontal"
                     android:visibility="gone">
 
-                    <com.mercadopago.customviews.MPTextView
+                    <com.mercadopago.android.px.customviews.MPTextView
                         android:id="@+id/mpsdkNoInstallmentsRateTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
         </android.support.v4.widget.NestedScrollView>
     </FrameLayout>
 
-    <com.mercadopago.views.AmountView
+    <com.mercadopago.android.px.views.AmountView
         android:id="@+id/amount_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <include layout="@layout/mpsdk_view_progress_bar" />
+    <include layout="@layout/mpsdk_view_progress_bar"/>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/mpsdkAppBar"
@@ -22,15 +22,15 @@
             android:theme="@style/ToolbarTheme"
             app:popupTheme="@style/Theme.MercadoPagoTheme.NoActionBar">
 
-            <com.mercadopago.customviews.MPTextView
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:id="@+id/mpsdkToolbarTitle"
                 style="@style/mpsdk_title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/mpsdk_title_activity_payment_methods" />
+                android:text="@string/mpsdk_title_activity_payment_methods"/>
 
-            <com.mercadopago.customviews.MPTextView
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:id="@+id/mpsdkBankDeals"
                 style="@style/mpsdk_small_white_text"
                 android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/mpsdk_title_activity_bank_deals"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
@@ -58,7 +58,7 @@
             android:id="@+id/mpsdkPaymentMethodsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"/>
 
     </FrameLayout>
 

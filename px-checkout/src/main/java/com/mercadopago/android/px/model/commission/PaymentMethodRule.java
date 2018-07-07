@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.model.commission;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.internal.repository.ChargeRepository;
+import com.mercadopago.android.px.internal.repository.ChargeRepository;
 import java.math.BigDecimal;
 
 public class PaymentMethodRule extends ChargeRule {

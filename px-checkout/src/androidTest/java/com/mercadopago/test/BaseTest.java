@@ -4,15 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class BaseTest <T extends Activity> extends ActivityInstrumentationTestCase2<T> {
+public class BaseTest<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
 
     public BaseTest(final Class<T> activityClass) {
         super(activityClass);
@@ -37,7 +35,9 @@ public class BaseTest <T extends Activity> extends ActivityInstrumentationTestCa
             int actualResultCode = (Integer) field.get(activity);
             assertTrue(actualResultCode == resultCode);
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException("Looks like the Android Activity class has changed it's private fields for mResultCode or mResultData.Time to update the reflection code.", e);
+            throw new RuntimeException(
+                "Looks like the Android Activity class has changed it's private fields for mResultCode or mResultData.Time to update the reflection code.",
+                e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +61,9 @@ public class BaseTest <T extends Activity> extends ActivityInstrumentationTestCa
             // Return
             return activityResult;
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException("Looks like the Android Activity class has changed it's private fields for mResultCode or mResultData.Time to update the reflection code.", e);
+            throw new RuntimeException(
+                "Looks like the Android Activity class has changed it's private fields for mResultCode or mResultData.Time to update the reflection code.",
+                e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -71,7 +73,8 @@ public class BaseTest <T extends Activity> extends ActivityInstrumentationTestCa
 
         if (list != null) {
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<T>>(){}.getType();
+            Type listType = new TypeToken<List<T>>() {
+            }.getType();
             intent.putExtra(listName, gson.toJson(list, listType));
         }
     }

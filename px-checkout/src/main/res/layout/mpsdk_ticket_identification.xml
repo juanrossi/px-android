@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mpsdkIdentificationCardContainer"
-    android:layout_width="@dimen/mpsdk_card_size_big_width"
-    android:layout_height="@dimen/mpsdk_card_size_big_height"
-    android:layout_gravity="center_horizontal">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/mpsdkIdentificationCardContainer"
+             android:layout_width="@dimen/mpsdk_card_size_big_width"
+             android:layout_height="@dimen/mpsdk_card_size_big_height"
+             android:layout_gravity="center_horizontal">
 
     <FrameLayout
         android:layout_width="@dimen/mpsdk_card_size_big_width_no_border"
@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.mercadopago.customviews.MPTextView
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -27,7 +27,7 @@
                 android:text="@string/mpsdk_ticket_identification_label"
                 android:textColor="@color/mpsdk_base_text_alpha"
                 android:textSize="11dp"
-                tools:text="DADOS PARA VALIDAR O SEU PAGAMENTO" />
+                tools:text="DADOS PARA VALIDAR O SEU PAGAMENTO"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                 android:paddingLeft="15dp"
                 android:paddingStart="15dp">
 
-                <com.mercadopago.customviews.MPTextView
+                <com.mercadopago.android.px.customviews.MPTextView
                     android:id="@+id/mpsdkIdentificationTypeId"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -45,13 +45,13 @@
                     android:textSize="14dp"
                     app:font_style="mono_regular"
                     app:minTextSize="8dp"
-                    tools:text="CPF: " />
+                    tools:text="CPF: "/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <com.mercadopago.customviews.MPTextView
+                    <com.mercadopago.android.px.customviews.MPTextView
                         android:id="@+id/mpsdkIdentificationCardholderContainer"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -67,9 +67,9 @@
                         app:autoSizeMinTextSize="8dp"
                         app:autoSizeStepGranularity="1dp"
                         app:autoSizeTextType="uniform"
-                        app:font_style="mono_regular" />
+                        app:font_style="mono_regular"/>
 
-                    <com.mercadopago.customviews.MPTextView
+                    <com.mercadopago.android.px.customviews.MPTextView
                         android:id="@+id/mpsdkIdNumberView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -84,7 +84,7 @@
                         app:autoSizeMinTextSize="8dp"
                         app:autoSizeStepGranularity="1dp"
                         app:autoSizeTextType="uniform"
-                        app:font_style="mono_regular" />
+                        app:font_style="mono_regular"/>
 
                 </FrameLayout>
             </LinearLayout>
@@ -103,7 +103,7 @@
                     android:paddingRight="7dp"
                     android:paddingStart="15dp">
 
-                    <com.mercadopago.customviews.MPTextView
+                    <com.mercadopago.android.px.customviews.MPTextView
                         android:id="@+id/mpsdkNameView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                         android:text="@string/mpsdk_name_and_lastname_identification_label"
                         android:textColor="@color/mpsdk_base_text_alpha"
                         android:textSize="12dp"
-                        app:minTextSize="8dp" />
+                        app:minTextSize="8dp"/>
                 </FrameLayout>
 
                 <FrameLayout
@@ -121,7 +121,7 @@
                     android:layout_marginTop="10dp"
                     android:visibility="gone">
 
-                    <com.mercadopago.customviews.MPTextView
+                    <com.mercadopago.android.px.customviews.MPTextView
                         android:id="@+id/mpsdkLastnameView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -131,7 +131,7 @@
                         android:paddingRight="10dp"
                         android:textColor="@color/mpsdk_base_text"
                         android:textSize="12dp"
-                        app:minTextSize="8dp" />
+                        app:minTextSize="8dp"/>
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>

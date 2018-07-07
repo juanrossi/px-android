@@ -10,7 +10,7 @@ buildscript {
     }
 }
 
-apply plugin: 'com.android.library'
+apply plugin:'com.android.library'
 
 android {
     compileSdkVersion api_level as int
@@ -67,7 +67,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
 
     implementation("com.squareup.retrofit2:converter-gson:$retrofit") {
-        exclude group: "com.google.code.gson", module: "gson"
+        exclude group:"com.google.code.gson", module:"gson"
     }
     api project(':px-services')
     api project(':px-tracking')
@@ -78,6 +78,6 @@ dependencies {
     implementation "com.android.support:multidex:$multidex"
 }
 
-apply from: "$rootDir/gradle/jacoco.gradle"
-apply from: "$rootDir/gradle/static-analysis.gradle"
-apply from: "$rootDir/gradle/deploy.gradle" 
+apply from:"$rootDir/gradle/jacoco.gradle"
+apply from:"$rootDir/gradle/static-analysis.gradle"
+apply from:"$rootDir/gradle/deploy.gradle"

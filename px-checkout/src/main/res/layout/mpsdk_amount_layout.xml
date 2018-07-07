@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:id="@+id/main_container"
-    android:orientation="vertical"
-    android:clickable="true"
-    android:focusable="true"
-    tools:parentTag="android.support.v7.widget.LinearLayoutCompat">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:id="@+id/main_container"
+              android:orientation="vertical"
+              android:clickable="true"
+              android:focusable="true"
+              tools:parentTag="android.support.v7.widget.LinearLayoutCompat">
 
     <View
         android:id="@+id/line"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="@color/mpsdk_light_gray" />
+        android:background="@color/mpsdk_light_gray"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,17 +32,17 @@
             android:layout_toStartOf="@+id/amount_container"
             android:orientation="vertical">
 
-            <com.mercadopago.customviews.MPTextView
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:id="@+id/amount_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 tools:text="-50 OFF"
                 tools:textColor="@color/mpsdk_discount_description"
-                android:textSize="@dimen/mpsdk_xs_text" />
+                android:textSize="@dimen/mpsdk_xs_text"/>
 
 
-            <com.mercadopago.customviews.MPTextView
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:id="@+id/max_coupon_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,16 +65,16 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-            <com.mercadopago.customviews.MPTextView
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:id="@+id/amount_before_discount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|right"
                 android:textColor="@color/mpsdk_color_new_card_text"
                 android:textSize="@dimen/mpsdk_xs_text"
-                tools:text="$ 1143" />
+                tools:text="$ 1143"/>
 
-            <com.mercadopago.customviews.MPTextView
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:id="@+id/final_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                 android:gravity="right|end"
                 android:textSize="@dimen/mpsdk_xl_text"
                 android:textColor="@color/mpsdk_base_text"
-                tools:text="$ 1043" />
+                tools:text="$ 1043"/>
         </LinearLayout>
 
         <ImageView

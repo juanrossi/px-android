@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
 
@@ -51,7 +49,6 @@ public class CustomMatchers {
                 }
                 return textFound;
             }
-
 
             @Override
             public void describeTo(Description description) {

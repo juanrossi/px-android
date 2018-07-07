@@ -1,17 +1,17 @@
 package com.mercadopago.android.px.core;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.hooks.CheckoutHooks;
-import com.mercadopago.hooks.Hook;
+import com.mercadopago.android.px.hooks.CheckoutHooks;
+import com.mercadopago.android.px.hooks.Hook;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentResult;
-import com.mercadopago.plugins.DataInitializationTask;
-import com.mercadopago.plugins.PaymentMethodPlugin;
-import com.mercadopago.plugins.PaymentProcessor;
+import com.mercadopago.android.px.plugins.DataInitializationTask;
+import com.mercadopago.android.px.plugins.PaymentMethodPlugin;
+import com.mercadopago.android.px.plugins.PaymentProcessor;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
-import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
+import com.mercadopago.android.px.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.util.TextUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
-import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
+import static com.mercadopago.android.px.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
 
 public class CheckoutStore {
 
@@ -186,7 +186,8 @@ public class CheckoutStore {
         return paymentPlugins.containsKey(PAYMENT_PROCESSOR_KEY);
     }
 
-    public void addPaymentPlugins(@NonNull final PaymentProcessor paymentProcessor, @NonNull final String paymentMethod) {
+    public void addPaymentPlugins(@NonNull final PaymentProcessor paymentProcessor,
+        @NonNull final String paymentMethod) {
         paymentPlugins.put(paymentMethod, paymentProcessor);
     }
 

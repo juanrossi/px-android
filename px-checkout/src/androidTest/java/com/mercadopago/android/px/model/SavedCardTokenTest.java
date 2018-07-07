@@ -3,13 +3,11 @@ package com.mercadopago.android.px.model;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import com.mercadopago.CheckoutActivity;
 import com.mercadopago.R;
+import com.mercadopago.android.px.CheckoutActivity;
+import com.mercadopago.android.px.exceptions.ExceptionHandler;
 import com.mercadopago.services.exceptions.CardTokenException;
-import com.mercadopago.exceptions.ExceptionHandler;
 import com.mercadopago.test.StaticMock;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,7 +112,8 @@ public class SavedCardTokenTest {
         } catch (CardTokenException ex) {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_CVV_LENGTH);
             String message = ExceptionHandler.getErrorMessage(InstrumentationRegistry.getContext(), ex);
-            String expectedMessage = InstrumentationRegistry.getContext().getString(R.string.mpsdk_invalid_cvv_length, String.valueOf(3));
+            String expectedMessage =
+                InstrumentationRegistry.getContext().getString(R.string.mpsdk_invalid_cvv_length, String.valueOf(3));
             assertEquals(message, expectedMessage);
         }
 

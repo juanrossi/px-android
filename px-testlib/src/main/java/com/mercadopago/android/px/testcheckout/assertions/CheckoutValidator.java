@@ -1,22 +1,22 @@
-package com.mercadopago.testcheckout.assertions;
+package com.mercadopago.android.px.testcheckout.assertions;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.testcheckout.pages.CardPage;
-import com.mercadopago.testcheckout.pages.CashPage;
-import com.mercadopago.testcheckout.pages.CongratsPage;
-import com.mercadopago.testcheckout.pages.CreditCardPage;
-import com.mercadopago.testcheckout.pages.DebitCardPage;
-import com.mercadopago.testcheckout.pages.ExpiryDatePage;
-import com.mercadopago.testcheckout.pages.IdentificationPage;
-import com.mercadopago.testcheckout.pages.InstallmentsPage;
-import com.mercadopago.testcheckout.pages.IssuerPage;
-import com.mercadopago.testcheckout.pages.NamePage;
-import com.mercadopago.testcheckout.pages.NoCheckoutPage;
-import com.mercadopago.testcheckout.pages.PaymentMethodPage;
-import com.mercadopago.testcheckout.pages.ReviewAndConfirmPage;
-import com.mercadopago.testcheckout.pages.ReviewPaymentMethodsPage;
-import com.mercadopago.testcheckout.pages.SecurityCodePage;
+import com.mercadopago.android.px.testcheckout.pages.CardPage;
+import com.mercadopago.android.px.testcheckout.pages.CashPage;
+import com.mercadopago.android.px.testcheckout.pages.CongratsPage;
+import com.mercadopago.android.px.testcheckout.pages.CreditCardPage;
+import com.mercadopago.android.px.testcheckout.pages.DebitCardPage;
+import com.mercadopago.android.px.testcheckout.pages.ExpiryDatePage;
+import com.mercadopago.android.px.testcheckout.pages.IdentificationPage;
+import com.mercadopago.android.px.testcheckout.pages.InstallmentsPage;
+import com.mercadopago.android.px.testcheckout.pages.IssuerPage;
+import com.mercadopago.android.px.testcheckout.pages.NamePage;
+import com.mercadopago.android.px.testcheckout.pages.NoCheckoutPage;
+import com.mercadopago.android.px.testcheckout.pages.PaymentMethodPage;
+import com.mercadopago.android.px.testcheckout.pages.ReviewAndConfirmPage;
+import com.mercadopago.android.px.testcheckout.pages.ReviewPaymentMethodsPage;
+import com.mercadopago.android.px.testcheckout.pages.SecurityCodePage;
 import com.mercadopago.testlib.assertions.Validator;
 
 public interface CheckoutValidator extends Validator {

@@ -1,20 +1,17 @@
 {
-    "groups":[
-
-    ],
-    "custom_options":[
-        {
-            "description":"Dinero en cuenta",
-            "id":"account_money",
-            "payment_type_id":"account_money",
-            "payment_method_id":"account_money"
-        }
-    ],
-    "payment_methods":[
-
-    ],
-    "cards":[
-
-    ],
-    "account_money":null
+  "groups": [
+  ],
+  "custom_options": [
+    {
+      "description": "Dinero en cuenta",
+      "id": "account_money",
+      "payment_type_id": "account_money",
+      "payment_method_id": "account_money"
+    }
+  ],
+  "payment_methods": [
+  ],
+  "cards": [
+  ],
+  "account_money": null
 }

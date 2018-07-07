@@ -1,17 +1,15 @@
 package com.mercadopago.payerInformation;
 
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.mocks.IdentificationTypes;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.Identification;
 import com.mercadopago.android.px.model.IdentificationType;
-import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.presenters.PayerInformationPresenter;
-import com.mercadopago.providers.PayerInformationProvider;
-import com.mercadopago.views.PayerInformationView;
-
-import org.junit.Test;
-
+import com.mercadopago.android.px.mvp.TaggedCallback;
+import com.mercadopago.android.px.presenters.PayerInformationPresenter;
+import com.mercadopago.android.px.providers.PayerInformationProvider;
+import com.mercadopago.android.px.views.PayerInformationView;
+import com.mercadopago.mocks.IdentificationTypes;
 import java.util.List;
+import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -189,7 +187,6 @@ public class PayerInformationPresenterTest {
         private String errorMessage;
 
         private MercadoPagoError mercadoPagoError;
-
 
         @Override
         public void initializeIdentificationTypes(List<IdentificationType> identificationTypes) {

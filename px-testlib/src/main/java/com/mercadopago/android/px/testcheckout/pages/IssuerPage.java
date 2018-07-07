@@ -1,10 +1,10 @@
-package com.mercadopago.testcheckout.pages;
+package com.mercadopago.android.px.testcheckout.pages;
 
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 
-import com.mercadopago.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testlib.pages.PageObject;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -34,7 +34,7 @@ public class IssuerPage extends PageObject<CheckoutValidator> {
     }
 
     private void selectOption(final int bankOption) {
-        ViewInteraction recyclerView = onView(withId(com.mercadopago.R.id.mpsdkActivityIssuersView));
+        ViewInteraction recyclerView = onView(withId(com.mercadopago.android.px.R.id.mpsdkActivityIssuersView));
         recyclerView.perform(scrollToPosition(bankOption));
         recyclerView.perform(RecyclerViewActions.actionOnItemAtPosition(bankOption, click()));
     }

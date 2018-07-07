@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:weightSum="1">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingTop="10dp"
+              android:paddingBottom="10dp"
+              android:weightSum="1">
+
     <ImageView
         android:id="@+id/mpsdkPaymentMethodImage"
         android:layout_width="0dp"
@@ -16,9 +17,9 @@
         android:layout_marginBottom="3dp"
         android:layout_gravity="start|center_vertical"
         android:maxHeight="20dp"
-        tools:src="@drawable/mpsdk_amex" />
+        tools:src="@drawable/mpsdk_amex"/>
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/mpsdkPaymentMethodName"
         android:layout_width="0dp"
         android:layout_height="match_parent"

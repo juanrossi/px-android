@@ -5,17 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import com.mercadopago.BankDealsActivity;
-import com.mercadopago.CardVaultActivity;
-import com.mercadopago.GuessingCardActivity;
-import com.mercadopago.InstallmentsActivity;
-import com.mercadopago.IssuersActivity;
-import com.mercadopago.PayerInformationActivity;
-import com.mercadopago.PaymentMethodsActivity;
-import com.mercadopago.PaymentTypesActivity;
-import com.mercadopago.PaymentVaultActivity;
-import com.mercadopago.ReviewPaymentMethodsActivity;
-import com.mercadopago.SecurityCodeActivity;
+import com.mercadopago.android.px.BankDealsActivity;
+import com.mercadopago.android.px.CardVaultActivity;
+import com.mercadopago.android.px.GuessingCardActivity;
+import com.mercadopago.android.px.InstallmentsActivity;
+import com.mercadopago.android.px.IssuersActivity;
+import com.mercadopago.android.px.PayerInformationActivity;
+import com.mercadopago.android.px.PaymentMethodsActivity;
+import com.mercadopago.android.px.PaymentTypesActivity;
+import com.mercadopago.android.px.PaymentVaultActivity;
+import com.mercadopago.android.px.ReviewPaymentMethodsActivity;
+import com.mercadopago.android.px.SecurityCodeActivity;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardInfo;
@@ -28,7 +28,7 @@ import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.PaymentType;
 import com.mercadopago.android.px.model.Site;
 import com.mercadopago.android.px.model.Token;
-import com.mercadopago.paymentresult.PaymentResultActivity;
+import com.mercadopago.android.px.paymentresult.PaymentResultActivity;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
 import com.mercadopago.util.JsonUtil;
@@ -95,7 +95,6 @@ public class MercadoPagoComponents {
                 this.merchantPublicKey = merchantPublicKey;
                 return this;
             }
-
 
             public PaymentVaultActivityBuilder setMaxSavedCards(Integer maxSavedCards) {
                 this.maxSavedCards = maxSavedCards;

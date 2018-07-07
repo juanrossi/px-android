@@ -1,9 +1,7 @@
 package com.mercadopago.android.px.components;
 
 import android.content.Context;
-
 import com.mercadopago.R;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,5 +40,4 @@ public class ReceiptRendererTest {
         String receiptDescription = receiptRenderer.getReceiptDescription(context, longReceipt);
         assertEquals(expected, receiptDescription);
     }
-
 }

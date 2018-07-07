@@ -22,7 +22,7 @@
             android:layout_marginBottom="@dimen/mpsdk_m_margin"
             android:src="@drawable/mpsdk_icon_error"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -32,7 +32,7 @@
             android:textColor="@color/ui_meli_black"
             android:textSize="@dimen/mpsdk_xxxl_text"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/mpsdkErrorMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

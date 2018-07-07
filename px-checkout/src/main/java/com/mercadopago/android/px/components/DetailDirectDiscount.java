@@ -4,12 +4,10 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.util.textformatter.TextFormatter;
-
 import javax.annotation.Nonnull;
 
 public class DetailDirectDiscount extends CompactComponent<DetailDirectDiscount.Props, Void> {
@@ -43,11 +41,11 @@ public class DetailDirectDiscount extends CompactComponent<DetailDirectDiscount.
         final TextView detailMessage = mainContainer.findViewById(R.id.detail);
         if (props.campaign.hasMaxCouponAmount()) {
             TextFormatter.withCurrencyId(props.discount.getCurrencyId())
-                    .withSpace()
-                    .amount(props.campaign.getMaxCouponAmount())
-                    .normalDecimals()
-                    .into(detailMessage)
-                    .holder(R.string.mpsdk_max_coupon_amount);
+                .withSpace()
+                .amount(props.campaign.getMaxCouponAmount())
+                .normalDecimals()
+                .into(detailMessage)
+                .holder(R.string.mpsdk_max_coupon_amount);
         } else {
             detailMessage.setVisibility(View.GONE);
         }
@@ -57,14 +55,14 @@ public class DetailDirectDiscount extends CompactComponent<DetailDirectDiscount.
         final TextView subtitle = mainContainer.findViewById(R.id.subtitle);
         if (props.discount.hasPercentOff()) {
             subtitle.setText(subtitle.getContext()
-                    .getString(R.string.mpsdk_discount_percent_off, props.discount.getPercentOff()));
+                .getString(R.string.mpsdk_discount_percent_off, props.discount.getPercentOff()));
         } else {
             TextFormatter.withCurrencyId(props.discount.getCurrencyId())
-                    .withSpace()
-                    .amount(props.discount.getAmountOff())
-                    .normalDecimals()
-                    .into(subtitle)
-                    .holder(R.string.mpsdk_discount_amount_off);
+                .withSpace()
+                .amount(props.discount.getAmountOff())
+                .normalDecimals()
+                .into(subtitle)
+                .holder(R.string.mpsdk_discount_amount_off);
         }
     }
 }

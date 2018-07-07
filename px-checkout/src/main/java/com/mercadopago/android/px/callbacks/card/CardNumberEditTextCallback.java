@@ -6,9 +6,14 @@ package com.mercadopago.android.px.callbacks.card;
 
 public interface CardNumberEditTextCallback {
     void checkOpenKeyboard();
+
     void appendSpace(CharSequence s);
+
     void deleteChar(CharSequence s);
+
     void saveCardNumber(CharSequence s);
+
     void changeErrorView();
+
     void toggleLineColorOnError(boolean toggle);
 }

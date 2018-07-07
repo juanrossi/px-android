@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <include layout="@layout/mpsdk_view_progress_bar" />
+    <include layout="@layout/mpsdk_view_progress_bar"/>
 
-    <include layout="@layout/mpsdk_toolbar_primary_with_title" />
+    <include layout="@layout/mpsdk_toolbar_primary_with_title"/>
 
     <LinearLayout
         android:id="@+id/mpsdkRegularLayout"
@@ -14,21 +14,21 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             style="@style/mpsdk_big_text_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:gravity="center"
             android:text="@string/mpsdk_empty_bank_deals"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/mpsdkBankDealsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:descendantFocusability="afterDescendants"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"/>
 
     </LinearLayout>
 

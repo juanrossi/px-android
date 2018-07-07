@@ -1,12 +1,12 @@
 package com.mercadopago.android.px.codediscount;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.internal.repository.AmountRepository;
-import com.mercadopago.internal.repository.DiscountRepository;
+import com.mercadopago.android.px.internal.repository.AmountRepository;
+import com.mercadopago.android.px.internal.repository.DiscountRepository;
+import com.mercadopago.android.px.model.Discount;
+import com.mercadopago.android.px.mvp.MvpPresenter;
 import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.exceptions.ApiException;
-import com.mercadopago.android.px.model.Discount;
-import com.mercadopago.mvp.MvpPresenter;
 
 class CodeDiscountPresenter extends MvpPresenter<CodeDiscountView, DiscountRepository> {
 
@@ -24,22 +24,21 @@ class CodeDiscountPresenter extends MvpPresenter<CodeDiscountView, DiscountRepos
 
     public void getDiscountForCode(final String input) {
         discountRepository.getCodeDiscount(amountRepository.getItemsAmount(), input)
-                .enqueue(new Callback<Discount>() {
-                    @Override
-                    public void success(final Discount discount) {
-                        if (isViewAttached()) {
-                            getView().processSuccess(discount);
-                        }
+            .enqueue(new Callback<Discount>() {
+                @Override
+                public void success(final Discount discount) {
+                    if (isViewAttached()) {
+                        getView().processSuccess(discount);
                     }
+                }
 
-                    @Override
-                    public void failure(final ApiException apiException) {
-                        if (isViewAttached()) {
-                            getView().processError();
-                        }
+                @Override
+                public void failure(final ApiException apiException) {
+                    if (isViewAttached()) {
+                        getView().processError();
                     }
-                });
+                }
+            });
     }
-
 }
 

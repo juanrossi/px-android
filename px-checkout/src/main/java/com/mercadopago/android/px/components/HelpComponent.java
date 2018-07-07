@@ -1,12 +1,9 @@
 package com.mercadopago.android.px.components;
 
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.mercadopago.R;
-
+import com.mercadopago.android.px.R;
 import javax.annotation.Nonnull;
 
 public class HelpComponent extends CompactComponent<String, Void> {

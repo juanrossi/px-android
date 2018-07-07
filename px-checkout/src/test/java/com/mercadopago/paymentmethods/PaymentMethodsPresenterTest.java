@@ -1,20 +1,17 @@
 package com.mercadopago.paymentmethods;
 
-import com.mercadopago.android.px.model.PaymentTypes;
-import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.PaymentMethod;
-import com.mercadopago.mvp.TaggedCallback;
+import com.mercadopago.android.px.model.PaymentTypes;
+import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.preferences.PaymentPreference;
-import com.mercadopago.presenters.PaymentMethodsPresenter;
-import com.mercadopago.providers.PaymentMethodsProvider;
-import com.mercadopago.views.PaymentMethodsView;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
-
+import com.mercadopago.android.px.presenters.PaymentMethodsPresenter;
+import com.mercadopago.android.px.providers.PaymentMethodsProvider;
+import com.mercadopago.android.px.views.PaymentMethodsView;
 import java.util.ArrayList;
 import java.util.List;
+import junit.framework.Assert;
+import org.junit.Test;
 
 /**
  * Created by mreverter on 1/5/17.
@@ -24,7 +21,6 @@ public class PaymentMethodsPresenterTest {
 
     @Test
     public void whenPaymentMethodsPresenterStartsShowPaymentMethods() {
-
 
         MockedView mockedView = new MockedView();
         MockedResourcesProvider resourcesProvider = new MockedResourcesProvider();
@@ -66,7 +62,6 @@ public class PaymentMethodsPresenterTest {
         Assert.assertTrue(!mockedView.progressVisible);
         Assert.assertTrue(!mockedView.bankDealsShown);
         Assert.assertTrue(mockedView.error == null);
-
     }
 
     private class MockedView implements PaymentMethodsView {

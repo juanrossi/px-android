@@ -2,10 +2,8 @@ package com.mercadopago.android.px.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-
-import com.mercadopago.uicontrollers.CustomViewController;
-import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchViewController;
-
+import com.mercadopago.android.px.uicontrollers.CustomViewController;
+import com.mercadopago.android.px.uicontrollers.paymentmethodsearch.PaymentMethodSearchViewController;
 import java.util.ArrayList;
 import java.util.List;
 

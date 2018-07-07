@@ -10,7 +10,7 @@
         android:layout_gravity="center"
         android:background="@color/mpsdk_colorPrimary" />
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

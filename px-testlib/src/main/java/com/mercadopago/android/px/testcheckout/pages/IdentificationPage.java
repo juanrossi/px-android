@@ -1,8 +1,8 @@
-package com.mercadopago.testcheckout.pages;
+package com.mercadopago.android.px.testcheckout.pages;
 
 import android.support.test.espresso.action.ViewActions;
 import android.view.View;
-import com.mercadopago.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testlib.pages.PageObject;
 import org.hamcrest.Matcher;
 
@@ -41,8 +41,8 @@ public class IdentificationPage extends PageObject<CheckoutValidator> {
     }
 
     private void insertIdAndPressNext(final String idNumber) {
-        Matcher<View> cardIdentificationNumberEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardIdentificationNumber);
-        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButton);
+        Matcher<View> cardIdentificationNumberEditTextMatcher = withId(com.mercadopago.android.px.R.id.mpsdkCardIdentificationNumber);
+        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.android.px.R.id.mpsdkNextButton);
         onView(cardIdentificationNumberEditTextMatcher).perform(typeText(idNumber));
         onView(cardNextButtonTextMatcher).perform(click());
     }
@@ -64,7 +64,7 @@ public class IdentificationPage extends PageObject<CheckoutValidator> {
     }
 
     public SecurityCodePage pressPrevious() {
-        onView(withId(com.mercadopago.R.id.mpsdkBackButton)).perform(click());
+        onView(withId(com.mercadopago.android.px.R.id.mpsdkBackButton)).perform(click());
         return new SecurityCodePage(validator);
     }
 }

@@ -1,8 +1,8 @@
 package com.mercadopago.android.px.model;
 
-import com.mercadopago.CheckoutActivity;
 import com.mercadopago.R;
-import com.mercadopago.exceptions.ExceptionHandler;
+import com.mercadopago.android.px.CheckoutActivity;
+import com.mercadopago.android.px.exceptions.ExceptionHandler;
 import com.mercadopago.services.exceptions.CardTokenException;
 import com.mercadopago.test.BaseTest;
 import com.mercadopago.test.StaticMock;
@@ -20,8 +20,10 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         assertTrue(cardToken.getExpirationYear() == StaticMock.DUMMY_EXPIRATION_YEAR_LONG);
         assertTrue(cardToken.getSecurityCode().equals(StaticMock.DUMMY_SECURITY_CODE));
         assertTrue(cardToken.getCardholder().getName().equals(StaticMock.DUMMY_CARDHOLDER_NAME));
-        assertTrue(cardToken.getCardholder().getIdentification().getType().equals(StaticMock.DUMMY_IDENTIFICATION_TYPE));
-        assertTrue(cardToken.getCardholder().getIdentification().getNumber().equals(StaticMock.DUMMY_IDENTIFICATION_NUMBER));
+        assertTrue(
+            cardToken.getCardholder().getIdentification().getType().equals(StaticMock.DUMMY_IDENTIFICATION_TYPE));
+        assertTrue(
+            cardToken.getCardholder().getIdentification().getNumber().equals(StaticMock.DUMMY_IDENTIFICATION_NUMBER));
     }
 
     public void testValidate() {
@@ -118,7 +120,8 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         } catch (CardTokenException ex) {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_CARD_LENGTH);
             String message = ExceptionHandler.getErrorMessage(getApplicationContext(), ex);
-            String expectedMessage = getApplicationContext().getString(R.string.mpsdk_invalid_card_length, String.valueOf(16));
+            String expectedMessage =
+                getApplicationContext().getString(R.string.mpsdk_invalid_card_length, String.valueOf(16));
             assertEquals(message, expectedMessage);
         }
     }
@@ -205,7 +208,8 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         } catch (CardTokenException ex) {
             assertEquals(ex.getErrorCode(), CardTokenException.INVALID_CVV_LENGTH);
             String message = ExceptionHandler.getErrorMessage(getApplicationContext(), ex);
-            String expectedMessage = getApplicationContext().getString(R.string.mpsdk_invalid_cvv_length, String.valueOf(3));
+            String expectedMessage =
+                getApplicationContext().getString(R.string.mpsdk_invalid_cvv_length, String.valueOf(3));
             assertEquals(message, expectedMessage);
         }
     }

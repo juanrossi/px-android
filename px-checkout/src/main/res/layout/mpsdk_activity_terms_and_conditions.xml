@@ -5,12 +5,14 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/mpsdkAppBar"
         app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/Theme.MercadoPagoTheme.NoActionBar">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/mpsdkToolbar"
             android:layout_width="match_parent"
@@ -18,7 +20,8 @@
             android:background="@color/mpsdk_background"
             android:theme="@style/ToolbarTheme"
             app:popupTheme="@style/Theme.MercadoPagoTheme.NoActionBar">
-            <com.mercadopago.customviews.MPTextView
+
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:id="@+id/mpsdkTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -28,16 +31,20 @@
                 android:layout_gravity="center"/>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
+
     <RelativeLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        tools:context="com.mercadopago.TermsAndConditionsActivity">
+        tools:context="com.mercadopago.android.px.TermsAndConditionsActivity">
+
         <include layout="@layout/mpsdk_view_progress_bar"/>
+
         <ScrollView
             android:id="@+id/mpsdkMPTermsAndConditions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone">
+
             <WebView
                 android:id="@+id/mpsdkTermsAndConditionsWebView"
                 android:layout_width="match_parent"

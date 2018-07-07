@@ -1,4 +1,4 @@
-package com.mercadopago.testcheckout.flows;
+package com.mercadopago.android.px.testcheckout.flows;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

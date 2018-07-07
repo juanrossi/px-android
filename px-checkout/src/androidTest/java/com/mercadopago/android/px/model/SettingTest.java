@@ -4,15 +4,12 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import com.mercadopago.CheckoutActivity;
+import com.mercadopago.android.px.CheckoutActivity;
 import com.mercadopago.test.StaticMock;
-
+import java.util.ArrayList;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 

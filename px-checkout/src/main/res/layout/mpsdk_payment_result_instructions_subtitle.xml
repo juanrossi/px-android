@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/mpsdk_xxxl_height"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/mpsdk_white"
-    android:padding="@dimen/mpsdk_m_margin">
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/mpsdk_xxxl_height"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:background="@color/mpsdk_white"
+             android:padding="@dimen/mpsdk_m_margin">
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/msdpkInstructionsSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

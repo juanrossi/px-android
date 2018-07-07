@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/mpsdkCardNumberInput"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:visibility="visible">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/mpsdkCardNumberInput"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:visibility="visible">
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -15,9 +15,9 @@
         android:text="@string/mpsdk_card_number_label"
         android:textColor="@color/mpsdk_color_new_card_text"
         android:textSize="14dp"
-        app:font_style="light" />
+        app:font_style="light"/>
 
-    <com.mercadopago.customviews.MPEditText
+    <com.mercadopago.android.px.customviews.MPEditText
         android:id="@+id/mpsdkCardNumber"
         android:layout_width="293dp"
         android:layout_height="wrap_content"
@@ -33,6 +33,6 @@
         android:textCursorDrawable="@drawable/mpsdk_cursor_input"
         android:textSize="19dp"
         app:backgroundTint="@color/mpsdk_input"
-        app:errorColor="@color/mpsdk_color_red_error" />
+        app:errorColor="@color/mpsdk_color_red_error"/>
 
 </LinearLayout>

@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -23,8 +24,10 @@
                 android:orientation="vertical"
                 android:background="@color/mpsdk_white"
                 android:visibility="visible">
+
                 <include layout="@layout/mpsdk_payment_types_list"/>
             </LinearLayout>
+
             <include layout="@layout/mpsdk_view_progress_bar"/>
         </FrameLayout>
     </ScrollView>

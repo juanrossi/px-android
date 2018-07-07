@@ -27,7 +27,6 @@ public abstract class Button extends CompactComponent<Button.Props, Button.Actio
             this.action = new Action();
             this.label = label;
         }
-
     }
 
     public Button(final Props props, final Actions callBack) {

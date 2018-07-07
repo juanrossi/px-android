@@ -1,10 +1,11 @@
 <LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="45dp"
-    android:background="@color/mpsdk_white_background"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+              android:layout_height="wrap_content"
+              android:minHeight="45dp"
+              android:background="@color/mpsdk_white_background"
+              android:orientation="vertical"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools">
+
     <LinearLayout
         android:paddingLeft="10dp"
         android:paddingStart="10dp"
@@ -12,14 +13,17 @@
         android:layout_height="@dimen/mpsdk_list_item_height_large"
         android:weightSum="1"
         android:orientation="horizontal">
+
         <LinearLayout
             android:layout_weight="0.98"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <ImageView
                     android:id="@+id/mpsdkImage"
                     android:layout_marginTop="8dp"
@@ -35,7 +39,7 @@
                     android:src="@drawable/mpsdk_cargavirtual"
                     android:adjustViewBounds="true"/>
 
-                <com.mercadopago.customviews.MPTextView
+                <com.mercadopago.android.px.customviews.MPTextView
                     android:id="@+id/mpsdkDescription"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
@@ -49,7 +53,7 @@
                     android:gravity="center_vertical"
                     style="@style/mpsdk_list_label"/>
 
-                <com.mercadopago.customviews.MPTextView
+                <com.mercadopago.android.px.customviews.MPTextView
                     android:id="@+id/mpsdkComment"
                     android:layout_marginBottom="12dp"
                     android:layout_width="wrap_content"
@@ -61,6 +65,7 @@
                     style="@style/mpsdk_list_label_comment"/>
             </RelativeLayout>
         </LinearLayout>
+
         <ImageView
             android:id="@+id/mpsdkEditHint"
             android:layout_width="15dp"
@@ -69,6 +74,7 @@
             android:src="@drawable/mpsdk_arrow_right_grey"
             android:adjustViewBounds="true"/>
     </LinearLayout>
+
     <View
         android:id="@+id/mpsdkSeparator"
         android:layout_width="match_parent"

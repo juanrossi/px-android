@@ -1,4 +1,4 @@
-package com.mercadopago.testcheckout.input;
+package com.mercadopago.android.px.testcheckout.input;
 
 
 public enum Country {

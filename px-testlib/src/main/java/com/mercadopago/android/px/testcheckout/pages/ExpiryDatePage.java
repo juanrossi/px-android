@@ -1,9 +1,9 @@
-package com.mercadopago.testcheckout.pages;
+package com.mercadopago.android.px.testcheckout.pages;
 
 import android.support.test.espresso.action.ViewActions;
 import android.view.View;
 
-import com.mercadopago.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testlib.pages.PageObject;
 
 import org.hamcrest.Matcher;
@@ -31,8 +31,8 @@ public class ExpiryDatePage extends PageObject<CheckoutValidator> {
     }
 
     public SecurityCodePage enterExpiryDate(final String s) {
-        Matcher<View> cardExpiryDateEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardExpiryDate);
-        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButton);
+        Matcher<View> cardExpiryDateEditTextMatcher = withId(com.mercadopago.android.px.R.id.mpsdkCardExpiryDate);
+        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.android.px.R.id.mpsdkNextButton);
         onView(cardExpiryDateEditTextMatcher).perform(typeText("0922"));
         onView(cardNextButtonTextMatcher).perform(click());
         return new SecurityCodePage(validator);
@@ -49,7 +49,7 @@ public class ExpiryDatePage extends PageObject<CheckoutValidator> {
     }
 
     public NamePage pressPrevious() {
-        onView(withId(com.mercadopago.R.id.mpsdkBackButton)).perform(click());
+        onView(withId(com.mercadopago.android.px.R.id.mpsdkBackButton)).perform(click());
         return new NamePage(validator);
     }
 }

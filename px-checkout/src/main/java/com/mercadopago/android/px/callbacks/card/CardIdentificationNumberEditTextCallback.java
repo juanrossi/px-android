@@ -6,7 +6,10 @@ package com.mercadopago.android.px.callbacks.card;
 
 public interface CardIdentificationNumberEditTextCallback {
     void checkOpenKeyboard();
+
     void saveIdentificationNumber(CharSequence s);
+
     void changeErrorView();
+
     void toggleLineColorOnError(boolean toggle);
 }

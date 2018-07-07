@@ -1,7 +1,7 @@
-package com.mercadopago.testcheckout.pages;
+package com.mercadopago.android.px.testcheckout.pages;
 
 import android.view.View;
-import com.mercadopago.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testlib.pages.PageObject;
 import org.hamcrest.Matcher;
 
@@ -26,7 +26,7 @@ public class ReviewPaymentMethodsPage extends PageObject<CheckoutValidator> {
     }
 
     public CreditCardPage clickEnterCardButton() {
-        final Matcher<View> enterOtherCardButtonMatcher = withId(com.mercadopago.R.id.tryOtherCardButton);
+        final Matcher<View> enterOtherCardButtonMatcher = withId(com.mercadopago.android.px.R.id.tryOtherCardButton);
         onView(enterOtherCardButtonMatcher).perform(click());
         return new CreditCardPage(validator);
     }

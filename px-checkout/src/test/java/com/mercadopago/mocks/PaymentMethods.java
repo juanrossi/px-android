@@ -1,17 +1,17 @@
 package com.mercadopago.mocks;
 
 import com.google.gson.reflect.TypeToken;
-import com.mercadopago.services.exceptions.ApiException;
 import com.mercadopago.android.px.model.PaymentMethod;
+import com.mercadopago.services.exceptions.ApiException;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.utils.ResourcesUtil;
-
 import java.lang.reflect.Type;
 import java.util.List;
 
 public class PaymentMethods {
 
-    private static String doNotFindPaymentMethodsException = "{\"message\":\"doesn't find payment methods\",\"error\":\"payment methods not found error\",\"cause\":[]}";
+    private static String doNotFindPaymentMethodsException =
+        "{\"message\":\"doesn't find payment methods\",\"error\":\"payment methods not found error\",\"cause\":[]}";
 
     private PaymentMethods() {
 

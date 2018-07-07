@@ -6,25 +6,25 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.mercadopago.CheckoutActivity;
+import com.mercadopago.android.px.CheckoutActivity;
 import com.mercadopago.android.px.callbacks.CallbackHolder;
-import com.mercadopago.hooks.CheckoutHooks;
-import com.mercadopago.internal.di.Session;
+import com.mercadopago.android.px.hooks.CheckoutHooks;
+import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.commission.ChargeRule;
-import com.mercadopago.plugins.DataInitializationTask;
-import com.mercadopago.plugins.PaymentMethodPlugin;
-import com.mercadopago.plugins.PaymentProcessor;
+import com.mercadopago.android.px.plugins.DataInitializationTask;
+import com.mercadopago.android.px.plugins.PaymentMethodPlugin;
+import com.mercadopago.android.px.plugins.PaymentProcessor;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.FlowPreference;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
 import com.mercadopago.android.px.preferences.ServicePreference;
-import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
-import com.mercadopago.tracker.FlowHandler;
-import com.mercadopago.uicontrollers.FontCache;
+import com.mercadopago.android.px.review_and_confirm.models.ReviewAndConfirmPreferences;
+import com.mercadopago.android.px.tracker.FlowHandler;
+import com.mercadopago.android.px.uicontrollers.FontCache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
+import static com.mercadopago.android.px.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
 import static com.mercadopago.util.TextUtils.isEmpty;
 
 public class MercadoPagoCheckout implements Serializable {
@@ -103,7 +103,7 @@ public class MercadoPagoCheckout implements Serializable {
      * Starts checkout experience.
      * When the flows ends it returns a {@link PaymentData} object to finish the payment.
      * will be returned on {@link Activity#onActivityResult(int, int, Intent)} if success or
-     * {@link com.mercadopago.exceptions.MercadoPagoError}
+     * {@link com.mercadopago.android.px.exceptions.MercadoPagoError}
      * if something went wrong or canceled.
      *
      * @param context context needed to start checkout.
@@ -119,7 +119,7 @@ public class MercadoPagoCheckout implements Serializable {
      * Starts checkout experience.
      * When the flows ends it returns a {@link PaymentResult} object that
      * will be returned on {@link Activity#onActivityResult(int, int, Intent)} if success or
-     * {@link com.mercadopago.exceptions.MercadoPagoError}
+     * {@link com.mercadopago.android.px.exceptions.MercadoPagoError}
      * <p>
      * will return on {@link Activity#onActivityResult(int, int, Intent)}
      *
@@ -283,7 +283,7 @@ public class MercadoPagoCheckout implements Serializable {
         /**
          * Checkout builder allow you to create a {@link MercadoPagoCheckout}
          *
-         * @param publicKey          merchant public key.
+         * @param publicKey merchant public key.
          * @param checkoutPreference the preference that represents the payment information.
          */
         public Builder(@NonNull final String publicKey, @NonNull final CheckoutPreference checkoutPreference) {
@@ -297,7 +297,7 @@ public class MercadoPagoCheckout implements Serializable {
         /**
          * Checkout builder allow you to create a {@link MercadoPagoCheckout}
          *
-         * @param publicKey    merchant public key.
+         * @param publicKey merchant public key.
          * @param preferenceId the preference id that represents the payment information.
          */
         public Builder(@NonNull final String publicKey, @NonNull final String preferenceId) {
@@ -419,7 +419,7 @@ public class MercadoPagoCheckout implements Serializable {
 
         @SuppressWarnings("unused")
         public Builder addPaymentMethodPlugin(@NonNull final PaymentMethodPlugin paymentMethodPlugin,
-                                              @NonNull final PaymentProcessor paymentProcessor) {
+            @NonNull final PaymentProcessor paymentProcessor) {
             paymentMethodPluginList.add(paymentMethodPlugin);
             paymentPlugins.put(paymentMethodPlugin.getId(), paymentProcessor);
             return this;
@@ -478,7 +478,7 @@ public class MercadoPagoCheckout implements Serializable {
 
         private boolean hasPaymentResultDiscount() {
             return paymentResult != null && paymentResult.getPaymentData() != null &&
-                    paymentResult.getPaymentData().getDiscount() != null;
+                paymentResult.getPaymentData().getDiscount() != null;
         }
 
         private boolean hasTwoDiscountsSet() {

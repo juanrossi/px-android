@@ -2,15 +2,12 @@ package com.mercadopago.android.px.model;
 
 import com.mercadopago.test.StaticMock;
 import com.mercadopago.util.JsonUtil;
-
+import java.util.Arrays;
+import java.util.Collection;
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Created by mreverter on 27/4/16.
@@ -20,15 +17,15 @@ import java.util.Collection;
 public class PaymentMethodSearchGetSearchItemsTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {"oxxo", "ticket", "oxxo"},
-                {"bancomer", "bank_transfer", "bancomer_bank_transfer"},
-                {"bancomer", "ticket", "bancomer_ticket"},
-                {"banamex", "bank_transfer", "banamex_bank_transfer"},
-                {"banamex", "ticket", "banamex_ticket"},
-                {"serfin", "bank_transfer", "serfin_bank_transfer"},
-                {"serfin", "ticket", "serfin_ticket"},
-                {"invalid_pm", "", "null"}
+        return Arrays.asList(new Object[][] {
+            { "oxxo", "ticket", "oxxo" },
+            { "bancomer", "bank_transfer", "bancomer_bank_transfer" },
+            { "bancomer", "ticket", "bancomer_ticket" },
+            { "banamex", "bank_transfer", "banamex_bank_transfer" },
+            { "banamex", "ticket", "banamex_ticket" },
+            { "serfin", "bank_transfer", "serfin_bank_transfer" },
+            { "serfin", "ticket", "serfin_ticket" },
+            { "invalid_pm", "", "null" }
         });
     }
 
@@ -39,7 +36,6 @@ public class PaymentMethodSearchGetSearchItemsTest {
     public String mPaymentMethodId;
 
     public String mPaymentTypeId;
-
 
     public PaymentMethodSearchGetSearchItemsTest(String paymentMethodId, String paymentTypeId, String itemId) {
         this.paymentMethodSearch = getPaymentMethodSearch();
@@ -63,10 +59,8 @@ public class PaymentMethodSearchGetSearchItemsTest {
         }
     }
 
-
     private PaymentMethodSearch getPaymentMethodSearch() {
         String paymentMethodSearchJson = StaticMock.getPaymentMethodSearchWithoutCustomOptionsAsJson();
         return JsonUtil.getInstance().fromJson(paymentMethodSearchJson, PaymentMethodSearch.class);
-
     }
 }

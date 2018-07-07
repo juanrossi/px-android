@@ -31,7 +31,7 @@
             android:layout_marginStart="@dimen/mpsdk_s_margin"
             android:orientation="vertical">
 
-            <com.mercadopago.customviews.MPTextView
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                 android:textColor="@color/ui_meli_black"
                 android:textSize="@dimen/mpsdk_s_text"/>
 
-            <com.mercadopago.customviews.MPTextView
+            <com.mercadopago.android.px.customviews.MPTextView
                 android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

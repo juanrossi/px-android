@@ -7,8 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 
 public class ToolbarRenderer extends Renderer<ToolbarComponent> {
 
@@ -28,7 +27,6 @@ public class ToolbarRenderer extends Renderer<ToolbarComponent> {
         if (!component.props.toolbarVisible) {
 
             toolbar.setVisibility(View.GONE);
-
         } else {
 
             final TextView titleView = view.findViewById(R.id.title);

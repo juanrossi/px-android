@@ -1,22 +1,20 @@
 package com.mercadopago.issuers;
 
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.mocks.Issuers;
-import com.mercadopago.mocks.PaymentMethods;
+import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.PaymentMethod;
-import com.mercadopago.mvp.TaggedCallback;
-import com.mercadopago.presenters.IssuersPresenter;
-import com.mercadopago.providers.IssuersProvider;
-import com.mercadopago.views.IssuersActivityView;
-
-import org.junit.Test;
-
+import com.mercadopago.android.px.mvp.TaggedCallback;
+import com.mercadopago.android.px.presenters.IssuersPresenter;
+import com.mercadopago.android.px.providers.IssuersProvider;
+import com.mercadopago.android.px.views.IssuersActivityView;
+import com.mercadopago.mocks.Issuers;
+import com.mercadopago.mocks.PaymentMethods;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

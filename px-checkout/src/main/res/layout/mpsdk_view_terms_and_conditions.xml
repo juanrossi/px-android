@@ -2,7 +2,6 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,7 +13,7 @@
     android:paddingBottom="@dimen/mpsdk_s_margin"
     android:paddingTop="@dimen/mpsdk_s_margin">
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/terms_and_conditions_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +24,7 @@
         android:textSize="@dimen/ui_fontsize_xxsmall"
         tools:text="Terms and conditions Message"/>
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/terms_and_conditions_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

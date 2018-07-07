@@ -1,14 +1,14 @@
 <LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center_vertical"
-    android:focusable="true"
-    android:layout_marginLeft="@dimen/mpsdk_xxs_margin"
-    android:layout_marginRight="@dimen/mpsdk_xxs_margin"
-    android:paddingTop="@dimen/mpsdk_m_margin"
-    android:background="?selectableItemBackground"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:gravity="center_vertical"
+              android:focusable="true"
+              android:layout_marginLeft="@dimen/mpsdk_xxs_margin"
+              android:layout_marginRight="@dimen/mpsdk_xxs_margin"
+              android:paddingTop="@dimen/mpsdk_m_margin"
+              android:background="?selectableItemBackground"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -23,21 +23,21 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:contentDescription="@string/mpsdk_bank"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"/>
 
-        <com.mercadopago.customviews.MPTextView
+        <com.mercadopago.android.px.customviews.MPTextView
             android:id="@+id/logo_name"
             style="@style/DealsLogoName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            tools:text="MercadoPago + Banco patagonia" />
+            tools:text="MercadoPago + Banco patagonia"/>
 
     </FrameLayout>
 
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/mpsdkInstallments"
         android:layout_marginTop="@dimen/mpsdk_xs_margin"
         android:layout_width="wrap_content"
@@ -45,9 +45,9 @@
         android:layout_gravity="center"
         android:gravity="center"
         tools:text="6 cuotas sin interes"
-        style="@style/DealsListTitle" />
+        style="@style/DealsListTitle"/>
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/mpsdkBankDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,5 +56,5 @@
         android:layout_marginTop="@dimen/mpsdk_xxxs_margin"
         android:gravity="center"
         tools:text="Mastercard, American Express y Visa"
-        style="@style/DealsDescription" />
+        style="@style/DealsDescription"/>
 </LinearLayout>

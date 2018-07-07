@@ -12,11 +12,11 @@ import com.mercadolibre.android.ui.widgets.MeliButton;
 import com.mercadolibre.android.ui.widgets.MeliDialog;
 import com.mercadolibre.android.ui.widgets.MeliSpinner;
 import com.mercadolibre.android.ui.widgets.TextField;
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.callbacks.OnDiscountRetrieved;
-import com.mercadopago.internal.di.Session;
-import com.mercadopago.android.px.services.util.TextUtil;
+import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.model.Discount;
+import com.mercadopago.android.px.services.util.TextUtil;
 import com.mercadopago.util.FlipModalAnimationUtil;
 
 import static android.graphics.Typeface.NORMAL;

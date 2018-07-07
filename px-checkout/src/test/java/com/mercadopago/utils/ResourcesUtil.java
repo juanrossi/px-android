@@ -9,7 +9,8 @@ import java.util.Scanner;
 
 public class ResourcesUtil {
 
-    private ResourcesUtil() {}
+    private ResourcesUtil() {
+    }
 
     public static String getStringResource(String fileName) {
         String resource;

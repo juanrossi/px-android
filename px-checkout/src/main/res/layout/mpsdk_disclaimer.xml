@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@color/mpsdk_review_summary_background"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:background="@color/mpsdk_review_summary_background"
+              android:orientation="vertical">
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/cftText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,5 +18,5 @@
         android:textColor="@color/mpsdk_summary_text_color"
         android:textSize="@dimen/mpsdk_l_text"
         app:font_style="light"
-        tools:text="CFT 0,00%" />
+        tools:text="CFT 0,00%"/>
 </LinearLayout>

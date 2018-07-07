@@ -1,9 +1,7 @@
 package com.mercadopago.android.px.controllers;
 
 import android.os.CountDownTimer;
-
-import com.mercadopago.observers.TimerObserver;
-
+import com.mercadopago.android.px.observers.TimerObserver;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,7 +145,8 @@ public class CheckoutTimer implements Timer {
     }
 
     @Override
-    public void setOnFinishListener(com.mercadopago.android.px.controllers.CheckoutTimer.FinishListener finishListener) {
+    public void setOnFinishListener(
+        com.mercadopago.android.px.controllers.CheckoutTimer.FinishListener finishListener) {
         mFinishListener = finishListener;
     }
 

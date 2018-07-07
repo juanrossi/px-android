@@ -3,7 +3,6 @@ package com.mercadopago.android.px.components;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +14,8 @@ public class RendererFactory {
 
     private static final Map<Class, Class> rendererRegistry = new HashMap<>();
 
-    private RendererFactory() {}
+    private RendererFactory() {
+    }
 
     public static void register(@NonNull final Class component, @NonNull final Class renderer) {
         rendererRegistry.put(component, renderer);

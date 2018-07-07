@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/mpsdk_light_gray"
-    android:paddingEnd="@dimen/mpsdk_xl_margin"
-    android:paddingLeft="@dimen/mpsdk_xl_margin"
-    android:paddingRight="@dimen/mpsdk_xl_margin"
-    android:paddingStart="@dimen/mpsdk_xl_margin">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@color/mpsdk_light_gray"
+             android:paddingEnd="@dimen/mpsdk_xl_margin"
+             android:paddingLeft="@dimen/mpsdk_xl_margin"
+             android:paddingRight="@dimen/mpsdk_xl_margin"
+             android:paddingStart="@dimen/mpsdk_xl_margin">
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/msdpkTertiaryInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,6 +18,6 @@
         android:gravity="center_horizontal"
         android:textColor="@color/ui_meli_dark_grey"
         android:textSize="@dimen/mpsdk_xxs_text"
-        tools:text="Tertiary info" />
+        tools:text="Tertiary info"/>
 
 </FrameLayout>

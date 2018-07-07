@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.mercadopago.R;
-import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.util.MercadoPagoUtil;
-
 import java.util.List;
 
 /**
@@ -27,7 +25,7 @@ public class ReviewPaymentMethodsAdapter extends RecyclerView.Adapter<ReviewPaym
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.mpsdk_review_payment_method, parent, false);
+            .inflate(R.layout.mpsdk_review_payment_method, parent, false);
         return new ViewHolder(v);
     }
 
@@ -52,7 +50,6 @@ public class ReviewPaymentMethodsAdapter extends RecyclerView.Adapter<ReviewPaym
 
         private final ImageView mPaymentMethodImage;
         private final MPTextView mPaymentMethodName;
-
 
         public ViewHolder(View v) {
             super(v);

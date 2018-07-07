@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".GuessingCardActivity">
+    tools:context=".android.px.GuessingCardActivity">
 
     <ScrollView
         android:id="@+id/mpsdkScrollViewContainer"
@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:background="@color/mpsdk_white">
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"

@@ -1,9 +1,9 @@
-package com.mercadopago.testcheckout.pages;
+package com.mercadopago.android.px.testcheckout.pages;
 
 
 import android.view.View;
 
-import com.mercadopago.testcheckout.assertions.CheckoutValidator;
+import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.testlib.pages.PageObject;
 
 import org.hamcrest.Matcher;
@@ -30,8 +30,8 @@ public class DebitCardPage extends PageObject<CheckoutValidator> {
     }
 
     public NamePage enterCreditCardNumber(final String cardNumber) {
-        Matcher<View> cardNumberEditTextMatcher = withId(com.mercadopago.R.id.mpsdkCardNumber);
-        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.R.id.mpsdkNextButton);
+        Matcher<View> cardNumberEditTextMatcher = withId(com.mercadopago.android.px.R.id.mpsdkCardNumber);
+        Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.android.px.R.id.mpsdkNextButton);
         onView(cardNumberEditTextMatcher).perform(typeText(cardNumber));
         onView(cardNextButtonTextMatcher).perform(click());
         return new NamePage(validator);

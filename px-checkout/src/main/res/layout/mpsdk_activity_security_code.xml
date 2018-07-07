@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/mpsdk_white"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:custom="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/mpsdk_white"
+              android:orientation="vertical">
 
     <ScrollView
         android:id="@+id/mpsdkScrollViewContainer"
@@ -35,7 +35,7 @@
 
                 </android.support.v7.widget.Toolbar>
 
-                <com.mercadopago.customviews.MPTextView
+                <com.mercadopago.android.px.customviews.MPTextView
                     android:id="@+id/mpsdkTimerTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,14 +48,14 @@
                     android:textColor="@color/mpsdk_toolbar_text"
                     android:textSize="17dp"
                     android:visibility="gone"
-                    app:font_style="mono_regular" />
+                    app:font_style="mono_regular"/>
 
                 <FrameLayout
                     android:id="@+id/mpsdkCardViewContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="40dp" />
+                    android:layout_marginTop="40dp"/>
             </FrameLayout>
 
             <LinearLayout
@@ -88,15 +88,15 @@
                         android:paddingStart="10dp"
                         android:visibility="visible">
 
-                        <com.mercadopago.customviews.MPTextView
+                        <com.mercadopago.android.px.customviews.MPTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:lines="1"
                             android:text="@string/mpsdk_security_code"
                             android:textColor="@color/mpsdk_color_new_card_text"
-                            android:textSize="14dp" />
+                            android:textSize="14dp"/>
 
-                        <com.mercadopago.customviews.MPEditText
+                        <com.mercadopago.android.px.customviews.MPEditText
                             android:id="@+id/mpsdkCardSecurityCode"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                             android:textCursorDrawable="@drawable/mpsdk_cursor_input"
                             android:textSize="19dp"
                             app:backgroundTint="@color/mpsdk_input"
-                            custom:errorColor="@color/mpsdk_color_red_error" />
+                            custom:errorColor="@color/mpsdk_color_red_error"/>
 
                     </LinearLayout>
 
@@ -126,7 +126,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="2dp"
                             android:layout_marginRight="2dp"
-                            android:visibility="visible" />
+                            android:visibility="visible"/>
                     </FrameLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -158,13 +158,13 @@
                             android:background="@drawable/mpsdk_form_input_button"
                             android:focusable="true">
 
-                            <com.mercadopago.customviews.MPTextView
+                            <com.mercadopago.android.px.customviews.MPTextView
                                 android:id="@+id/mpsdkBackButtonText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="@string/mpsdk_input_button_back"
-                                android:textColor="@color/mpsdk_active_button" />
+                                android:textColor="@color/mpsdk_active_button"/>
                         </FrameLayout>
                     </FrameLayout>
 
@@ -176,13 +176,13 @@
                         android:background="@drawable/mpsdk_form_input_button"
                         android:focusable="true">
 
-                        <com.mercadopago.customviews.MPTextView
+                        <com.mercadopago.android.px.customviews.MPTextView
                             android:id="@+id/mpsdkNextButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/mpsdk_input_button_next"
-                            android:textColor="@color/mpsdk_active_button" />
+                            android:textColor="@color/mpsdk_active_button"/>
                     </FrameLayout>
                 </LinearLayout>
 
@@ -194,13 +194,13 @@
                     android:background="@color/mpsdk_very_light_gray"
                     android:visibility="gone">
 
-                    <com.mercadopago.customviews.MPTextView
+                    <com.mercadopago.android.px.customviews.MPTextView
                         android:id="@+id/mpsdkErrorTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:textColor="@color/mpsdk_color_red_error"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </FrameLayout>
 
                 <include layout="@layout/mpsdk_view_progress_bar_small"/>

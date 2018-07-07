@@ -9,7 +9,7 @@
     android:minHeight="@dimen/mpsdk_toolbar_height"
     android:background="@android:color/transparent">
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/mpsdkBankDealsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:textColor="@color/mpsdk_toolbar_text"
         style="@style/mpsdk_title_text"/>
 
-    <com.mercadopago.customviews.MPTextView
+    <com.mercadopago.android.px.customviews.MPTextView
         android:id="@+id/mpsdkTimerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
