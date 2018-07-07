@@ -1,4 +1,4 @@
-package com.mercadopago.testlib.idlingresource;
+package com.mercadopago.android.testlib.idlingresource;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;

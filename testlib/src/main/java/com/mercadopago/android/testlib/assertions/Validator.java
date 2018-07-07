@@ -1,4 +1,4 @@
-package com.mercadopago.testlib.assertions;
+package com.mercadopago.android.testlib.assertions;
 
 
 public interface Validator {

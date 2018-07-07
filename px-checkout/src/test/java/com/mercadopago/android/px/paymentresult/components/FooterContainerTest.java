@@ -8,7 +8,7 @@ import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.paymentresult.PaymentResultProvider;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
 import com.mercadopago.android.px.review_and_confirm.components.actions.ChangePaymentMethodAction;
-import com.mercadopago.mocks.PaymentResults;
+import com.mercadopago.android.px.mocks.PaymentResults;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

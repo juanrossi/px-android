@@ -13,9 +13,9 @@ import com.mercadopago.android.px.customviews.MPButton;
 import com.mercadopago.example.R;
 import com.mercadopago.android.px.services.core.Settings;
 import com.mercadopago.android.px.tracking.constants.TrackingEnvironments;
-import com.mercadopago.utils.ExamplesUtils;
+import com.mercadopago.android.px.utils.ExamplesUtils;
 
-import static com.mercadopago.utils.ExamplesUtils.resolveCheckoutResult;
+import static com.mercadopago.android.px.utils.ExamplesUtils.resolveCheckoutResult;
 
 public class CheckoutExampleActivity extends AppCompatActivity {
 

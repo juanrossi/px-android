@@ -1,7 +1,7 @@
-package com.mercadopago.testlib.pages;
+package com.mercadopago.android.testlib.pages;
 
 
-import com.mercadopago.testlib.assertions.Validator;
+import com.mercadopago.android.testlib.assertions.Validator;
 
 public abstract class PageObject<T extends Validator> {
 

@@ -3,8 +3,8 @@ package com.mercadopago.android.px.core;
 import android.os.Build;
 import android.support.test.InstrumentationRegistry;
 import com.mercadopago.android.px.CheckoutActivity;
-import com.mercadopago.test.BaseTest;
-import com.mercadopago.test.StaticMock;
+import com.mercadopago.android.px.test.BaseTest;
+import com.mercadopago.android.px.test.StaticMock;
 import junit.framework.Assert;
 
 public class MercadoPagoServicesAdapterTest extends BaseTest<CheckoutActivity> {

@@ -5,7 +5,7 @@ import com.mercadopago.android.px.model.Instruction;
 import com.mercadopago.android.px.paymentresult.components.InstructionReferenceComponent;
 import com.mercadopago.android.px.paymentresult.components.InstructionsReferences;
 import com.mercadopago.android.px.paymentresult.props.InstructionsReferencesProps;
-import com.mercadopago.mocks.Instructions;
+import com.mercadopago.android.px.mocks.Instructions;
 import java.util.List;
 import junit.framework.Assert;
 import org.junit.Before;

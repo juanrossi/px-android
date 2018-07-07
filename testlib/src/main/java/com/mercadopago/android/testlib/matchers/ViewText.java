@@ -1,4 +1,4 @@
-package com.mercadopago.testlib.matchers;
+package com.mercadopago.android.testlib.matchers;
 
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;

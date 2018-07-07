@@ -18,8 +18,8 @@ import com.mercadopago.example.R;
 import java.util.List;
 
 import static android.support.v7.widget.RecyclerView.ViewHolder;
-import static com.mercadopago.utils.ExamplesUtils.getOptions;
-import static com.mercadopago.utils.ExamplesUtils.resolveCheckoutResult;
+import static com.mercadopago.android.px.utils.ExamplesUtils.getOptions;
+import static com.mercadopago.android.px.utils.ExamplesUtils.resolveCheckoutResult;
 
 public class SelectCheckoutActivity extends AppCompatActivity {
 

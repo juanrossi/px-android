@@ -1,4 +1,4 @@
-package com.mercadopago.testlib.utils;
+package com.mercadopago.android.testlib.utils;
 
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;

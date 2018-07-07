@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.components;
 
 import android.content.Context;
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

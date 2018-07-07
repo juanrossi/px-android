@@ -9,7 +9,7 @@ import com.mercadopago.android.px.paymentresult.components.InstructionsInfo;
 import com.mercadopago.android.px.paymentresult.components.InstructionsReferences;
 import com.mercadopago.android.px.paymentresult.components.InstructionsTertiaryInfo;
 import com.mercadopago.android.px.paymentresult.props.InstructionsContentProps;
-import com.mercadopago.mocks.Instructions;
+import com.mercadopago.android.px.mocks.Instructions;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.Assert;

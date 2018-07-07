@@ -1,6 +1,6 @@
 package com.mercadopago.android.px.preferences;
 
-import com.mercadopago.services.constants.ProcessingModes;
+import com.mercadopago.android.px.services.constants.ProcessingModes;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;

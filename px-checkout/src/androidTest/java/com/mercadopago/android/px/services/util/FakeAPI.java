@@ -1,6 +1,6 @@
-package com.mercadopago.services.util;
+package com.mercadopago.android.px.services.util;
 
-import com.mercadopago.test.FakeInterceptor;
+import com.mercadopago.android.px.test.FakeInterceptor;
 import com.mercadopago.util.JsonUtil;
 import java.util.ArrayList;
 import java.util.List;

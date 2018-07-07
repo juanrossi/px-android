@@ -1,6 +1,6 @@
 package com.mercadopago.android.px.model;
 
-import com.mercadopago.services.exceptions.ApiException;
+import com.mercadopago.android.px.services.exceptions.ApiException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;

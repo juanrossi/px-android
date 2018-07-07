@@ -1,4 +1,4 @@
-package com.mercadopago.testlib;
+package com.mercadopago.android.testlib;
 
 import android.support.test.InstrumentationRegistry;
 import java.io.InputStream;

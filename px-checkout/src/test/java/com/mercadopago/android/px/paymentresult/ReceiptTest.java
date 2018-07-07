@@ -2,7 +2,7 @@ package com.mercadopago.android.px.paymentresult;
 
 import com.mercadopago.android.px.components.Receipt;
 import com.mercadopago.android.px.model.PaymentResult;
-import com.mercadopago.mocks.PaymentResults;
+import com.mercadopago.android.px.mocks.PaymentResults;
 import junit.framework.Assert;
 import org.junit.Test;
 

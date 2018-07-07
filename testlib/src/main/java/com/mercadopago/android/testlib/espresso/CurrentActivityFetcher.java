@@ -1,4 +1,4 @@
-package com.mercadopago.testlib.espresso;
+package com.mercadopago.android.testlib.espresso;
 
 import android.app.Activity;
 import android.support.test.InstrumentationRegistry;

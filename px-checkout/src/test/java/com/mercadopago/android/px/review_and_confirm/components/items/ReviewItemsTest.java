@@ -1,6 +1,6 @@
 package com.mercadopago.android.px.review_and_confirm.components.items;
 
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.review_and_confirm.models.ItemsModel;
 import org.junit.Before;
 import org.junit.Test;

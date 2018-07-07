@@ -1,4 +1,4 @@
-package com.mercadopago.testlib.utils;
+package com.mercadopago.android.testlib.utils;
 
 
 import android.content.Context;

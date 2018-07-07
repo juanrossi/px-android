@@ -1,4 +1,4 @@
-package com.mercadopago.testlib.matchers;
+package com.mercadopago.android.testlib.matchers;
 
 import android.content.res.Resources;
 import android.support.annotation.IdRes;

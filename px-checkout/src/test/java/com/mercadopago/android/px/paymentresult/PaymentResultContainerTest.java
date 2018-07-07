@@ -1,6 +1,6 @@
 package com.mercadopago.android.px.paymentresult;
 
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.ActionDispatcher;
 import com.mercadopago.android.px.model.Instruction;
 import com.mercadopago.android.px.model.PaymentData;
@@ -12,8 +12,8 @@ import com.mercadopago.android.px.paymentresult.model.Badge;
 import com.mercadopago.android.px.paymentresult.props.HeaderProps;
 import com.mercadopago.android.px.paymentresult.props.PaymentResultProps;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
-import com.mercadopago.mocks.PaymentMethods;
-import com.mercadopago.mocks.PaymentResults;
+import com.mercadopago.android.px.mocks.PaymentMethods;
+import com.mercadopago.android.px.mocks.PaymentResults;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -460,7 +460,7 @@ public class PaymentResultContainerTest {
     @Test
     public void onPaymentMethodOffPaymentThenShowInstructionsTitle() {
         final PaymentResult paymentResult = PaymentResults.getPaymentMethodOffPaymentResult();
-        final Instruction instruction = com.mercadopago.mocks.Instructions.getRapipagoInstruction();
+        final Instruction instruction = com.mercadopago.android.px.mocks.Instructions.getRapipagoInstruction();
 
         final HeaderProps headerProps = getHeaderPropsFromContainerWith(paymentResult, instruction);
 

@@ -1,8 +1,8 @@
 package com.mercadopago.android.px.model;
 
 import com.mercadopago.android.px.CheckoutActivity;
-import com.mercadopago.test.BaseTest;
-import com.mercadopago.test.StaticMock;
+import com.mercadopago.android.px.test.BaseTest;
+import com.mercadopago.android.px.test.StaticMock;
 
 public class CardTest extends BaseTest<CheckoutActivity> {
 

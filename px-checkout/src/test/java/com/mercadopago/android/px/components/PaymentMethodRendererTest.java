@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.components;
 
 import android.content.Context;
-import com.mercadopago.R;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.model.PaymentTypes;
 import java.util.Locale;
 import org.junit.Before;

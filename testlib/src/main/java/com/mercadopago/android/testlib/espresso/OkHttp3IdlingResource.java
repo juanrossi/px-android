@@ -1,4 +1,4 @@
-package com.mercadopago.testlib.espresso;
+package com.mercadopago.android.testlib.espresso;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
