@@ -2,13 +2,11 @@ package com.mercadopago.tracking;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
-
 import com.mercadopago.tracking.mocks.EventMock;
 import com.mercadopago.tracking.model.Event;
 import com.mercadopago.tracking.model.ScreenViewEvent;
 import com.mercadopago.tracking.strategies.EventsDatabase;
 import com.mercadopago.tracking.strategies.EventsDatabaseImpl;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -57,7 +55,6 @@ public class EventDatabaseImplTest {
         int storedTracksAmount = trackingContext.getBatchSize();
 
         assertEquals(storedTracksAmount, 0);
-
     }
 
     private class MockedMPTrackingContext {
@@ -83,7 +80,5 @@ public class EventDatabaseImplTest {
         public Integer getBatchSize() {
             return database.getBatchSize();
         }
-
     }
-
 }

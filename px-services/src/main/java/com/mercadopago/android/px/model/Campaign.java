@@ -3,9 +3,7 @@ package com.mercadopago.android.px.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.services.util.ParcelableUtil;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -88,7 +86,8 @@ public class Campaign implements Serializable, Parcelable {
     }
 
     public String getCampaignTermsUrl() {
-        return String.format(Locale.US, "https://api.mercadolibre.com/campaigns/%s/terms_and_conditions?format_type=html", id);
+        return String
+            .format(Locale.US, "https://api.mercadolibre.com/campaigns/%s/terms_and_conditions?format_type=html", id);
     }
 
     public static class Builder {

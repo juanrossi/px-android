@@ -6,7 +6,6 @@ import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentType;
 import com.mercadopago.android.px.model.PaymentTypes;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +57,9 @@ public class PaymentPreference implements Serializable {
                 excludedPaymentMethodIds.add(paymentMethod.getId());
             }
             return excludedPaymentMethodIds;
-        } else
+        } else {
             return null;
+        }
     }
 
     public Integer getDefaultInstallments() {
@@ -83,8 +83,9 @@ public class PaymentPreference implements Serializable {
                 excludedPaymentTypeIds.add(paymentType.getId());
             }
             return excludedPaymentTypeIds;
-        } else
+        } else {
             return null;
+        }
     }
 
     public String getDefaultPaymentMethodId() {
@@ -109,7 +110,6 @@ public class PaymentPreference implements Serializable {
         } else {
             return payerCosts;
         }
-
     }
 
     public PayerCost getDefaultInstallments(List<PayerCost> payerCosts) {
@@ -146,7 +146,7 @@ public class PaymentPreference implements Serializable {
             List<String> excludedPaymentTypes = getExcludedPaymentTypes();
 
             if ((excludedPaymentMethodIds != null && excludedPaymentMethodIds.contains(paymentMethod.getId()))
-                    || (excludedPaymentTypes != null && excludedPaymentTypes.contains(paymentMethod.getPaymentTypeId()))) {
+                || (excludedPaymentTypes != null && excludedPaymentTypes.contains(paymentMethod.getPaymentTypeId()))) {
                 isSupported = false;
             }
         }
@@ -172,7 +172,7 @@ public class PaymentPreference implements Serializable {
 
     public boolean excludedPaymentTypesValid() {
         return excludedPaymentTypes == null
-                || excludedPaymentTypes.size() < PaymentTypes.getAllPaymentTypes().size();
+            || excludedPaymentTypes.size() < PaymentTypes.getAllPaymentTypes().size();
     }
 
     public boolean validDefaultInstallments() {

@@ -1,13 +1,10 @@
 package com.mercadopago.android.px.testcheckout.pages;
 
-
 import android.support.test.espresso.action.ViewActions;
 import android.view.View;
-
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.android.testlib.pages.PageObject;
-
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -38,7 +35,6 @@ public class CreditCardPage extends PageObject<CheckoutValidator> {
         return new NamePage(validator);
     }
 
-
     public NoCheckoutPage pressBackWithExclusion() {
         onView(isRoot()).perform(ViewActions.pressBack());
         return new NoCheckoutPage(validator);
@@ -66,5 +62,4 @@ public class CreditCardPage extends PageObject<CheckoutValidator> {
         onView(cardNumberEditTextMatcher).perform(typeText(cardNumber));
         return cardNextButtonTextMatcher;
     }
-
 }

@@ -12,7 +12,6 @@ public interface TracksListener<T> {
      * in TrackingUtil.java, under the key SCREEN_NAME.
      * Example:
      * {@link com.mercadopago.android.px.tracking.utils.TrackingUtil#SCREEN_NAME_PAYMENT_VAULT}
-     *
      * @param extraParams Map containing information that the screen is showing. It also contains information
      * about errors if the screen launched is the Error screen.
      * The keys of the map are the ones described under the key PROPERTY in TrackingUtil.java.

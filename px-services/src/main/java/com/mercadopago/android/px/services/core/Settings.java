@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.services.core;
 
 import com.mercadopago.android.px.tracking.constants.TrackingEnvironments;
-
 import okhttp3.logging.HttpLoggingInterceptor;
 
 public class Settings {
@@ -24,5 +23,4 @@ public class Settings {
     public static void enableBetaServices() {
         servicesVersion = "beta";
     }
-
 }

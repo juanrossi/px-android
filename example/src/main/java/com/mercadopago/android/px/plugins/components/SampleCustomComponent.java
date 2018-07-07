@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.plugins.components;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.components.CustomComponent;
 import com.mercadopago.android.px.components.RendererFactory;
 

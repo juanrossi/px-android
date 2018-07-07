@@ -1,13 +1,13 @@
 package com.mercadopago.android.px.payerInformation;
 
 import com.mercadopago.android.px.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.mocks.IdentificationTypes;
 import com.mercadopago.android.px.model.Identification;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.presenters.PayerInformationPresenter;
 import com.mercadopago.android.px.providers.PayerInformationProvider;
 import com.mercadopago.android.px.views.PayerInformationView;
-import com.mercadopago.android.px.mocks.IdentificationTypes;
 import java.util.List;
 import org.junit.Test;
 

@@ -2,10 +2,8 @@ package com.mercadopago.android.px.testcheckout.pages;
 
 import android.support.test.espresso.action.ViewActions;
 import android.view.View;
-
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.android.testlib.pages.PageObject;
-
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -51,7 +49,7 @@ public class NamePage extends PageObject<CheckoutValidator> {
 
     public CreditCardPage pressPrevious() {
         onView(withId(com.mercadopago.android.px.R.id.mpsdkScrollViewContainer))
-                .perform(swipeUp());
+            .perform(swipeUp());
         onView(withId(com.mercadopago.android.px.R.id.mpsdkBackButton)).perform(click());
         return new CreditCardPage(validator);
     }

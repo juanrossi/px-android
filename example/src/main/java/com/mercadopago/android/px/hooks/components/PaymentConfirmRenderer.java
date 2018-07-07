@@ -4,9 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-
-import com.mercadopago.example.R;
 import com.mercadopago.android.px.hooks.HookRenderer;
+import com.mercadopago.example.R;
 
 public class PaymentConfirmRenderer extends HookRenderer<PaymentConfirm> {
 
@@ -15,7 +14,7 @@ public class PaymentConfirmRenderer extends HookRenderer<PaymentConfirm> {
     @Override
     public View renderContents(final PaymentConfirm component, final Context context) {
         final View view = LayoutInflater.from(context)
-                .inflate(R.layout.hook_payment_confirm, null);
+            .inflate(R.layout.hook_payment_confirm, null);
 
         final TextView amount = view.findViewById(R.id.amount);
         amount.setText(component.props.paymentData.getTransactionAmount().toString());

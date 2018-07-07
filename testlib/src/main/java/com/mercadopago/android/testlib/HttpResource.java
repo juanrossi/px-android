@@ -17,7 +17,8 @@ public abstract class HttpResource implements TestRule {
             @Override
             public void evaluate() throws Throwable {
                 final OkHttpClient client = getClient();
-                final OkHttp3IdlingResource okHttp3IdlingResource = OkHttp3IdlingResource.create(RES_NAME_OK_HTTP, client);
+                final OkHttp3IdlingResource okHttp3IdlingResource =
+                    OkHttp3IdlingResource.create(RES_NAME_OK_HTTP, client);
                 IdlingRegistry.getInstance().register(okHttp3IdlingResource);
                 base.evaluate();
                 IdlingRegistry.getInstance().unregister(okHttp3IdlingResource);

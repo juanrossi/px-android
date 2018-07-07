@@ -28,23 +28,23 @@
   "notification_url": null,
   "operation_type": "regular_payment",
   "payer": {
-      "phone": {
+    "phone": {
       "area_code": "",
       "number": ""
-      },
-      "address": {
-        "zip_code": "",
-        "street_name": "",
-        "street_number": null
-      },
-      "email": "test@mgmail.com",
-      "identification": {
-        "number": "",
-        "type": ""
-      },
-      "name": "",
-      "surname": "",
-      "date_created": ""
+    },
+    "address": {
+      "zip_code": "",
+      "street_name": "",
+      "street_number": null
+    },
+    "email": "test@mgmail.com",
+    "identification": {
+      "number": "",
+      "type": ""
+    },
+    "name": "",
+    "surname": "",
+    "date_created": ""
   },
   "payment_methods": {
     "excluded_payment_methods": [

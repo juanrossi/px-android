@@ -1,6 +1,5 @@
 package com.mercadopago.android.px.testcheckout.input;
 
-
 public class VisaDebit extends FakeCard {
 
     public VisaDebit(final CardState cardState, final Country country) {
@@ -9,10 +8,10 @@ public class VisaDebit extends FakeCard {
 
     private static String getNumber(Country country) {
         switch (country) {
-            case ARGENTINA:
-                return "4002768694395619";
-            default:
-                return null;
+        case ARGENTINA:
+            return "4002768694395619";
+        default:
+            return null;
         }
     }
 }

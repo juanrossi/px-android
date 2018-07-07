@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
-
 import java.util.Collection;
 
 public class ActivityIdlingResource implements IdlingResource {
@@ -41,7 +40,7 @@ public class ActivityIdlingResource implements IdlingResource {
     private Activity getActivityInstance() {
         final Activity[] mActivity = new Activity[1];
         Collection<Activity> resumedActivities =
-                ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+            ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
         mActivity[0] = resumedActivities.iterator().next();
         return mActivity[0];
     }

@@ -1,6 +1,5 @@
 package com.mercadopago.android.px.services.util;
 
-
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 

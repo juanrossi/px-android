@@ -1,4 +1,5 @@
 package com.mercadopago.android.px.model;
+
 /**
  * Created by mromar on 10/20/17.
  */

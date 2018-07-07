@@ -82,13 +82,13 @@ public final class UtilityMatchers {
     }
 
     public static Matcher<View> withItemTextInRecyclerView(final String itemText) {
-        checkArgument(!itemText.isEmpty(),"cannot be empty");
+        checkArgument(!itemText.isEmpty(), "cannot be empty");
         return new TypeSafeMatcher<View>() {
             @Override
             protected boolean matchesSafely(final View item) {
                 return allOf(
-                        isDescendantOfA(isAssignableFrom(RecyclerView.class)),
-                        withText(itemText)).matches(item);
+                    isDescendantOfA(isAssignableFrom(RecyclerView.class)),
+                    withText(itemText)).matches(item);
             }
 
             @Override

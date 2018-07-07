@@ -1,12 +1,10 @@
 package com.mercadopago.android.px.tracking.strategies;
 
 import android.content.Context;
-
 import com.mercadopago.android.px.tracking.model.AppInformation;
 import com.mercadopago.android.px.tracking.model.DeviceInfo;
 import com.mercadopago.android.px.tracking.model.Event;
 import com.mercadopago.android.px.tracking.model.EventTrackIntent;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +64,7 @@ public abstract class TrackingStrategy {
         Map<String, List<Event>> eventsByFlowMap = mapEventsToFlow(events);
         List<EventTrackIntent> eventTrackIntents = new ArrayList<>();
 
-        for(String flowId : eventsByFlowMap.keySet()) {
+        for (String flowId : eventsByFlowMap.keySet()) {
             AppInformation appInformation = getAppInformation().copy();
             appInformation.setFlowId(flowId);
             eventTrackIntents.add(new EventTrackIntent(appInformation, getDeviceInfo(), eventsByFlowMap.get(flowId)));
@@ -78,7 +76,7 @@ public abstract class TrackingStrategy {
         Map<String, List<Event>> eventsPerFlowMap = new HashMap<>();
         for (Event event : events) {
             List<Event> currentEvents = eventsPerFlowMap.get(event.getFlowId());
-            if(currentEvents == null) {
+            if (currentEvents == null) {
                 currentEvents = new ArrayList<>();
                 eventsPerFlowMap.put(event.getFlowId(), currentEvents);
             }

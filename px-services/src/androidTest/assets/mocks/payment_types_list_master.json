@@ -1,1 +1,8 @@
-[{"id":"debit_card"},{"id":"credit_card"}]
+[
+  {
+    "id": "debit_card"
+  },
+  {
+    "id": "credit_card"
+  }
+]

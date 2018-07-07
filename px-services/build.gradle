@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin:'com.android.library'
 
 android {
     compileSdkVersion api_level.toInteger()
@@ -33,7 +33,7 @@ android {
 dependencies {
 
     androidTestImplementation project(":testlib")
-    testImplementation'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 
     implementation "com.android.support:appcompat-v7:$support_library_version"
     implementation "com.google.code.gson:gson:2.8.2"
@@ -43,4 +43,4 @@ dependencies {
     implementation project(':px-tracking')
 }
 
-apply from: "$rootDir/gradle/deploy_services.gradle"
+apply from:"$rootDir/gradle/deploy_services.gradle"

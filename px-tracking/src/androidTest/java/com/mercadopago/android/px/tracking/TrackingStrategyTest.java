@@ -2,42 +2,39 @@ package com.mercadopago.tracking;
 
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
-
 import com.mercadopago.tracking.mocks.MPMockedTrackingService;
 import com.mercadopago.tracking.mocks.TrackingStaticMock;
 import com.mercadopago.tracking.model.Event;
 import com.mercadopago.tracking.model.EventTrackIntent;
 import com.mercadopago.tracking.model.ScreenViewEvent;
 import com.mercadopago.tracking.strategies.RealTimeTrackingStrategy;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import java.util.ArrayList;
 import java.util.List;
+import junit.framework.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class TrackingStrategyTest {
 
     private static final String MOCKED_PK = "TEST-PK";
+
     @Test
     public void whenEventsAreFromTheSameFlowThenThereShouldBeOneIntent() {
 
         //Given a list of events and a Strategy
         List<Event> eventList = new ArrayList<>();
         ScreenViewEvent screenViewEvent1 = new ScreenViewEvent.Builder()
-                .setScreenId("/some-id")
-                .setScreenName("Some page")
-                .setFlowId("1234")
-                .build();
+            .setScreenId("/some-id")
+            .setScreenName("Some page")
+            .setFlowId("1234")
+            .build();
         ScreenViewEvent screenViewEvent2 = new ScreenViewEvent.Builder()
-                .setScreenId("/another-id")
-                .setScreenName("Another page")
-                .setFlowId("1234")
-                .build();
+            .setScreenId("/another-id")
+            .setScreenName("Another page")
+            .setFlowId("1234")
+            .build();
 
         eventList.add(screenViewEvent1);
         eventList.add(screenViewEvent2);
@@ -60,26 +57,26 @@ public class TrackingStrategyTest {
         //Given a list of events and a Strategy
         List<Event> eventList = new ArrayList<>();
         ScreenViewEvent screenViewEvent1 = new ScreenViewEvent.Builder()
-                .setScreenId("/some-id")
-                .setScreenName("Some page")
-                .setFlowId("1234")
-                .build();
+            .setScreenId("/some-id")
+            .setScreenName("Some page")
+            .setFlowId("1234")
+            .build();
         ScreenViewEvent screenViewEvent2 = new ScreenViewEvent.Builder()
-                .setScreenId("/another-id")
-                .setScreenName("Another page")
-                .setFlowId("1234")
-                .build();
+            .setScreenId("/another-id")
+            .setScreenName("Another page")
+            .setFlowId("1234")
+            .build();
 
         ScreenViewEvent screenViewEvent3 = new ScreenViewEvent.Builder()
-                .setScreenId("/some-id-from-another-flow")
-                .setScreenName("Some page")
-                .setFlowId("9876")
-                .build();
+            .setScreenId("/some-id-from-another-flow")
+            .setScreenName("Some page")
+            .setFlowId("9876")
+            .build();
         ScreenViewEvent screenViewEvent4 = new ScreenViewEvent.Builder()
-                .setScreenId("/another-id-from-another-flow")
-                .setScreenName("Another page")
-                .setFlowId("9876")
-                .build();
+            .setScreenId("/another-id-from-another-flow")
+            .setScreenName("Another page")
+            .setFlowId("9876")
+            .build();
 
         eventList.add(screenViewEvent1);
         eventList.add(screenViewEvent2);
@@ -104,26 +101,26 @@ public class TrackingStrategyTest {
         //Given a list of events and a Strategy
         List<Event> eventList = new ArrayList<>();
         ScreenViewEvent screenViewEvent1 = new ScreenViewEvent.Builder()
-                .setScreenId("/some-id")
-                .setScreenName("Some page")
-                .setFlowId("1234")
-                .build();
+            .setScreenId("/some-id")
+            .setScreenName("Some page")
+            .setFlowId("1234")
+            .build();
         ScreenViewEvent screenViewEvent2 = new ScreenViewEvent.Builder()
-                .setScreenId("/another-id")
-                .setScreenName("Another page")
-                .setFlowId("1234")
-                .build();
+            .setScreenId("/another-id")
+            .setScreenName("Another page")
+            .setFlowId("1234")
+            .build();
 
         ScreenViewEvent screenViewEvent3 = new ScreenViewEvent.Builder()
-                .setScreenId("/some-id-from-another-flow")
-                .setScreenName("Some page")
-                .setFlowId("9876")
-                .build();
+            .setScreenId("/some-id-from-another-flow")
+            .setScreenName("Some page")
+            .setFlowId("9876")
+            .build();
         ScreenViewEvent screenViewEvent4 = new ScreenViewEvent.Builder()
-                .setScreenId("/another-id-from-another-flow")
-                .setScreenName("Another page")
-                .setFlowId("9876")
-                .build();
+            .setScreenId("/another-id-from-another-flow")
+            .setScreenName("Another page")
+            .setFlowId("9876")
+            .build();
 
         eventList.add(screenViewEvent1);
         eventList.add(screenViewEvent2);

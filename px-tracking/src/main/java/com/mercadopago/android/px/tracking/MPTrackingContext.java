@@ -2,18 +2,15 @@ package com.mercadopago.android.px.tracking;
 
 import android.content.Context;
 import android.os.Build;
-
-
 import com.mercadopago.android.px.tracking.model.AppInformation;
 import com.mercadopago.android.px.tracking.model.DeviceInfo;
 import com.mercadopago.android.px.tracking.model.Event;
-import com.mercadopago.android.px.tracking.tracker.MPTracker;
 import com.mercadopago.android.px.tracking.model.Fingerprint;
+import com.mercadopago.android.px.tracking.tracker.MPTracker;
 
 /**
  * Created by vaserber on 6/5/17.
  */
-
 
 public class MPTrackingContext {
 
@@ -36,20 +33,20 @@ public class MPTrackingContext {
 
     private AppInformation initializeAppInformation(String version) {
         return new AppInformation.Builder()
-                .setVersion(version)
-                .setPlatform("mobile/android")
-                .build();
+            .setVersion(version)
+            .setPlatform("mobile/android")
+            .build();
     }
 
     private DeviceInfo initializeDeviceInfo() {
         return new DeviceInfo.Builder()
-                .setModel(Build.MODEL)
-                .setOS("android")
-                .setUuid(Fingerprint.getAndroidId(this.context))
-                .setSystemVersion(Fingerprint.getDeviceSystemVersion())
-                .setScreenSize(Fingerprint.getDeviceResolution(this.context))
-                .setResolution(String.valueOf(Fingerprint.getDeviceScreenDensity(this.context)))
-                .build();
+            .setModel(Build.MODEL)
+            .setOS("android")
+            .setUuid(Fingerprint.getAndroidId(this.context))
+            .setSystemVersion(Fingerprint.getDeviceSystemVersion())
+            .setScreenSize(Fingerprint.getDeviceResolution(this.context))
+            .setResolution(String.valueOf(Fingerprint.getDeviceScreenDensity(this.context)))
+            .build();
     }
 
     public void trackEvent(Event event) {

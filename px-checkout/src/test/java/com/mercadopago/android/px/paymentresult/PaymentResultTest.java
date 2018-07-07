@@ -2,6 +2,7 @@ package com.mercadopago.android.px.paymentresult;
 
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.mocks.PaymentMethods;
 import com.mercadopago.android.px.model.Instruction;
 import com.mercadopago.android.px.model.Instructions;
 import com.mercadopago.android.px.model.Payment;
@@ -9,7 +10,6 @@ import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.Sites;
 import com.mercadopago.android.px.mvp.TaggedCallback;
-import com.mercadopago.android.px.mocks.PaymentMethods;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.tracking.model.ScreenViewEvent;
 import java.math.BigDecimal;

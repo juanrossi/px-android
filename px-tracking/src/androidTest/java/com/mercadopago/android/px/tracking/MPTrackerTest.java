@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
-
 import com.mercadopago.tracking.listeners.TracksListener;
 import com.mercadopago.tracking.mocks.MPMockedTrackingService;
 import com.mercadopago.tracking.model.ActionEvent;
@@ -21,15 +20,13 @@ import com.mercadopago.tracking.model.TrackingIntent;
 import com.mercadopago.tracking.strategies.TrackingStrategy;
 import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.tracking.utils.TrackingUtil;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -84,7 +81,7 @@ public class MPTrackerTest {
     private Context context;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         context = InstrumentationRegistry.getTargetContext();
     }
 
@@ -111,10 +108,10 @@ public class MPTrackerTest {
         final DeviceInfo deviceInfo = getDeviceInfo();
 
         final Event screenViewEvent = new ScreenViewEvent.Builder()
-                .setFlowId(MOCKED_FLOW_ID)
-                .setScreenId(MOCKED_SCREEN_ID_1)
-                .setScreenName(MOCKED_SCREEN_REVIEW_AND_CONFIRM)
-                .build();
+            .setFlowId(MOCKED_FLOW_ID)
+            .setScreenId(MOCKED_SCREEN_ID_1)
+            .setScreenName(MOCKED_SCREEN_REVIEW_AND_CONFIRM)
+            .build();
 
         MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, context);
 
@@ -132,7 +129,8 @@ public class MPTrackerTest {
             }
         });
 
-        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, screenViewEvent, context, TrackingUtil.BATCH_STRATEGY);
+        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, screenViewEvent, context,
+            TrackingUtil.BATCH_STRATEGY);
 
         TrackingStrategy strategy = MPTracker.getInstance().getTrackingStrategy();
 
@@ -172,7 +170,8 @@ public class MPTrackerTest {
             }
         });
 
-        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, screenViewEvent, context, TrackingUtil.BATCH_STRATEGY);
+        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, screenViewEvent, context,
+            TrackingUtil.BATCH_STRATEGY);
     }
 
     @Test
@@ -181,14 +180,14 @@ public class MPTrackerTest {
         final DeviceInfo deviceInfo = getDeviceInfo();
 
         Event actionEvent = new ActionEvent.Builder()
-                .setAction(MOCKED_ACTION)
-                .setCategory(MOCKED_CATEGORY)
-                .setLabel(MOCKED_LABEL)
-                .setValue(MOCKED_VALUE)
-                .setScreenId(MOCKED_SCREEN_ID_1)
-                .setScreenName(MOCKED_SCREEN_NAME_1)
-                .addProperty(MOCKED_PROPERTY_KEY_1, MOCKED_PROPERTY_VALUE_1)
-                .build();
+            .setAction(MOCKED_ACTION)
+            .setCategory(MOCKED_CATEGORY)
+            .setLabel(MOCKED_LABEL)
+            .setValue(MOCKED_VALUE)
+            .setScreenId(MOCKED_SCREEN_ID_1)
+            .setScreenName(MOCKED_SCREEN_NAME_1)
+            .addProperty(MOCKED_PROPERTY_KEY_1, MOCKED_PROPERTY_VALUE_1)
+            .build();
 
         MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, context);
 
@@ -211,7 +210,8 @@ public class MPTrackerTest {
             }
         });
 
-        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, actionEvent, context, TrackingUtil.BATCH_STRATEGY);
+        MPTracker.getInstance().trackEvent(MOCKED_PUBLIC_KEY, appInformation, deviceInfo, actionEvent, context,
+            TrackingUtil.BATCH_STRATEGY);
     }
 
     @Test
@@ -255,14 +255,14 @@ public class MPTrackerTest {
 
         final List<StackTraceInfo> stackTraceInfoList = new ArrayList<>();
         final StackTraceInfo stackTraceInfo = new StackTraceInfo(MOCKED_STACK_TRACE_FILE, MOCKED_STACK_TRACE_LINE,
-                MOCKED_STACK_TRACE_COLUMN, MOCKED_STACK_TRACE_METHOD);
+            MOCKED_STACK_TRACE_COLUMN, MOCKED_STACK_TRACE_METHOD);
         stackTraceInfoList.add(stackTraceInfo);
 
         final ErrorEvent errorEvent = new ErrorEvent.Builder()
-                .setErrorClass(MOCKED_ERROR_CLASS_1)
-                .setErrorMessage(MOCKED_ERROR_MESSAGE_1)
-                .setStackTraceList(stackTraceInfoList)
-                .build();
+            .setErrorClass(MOCKED_ERROR_CLASS_1)
+            .setErrorMessage(MOCKED_ERROR_MESSAGE_1)
+            .setStackTraceList(stackTraceInfoList)
+            .build();
 
         MPTracker.getInstance().initTracker(MOCKED_PUBLIC_KEY, MOCKED_SITE_ID, MOCKED_CHECKOUT_VERSION, context);
 
@@ -279,5 +279,4 @@ public class MPTrackerTest {
         assertEquals(MOCKED_STACK_TRACE_COLUMN, sentStackTrace.getColumnNumber());
         assertEquals(MOCKED_STACK_TRACE_METHOD, sentStackTrace.getMethod());
     }
-
 }

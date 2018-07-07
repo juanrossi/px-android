@@ -14,7 +14,8 @@ public class JsonConverter {
     private Gson mGson;
 
     protected JsonConverter() {
-        mGson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+        mGson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
     }
 
     public static JsonConverter getInstance() {

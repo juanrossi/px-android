@@ -1,8 +1,7 @@
 package com.mercadopago.android.px.services.exceptions;
 
-import com.mercadopago.android.px.services.util.ApiUtil;
 import com.mercadopago.android.px.model.Cause;
-
+import com.mercadopago.android.px.services.util.ApiUtil;
 import java.util.List;
 
 public class ApiException {

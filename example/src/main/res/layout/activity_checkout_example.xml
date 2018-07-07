@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <ScrollView
         android:id="@+id/regularLayout"
@@ -30,7 +30,7 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/plugandplay" />
+                android:src="@drawable/plugandplay"/>
 
             <com.mercadopago.android.px.customviews.MPTextView
                 style="@style/big_label"
@@ -41,7 +41,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
                 android:singleLine="false"
-                android:text="@string/checkout_title" />
+                android:text="@string/checkout_title"/>
 
             <com.mercadopago.android.px.customviews.MPTextView
                 style="@style/form_label"
@@ -52,7 +52,7 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center_horizontal"
                 android:singleLine="false"
-                android:text="@string/checkout_description" />
+                android:text="@string/checkout_description"/>
 
             <com.mercadopago.android.px.customviews.MPButton
                 android:id="@+id/continueButton"
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px_button_height"
                 android:layout_marginTop="25dp"
-                android:text="@string/px_continue_label" />
+                android:text="@string/px_continue_label"/>
 
             <com.mercadopago.android.px.customviews.MPButton
                 android:id="@+id/select_checkout"
@@ -68,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px_button_height"
                 android:layout_marginTop="25dp"
-                android:text="@string/select_checkout" />
+                android:text="@string/select_checkout"/>
 
             <TextView
                 android:id="@+id/jsonConfigButton"
@@ -78,7 +78,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="@string/json_config_button_text"
-                android:textColor="@color/px_background_blue" />
+                android:textColor="@color/px_background_blue"/>
 
 
         </LinearLayout>

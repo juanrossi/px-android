@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/lock" />
+            android:src="@drawable/lock"/>
 
         <TextView
             android:id="@+id/label"
@@ -28,7 +28,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Ingresar clave"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
 
         <EditText
@@ -39,7 +39,7 @@
             android:ellipsize="start"
             android:gravity="center"
             android:imeOptions="actionDone"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"/>
 
         <TextView
             android:id="@+id/error_label"
@@ -49,7 +49,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:textSize="14sp"
-            tools:text="La clave ingresada es inválida" />
+            tools:text="La clave ingresada es inválida"/>
 
     </LinearLayout>
 
@@ -60,7 +60,7 @@
         android:layout_height="@dimen/px_button_height"
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
-        android:text="Continuar" />
+        android:text="Continuar"/>
 
     <ProgressBar
         android:id="@+id/progressbar"
@@ -70,5 +70,5 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:indeterminate="true" />
+        android:indeterminate="true"/>
 </RelativeLayout>

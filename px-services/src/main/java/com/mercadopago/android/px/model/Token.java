@@ -4,7 +4,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mercadopago.android.px.services.util.TextUtil;
-
 import java.util.Date;
 
 public class Token implements CardInformation {
@@ -178,9 +177,10 @@ public class Token implements CardInformation {
         this.esc = esc;
     }
 
-
     public String toJson() {
-        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+        Gson gson =
+            new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
         return gson.toJson(this);
     }
 

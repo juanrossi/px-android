@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:orientation="vertical"
-    android:theme="@style/Theme.AppTheme.Amex">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            android:theme="@style/Theme.AppTheme.Amex">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                     android:gravity="center_vertical"
                     android:text="Payment METHOD"
                     android:textColor="@color/ui_meli_black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"/>
 
                 <com.mercadopago.android.px.customviews.MPTextView
                     android:id="@+id/label"
@@ -44,7 +44,7 @@
                     android:gravity="center"
                     android:textColor="@color/ui_meli_black"
                     android:textSize="27sp"
-                    tools:text="Tarjeta" />
+                    tools:text="Tarjeta"/>
 
             </LinearLayout>
 
@@ -59,7 +59,7 @@
             android:background="@drawable/button"
             android:text="Continuar"
             android:textColor="@color/px_white_background"
-            android:textSize="16dp" />
+            android:textSize="16dp"/>
 
     </LinearLayout>
 </ScrollView>

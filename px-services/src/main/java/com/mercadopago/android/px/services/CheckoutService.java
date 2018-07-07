@@ -1,11 +1,11 @@
 package com.mercadopago.android.px.services;
 
-import com.mercadopago.android.px.services.adapters.MPCall;
 import com.mercadopago.android.px.model.Instructions;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.requests.PayerIntent;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
+import com.mercadopago.android.px.services.adapters.MPCall;
 import java.math.BigDecimal;
 import java.util.Map;
 import retrofit2.http.Body;
@@ -31,12 +31,18 @@ public interface CheckoutService {
         @Query("support_plugins") String supportedPlugins);
 
     @POST("/{version}/checkout/payments")
-    MPCall<Payment> createPayment(@Path(value = "version", encoded = true) String version, @Header("X-Idempotency-Key") String transactionId, @Body Map<String, Object> body);
+    MPCall<Payment> createPayment(@Path(value = "version", encoded = true) String version,
+        @Header("X-Idempotency-Key") String transactionId, @Body Map<String, Object> body);
 
     @GET("/{version}/checkout/payments/{payment_id}/results")
-    MPCall<Instructions> getPaymentResult(@Path(value = "version", encoded = true) String version, @Header("Accept-Language") String locale, @Path(value = "payment_id", encoded = true) Long paymentId, @Query("public_key") String mKey, @Query("access_token") String privateKey, @Query("payment_type") String paymentTypeId, @Query("api_version") String apiVersion);
+    MPCall<Instructions> getPaymentResult(@Path(value = "version", encoded = true) String version,
+        @Header("Accept-Language") String locale, @Path(value = "payment_id", encoded = true) Long paymentId,
+        @Query("public_key") String mKey, @Query("access_token") String privateKey,
+        @Query("payment_type") String paymentTypeId, @Query("api_version") String apiVersion);
 
     @GET("/{version}/checkout/preferences/{preference_id}")
-    MPCall<CheckoutPreference> getPreference(@Path(value = "version", encoded = true) String version, @Path(value = "preference_id", encoded = true) String checkoutPreferenceId, @Query("public_key") String publicKey);
+    MPCall<CheckoutPreference> getPreference(@Path(value = "version", encoded = true) String version,
+        @Path(value = "preference_id", encoded = true) String checkoutPreferenceId,
+        @Query("public_key") String publicKey);
 }
 

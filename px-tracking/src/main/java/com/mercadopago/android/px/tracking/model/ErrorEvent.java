@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.tracking.model;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,6 @@ public class ErrorEvent extends Event {
     public List<StackTraceInfo> getStackTraceList() {
         return stackTraceList;
     }
-
 
     public static class Builder {
         private String errorClass;

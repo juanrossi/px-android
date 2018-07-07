@@ -3,7 +3,6 @@ package com.mercadopago.android.px.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
@@ -50,5 +49,4 @@ public class CardPaymentMetadata implements Parcelable, Serializable {
     public String getId() {
         return id;
     }
-
 }

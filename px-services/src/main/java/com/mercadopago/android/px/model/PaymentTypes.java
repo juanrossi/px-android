@@ -36,8 +36,8 @@ public class PaymentTypes {
 
     public static boolean isCardPaymentType(String paymentType) {
         return PaymentTypes.CREDIT_CARD.equals(paymentType) ||
-                PaymentTypes.DEBIT_CARD.equals(paymentType) ||
-                PaymentTypes.PREPAID_CARD.equals(paymentType);
+            PaymentTypes.DEBIT_CARD.equals(paymentType) ||
+            PaymentTypes.PREPAID_CARD.equals(paymentType);
     }
 
     @Deprecated
@@ -47,7 +47,7 @@ public class PaymentTypes {
 
     public static boolean isPlugin(String type) {
         return PaymentTypes.ACCOUNT_MONEY.equals(type)
-                || PaymentTypes.PLUGIN.equals(type);
+            || PaymentTypes.PLUGIN.equals(type);
     }
 
     public static List<String> getAllPaymentTypes() {

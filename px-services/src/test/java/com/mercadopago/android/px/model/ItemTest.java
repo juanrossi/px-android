@@ -1,12 +1,11 @@
 package com.mercadopago.android.px.model;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;

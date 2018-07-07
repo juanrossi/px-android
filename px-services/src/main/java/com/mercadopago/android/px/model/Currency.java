@@ -14,7 +14,7 @@ public class Currency {
     }
 
     public Currency(String id, String description, String symbol,
-                    int decimalPlaces, Character decimalSeparator, Character thousandsSeparator) {
+        int decimalPlaces, Character decimalSeparator, Character thousandsSeparator) {
 
         this.id = id;
         this.description = description;
@@ -75,7 +75,7 @@ public class Currency {
     @Override
     public String toString() {
         return "Currency [id=" + id + ", description=" + description
-                + ", symbol=" + symbol + ", decimalPlaces=" + decimalPlaces
-                + "]";
+            + ", symbol=" + symbol + ", decimalPlaces=" + decimalPlaces
+            + "]";
     }
 }

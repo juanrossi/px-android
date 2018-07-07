@@ -2,7 +2,6 @@ package com.mercadopago.android.px.preferences;
 
 import com.google.gson.annotations.SerializedName;
 import com.mercadopago.android.px.services.constants.ProcessingModes;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -156,7 +155,8 @@ public class ServicePreference implements Serializable {
             return this;
         }
 
-        public Builder setGetCustomerURL(String getCustomerURL, String getCustomerURI, Map<String, String> additionalInfo) {
+        public Builder setGetCustomerURL(String getCustomerURL, String getCustomerURI,
+            Map<String, String> additionalInfo) {
             this.getCustomerURL = getCustomerURL;
             this.getCustomerURI = getURI(getCustomerURI);
             getCustomerAdditionalInfo = additionalInfo;
@@ -169,20 +169,23 @@ public class ServicePreference implements Serializable {
             return this;
         }
 
-        public Builder setCreatePaymentURL(String createPaymentURL, String createPaymentURI, Map<String, Object> additionalInfo) {
+        public Builder setCreatePaymentURL(String createPaymentURL, String createPaymentURI,
+            Map<String, Object> additionalInfo) {
             this.createPaymentURL = createPaymentURL;
             this.createPaymentURI = getURI(createPaymentURI);
             createPaymentAdditionalInfo = additionalInfo;
             return this;
         }
 
-        public Builder setCreateCheckoutPreferenceURL(String createCheckoutPreferenceURL, String createCheckoutPreferenceURI) {
+        public Builder setCreateCheckoutPreferenceURL(String createCheckoutPreferenceURL,
+            String createCheckoutPreferenceURI) {
             this.createCheckoutPreferenceURL = createCheckoutPreferenceURL;
             this.createCheckoutPreferenceURI = getURI(createCheckoutPreferenceURI);
             return this;
         }
 
-        public Builder setCreateCheckoutPreferenceURL(String createCheckoutPreferenceURL, String createCheckoutPreferenceURI, Map<String, Object> additionalInfo) {
+        public Builder setCreateCheckoutPreferenceURL(String createCheckoutPreferenceURL,
+            String createCheckoutPreferenceURI, Map<String, Object> additionalInfo) {
             this.createCheckoutPreferenceURL = createCheckoutPreferenceURL;
             this.createCheckoutPreferenceURI = getURI(createCheckoutPreferenceURI);
             createCheckoutPreferenceAdditionalInfo = additionalInfo;

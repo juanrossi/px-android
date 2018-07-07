@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.mercadopago.android.px.components.CustomComponent;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.core.MercadoPagoCheckout.Builder;
-import com.mercadopago.example.R;
 import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.Item;
 import com.mercadopago.android.px.model.Payment;
@@ -21,6 +20,7 @@ import com.mercadopago.android.px.preferences.FlowPreference;
 import com.mercadopago.android.px.review_and_confirm.models.ReviewAndConfirmPreferences;
 import com.mercadopago.android.px.tracking.listeners.TracksListener;
 import com.mercadopago.android.px.tracking.tracker.MPTracker;
+import com.mercadopago.example.R;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.ViewUtils;
 import java.math.BigDecimal;
@@ -42,7 +42,8 @@ public final class ExamplesUtils {
     private static final String RESULT_CODE_MESSAGE = " Result code: ";
     private static final String DUMMY_PREFERENCE_ID = "243962506-0bb62e22-5c7b-425e-a0a6-c22d0f4758a9";
     private static final String DUMMY_PREFERENCE_ID_WITH_TWO_ITEMS = "243962506-b6476e8b-a1a4-40cb-bfec-9954bff4a143";
-    private static final String DUMMY_PREFERENCE_ID_ONE_ITEM_WITH_QUANTITY = "243962506-ad5df092-f5a2-4b99-bcc4-7578d6e71849";
+    private static final String DUMMY_PREFERENCE_ID_ONE_ITEM_WITH_QUANTITY =
+        "243962506-ad5df092-f5a2-4b99-bcc4-7578d6e71849";
     private static final String DUMMY_PREFERENCE_ID_WITH_ITEM_LONG_TITLE =
         "243962506-4ddac80d-af86-4a4f-80e3-c4e4735ba200";
     private static final String DUMMY_PREFERENCE_ID_WITH_DECIMALS = "243962506-ad5df092-f5a2-4b99-bcc4-7578d6e71849";

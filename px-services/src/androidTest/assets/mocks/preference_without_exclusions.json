@@ -23,14 +23,14 @@
       "unit_price": 100
     }
   ],
-  "payer":{
-    "email":"test@hotmail.com",
-    "id":null,
-    "identification":{
-      "number":"",
-      "type":""
+  "payer": {
+    "email": "test@hotmail.com",
+    "id": null,
+    "identification": {
+      "number": "",
+      "type": ""
     },
-    "type":null
+    "type": null
   },
   "marketplace": "NONE",
   "marketplace_fee": 0,

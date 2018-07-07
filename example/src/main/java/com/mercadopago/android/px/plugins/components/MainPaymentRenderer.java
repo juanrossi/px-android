@@ -4,9 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mercadopago.android.px.components.Renderer;
-import com.mercadopago.example.R;
 
 public class MainPaymentRenderer extends Renderer<MainPayment> {
 

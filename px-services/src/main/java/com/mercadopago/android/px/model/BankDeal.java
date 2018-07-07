@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.model;
 
 import com.mercadopago.android.px.services.util.TextUtil;
-
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Date;
@@ -116,6 +115,6 @@ public class BankDeal {
 
     public String getPrettyExpirationDate() {
         return DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
-                .format(getDateExpired());
+            .format(getDateExpired());
     }
 }

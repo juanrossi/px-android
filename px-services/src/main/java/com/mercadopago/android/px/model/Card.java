@@ -141,5 +141,4 @@ public class Card implements CardInformation {
     public String getSecurityCodeLocation() {
         return securityCode != null ? securityCode.getCardLocation() : CARD_DEFAULT_SECURITY_CODE_LOCATION;
     }
-
 }

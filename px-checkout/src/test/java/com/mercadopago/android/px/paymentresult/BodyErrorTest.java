@@ -1,10 +1,10 @@
 package com.mercadopago.android.px.paymentresult;
 
 import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.mocks.PaymentResults;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.paymentresult.components.BodyError;
 import com.mercadopago.android.px.paymentresult.props.BodyErrorProps;
-import com.mercadopago.android.px.mocks.PaymentResults;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

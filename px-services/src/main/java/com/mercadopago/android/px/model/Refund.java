@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.model;
 
 import com.google.gson.JsonObject;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;

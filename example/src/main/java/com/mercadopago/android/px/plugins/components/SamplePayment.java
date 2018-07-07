@@ -2,7 +2,6 @@ package com.mercadopago.android.px.plugins.components;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.plugins.PaymentPluginProcessorResultAction;
@@ -31,15 +30,12 @@ public class SamplePayment extends PluginComponent<Void> {
             @Override
             public void run() {
 
-
                 final GenericPayment result = new GenericPayment(
-                        123456l,
-                        Payment.StatusCodes.STATUS_APPROVED,
-                        Payment.StatusDetail.STATUS_DETAIL_APPROVED_PLUGIN_PM,
-                        props.paymentData);
+                    123456l,
+                    Payment.StatusCodes.STATUS_APPROVED,
+                    Payment.StatusDetail.STATUS_DETAIL_APPROVED_PLUGIN_PM,
+                    props.paymentData);
                 getDispatcher().dispatch(new PaymentPluginProcessorResultAction(result));
-
-
             }
         }, 2000);
     }

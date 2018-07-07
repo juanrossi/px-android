@@ -1,6 +1,5 @@
 package com.mercadopago.android.px.testcheckout.input;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;

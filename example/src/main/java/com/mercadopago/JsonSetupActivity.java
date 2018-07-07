@@ -19,11 +19,11 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 import com.google.gson.JsonSyntaxException;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
-import com.mercadopago.example.R;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
+import com.mercadopago.android.px.utils.CheckoutConfiguration;
+import com.mercadopago.example.R;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.TextUtils;
-import com.mercadopago.android.px.utils.CheckoutConfiguration;
 
 public class JsonSetupActivity extends AppCompatActivity {
 
@@ -93,7 +93,8 @@ public class JsonSetupActivity extends AppCompatActivity {
         MercadoPagoCheckout.Builder checkoutBuilder;
 
         if (!TextUtils.isEmpty(mConfiguration.getPrefId())) {
-            checkoutBuilder = new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), mConfiguration.getPrefId());
+            checkoutBuilder =
+                new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), mConfiguration.getPrefId());
         } else {
             CheckoutPreference preference = createCheckoutPreference(mConfiguration);
             checkoutBuilder = new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), preference);
@@ -112,8 +113,9 @@ public class JsonSetupActivity extends AppCompatActivity {
     }
 
     private CheckoutPreference createCheckoutPreference(CheckoutConfiguration checkoutConfiguration) {
-        return new CheckoutPreference.Builder(checkoutConfiguration.getSite(), checkoutConfiguration.getPayerEmail(), checkoutConfiguration.getItems())
-                .build();
+        return new CheckoutPreference.Builder(checkoutConfiguration.getSite(), checkoutConfiguration.getPayerEmail(),
+            checkoutConfiguration.getItems())
+            .build();
     }
 
     private void validateJson() {

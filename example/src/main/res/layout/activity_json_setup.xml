@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/setupScrollView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/setupScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:gravity="end" />
+            android:gravity="end"/>
 
         <EditText
             android:id="@+id/jsonEditText"
@@ -30,7 +30,7 @@
             android:hint="Paste Setup JSON here"
             android:inputType="textMultiLine"
             android:maxLines="400"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"/>
 
         <com.mercadopago.android.px.customviews.MPButton
             android:id="@+id/checkoutStartButton"
@@ -38,6 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="10dp"
-            android:text="@string/start_checkout_from_json" />
+            android:text="@string/start_checkout_from_json"/>
     </LinearLayout>
 </ScrollView>

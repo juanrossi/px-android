@@ -308,13 +308,13 @@ public class Payment implements Serializable {
 
     public Boolean isCardPaymentType(String paymentTypeId) {
         return paymentTypeId.equals(PaymentTypes.CREDIT_CARD)
-                || paymentTypeId.equals(PaymentTypes.DEBIT_CARD)
-                || paymentTypeId.equals(PaymentTypes.PREPAID_CARD);
+            || paymentTypeId.equals(PaymentTypes.DEBIT_CARD)
+            || paymentTypeId.equals(PaymentTypes.PREPAID_CARD);
     }
 
     public static boolean isPendingStatus(final String status, final String statusDetail) {
         return StatusCodes.STATUS_PENDING.equals(status) &&
-                StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT.equals(statusDetail);
+            StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT.equals(statusDetail);
     }
 
     public static class StatusCodes {
@@ -339,8 +339,10 @@ public class Payment implements Serializable {
         public static final String STATUS_DETAIL_CC_REJECTED_CARD_DISABLED = "cc_rejected_card_disabled";
         public static final String STATUS_DETAIL_CC_REJECTED_INSUFFICIENT_AMOUNT = "cc_rejected_insufficient_amount";
         public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_OTHER = "cc_rejected_bad_filled_other";
-        public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER = "cc_rejected_bad_filled_card_number";
-        public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_SECURITY_CODE = "cc_rejected_bad_filled_security_code";
+        public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER =
+            "cc_rejected_bad_filled_card_number";
+        public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_SECURITY_CODE =
+            "cc_rejected_bad_filled_security_code";
         public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_DATE = "cc_rejected_bad_filled_date";
         public static final String STATUS_DETAIL_CC_REJECTED_DUPLICATED_PAYMENT = "cc_rejected_duplicated_payment";
         public static final String STATUS_DETAIL_CC_REJECTED_HIGH_RISK = "cc_rejected_high_risk";
@@ -349,53 +351,52 @@ public class Payment implements Serializable {
         public static final String STATUS_DETAIL_REJECTED_REJECTED_BY_BANK = "rejected_by_bank";
         public static final String STATUS_DETAIL_REJECTED_REJECTED_INSUFFICIENT_DATA = "rejected_insufficient_data";
 
-
         public static boolean isKnownErrorDetail(String statusDetail) {
             return STATUS_DETAIL_CC_REJECTED_BAD_FILLED_OTHER.equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_SECURITY_CODE.equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_DATE.equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_CARD_DISABLED.equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER.equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE.equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_DUPLICATED_PAYMENT.equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_INSUFFICIENT_AMOUNT.equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_MAX_ATTEMPTS.equals(statusDetail)
-                    || STATUS_DETAIL_INVALID_ESC.equals(statusDetail)
-                    || STATUS_DETAIL_REJECTED_HIGH_RISK.equals(statusDetail)
-                    || STATUS_DETAIL_REJECTED_REJECTED_BY_BANK.equals(statusDetail)
-                    || STATUS_DETAIL_REJECTED_REJECTED_INSUFFICIENT_DATA.equals(statusDetail);
+                || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_SECURITY_CODE.equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_DATE.equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_CARD_DISABLED.equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER.equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE.equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_DUPLICATED_PAYMENT.equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_INSUFFICIENT_AMOUNT.equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_MAX_ATTEMPTS.equals(statusDetail)
+                || STATUS_DETAIL_INVALID_ESC.equals(statusDetail)
+                || STATUS_DETAIL_REJECTED_HIGH_RISK.equals(statusDetail)
+                || STATUS_DETAIL_REJECTED_REJECTED_BY_BANK.equals(statusDetail)
+                || STATUS_DETAIL_REJECTED_REJECTED_INSUFFICIENT_DATA.equals(statusDetail);
         }
 
         public static boolean isPaymentStatusRecoverable(final String statusDetail) {
             return STATUS_DETAIL_CC_REJECTED_BAD_FILLED_OTHER.equals(statusDetail) ||
-                    STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER.equals(statusDetail) ||
-                    STATUS_DETAIL_CC_REJECTED_BAD_FILLED_SECURITY_CODE.equals(statusDetail) ||
-                    STATUS_DETAIL_CC_REJECTED_BAD_FILLED_DATE.equals(statusDetail) ||
-                    STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE.equals(statusDetail) ||
-                    STATUS_DETAIL_INVALID_ESC.equals(statusDetail) ||
-                    STATUS_DETAIL_CC_REJECTED_CARD_DISABLED.equals(statusDetail);
+                STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER.equals(statusDetail) ||
+                STATUS_DETAIL_CC_REJECTED_BAD_FILLED_SECURITY_CODE.equals(statusDetail) ||
+                STATUS_DETAIL_CC_REJECTED_BAD_FILLED_DATE.equals(statusDetail) ||
+                STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE.equals(statusDetail) ||
+                STATUS_DETAIL_INVALID_ESC.equals(statusDetail) ||
+                STATUS_DETAIL_CC_REJECTED_CARD_DISABLED.equals(statusDetail);
         }
 
         public static boolean isStatusDetailRecoverable(String statusDetail) {
             return statusDetail != null && (STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE.equals(statusDetail) ||
-                    STATUS_DETAIL_INVALID_ESC.equals(statusDetail) ||
-                    STATUS_DETAIL_CC_REJECTED_CARD_DISABLED.equals(statusDetail));
+                STATUS_DETAIL_INVALID_ESC.equals(statusDetail) ||
+                STATUS_DETAIL_CC_REJECTED_CARD_DISABLED.equals(statusDetail));
         }
 
         public static boolean isRecoverablePaymentStatus(String paymentStatus, String paymentStatusDetail) {
             return Payment.StatusCodes.STATUS_REJECTED.equals(paymentStatus)
-                    && isPaymentStatusRecoverable(paymentStatusDetail);
+                && isPaymentStatusRecoverable(paymentStatusDetail);
         }
 
         public static boolean isBadFilled(final String statusDetail) {
             return STATUS_DETAIL_CC_REJECTED_BAD_FILLED_DATE
-                    .equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_SECURITY_CODE
-                    .equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_OTHER
-                    .equals(statusDetail)
-                    || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER
-                    .equals(statusDetail);
+                .equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_SECURITY_CODE
+                .equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_OTHER
+                .equals(statusDetail)
+                || STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER
+                .equals(statusDetail);
         }
     }
 }

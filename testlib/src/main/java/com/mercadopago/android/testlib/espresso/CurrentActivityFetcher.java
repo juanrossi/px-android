@@ -14,6 +14,7 @@ public final class CurrentActivityFetcher {
 
     /**
      * Retrieves the current activity
+     *
      * @param <T> The expected type of the current activity
      * @return The current activity, casted to the requested type
      */
@@ -31,7 +32,7 @@ public final class CurrentActivityFetcher {
             final Collection<Activity> resumedActivity = ActivityLifecycleMonitorRegistry.getInstance()
                 .getActivitiesInStage(Stage.RESUMED);
 
-            if(resumedActivity.iterator().hasNext()){
+            if (resumedActivity.iterator().hasNext()) {
                 currentActivity = resumedActivity.iterator().next();
             }
         }

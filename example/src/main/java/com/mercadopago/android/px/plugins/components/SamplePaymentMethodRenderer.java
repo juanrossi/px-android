@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.mercadopago.example.R;
 import com.mercadopago.android.px.plugins.PluginRenderer;
+import com.mercadopago.example.R;
 import com.mercadopago.util.TextUtils;
 
 /**
@@ -22,7 +21,7 @@ public class SamplePaymentMethodRenderer extends PluginRenderer<SamplePaymentMet
     public View renderContents(final SamplePaymentMethod component, final Context context) {
 
         final View view = LayoutInflater.from(context)
-                .inflate(R.layout.activity_second_factor_auth, null);
+            .inflate(R.layout.activity_second_factor_auth, null);
         final View continueButton = view.findViewById(R.id.button_continue);
         final EditText passwordView = view.findViewById(R.id.password);
         final TextView errorLabel = view.findViewById(R.id.error_label);
@@ -32,7 +31,7 @@ public class SamplePaymentMethodRenderer extends PluginRenderer<SamplePaymentMet
         passwordView.setEnabled(!component.state.authenticating);
         passwordView.setText(component.state.password);
         errorLabel.setVisibility(TextUtils.isEmpty(component.state.errorMessage)
-                ? View.GONE : View.VISIBLE);
+            ? View.GONE : View.VISIBLE);
         errorLabel.setText(component.state.errorMessage);
         progressbar.setVisibility(component.state.authenticating ? View.VISIBLE : View.GONE);
         continueButton.setVisibility(component.state.authenticating ? View.GONE : View.VISIBLE);
@@ -48,7 +47,8 @@ public class SamplePaymentMethodRenderer extends PluginRenderer<SamplePaymentMet
         passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) ||
+                    (actionId == EditorInfo.IME_ACTION_DONE)) {
                     final EditText editText = view.findViewById(R.id.password);
                     component.authenticate(editText.getText().toString());
                     return true;

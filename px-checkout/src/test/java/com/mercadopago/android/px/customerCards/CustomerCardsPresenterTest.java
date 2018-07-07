@@ -2,13 +2,13 @@ package com.mercadopago.android.px.customerCards;
 
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.mocks.Cards;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Customer;
 import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.presenters.CustomerCardsPresenter;
 import com.mercadopago.android.px.providers.CustomerCardsProvider;
 import com.mercadopago.android.px.views.CustomerCardsView;
-import com.mercadopago.android.px.mocks.Cards;
 import java.util.List;
 import org.junit.Test;
 

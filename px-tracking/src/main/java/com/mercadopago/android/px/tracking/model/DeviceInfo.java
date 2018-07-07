@@ -92,18 +92,31 @@ public class DeviceInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         DeviceInfo that = (DeviceInfo) o;
 
-        if (!model.equals(that.model)) return false;
-        if (!os.equals(that.os)) return false;
-        if (!systemVersion.equals(that.systemVersion)) return false;
-        if (!resolution.equals(that.resolution)) return false;
-        if (!uuid.equals(that.uuid)) return false;
+        if (!model.equals(that.model)) {
+            return false;
+        }
+        if (!os.equals(that.os)) {
+            return false;
+        }
+        if (!systemVersion.equals(that.systemVersion)) {
+            return false;
+        }
+        if (!resolution.equals(that.resolution)) {
+            return false;
+        }
+        if (!uuid.equals(that.uuid)) {
+            return false;
+        }
         return screenSize.equals(that.screenSize);
-
     }
 
     @Override

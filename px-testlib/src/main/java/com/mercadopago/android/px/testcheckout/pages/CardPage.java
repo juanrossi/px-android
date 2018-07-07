@@ -1,8 +1,6 @@
 package com.mercadopago.android.px.testcheckout.pages;
 
-
 import android.support.test.espresso.contrib.RecyclerViewActions;
-
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.android.testlib.pages.PageObject;
 
@@ -22,13 +20,13 @@ public class CardPage extends PageObject<CheckoutValidator> {
 
     public CreditCardPage selectCreditCard() {
         onView(withId(com.mercadopago.android.px.R.id.mpsdkGroupsList))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+            .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         return new CreditCardPage(validator);
     }
 
     public DebitCardPage selectDebitCard() {
         onView(withId(com.mercadopago.android.px.R.id.mpsdkGroupsList))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+            .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
         return new DebitCardPage(validator);
     }
 

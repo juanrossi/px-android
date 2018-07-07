@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.model;
 
 import android.text.TextUtils;
-
 import java.util.List;
 
 public class InstructionReference {

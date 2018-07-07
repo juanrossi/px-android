@@ -3,7 +3,6 @@ package com.mercadopago.android.px.tracking.services;
 import com.mercadopago.android.px.tracking.model.EventTrackIntent;
 import com.mercadopago.android.px.tracking.model.PaymentIntent;
 import com.mercadopago.android.px.tracking.model.TrackingIntent;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
@@ -24,5 +23,7 @@ public interface TrackingService {
     Call<Void> trackPaymentId(@Path(value = "version", encoded = true) String version, @Body PaymentIntent body);
 
     @POST("/{version}/checkout/tracking/events")
-    Call<Void> trackEvents(@Header("Accept-version") String eventsTrackingVersion, @Path(value = "version", encoded = true) String version, @Query("public_key") String publicKey, @Body EventTrackIntent body);
+    Call<Void> trackEvents(@Header("Accept-version") String eventsTrackingVersion,
+        @Path(value = "version", encoded = true) String version, @Query("public_key") String publicKey,
+        @Body EventTrackIntent body);
 }

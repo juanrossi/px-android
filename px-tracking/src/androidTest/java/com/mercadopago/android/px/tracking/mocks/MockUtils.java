@@ -1,7 +1,6 @@
 package com.mercadopago.tracking.mocks;
 
 import android.content.Context;
-
 import java.io.InputStream;
 
 /**
@@ -20,7 +19,6 @@ public class MockUtils {
             is.close();
 
             return new String(buffer);
-
         } catch (Exception e) {
 
             return "";

@@ -4,10 +4,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import com.google.gson.reflect.TypeToken;
-import com.mercadopago.android.px.services.callbacks.Callback;
-import com.mercadopago.android.px.services.util.ApiUtil;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.Token;
+import com.mercadopago.android.px.services.callbacks.Callback;
+import com.mercadopago.android.px.services.util.ApiUtil;
 import com.mercadopago.android.px.tracking.tracker.MPTracker;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -28,14 +28,14 @@ public class ErrorHandlingCallAdapter {
 
         @Override
         public CallAdapter<MPCall<?>, MPCallAdapter> get(@NonNull Type returnType, @NonNull Annotation[] annotations,
-                                                         @NonNull Retrofit retrofit) {
+            @NonNull Retrofit retrofit) {
             TypeToken<?> token = TypeToken.get(returnType);
             if (token.getRawType() != MPCall.class) {
                 return null;
             }
             if (!(returnType instanceof ParameterizedType)) {
                 throw new IllegalStateException(
-                        "MPCall must have generic type (e.g., MPCall<ResponseBody>)");
+                    "MPCall must have generic type (e.g., MPCall<ResponseBody>)");
             }
             final Type responseType = ((ParameterizedType) returnType).getActualTypeArguments()[0];
             return new CallAdapter<MPCall<?>, MPCallAdapter>() {
@@ -81,7 +81,8 @@ public class ErrorHandlingCallAdapter {
 
                                     if (!mPayment.isCardPaymentType(mPayment.getPaymentTypeId())) {
                                         //FIXME no puede ser Long
-                                        MPTracker.getInstance().trackPayment(new Long(mPayment.getId()), mPayment.getPaymentTypeId());
+                                        MPTracker.getInstance()
+                                            .trackPayment(new Long(mPayment.getId()), mPayment.getPaymentTypeId());
                                     }
                                 } else if (body instanceof Token) {
                                     Token mToken = (Token) body;

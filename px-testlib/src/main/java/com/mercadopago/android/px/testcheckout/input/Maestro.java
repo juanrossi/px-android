@@ -1,6 +1,5 @@
 package com.mercadopago.android.px.testcheckout.input;
 
-
 public class Maestro extends FakeCard {
 
     public Maestro(final CardState cardState, final Country country) {
@@ -9,10 +8,10 @@ public class Maestro extends FakeCard {
 
     private static String getNumber(Country country) {
         switch (country) {
-            case ARGENTINA:
-                return "501041415281778603";
-            default:
-                return null;
+        case ARGENTINA:
+            return "501041415281778603";
+        default:
+            return null;
         }
     }
 }

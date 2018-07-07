@@ -2,6 +2,8 @@ package com.mercadopago.android.px.paymentresult;
 
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.mocks.PaymentMethods;
+import com.mercadopago.android.px.mocks.PaymentResults;
 import com.mercadopago.android.px.model.Instruction;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentResult;
@@ -12,8 +14,6 @@ import com.mercadopago.android.px.paymentresult.model.Badge;
 import com.mercadopago.android.px.paymentresult.props.HeaderProps;
 import com.mercadopago.android.px.paymentresult.props.PaymentResultProps;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
-import com.mercadopago.android.px.mocks.PaymentMethods;
-import com.mercadopago.android.px.mocks.PaymentResults;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

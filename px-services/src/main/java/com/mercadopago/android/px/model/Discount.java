@@ -3,9 +3,7 @@ package com.mercadopago.android.px.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.services.util.ParcelableUtil;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -113,8 +111,8 @@ public class Discount implements Serializable, Parcelable {
         /**
          * Builder for discount construction
          *
-         * @param id           discount id
-         * @param currencyId   amount currency id
+         * @param id discount id
+         * @param currencyId amount currency id
          * @param couponAmount amount that will be applied in discount
          */
         public Builder(@NonNull final String id,

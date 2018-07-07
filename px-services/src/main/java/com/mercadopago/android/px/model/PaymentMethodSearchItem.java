@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.model;
 
 import android.support.annotation.DrawableRes;
-
 import java.io.Serializable;
 import java.util.List;
 

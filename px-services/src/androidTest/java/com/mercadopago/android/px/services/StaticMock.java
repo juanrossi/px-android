@@ -1,14 +1,12 @@
 package com.mercadopago.android.px.services;
 
 import android.content.Context;
-
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.Cardholder;
 import com.mercadopago.android.px.model.Identification;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.services.util.JsonUtil;
-
 import java.io.InputStream;
 
 public class StaticMock {
@@ -104,7 +102,8 @@ public class StaticMock {
     }
 
     public static PaymentMethod getPaymentMethod(Context context, String flavor) {
-        return JsonUtil.getInstance().fromJson(getFile(context, "mocks/payment_method_on" + flavor + ".json"), PaymentMethod.class);
+        return JsonUtil.getInstance()
+            .fromJson(getFile(context, "mocks/payment_method_on" + flavor + ".json"), PaymentMethod.class);
     }
 
     public static IdentificationType getIdentificationType() {

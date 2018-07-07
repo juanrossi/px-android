@@ -1,12 +1,10 @@
 package com.mercadopago.android.px.tracking.strategies;
 
 import android.content.Context;
-
 import com.mercadopago.android.px.tracking.model.AppInformation;
 import com.mercadopago.android.px.tracking.model.Event;
 import com.mercadopago.android.px.tracking.model.EventTrackIntent;
 import com.mercadopago.android.px.tracking.services.MPTrackingService;
-
 import java.util.ArrayList;
 import java.util.List;
 

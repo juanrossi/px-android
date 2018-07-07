@@ -3,7 +3,6 @@ package com.mercadopago.android.px.testcheckout.pages;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
-
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.android.testlib.pages.PageObject;
 
@@ -49,5 +48,4 @@ public class IssuerPage extends PageObject<CheckoutValidator> {
         validator.validate(this);
         return this;
     }
-
 }

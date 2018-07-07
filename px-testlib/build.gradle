@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin:'com.android.library'
 
 android {
     compileSdkVersion api_level as int
@@ -33,4 +33,4 @@ dependencies {
     implementation project(':px-checkout')
 }
 
-apply from: "$rootDir/gradle/deploy_testcheckout.gradle"
+apply from:"$rootDir/gradle/deploy_testcheckout.gradle"

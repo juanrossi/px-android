@@ -2,9 +2,7 @@ package com.mercadopago.android.px.model;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.mercadopago.android.px.services.exceptions.CardTokenException;
-
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -22,7 +20,7 @@ public class CardToken {
     private String securityCode;
 
     public CardToken(String cardNumber, Integer expirationMonth, Integer expirationYear,
-                     String securityCode, String cardholderName, String identificationType, String identificationNumber) {
+        String securityCode, String cardholderName, String identificationType, String identificationNumber) {
         this.cardNumber = normalizeCardNumber(cardNumber);
         this.expirationMonth = expirationMonth;
         this.expirationYear = normalizeYear(expirationYear);
@@ -37,10 +35,12 @@ public class CardToken {
 
     public static boolean validateSecurityCode(String securityCode) {
 
-        return securityCode == null || (!TextUtils.isEmpty(securityCode) && securityCode.length() >= 3 && securityCode.length() <= 4);
+        return securityCode == null ||
+            (!TextUtils.isEmpty(securityCode) && securityCode.length() >= 3 && securityCode.length() <= 4);
     }
 
-    public static void validateSecurityCode(String securityCode, PaymentMethod paymentMethod, String bin) throws CardTokenException {
+    public static void validateSecurityCode(String securityCode, PaymentMethod paymentMethod, String bin)
+        throws CardTokenException {
 
         if (paymentMethod != null) {
             Setting setting = Setting.getSettingByBin(paymentMethod.getSettings(), bin);
@@ -105,7 +105,8 @@ public class CardToken {
     }
 
     private static boolean hasMonthPassed(int month, int year) {
-        return hasYearPassed(year) || normalizeYear(year) == now.get(Calendar.YEAR) && month < (now.get(Calendar.MONTH) + 1);
+        return hasYearPassed(year) ||
+            normalizeYear(year) == now.get(Calendar.YEAR) && month < (now.get(Calendar.MONTH) + 1);
     }
 
     private static Integer normalizeYear(Integer year) {
@@ -168,7 +169,8 @@ public class CardToken {
     }
 
     public boolean validate(boolean includeSecurityCode) {
-        boolean result = validateCardNumber() && validateExpiryDate() && validateIdentification() && validateCardholderName();
+        boolean result =
+            validateCardNumber() && validateExpiryDate() && validateIdentification() && validateCardholderName();
         if (includeSecurityCode) {
             result = result && validateSecurityCode();
         }
@@ -176,7 +178,8 @@ public class CardToken {
     }
 
     public boolean validateCardNumber() {
-        return !TextUtils.isEmpty(cardNumber) && (cardNumber.length() > MIN_LENGTH_NUMBER) && (cardNumber.length() < MAX_LENGTH_NUMBER);
+        return !TextUtils.isEmpty(cardNumber) && (cardNumber.length() > MIN_LENGTH_NUMBER) &&
+            (cardNumber.length() < MAX_LENGTH_NUMBER);
     }
 
     public void validateCardNumber(PaymentMethod paymentMethod) throws CardTokenException {
@@ -188,13 +191,12 @@ public class CardToken {
         }
 
         Setting setting = Setting.getSettingByBin(paymentMethod.getSettings(), (cardNumber.length()
-                >= Bin.BIN_LENGTH ? cardNumber.substring(0, Bin.BIN_LENGTH) : ""));
+            >= Bin.BIN_LENGTH ? cardNumber.substring(0, Bin.BIN_LENGTH) : ""));
 
         if (setting == null) {
 
             // Invalid bin
             throw new CardTokenException(CardTokenException.INVALID_CARD_BIN);
-
         } else {
 
             // Validate cards length
@@ -219,15 +221,15 @@ public class CardToken {
 
     public void validateSecurityCode(PaymentMethod paymentMethod) throws CardTokenException {
         validateSecurityCode(securityCode, paymentMethod, (((cardNumber != null) ?
-                cardNumber.length() : 0) >= Bin.BIN_LENGTH ?
-                cardNumber.substring(0, Bin.BIN_LENGTH) : ""));
+            cardNumber.length() : 0) >= Bin.BIN_LENGTH ?
+            cardNumber.substring(0, Bin.BIN_LENGTH) : ""));
     }
 
     public boolean validateIdentificationNumber(IdentificationType identificationType) {
         if (identificationType != null) {
             if ((cardholder != null) &&
-                    (cardholder.getIdentification() != null) &&
-                    (cardholder.getIdentification().getNumber() != null)) {
+                (cardholder.getIdentification() != null) &&
+                (cardholder.getIdentification().getNumber() != null)) {
                 int len = cardholder.getIdentification().getNumber().length();
                 Integer min = identificationType.getMinLength();
                 Integer max = identificationType.getMaxLength();
@@ -255,12 +257,12 @@ public class CardToken {
 
     public boolean validateIdentificationType() {
         return cardholder != null &&
-                (cardholder.getIdentification() != null && !TextUtils.isEmpty(cardholder.getIdentification().getType()));
+            (cardholder.getIdentification() != null && !TextUtils.isEmpty(cardholder.getIdentification().getType()));
     }
 
     public boolean validateIdentificationNumber() {
         return cardholder != null && (cardholder.getIdentification() != null &&
-                (validateIdentificationType() && !TextUtils.isEmpty(cardholder.getIdentification().getNumber())));
+            (validateIdentificationType() && !TextUtils.isEmpty(cardholder.getIdentification().getNumber())));
     }
 
     public boolean validateCardholderName() {

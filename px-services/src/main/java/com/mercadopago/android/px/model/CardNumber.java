@@ -2,7 +2,6 @@ package com.mercadopago.android.px.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.mercadopago.android.px.services.util.ParcelableUtil;
 import java.io.Serializable;
 

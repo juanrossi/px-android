@@ -72,16 +72,25 @@ public class AppInformation {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AppInformation that = (AppInformation) o;
 
-        if (!flowId.equals(that.flowId)) return false;
-        if (!version.equals(that.version)) return false;
-        if (!environment.equals(that.environment)) return false;
+        if (!flowId.equals(that.flowId)) {
+            return false;
+        }
+        if (!version.equals(that.version)) {
+            return false;
+        }
+        if (!environment.equals(that.environment)) {
+            return false;
+        }
         return platform.equals(that.platform);
-
     }
 
     @Override
@@ -95,10 +104,10 @@ public class AppInformation {
 
     public AppInformation copy() {
         return new AppInformation.Builder()
-                .setEnvironment(this.environment)
-                .setFlowId(this.flowId)
-                .setVersion(this.version)
-                .setPlatform(this.platform)
-                .build();
+            .setEnvironment(this.environment)
+            .setFlowId(this.flowId)
+            .setVersion(this.version)
+            .setPlatform(this.platform)
+            .build();
     }
 }

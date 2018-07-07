@@ -1,1 +1,7 @@
-{"model":"model","os":"android","resolution":"resolution","screen_size":"size","system_version":"system_version"}
+{
+  "model": "model",
+  "os": "android",
+  "resolution": "resolution",
+  "screen_size": "size",
+  "system_version": "system_version"
+}

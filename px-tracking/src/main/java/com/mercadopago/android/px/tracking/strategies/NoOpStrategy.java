@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.tracking.strategies;
 
 import android.content.Context;
-
 import com.mercadopago.android.px.tracking.model.Event;
 
 public class NoOpStrategy extends TrackingStrategy {

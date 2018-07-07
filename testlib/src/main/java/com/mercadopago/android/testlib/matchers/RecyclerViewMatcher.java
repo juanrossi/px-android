@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -46,7 +45,7 @@ public class RecyclerViewMatcher {
 
                 if (childView == null) {
                     RecyclerView recyclerView =
-                            (RecyclerView) view.getRootView().findViewById(recyclerViewId);
+                        (RecyclerView) view.getRootView().findViewById(recyclerViewId);
                     if (recyclerView != null && recyclerView.getId() == recyclerViewId) {
                         RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
                         if (viewHolder != null) {

@@ -1,7 +1,6 @@
 package com.mercadopago.tracking.mocks;
 
 import android.support.test.InstrumentationRegistry;
-
 import com.mercadopago.tracking.model.AppInformation;
 import com.mercadopago.tracking.model.DeviceInfo;
 import com.mercadopago.tracking.model.EventTrackIntent;

@@ -3,7 +3,6 @@ package com.mercadopago.android.px.plugins.components;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mercadopago.android.px.components.Renderer;
 import com.mercadopago.example.R;
 

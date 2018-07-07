@@ -2,7 +2,6 @@ package com.mercadopago.android.px.plugins;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.plugins.components.SamplePayment;
 
 /**
@@ -13,12 +12,12 @@ public class SamplePaymentProcessor extends PaymentProcessor {
 
     @Override
     public PluginComponent createPaymentComponent(@NonNull final PluginComponent.Props props,
-                                                  @NonNull final Context context) {
+        @NonNull final Context context) {
 
         return new SamplePayment(
-                props.toBuilder()
-                        .setToolbarVisible(false)
-                        .build()
+            props.toBuilder()
+                .setToolbarVisible(false)
+                .build()
         );
     }
 }

@@ -1,13 +1,10 @@
 package com.mercadopago.android.px.tracking.strategies;
 
 import android.content.Context;
-
 import com.mercadopago.android.px.tracking.model.Event;
 import com.mercadopago.android.px.tracking.model.EventTrackIntent;
 import com.mercadopago.android.px.tracking.services.MPTrackingService;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -19,7 +16,8 @@ public class BatchTrackingStrategy extends TrackingStrategy {
     private final MPTrackingService trackingService;
     private final ConnectivityChecker connectivityChecker;
 
-    public BatchTrackingStrategy(EventsDatabase database, ConnectivityChecker connectivityChecker, MPTrackingService trackingService) {
+    public BatchTrackingStrategy(EventsDatabase database, ConnectivityChecker connectivityChecker,
+        MPTrackingService trackingService) {
         setDatabase(database);
         this.trackingService = trackingService;
         this.connectivityChecker = connectivityChecker;

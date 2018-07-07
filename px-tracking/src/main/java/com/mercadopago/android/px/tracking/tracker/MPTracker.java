@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.tracking.tracker;
 
 import android.content.Context;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.gson.Gson;
@@ -25,7 +24,6 @@ import com.mercadopago.android.px.tracking.strategies.RealTimeTrackingStrategy;
 import com.mercadopago.android.px.tracking.strategies.TrackingStrategy;
 import com.mercadopago.android.px.tracking.utils.JsonConverter;
 import com.mercadopago.android.px.tracking.utils.TrackingUtil;
-
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,6 +77,7 @@ public final class MPTracker {
 
     /**
      * Set listener to track library's screens and events in the app.
+     *
      * @param tracksListener TracksListener implementing the tracking methods
      */
     public void setTracksListener(TracksListener tracksListener) {
@@ -99,14 +98,15 @@ public final class MPTracker {
 
     /**
      * @param paymentId The payment id of a payment method off. Cannot be {@code null}.
-     * @param typeId    The payment type id. It has to be a card type.
+     * @param typeId The payment type id. It has to be a card type.
      */
     public PaymentIntent trackPayment(Long paymentId, String typeId) {
 
         PaymentIntent paymentIntent = null;
 
         if (trackerInitialized) {
-            paymentIntent = new PaymentIntent(mPublicKey, paymentId.toString(), DEFAULT_FLAVOUR, SDK_PLATFORM, SDK_TYPE, mSdkVersion, mSiteId);
+            paymentIntent = new PaymentIntent(mPublicKey, paymentId.toString(), DEFAULT_FLAVOUR, SDK_PLATFORM, SDK_TYPE,
+                mSdkVersion, mSiteId);
             initializeMPTrackingService();
             mMPTrackingService.trackPaymentId(paymentIntent, mContext);
         }
@@ -119,7 +119,8 @@ public final class MPTracker {
     public TrackingIntent trackToken(String token) {
         TrackingIntent trackingIntent = null;
         if (trackerInitialized && !isEmpty(token)) {
-            trackingIntent = new TrackingIntent(mPublicKey, token, DEFAULT_FLAVOUR, SDK_PLATFORM, SDK_TYPE, mSdkVersion, mSiteId);
+            trackingIntent =
+                new TrackingIntent(mPublicKey, token, DEFAULT_FLAVOUR, SDK_PLATFORM, SDK_TYPE, mSdkVersion, mSiteId);
             initializeMPTrackingService();
             mMPTrackingService.trackToken(trackingIntent, mContext);
         }
@@ -130,15 +131,15 @@ public final class MPTracker {
      * This method tracks a list of events in one request
      *
      * @param appInformation Info about this application and SDK integration
-     * @param deviceInfo     Info about the device that is using the app
-     * @param event          Event to track
-     * @param context        Application context
+     * @param deviceInfo Info about the device that is using the app
+     * @param event Event to track
+     * @param context Application context
      */
     public void trackEvent(final String publicKey,
-                           final AppInformation appInformation,
-                           final DeviceInfo deviceInfo,
-                           final Event event,
-                           final Context context) {
+        final AppInformation appInformation,
+        final DeviceInfo deviceInfo,
+        final Event event,
+        final Context context) {
         trackEvent(publicKey, appInformation, deviceInfo, event, context, TrackingUtil.NOOP_STRATEGY);
     }
 
@@ -146,16 +147,16 @@ public final class MPTracker {
      * This method tracks a list of events in one request
      *
      * @param appInformation Info about this application and SDK integration
-     * @param deviceInfo     Info about the device that is using the app
-     * @param event          Event to track
-     * @param context        Application context
+     * @param deviceInfo Info about the device that is using the app
+     * @param event Event to track
+     * @param context Application context
      */
     public void trackEvent(final String publicKey,
-                           final AppInformation appInformation,
-                           final DeviceInfo deviceInfo,
-                           final Event event,
-                           final Context context,
-                           final String trackingStrategy) {
+        final AppInformation appInformation,
+        final DeviceInfo deviceInfo,
+        final Event event,
+        final Context context,
+        final String trackingStrategy) {
 
         initializeMPTrackingService();
 
@@ -208,12 +209,11 @@ public final class MPTracker {
         return eventMap;
     }
 
-
     /**
-     * @param publicKey  The public key of the merchant. Cannot be {@code null}.
-     * @param siteId     The site that comes in the preference. Cannot be {@code null}.
+     * @param publicKey The public key of the merchant. Cannot be {@code null}.
+     * @param siteId The site that comes in the preference. Cannot be {@code null}.
      * @param sdkVersion The Mercado Pago sdk version. Cannot be {@code null}.
-     * @param context    Reference to Android Context. Cannot be {@code null}.
+     * @param context Reference to Android Context. Cannot be {@code null}.
      */
     public void initTracker(String publicKey, String siteId, String sdkVersion, Context context) {
         if (!isTrackerInitialized()) {
@@ -228,10 +228,10 @@ public final class MPTracker {
     }
 
     /**
-     * @param publicKey  The public key of the merchant. Cannot be {@code null}.
-     * @param siteId     The site that comes in the preference. Cannot be {@code null}.
+     * @param publicKey The public key of the merchant. Cannot be {@code null}.
+     * @param siteId The site that comes in the preference. Cannot be {@code null}.
      * @param sdkVersion The Mercado Pago sdk version. Cannot be {@code null}.
-     * @param context    Reference to Android Context. Cannot be {@code null}.
+     * @param context Reference to Android Context. Cannot be {@code null}.
      * @return True if all parameters are valid. False if any parameter is invalid
      */
     private boolean areInitParametersValid(String publicKey, String siteId, String sdkVersion, Context context) {
@@ -263,13 +263,15 @@ public final class MPTracker {
      * @return True if it is a card payment. False if not a card payment.
      */
     private Boolean isCardPaymentType(String paymentTypeId) {
-        return paymentTypeId.equals("credit_card") || paymentTypeId.equals("debit_card") || paymentTypeId.equals("prepaid_card");
+        return paymentTypeId.equals("credit_card") || paymentTypeId.equals("debit_card") ||
+            paymentTypeId.equals("prepaid_card");
     }
 
     private TrackingStrategy setTrackingStrategy(Context context, Event event, String strategy) {
         if (isBatchStrategy(strategy)) {
             initializeDatabase();
-            trackingStrategy = new BatchTrackingStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
+            trackingStrategy =
+                new BatchTrackingStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
         } else if (isForcedStrategy(strategy)) {
             initializeDatabase();
             trackingStrategy = new ForcedStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
@@ -299,7 +301,7 @@ public final class MPTracker {
 
     private boolean isResultScreen(String name) {
         return TrackingUtil.SCREEN_NAME_PAYMENT_RESULT.equals(name)
-                || TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_INSTRUCTIONS.equals(name);
+            || TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_INSTRUCTIONS.equals(name);
     }
 
     public Event getEvent() {

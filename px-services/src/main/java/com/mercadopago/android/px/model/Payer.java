@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 public class Payer implements Serializable {
 
-
     private String id;
     /**
      * @deprecated This method is deprecated, access token should be added
@@ -85,6 +84,4 @@ public class Payer implements Serializable {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-
 }

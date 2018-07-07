@@ -2,7 +2,6 @@ package com.mercadopago.android.px.plugins.components;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.android.px.plugins.PaymentPluginProcessorResultAction;
 import com.mercadopago.android.px.plugins.PluginComponent;
@@ -16,7 +15,6 @@ public class MainPayment extends PluginComponent<Void> {
 
     private final Handler handler = new Handler();
     private final PluginPayment pluginPayment;
-
 
     public MainPayment(@NonNull final Props props, PluginPayment pluginPayment) {
         super(props);

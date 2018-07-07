@@ -1,14 +1,11 @@
 package com.mercadopago.android.px.testcheckout.pages;
 
-
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.view.View;
-
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.android.testlib.pages.PageObject;
-
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -42,9 +39,8 @@ public class InstallmentsPage extends PageObject<CheckoutValidator> {
         Matcher<View> InstallmentsRecyclerViewMatcher = withId(R.id.mpsdkActivityInstallmentsView);
 
         onView(InstallmentsRecyclerViewMatcher)
-                .perform(RecyclerViewActions.actionOnItemAtPosition(installmentsOption, click()));
+            .perform(RecyclerViewActions.actionOnItemAtPosition(installmentsOption, click()));
 
         return new ReviewAndConfirmPage(validator);
     }
-
 }

@@ -5,7 +5,8 @@ package com.mercadopago.android.px.services.util;
  */
 
 public class TextUtil {
-    private TextUtil() {}
+    private TextUtil() {
+    }
 
     public static boolean isEmpty(String text) {
         return text == null || text.isEmpty();

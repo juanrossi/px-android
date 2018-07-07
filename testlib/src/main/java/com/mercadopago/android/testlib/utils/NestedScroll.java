@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
-
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
@@ -37,7 +36,7 @@ public final class NestedScroll {
             @Override
             public Matcher<View> getConstraints() {
                 return allOf(isDescendantOfA(isAssignableFrom(NestedScrollView.class)), withEffectiveVisibility(
-                        ViewMatchers.Visibility.VISIBLE));
+                    ViewMatchers.Visibility.VISIBLE));
             }
 
             @Override
@@ -49,13 +48,13 @@ public final class NestedScroll {
             public void perform(final UiController uiController, final View view) {
                 try {
                     final NestedScrollView nestedScrollView = (NestedScrollView)
-                            findFirstParentLayoutOfClass(view, NestedScrollView.class);
+                        findFirstParentLayoutOfClass(view, NestedScrollView.class);
                     if (nestedScrollView != null) {
                         final CoordinatorLayout coordinatorLayout =
-                                (CoordinatorLayout) findFirstParentLayoutOfClass(view, CoordinatorLayout.class);
+                            (CoordinatorLayout) findFirstParentLayoutOfClass(view, CoordinatorLayout.class);
                         if (coordinatorLayout != null) {
                             final CollapsingToolbarLayout collapsingToolbarLayout =
-                                    findCollapsingToolbarLayoutChildIn(coordinatorLayout);
+                                findCollapsingToolbarLayoutChildIn(coordinatorLayout);
                             if (collapsingToolbarLayout != null) {
                                 final int toolbarHeight = collapsingToolbarLayout.getHeight();
                                 nestedScrollView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
@@ -68,10 +67,10 @@ public final class NestedScroll {
                     }
                 } catch (final Exception e) {
                     throw new PerformException.Builder()
-                            .withActionDescription(this.getDescription())
-                            .withViewDescription(HumanReadables.describe(view))
-                            .withCause(e)
-                            .build();
+                        .withActionDescription(this.getDescription())
+                        .withViewDescription(HumanReadables.describe(view))
+                        .withCause(e)
+                        .build();
                 }
                 uiController.loopMainThreadUntilIdle();
             }

@@ -4,13 +4,12 @@ import android.os.Bundle;
 import android.support.v4.util.Pair;
 import com.mercadopago.SampleTopFragment;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
-import com.mercadopago.example.R;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.plugins.MainPaymentProcessor;
 import com.mercadopago.android.px.plugins.SamplePaymentMethodPlugin;
 import com.mercadopago.android.px.plugins.model.BusinessPayment;
 import com.mercadopago.android.px.plugins.model.ExitAction;
-
+import com.mercadopago.example.R;
 import java.util.ArrayList;
 import java.util.Collection;
 

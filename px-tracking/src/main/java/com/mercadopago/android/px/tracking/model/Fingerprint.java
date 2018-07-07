@@ -17,12 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,6 +29,8 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Fingerprint {
     private static final String TAG = "Fingerprint";
@@ -54,7 +51,6 @@ public class Fingerprint {
     public VendorSpecificAttributes vendorSpecificAttributes;
     public Location location;
 
-
     public static String getSystemProperty(String propName) {
         String line;
         BufferedReader input = null;
@@ -63,17 +59,14 @@ public class Fingerprint {
             input = new BufferedReader(new InputStreamReader(p.getInputStream()), 1024);
             line = input.readLine();
             input.close();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Log.e(TAG, "Unable to read sysprop " + propName, ex);
             return null;
-        }
-        finally {
+        } finally {
             if (input != null) {
                 try {
                     input.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     Log.e(TAG, "Exception while closing InputStream", e);
                 }
             }
@@ -158,7 +151,8 @@ public class Fingerprint {
                         }
                     }
                     mFSUUID = readFile(file);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
 
             return mFSUUID;
@@ -244,7 +238,7 @@ public class Fingerprint {
                 Criteria criteria = new Criteria();
                 criteria.setAccuracy(Criteria.ACCURACY_COARSE);
                 mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                        0, 0, mLocationListener, Looper.getMainLooper());
+                    0, 0, mLocationListener, Looper.getMainLooper());
             }
 
             // we've a few options here to get the location while we pull a new one.
@@ -259,7 +253,7 @@ public class Fingerprint {
 
                 return location;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -427,7 +421,8 @@ public class Fingerprint {
                 location.put(LOCATION_TIMESTAMP, System.currentTimeMillis() / 1000L);
                 location.put(LOCATION_LATITUDE, latitude);
                 location.put(LOCATION_LONGITUDE, longitude);
-            } catch (JSONException ignored) {}
+            } catch (JSONException ignored) {
+            }
         }
 
         @Override
@@ -449,18 +444,19 @@ public class Fingerprint {
             if (location != null) {
                 try {
                     return location.getLong(LOCATION_TIMESTAMP);
-                } catch (JSONException ignored) {}
+                } catch (JSONException ignored) {
+                }
             }
 
             return System.currentTimeMillis() / 1000L;
         }
 
-
         public double getLatitude() {
             if (location != null) {
                 try {
                     return location.getDouble(LOCATION_LATITUDE);
-                } catch (JSONException ignored) {}
+                } catch (JSONException ignored) {
+                }
             }
 
             return 0;
@@ -470,7 +466,8 @@ public class Fingerprint {
             if (location != null) {
                 try {
                     return location.getDouble(LOCATION_LONGITUDE);
-                } catch (JSONException e) {}
+                } catch (JSONException e) {
+                }
             }
 
             return 0;
@@ -490,12 +487,15 @@ public class Fingerprint {
         }
 
         @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {}
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+        }
 
         @Override
-        public void onProviderEnabled(String s) {}
+        public void onProviderEnabled(String s) {
+        }
 
         @Override
-        public void onProviderDisabled(String s) {}
+        public void onProviderDisabled(String s) {
+        }
     }
 }

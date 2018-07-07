@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.tracking.model;
 
 import android.support.annotation.StringDef;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
@@ -18,10 +17,10 @@ public abstract class Event {
     public static final String TYPE_ACTION = "action";
     public static final String TYPE_ERROR = "error";
 
-    @StringDef({TYPE_SCREEN_VIEW, TYPE_ACTION, TYPE_ERROR})
+    @StringDef({ TYPE_SCREEN_VIEW, TYPE_ACTION, TYPE_ERROR })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface EventType {}
-
+    public @interface EventType {
+    }
 
     private String flowId;
     private Long timestamp;
@@ -44,7 +43,8 @@ public abstract class Event {
         this.timestamp = timestamp;
     }
 
-    public @EventType String getType() {
+    public @EventType
+    String getType() {
         return type;
     }
 

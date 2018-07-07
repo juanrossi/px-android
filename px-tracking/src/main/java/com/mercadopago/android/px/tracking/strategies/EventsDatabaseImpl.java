@@ -7,11 +7,9 @@ import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import com.mercadopago.android.px.tracking.model.Event;
 import com.mercadopago.android.px.tracking.utils.EventFactory;
 import com.mercadopago.android.px.tracking.utils.JsonConverter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -36,9 +34,9 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_NAME + "(" +
-                ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                TIMESTAMP + " TEXT, " +
-                TRACK_JSON + " TEXT);");
+            ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            TIMESTAMP + " TEXT, " +
+            TRACK_JSON + " TEXT);");
     }
 
     @Override
@@ -54,7 +52,6 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
         putEventInfoIntoValues(values, event);
         persistData(values);
     }
-
 
     @Override
     public void returnEvents(List<Event> batch) {
@@ -100,7 +97,8 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
         Long maxLifeTimeMillis = TimeUnit.DAYS.toMillis(MAX_LIFETIME_DAYS);
         Long currentTimeMillis = System.currentTimeMillis();
 
-        int count = db.delete(TABLE_NAME, "(" + currentTimeMillis.toString() + " - " + TIMESTAMP + ") >= " + maxLifeTimeMillis.toString(), null);
+        int count = db.delete(TABLE_NAME,
+            "(" + currentTimeMillis.toString() + " - " + TIMESTAMP + ") >= " + maxLifeTimeMillis.toString(), null);
         batchSizeCache = batchSizeCache - count;
         db.close();
     }
@@ -109,7 +107,9 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     public Long getNextTrackTimestamp() {
         Long timestamp = null;
         SQLiteDatabase db = getWritableDatabase();
-        String timestampJson = DatabaseUtils.stringForQuery(db, "SELECT " + TIMESTAMP + " FROM " + TABLE_NAME + " ORDER BY " + ID + " ASC LIMIT 1", null);
+        String timestampJson = DatabaseUtils
+            .stringForQuery(db, "SELECT " + TIMESTAMP + " FROM " + TABLE_NAME + " ORDER BY " + ID + " ASC LIMIT 1",
+                null);
         try {
             timestamp = Long.valueOf(timestampJson);
         } catch (Exception e) {
@@ -122,10 +122,10 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     @Override
     public void clearDatabase() {
         SQLiteDatabase db = getReadableDatabase();
-        try{
-            db.execSQL("delete from "+ TABLE_NAME);
+        try {
+            db.execSQL("delete from " + TABLE_NAME);
             batchSizeCache = 0;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         db.close();
@@ -135,7 +135,7 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     public List<Event> retrieveBatch() {
 
         SQLiteDatabase db = getReadableDatabase();
-        String[] columns = {ID, TRACK_JSON};
+        String[] columns = { ID, TRACK_JSON };
 
         Cursor cursor = db.query(false, TABLE_NAME, columns, null, null, null, null, "_id desc", null);
 
@@ -160,6 +160,4 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
         int rowsAffected = db.delete(TABLE_NAME, ID + "=" + id, null);
         batchSizeCache = batchSizeCache - rowsAffected;
     }
-
-
 }

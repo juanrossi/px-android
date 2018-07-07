@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.hooks.components;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.android.px.hooks.HookComponent;
 

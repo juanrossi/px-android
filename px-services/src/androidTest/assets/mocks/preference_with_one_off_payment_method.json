@@ -48,17 +48,31 @@
   },
   "payment_methods": {
     "excluded_payment_methods": [
-      {"id":"rapipago"},
-      {"id":"cargavirtual"}
+      {
+        "id": "rapipago"
+      },
+      {
+        "id": "cargavirtual"
+      }
     ],
     "default_installments": null,
     "default_payment_method_id": null,
     "excluded_payment_types": [
-      {"id":"atm"},
-      {"id":"debit_card"},
-      {"id":"credit_card"},
-      {"id":"prepaid_card"},
-      {"id":"digital_currency"}
+      {
+        "id": "atm"
+      },
+      {
+        "id": "debit_card"
+      },
+      {
+        "id": "credit_card"
+      },
+      {
+        "id": "prepaid_card"
+      },
+      {
+        "id": "digital_currency"
+      }
     ],
     "installments": null
   },

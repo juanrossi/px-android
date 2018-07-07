@@ -17,8 +17,8 @@ buildscript {
     }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'spoon'
+apply plugin:'com.android.library'
+apply plugin:'spoon'
 
 spoon {
     grantAllPermissions = true
@@ -55,4 +55,4 @@ dependencies {
     api "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion"
 }
 
-apply from: "$rootDir/gradle/deploy_testlib.gradle"
+apply from:"$rootDir/gradle/deploy_testlib.gradle"

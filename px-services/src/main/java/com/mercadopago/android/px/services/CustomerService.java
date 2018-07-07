@@ -1,8 +1,7 @@
 package com.mercadopago.android.px.services;
 
-import com.mercadopago.android.px.services.adapters.MPCall;
 import com.mercadopago.android.px.model.Customer;
-
+import com.mercadopago.android.px.services.adapters.MPCall;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

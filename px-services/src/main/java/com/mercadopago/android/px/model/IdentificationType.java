@@ -12,7 +12,7 @@ public class IdentificationType {
     }
 
     public IdentificationType(String id, String name, String type,
-                              Integer minLength, Integer maxLength) {
+        Integer minLength, Integer maxLength) {
         this.id = id;
         this.name = name;
         this.type = type;

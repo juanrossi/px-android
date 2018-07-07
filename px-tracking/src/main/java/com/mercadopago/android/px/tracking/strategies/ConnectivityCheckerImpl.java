@@ -40,12 +40,12 @@ public class ConnectivityCheckerImpl implements ConnectivityChecker {
     }
 
     private NetworkInfo getAvailableNetworkInfo() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager =
+            (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected()) {
             return networkInfo;
         }
         return null;
     }
-
 }

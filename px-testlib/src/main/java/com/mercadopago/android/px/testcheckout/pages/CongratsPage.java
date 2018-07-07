@@ -5,7 +5,6 @@ import com.mercadopago.android.testlib.pages.PageObject;
 
 public class CongratsPage extends PageObject<CheckoutValidator> {
 
-
     public CongratsPage() {
         // This constructor is intentionally empty. Nothing special is needed here.
     }

@@ -22,5 +22,4 @@ public class Identification implements Serializable {
     public void setNumber(String number) {
         this.number = number;
     }
-
 }

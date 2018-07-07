@@ -6,17 +6,24 @@ import android.support.test.espresso.IdlingResource;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 
-/** An {@link IdlingResource) for {@link OkHttpClient}. */
+/**
+ * An {@link IdlingResource) for {@link OkHttpClient}.
+ */
 public final class OkHttp3IdlingResource implements IdlingResource {
     /**
      * Create a new {@link IdlingResource} from {@code client} as {@code name}. You must register
      * this instance using {@code Espresso.registerIdlingResources}.
      */
-    @CheckResult @NonNull
+    @CheckResult
+    @NonNull
     @SuppressWarnings("ConstantConditions") // Extra guards as a library.
     public static OkHttp3IdlingResource create(@NonNull String name, @NonNull OkHttpClient client) {
-        if (name == null) throw new NullPointerException("name == null");
-        if (client == null) throw new NullPointerException("client == null");
+        if (name == null) {
+            throw new NullPointerException("name == null");
+        }
+        if (client == null) {
+            throw new NullPointerException("client == null");
+        }
         return new OkHttp3IdlingResource(name, client.dispatcher());
     }
 
@@ -28,7 +35,8 @@ public final class OkHttp3IdlingResource implements IdlingResource {
         this.name = name;
         this.dispatcher = dispatcher;
         dispatcher.setIdleCallback(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 ResourceCallback callback = OkHttp3IdlingResource.this.callback;
                 if (callback != null) {
                     callback.onTransitionToIdle();
@@ -37,17 +45,22 @@ public final class OkHttp3IdlingResource implements IdlingResource {
         });
     }
 
-    @Override public String getName() {
+    @Override
+    public String getName() {
         return name;
     }
 
-    @Override public boolean isIdleNow() {
+    @Override
+    public boolean isIdleNow() {
         final boolean idle = (dispatcher.runningCallsCount() == 0);
-        if (idle && callback != null) callback.onTransitionToIdle();
+        if (idle && callback != null) {
+            callback.onTransitionToIdle();
+        }
         return idle;
     }
 
-    @Override public void registerIdleTransitionCallback(ResourceCallback callback) {
+    @Override
+    public void registerIdleTransitionCallback(ResourceCallback callback) {
         this.callback = callback;
     }
 }

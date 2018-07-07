@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.hooks;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.components.Component;
 import com.mercadopago.android.px.hooks.components.PaymentConfirm;
 import com.mercadopago.android.px.hooks.components.PaymentMethodConfirm;
@@ -15,7 +14,7 @@ public class ExampleHooks extends DefaultCheckoutHooks {
             @Override
             public Component<HookComponent.Props, Void> createComponent() {
                 return new PaymentTypeConfirm(props.toBuilder()
-                        .setToolbarTitle("Payment Type").build());
+                    .setToolbarTitle("Payment Type").build());
             }
 
             @Override
@@ -41,7 +40,7 @@ public class ExampleHooks extends DefaultCheckoutHooks {
             @Override
             public Component<HookComponent.Props, Void> createComponent() {
                 return new PaymentConfirm(props.toBuilder()
-                        .setToolbarTitle("Before payment").build());
+                    .setToolbarTitle("Before payment").build());
             }
         };
     }

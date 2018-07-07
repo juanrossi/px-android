@@ -41,7 +41,8 @@ public class IdentificationPage extends PageObject<CheckoutValidator> {
     }
 
     private void insertIdAndPressNext(final String idNumber) {
-        Matcher<View> cardIdentificationNumberEditTextMatcher = withId(com.mercadopago.android.px.R.id.mpsdkCardIdentificationNumber);
+        Matcher<View> cardIdentificationNumberEditTextMatcher =
+            withId(com.mercadopago.android.px.R.id.mpsdkCardIdentificationNumber);
         Matcher<View> cardNextButtonTextMatcher = withId(com.mercadopago.android.px.R.id.mpsdkNextButton);
         onView(cardIdentificationNumberEditTextMatcher).perform(typeText(idNumber));
         onView(cardNextButtonTextMatcher).perform(click());

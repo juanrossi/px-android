@@ -82,7 +82,7 @@ public class ColorPicker extends View {
     /**
      * Currently selected color
      */
-    private float[] colorHSV = {0f, 0f, 1f};
+    private float[] colorHSV = { 0f, 0f, 1f };
 
     public ColorPicker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -131,7 +131,6 @@ public class ColorPicker extends View {
         innerWheelRect = new RectF();
 
         colorPointerCoords = new RectF();
-
     }
 
     @Override
@@ -160,9 +159,10 @@ public class ColorPicker extends View {
 
         // drawing value slider
 
-        float[] hsv = {colorHSV[0], colorHSV[1], 1f};
+        float[] hsv = { colorHSV[0], colorHSV[1], 1f };
 
-        SweepGradient sweepGradient = new SweepGradient(centerX, centerY, new int[]{Color.BLACK, Color.HSVToColor(hsv), Color.WHITE}, null);
+        SweepGradient sweepGradient =
+            new SweepGradient(centerX, centerY, new int[] { Color.BLACK, Color.HSVToColor(hsv), Color.WHITE }, null);
         sweepGradient.setLocalMatrix(gradientRotationMatrix);
         valueSliderPaint.setShader(sweepGradient);
 
@@ -183,21 +183,21 @@ public class ColorPicker extends View {
 
         // drawing value pointer
 
-        valuePointerPaint.setColor(Color.HSVToColor(new float[]{0f, 0f, 1f - colorHSV[2]}));
+        valuePointerPaint.setColor(Color.HSVToColor(new float[] { 0f, 0f, 1f - colorHSV[2] }));
 
         double valueAngle = (colorHSV[2] - 0.5f) * Math.PI;
         float valueAngleX = (float) Math.cos(valueAngle);
         float valueAngleY = (float) Math.sin(valueAngle);
 
-        canvas.drawLine(valueAngleX * innerWheelRadius + centerX, valueAngleY * innerWheelRadius + centerY, valueAngleX * outerWheelRadius + centerX,
-                valueAngleY * outerWheelRadius + centerY, valuePointerPaint);
+        canvas.drawLine(valueAngleX * innerWheelRadius + centerX, valueAngleY * innerWheelRadius + centerY,
+            valueAngleX * outerWheelRadius + centerX,
+            valueAngleY * outerWheelRadius + centerY, valuePointerPaint);
 
         // drawing pointer arrow
 
         if (arrowPointerSize > 0) {
             drawPointerArrow(canvas);
         }
-
     }
 
     private void drawPointerArrow(Canvas canvas) {
@@ -230,7 +230,6 @@ public class ColorPicker extends View {
         valuePointerArrowPaint.setStrokeJoin(Join.ROUND);
         valuePointerArrowPaint.setColor(Color.BLACK);
         canvas.drawPath(arrowPointerPath, valuePointerArrowPaint);
-
     }
 
     @Override
@@ -248,8 +247,10 @@ public class ColorPicker extends View {
         innerWheelRadius = outerWheelRadius - valueSliderWidth;
         colorWheelRadius = innerWheelRadius - innerPadding;
 
-        outerWheelRect.set(centerX - outerWheelRadius, centerY - outerWheelRadius, centerX + outerWheelRadius, centerY + outerWheelRadius);
-        innerWheelRect.set(centerX - innerWheelRadius, centerY - innerWheelRadius, centerX + innerWheelRadius, centerY + innerWheelRadius);
+        outerWheelRect.set(centerX - outerWheelRadius, centerY - outerWheelRadius, centerX + outerWheelRadius,
+            centerY + outerWheelRadius);
+        innerWheelRect.set(centerX - innerWheelRadius, centerY - innerWheelRadius, centerX + innerWheelRadius,
+            centerY + innerWheelRadius);
 
         colorWheelBitmap = createColorWheelBitmap(colorWheelRadius * 2, colorWheelRadius * 2);
 
@@ -261,7 +262,6 @@ public class ColorPicker extends View {
 
         valueSliderPath.arcTo(outerWheelRect, 270, 180);
         valueSliderPath.arcTo(innerWheelRect, 90, -180);
-
     }
 
     private Bitmap createColorWheelBitmap(int width, int height) {
@@ -271,7 +271,7 @@ public class ColorPicker extends View {
         int colorCount = 12;
         int colorAngleStep = 360 / 12;
         int colors[] = new int[colorCount + 1];
-        float hsv[] = {0f, 1f, 1f};
+        float hsv[] = { 0f, 1f, 1f };
         for (int i = 0; i < colors.length; i++) {
             hsv[0] = (i * colorAngleStep + 180) % 360;
             colors[i] = Color.HSVToColor(hsv);
@@ -279,7 +279,8 @@ public class ColorPicker extends View {
         colors[colorCount] = colors[0];
 
         SweepGradient sweepGradient = new SweepGradient(width / 2, height / 2, colors, null);
-        RadialGradient radialGradient = new RadialGradient(width / 2, height / 2, colorWheelRadius, 0xFFFFFFFF, 0x00FFFFFF, TileMode.CLAMP);
+        RadialGradient radialGradient =
+            new RadialGradient(width / 2, height / 2, colorWheelRadius, 0xFFFFFFFF, 0x00FFFFFF, TileMode.CLAMP);
         ComposeShader composeShader = new ComposeShader(sweepGradient, radialGradient, PorterDuff.Mode.SRC_OVER);
 
         colorWheelPaint.setShader(composeShader);
@@ -288,37 +289,35 @@ public class ColorPicker extends View {
         canvas.drawCircle(width / 2, height / 2, colorWheelRadius, colorWheelPaint);
 
         return bitmap;
-
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         switch (action) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
+        case MotionEvent.ACTION_DOWN:
+        case MotionEvent.ACTION_MOVE:
 
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-                int cx = x - getWidth() / 2;
-                int cy = y - getHeight() / 2;
-                double d = Math.sqrt(cx * cx + cy * cy);
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            int cx = x - getWidth() / 2;
+            int cy = y - getHeight() / 2;
+            double d = Math.sqrt(cx * cx + cy * cy);
 
-                if (d <= colorWheelRadius) {
+            if (d <= colorWheelRadius) {
 
-                    colorHSV[0] = (float) (Math.toDegrees(Math.atan2(cy, cx)) + 180f);
-                    colorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / colorWheelRadius)));
+                colorHSV[0] = (float) (Math.toDegrees(Math.atan2(cy, cx)) + 180f);
+                colorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / colorWheelRadius)));
 
-                    invalidate();
+                invalidate();
+            } else if (x >= getWidth() / 2 && d >= innerWheelRadius) {
 
-                } else if (x >= getWidth() / 2 && d >= innerWheelRadius) {
+                colorHSV[2] = (float) Math.max(0, Math.min(1, Math.atan2(cy, cx) / Math.PI + 0.5f));
 
-                    colorHSV[2] = (float) Math.max(0, Math.min(1, Math.atan2(cy, cx) / Math.PI + 0.5f));
+                invalidate();
+            }
 
-                    invalidate();
-                }
-
-                return true;
+            return true;
         }
         return super.onTouchEvent(event);
     }
@@ -349,5 +348,4 @@ public class ColorPicker extends View {
             super.onRestoreInstanceState(state);
         }
     }
-
 }

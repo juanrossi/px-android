@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-
 import com.mercadopago.android.px.services.util.ParcelableUtil;
 import java.io.Serializable;
 import java.math.BigDecimal;

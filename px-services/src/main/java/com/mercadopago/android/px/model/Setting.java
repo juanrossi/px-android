@@ -2,7 +2,6 @@ package com.mercadopago.android.px.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -45,8 +44,8 @@ public class Setting implements Parcelable, Serializable {
             for (Setting setting : settings) {
 
                 if (!"".equals(bin) && bin.matches(setting.getBin().getPattern() + ".*") &&
-                        (setting.getBin().getExclusionPattern() == null || setting.getBin().getExclusionPattern().isEmpty()
-                                || !bin.matches(setting.getBin().getExclusionPattern() + ".*"))) {
+                    (setting.getBin().getExclusionPattern() == null || setting.getBin().getExclusionPattern().isEmpty()
+                        || !bin.matches(setting.getBin().getExclusionPattern() + ".*"))) {
                     selectedSetting = setting;
                 }
             }

@@ -1,10 +1,10 @@
 package com.mercadopago.android.px.paymentresult;
 
 import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.mocks.Instructions;
 import com.mercadopago.android.px.model.Instruction;
 import com.mercadopago.android.px.paymentresult.components.AccreditationComment;
 import com.mercadopago.android.px.paymentresult.components.AccreditationTime;
-import com.mercadopago.android.px.mocks.Instructions;
 import java.util.List;
 import junit.framework.Assert;
 import org.junit.Before;

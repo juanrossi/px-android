@@ -29,5 +29,4 @@ public class EventTrackIntent {
     public List<Event> getEvents() {
         return events;
     }
-
 }

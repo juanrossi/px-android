@@ -20,12 +20,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,6 +32,8 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Fingerprint {
     private static final String TAG = "Fingerprint";
@@ -56,7 +53,6 @@ public class Fingerprint {
     public long freeDiskSpace;
     public VendorSpecificAttributes vendorSpecificAttributes;
     public Location location;
-
 
     public static String getSystemProperty(String propName) {
         String line;
@@ -101,16 +97,19 @@ public class Fingerprint {
 
     @SuppressLint("MissingPermission")
     private void registerLocationUpdate(Context context) {
-        if (isLocationPermissionGranted(context) && mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
+        if (isLocationPermissionGranted(context) &&
+            mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    0, 0, mLocationListener, Looper.getMainLooper());
+                0, 0, mLocationListener, Looper.getMainLooper());
         }
     }
 
     private boolean isLocationPermissionGranted(Context context) {
         return mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER) &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED;
     }
 
     public ArrayList<VendorId> getVendorIds() {
@@ -287,7 +286,6 @@ public class Fingerprint {
             } catch (JSONException ignored) {
                 // Do nothing
             }
-
         }
 
         static Location fromDisk(Context context) {
@@ -322,7 +320,7 @@ public class Fingerprint {
 
         boolean hasLocation() {
             return location.has(LOCATION_LATITUDE)
-                    && location.has(LOCATION_LATITUDE);
+                && location.has(LOCATION_LATITUDE);
         }
 
         public void save(Context context) {

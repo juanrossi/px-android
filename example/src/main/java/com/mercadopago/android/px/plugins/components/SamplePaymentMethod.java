@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.plugins.components;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.components.NextAction;
 import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.android.px.plugins.PluginComponent;
@@ -26,7 +25,6 @@ public class SamplePaymentMethod extends PluginComponent<SamplePaymentMethod.Sam
         if (TextUtils.isEmpty(password)) {
 
             setState(new SampleState(false, resources.getPasswordRequiredMessage()));
-
         } else {
 
             setState(new SampleState(true, null, password));

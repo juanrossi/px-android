@@ -1,9 +1,9 @@
 package com.mercadopago.android.px.utils;
 
+import com.mercadopago.android.px.mocks.PaymentMethods;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentResult;
-import com.mercadopago.android.px.mocks.PaymentMethods;
 
 public final class StubPaymentResult {
 

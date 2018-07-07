@@ -11,10 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.example.R;
-
 import java.util.List;
 
 import static android.support.v7.widget.RecyclerView.ViewHolder;
@@ -29,7 +27,8 @@ public class SelectCheckoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_checkout);
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        DividerItemDecoration dividerItemDecoration =
+            new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.setAdapter(new SelectionAdapter(getOptions()));
         recyclerView.addItemDecoration(dividerItemDecoration);
     }
@@ -50,7 +49,8 @@ public class SelectCheckoutActivity extends AppCompatActivity {
 
         @Override
         public ItemHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-            return new ItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_option_row, parent, false));
+            return new ItemHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.view_option_row, parent, false));
         }
 
         @Override

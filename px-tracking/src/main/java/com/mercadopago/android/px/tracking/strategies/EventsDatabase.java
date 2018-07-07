@@ -1,8 +1,6 @@
 package com.mercadopago.android.px.tracking.strategies;
 
-
 import com.mercadopago.android.px.tracking.model.Event;
-
 import java.util.List;
 
 public interface EventsDatabase {

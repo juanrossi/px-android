@@ -11,10 +11,10 @@ public class Card {
     private final String expDate;
 
     public Card(final String escNumber,
-                final String cardHolderName,
-                @Nullable final String cardNumber,
-                final String cardHolderIdentityNumber,
-                final String expDate) {
+        final String cardHolderName,
+        @Nullable final String cardNumber,
+        final String cardHolderIdentityNumber,
+        final String expDate) {
 
         this.escNumber = escNumber;
         this.cardHolderName = cardHolderName;

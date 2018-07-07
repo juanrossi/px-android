@@ -2,7 +2,6 @@ package com.mercadopago.android.px.testcheckout.flows;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 
 public class TestFlow {
@@ -21,7 +20,7 @@ public class TestFlow {
      * you can use this static method.
      *
      * @param mercadoPagoCheckout the checkout configuration.
-     * @param context             context that will start the checkout.
+     * @param context context that will start the checkout.
      * @return
      */
     protected TestFlow(@NonNull final MercadoPagoCheckout mercadoPagoCheckout, @NonNull final Context context) {
@@ -29,7 +28,7 @@ public class TestFlow {
         this.context = context;
     }
 
-    protected void startCheckout(){
+    protected void startCheckout() {
         if (checkout != null && context != null) {
             checkout.startForPayment(context);
         }

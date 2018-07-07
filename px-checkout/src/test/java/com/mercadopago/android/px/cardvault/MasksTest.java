@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.cardvault;
 
-import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.mocks.IdentificationTypes;
+import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.util.MPCardMaskUtil;
 import java.util.Arrays;
 import java.util.Collection;

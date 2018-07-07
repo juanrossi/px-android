@@ -1,12 +1,10 @@
 package com.mercadopago.tracking.mocks;
 
 import android.content.Context;
-
 import com.mercadopago.tracking.model.EventTrackIntent;
 import com.mercadopago.tracking.model.PaymentIntent;
 import com.mercadopago.tracking.model.TrackingIntent;
 import com.mercadopago.tracking.services.MPTrackingService;
-
 import retrofit2.Callback;
 
 /**
@@ -26,7 +24,8 @@ public class MPMockedTrackingService implements MPTrackingService {
     }
 
     @Override
-    public void trackEvents(String publicKey, EventTrackIntent eventTrackIntent, Context context, Callback<Void> callback) {
+    public void trackEvents(String publicKey, EventTrackIntent eventTrackIntent, Context context,
+        Callback<Void> callback) {
 
     }
 

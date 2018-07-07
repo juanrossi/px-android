@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class PaymentMethodSearch implements Serializable {
 
     private List<PaymentMethodSearchItem> groups;
@@ -74,7 +73,6 @@ public class PaymentMethodSearch implements Serializable {
         if (selectedPaymentMethod != null) {
 
             requiredItem = searchItemMatchingPaymentMethod(selectedPaymentMethod);
-
         }
         return requiredItem;
     }
@@ -88,7 +86,8 @@ public class PaymentMethodSearch implements Serializable {
         for (PaymentMethodSearchItem currentItem : list) {
 
             //Case like "pagofacil", without the payment type in the item id.
-            if (itemMatchesPaymentMethod(currentItem, paymentMethod) && currentItem.getId().equals(paymentMethod.getId())) {
+            if (itemMatchesPaymentMethod(currentItem, paymentMethod) &&
+                currentItem.getId().equals(paymentMethod.getId())) {
                 requiredItem = currentItem;
                 break;
             }

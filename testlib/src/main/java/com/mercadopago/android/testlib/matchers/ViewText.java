@@ -4,7 +4,6 @@ import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.view.View;
 import android.widget.TextView;
-
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -31,11 +30,10 @@ public final class ViewText {
 
             @Override
             public void perform(final UiController uiController, final View view) {
-                final TextView tv = (TextView)view;
+                final TextView tv = (TextView) view;
                 stringHolder[0] = tv.getText().toString();
             }
         });
         return stringHolder[0];
     }
-
 }

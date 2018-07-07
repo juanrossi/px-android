@@ -1,7 +1,6 @@
 package com.mercadopago.android.px.services.util;
 
 import com.mercadopago.android.px.services.exceptions.ApiException;
-
 import retrofit2.Response;
 
 //FIXME REVISAR QUE SERÍA MEJOR DEJAR

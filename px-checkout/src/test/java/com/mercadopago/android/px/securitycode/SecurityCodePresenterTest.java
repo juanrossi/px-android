@@ -1,6 +1,11 @@
 package com.mercadopago.android.px.securitycode;
 
 import com.mercadopago.android.px.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.mocks.Cards;
+import com.mercadopago.android.px.mocks.Issuers;
+import com.mercadopago.android.px.mocks.PayerCosts;
+import com.mercadopago.android.px.mocks.PaymentMethods;
+import com.mercadopago.android.px.mocks.Tokens;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.Issuer;
@@ -15,16 +20,11 @@ import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.presenters.SecurityCodePresenter;
 import com.mercadopago.android.px.providers.SecurityCodeProvider;
-import com.mercadopago.android.px.views.SecurityCodeActivityView;
-import com.mercadopago.android.px.mocks.Cards;
-import com.mercadopago.android.px.mocks.Issuers;
-import com.mercadopago.android.px.mocks.PayerCosts;
-import com.mercadopago.android.px.mocks.PaymentMethods;
-import com.mercadopago.android.px.mocks.Tokens;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.services.exceptions.CardTokenException;
-import com.mercadopago.util.TextUtils;
 import com.mercadopago.android.px.utils.MVPStructure;
+import com.mercadopago.android.px.views.SecurityCodeActivityView;
+import com.mercadopago.util.TextUtils;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
