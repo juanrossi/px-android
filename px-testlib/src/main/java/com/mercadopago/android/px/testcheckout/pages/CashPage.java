@@ -4,7 +4,7 @@ package com.mercadopago.android.px.testcheckout.pages;
 import android.view.View;
 
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
-import com.mercadopago.testlib.pages.PageObject;
+import com.mercadopago.android.testlib.pages.PageObject;
 
 import org.hamcrest.Matcher;
 

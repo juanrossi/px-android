@@ -5,7 +5,7 @@ import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
-import com.mercadopago.testlib.pages.PageObject;
+import com.mercadopago.android.testlib.pages.PageObject;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

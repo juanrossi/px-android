@@ -17,7 +17,7 @@ import com.mercadopago.android.px.testcheckout.pages.PaymentMethodPage;
 import com.mercadopago.android.px.testcheckout.pages.ReviewAndConfirmPage;
 import com.mercadopago.android.px.testcheckout.pages.ReviewPaymentMethodsPage;
 import com.mercadopago.android.px.testcheckout.pages.SecurityCodePage;
-import com.mercadopago.testlib.assertions.Validator;
+import com.mercadopago.android.testlib.assertions.Validator;
 
 public interface CheckoutValidator extends Validator {
 

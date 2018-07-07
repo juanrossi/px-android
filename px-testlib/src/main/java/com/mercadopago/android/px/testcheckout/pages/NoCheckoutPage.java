@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.testcheckout.pages;
 
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
-import com.mercadopago.testlib.pages.PageObject;
+import com.mercadopago.android.testlib.pages.PageObject;
 
 public class NoCheckoutPage extends PageObject<CheckoutValidator> {
 
