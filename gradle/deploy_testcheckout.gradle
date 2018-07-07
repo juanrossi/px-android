@@ -12,14 +12,14 @@ if (project.rootProject.file('local.properties').exists()) {
 
 ext {
     versionToDeploy = version_to_deploy as String
-    artifactLib = 'px-testlib'
-    libraryName = 'px-testlib'
+    artifactLib = 'testlib'
+    libraryName = 'com.mercadopago.android.px.testlib'
     libraryDescription = 'MercadoPago Android test checkout lib'
     siteUrl = 'https://github.com/mercadopago/px-android'
     gitUrl = 'https://github.com/mercadopago/px-android.git'
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    groupName = "com.mercadopago.android"
+    groupName = "com.mercadopago.android.px"
 }
 
 
@@ -101,7 +101,7 @@ bintray {
 
     configurations = ['archives']
     pkg {
-        repo = 'PX'
+        repo = 'android'
         name = libraryName
         desc = libraryDescription
         userOrg = 'mercadopago'

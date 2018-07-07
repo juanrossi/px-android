@@ -13,7 +13,7 @@ if (project.rootProject.file('local.properties').exists()) {
 ext {
     versionToDeploy = version_to_deploy as String
     artifactLib = 'testlib'
-    libraryName = 'testlib'
+    libraryName = 'com.mercadopago.android.testlib'
     libraryDescription = 'MercadoPago Android testlib'
     siteUrl = 'https://github.com/mercadopago/px-android'
     gitUrl = 'https://github.com/mercadopago/px-android.git'
@@ -101,7 +101,7 @@ bintray {
 
     configurations = ['archives']
     pkg {
-        repo = 'PX'
+        repo = 'android'
         name = libraryName
         desc = libraryDescription
         userOrg = 'mercadopago'

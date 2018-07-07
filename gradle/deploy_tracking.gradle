@@ -13,13 +13,13 @@ if (project.rootProject.file('local.properties').exists()) {
 ext {
     versionToDeploy = version_to_deploy as String
     artifactLib = 'tracking'
-    libraryName = 'mercadopago-sdk_tracking'
-    libraryDescription = 'MercadoPago Tracking Android Lib'
+    libraryName = 'com.mercadopago.android.px.tracking'
+    libraryDescription = 'MercadoPago Tracking Android'
     siteUrl = 'https://github.com/mercadopago/px-android_tracking'
     gitUrl = 'https://github.com/mercadopago/px-android_tracking.git'
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    groupName = "com.mercadopago"
+    groupName = "com.mercadopago.android.px"
 }
 
 version = versionToDeploy
@@ -95,7 +95,7 @@ bintray {
 
     configurations = ['archives']
     pkg {
-        repo = 'PX'
+        repo = 'android'
         name = libraryName
         desc = libraryDescription
         userOrg = 'mercadopago'
