@@ -2,7 +2,7 @@ package com.mercadopago.android.px.preferences;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.CustomComponent;
+import com.mercadopago.android.px.components.CustomComponent;
 
 /**
  * Created by nfortuna on 1/24/18.

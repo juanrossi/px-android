@@ -1,6 +1,6 @@
 package com.mercadopago.guessing;
 
-import com.mercadopago.controllers.PaymentMethodGuessingController;
+import com.mercadopago.android.px.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.internal.repository.AmountRepository;
 import com.mercadopago.internal.repository.GroupsRepository;

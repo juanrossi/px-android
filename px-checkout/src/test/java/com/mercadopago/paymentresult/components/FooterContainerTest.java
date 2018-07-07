@@ -1,9 +1,9 @@
 package com.mercadopago.paymentresult.components;
 
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.Footer;
-import com.mercadopago.components.NextAction;
-import com.mercadopago.components.RecoverPaymentAction;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.Footer;
+import com.mercadopago.android.px.components.NextAction;
+import com.mercadopago.android.px.components.RecoverPaymentAction;
 import com.mercadopago.mocks.PaymentResults;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.paymentresult.PaymentResultProvider;

@@ -1,6 +1,6 @@
 package com.mercadopago.views;
 
-import com.mercadopago.controllers.PaymentMethodGuessingController;
+import com.mercadopago.android.px.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.services.exceptions.CardTokenException;

@@ -1,8 +1,8 @@
 package com.mercadopago.presenters;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.core.CheckoutStore;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.core.CheckoutStore;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.internal.repository.AmountRepository;
@@ -56,8 +56,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE;
-import static com.mercadopago.core.MercadoPagoCheckout.PAYMENT_RESULT_CODE;
+import static com.mercadopago.android.px.core.MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE;
+import static com.mercadopago.android.px.core.MercadoPagoCheckout.PAYMENT_RESULT_CODE;
 import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubExpiredPreference;
 import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItem;
 import static com.mercadopago.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItemAndPayer;

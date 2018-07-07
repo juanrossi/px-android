@@ -1,7 +1,7 @@
 package com.mercadopago.views;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.internal.repository.DiscountRepository;

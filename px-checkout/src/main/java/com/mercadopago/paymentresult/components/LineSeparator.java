@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercadopago.R;
-import com.mercadopago.components.CompactComponent;
+import com.mercadopago.android.px.components.CompactComponent;
 
 import javax.annotation.Nonnull;
 

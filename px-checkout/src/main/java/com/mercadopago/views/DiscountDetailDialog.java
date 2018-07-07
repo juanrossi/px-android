@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mercadolibre.android.ui.widgets.MeliDialog;
 import com.mercadopago.R;
-import com.mercadopago.components.DetailDirectDiscount;
+import com.mercadopago.android.px.components.DetailDirectDiscount;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Discount;
 

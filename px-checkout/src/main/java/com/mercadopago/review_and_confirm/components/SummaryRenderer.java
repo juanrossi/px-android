@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-import com.mercadopago.components.Renderer;
-import com.mercadopago.components.RendererFactory;
+import com.mercadopago.android.px.components.Renderer;
+import com.mercadopago.android.px.components.RendererFactory;
 
 public class SummaryRenderer extends Renderer<SummaryComponent> {
 

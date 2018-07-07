@@ -3,9 +3,9 @@ package com.mercadopago.listeners.card;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import com.mercadopago.callbacks.PaymentMethodSelectionCallback;
-import com.mercadopago.callbacks.card.CardNumberEditTextCallback;
-import com.mercadopago.controllers.PaymentMethodGuessingController;
+import com.mercadopago.android.px.callbacks.PaymentMethodSelectionCallback;
+import com.mercadopago.android.px.callbacks.card.CardNumberEditTextCallback;
+import com.mercadopago.android.px.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.model.Bin;
 import com.mercadopago.android.px.model.PaymentMethod;
 

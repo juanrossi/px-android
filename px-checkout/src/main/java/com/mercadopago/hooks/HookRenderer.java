@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.mercadopago.R;
-import com.mercadopago.components.Renderer;
-import com.mercadopago.components.RendererFactory;
+import com.mercadopago.android.px.components.Renderer;
+import com.mercadopago.android.px.components.RendererFactory;
 
 public abstract class HookRenderer<T extends HookComponent> extends Renderer<T> {
 

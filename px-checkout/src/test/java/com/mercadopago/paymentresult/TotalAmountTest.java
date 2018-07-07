@@ -1,7 +1,7 @@
 package com.mercadopago.paymentresult;
 
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.TotalAmount;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.TotalAmount;
 import com.mercadopago.services.util.CurrenciesUtil;
 import com.mercadopago.mocks.PayerCosts;
 import com.mercadopago.android.px.model.PayerCost;

@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercadolibre.android.ui.widgets.MeliButton;
-import com.mercadopago.components.LinkAction;
-import com.mercadopago.components.Renderer;
+import com.mercadopago.android.px.components.LinkAction;
+import com.mercadopago.android.px.components.Renderer;
 import com.mercadopago.android.px.model.InstructionAction;
 
 public class InstructionsActionRenderer extends Renderer<InstructionsAction> {

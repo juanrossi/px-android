@@ -1,7 +1,7 @@
 package com.mercadopago.internal.datasource;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.android.px.core.CheckoutStore;
 import com.mercadopago.internal.datasource.cache.GroupsCache;
 import com.mercadopago.internal.repository.AmountRepository;
 import com.mercadopago.internal.repository.GroupsRepository;

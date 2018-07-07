@@ -3,7 +3,7 @@ package com.mercadopago.providers;
 import android.content.Context;
 
 import com.mercadopago.R;
-import com.mercadopago.core.MerchantServer;
+import com.mercadopago.android.px.core.MerchantServer;
 import com.mercadopago.android.px.model.Customer;
 import com.mercadopago.mvp.TaggedCallback;
 

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.mercadopago.BuildConfig;
 import com.mercadopago.R;
-import com.mercadopago.core.MercadoPagoServicesAdapter;
+import com.mercadopago.android.px.core.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.Installment;

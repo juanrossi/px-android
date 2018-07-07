@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.example.R;
 
 import java.util.List;

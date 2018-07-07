@@ -14,9 +14,9 @@ import android.widget.FrameLayout;
 
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.adapters.PaymentTypesAdapter;
-import com.mercadopago.callbacks.OnSelectedCallback;
-import com.mercadopago.controllers.CheckoutTimer;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.controllers.CheckoutTimer;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.RecyclerItemClickListener;
 import com.mercadopago.android.px.services.exceptions.ApiException;

@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.mercadopago.components.Action;
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.ComponentManager;
+import com.mercadopago.android.px.components.Action;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.ComponentManager;
 import com.mercadopago.plugins.components.BusinessPaymentContainer;
 import com.mercadopago.plugins.model.BusinessPaymentModel;
 import com.mercadopago.plugins.model.ExitAction;

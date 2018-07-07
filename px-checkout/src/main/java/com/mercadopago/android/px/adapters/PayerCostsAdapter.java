@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.mercadopago.R;
-import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.Site;
 import com.mercadopago.uicontrollers.payercosts.PayerCostRow;

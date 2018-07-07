@@ -1,6 +1,6 @@
 package com.mercadopago.paymentresult;
 
-import com.mercadopago.components.ActionDispatcher;
+import com.mercadopago.android.px.components.ActionDispatcher;
 import com.mercadopago.mocks.PaymentResults;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.paymentresult.components.BodyError;

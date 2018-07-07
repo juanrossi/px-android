@@ -3,7 +3,7 @@ package com.mercadopago.listeners.card;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import com.mercadopago.callbacks.card.CardSecurityCodeEditTextCallback;
+import com.mercadopago.android.px.callbacks.card.CardSecurityCodeEditTextCallback;
 
 /**
  * Created by vaserber on 10/20/16.

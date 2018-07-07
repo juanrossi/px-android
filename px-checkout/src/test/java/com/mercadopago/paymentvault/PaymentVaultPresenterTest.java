@@ -1,8 +1,8 @@
 package com.mercadopago.paymentvault;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.callbacks.OnSelectedCallback;
-import com.mercadopago.constants.PaymentMethods;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.constants.PaymentMethods;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.internal.repository.DiscountRepository;

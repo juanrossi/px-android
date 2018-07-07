@@ -1,11 +1,11 @@
 package com.mercadopago.presenters;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.callbacks.FailureRecovery;
-import com.mercadopago.callbacks.OnSelectedCallback;
-import com.mercadopago.constants.PaymentMethods;
-import com.mercadopago.core.CheckoutStore;
-import com.mercadopago.core.MercadoPagoComponents;
+import com.mercadopago.android.px.callbacks.FailureRecovery;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.constants.PaymentMethods;
+import com.mercadopago.android.px.core.CheckoutStore;
+import com.mercadopago.android.px.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.hooks.HookHelper;

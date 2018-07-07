@@ -1,0 +1,70 @@
+package com.mercadopago.android.px.codediscount;
+
+import android.support.annotation.NonNull;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import com.mercadolibre.android.ui.widgets.MeliButton;
+import com.mercadopago.R;
+import com.mercadopago.android.px.components.CompactComponent;
+import com.mercadopago.android.px.model.Discount;
+import com.mercadopago.util.textformatter.TextFormatter;
+import javax.annotation.Nonnull;
+
+class CongratsCodeDiscount extends CompactComponent<CongratsCodeDiscount.Props, CodeDiscountDialog.Actions> {
+
+    /* default */ static class Props {
+
+        @NonNull
+        private final Discount discount;
+
+        public Props(@NonNull final Discount discount) {
+            this.discount = discount;
+        }
+    }
+
+    /* default */ CongratsCodeDiscount(@NonNull final Props props, @NonNull final CodeDiscountDialog.Actions actions) {
+        super(props, actions);
+    }
+
+    @Override
+    public View render(@Nonnull final ViewGroup parent) {
+        final View mainContainer = inflate(parent, R.layout.mpsdk_view_congrats_discount);
+        configureTitle(mainContainer);
+        configureSubtitle(mainContainer);
+        configureButton(mainContainer);
+        return mainContainer;
+    }
+
+    private void configureTitle(final View mainContainer) {
+        final TextView title = mainContainer.findViewById(R.id.title);
+        title.setText(R.string.mpsdk_excellent);
+    }
+
+    private void configureSubtitle(final View mainContainer) {
+        final TextView subtitle = mainContainer.findViewById(R.id.subtitle);
+        if (props.discount.hasPercentOff()) {
+            subtitle.setText(subtitle.getContext().getString(R.string.mpsdk_get_your_discount_percent, props.discount.getPercentOff()));
+        } else {
+            TextFormatter.withCurrencyId(props.discount.getCurrencyId())
+                    .withSpace()
+                    .amount(props.discount.getAmountOff())
+                    .normalDecimals()
+                    .into(subtitle)
+                    .holder(R.string.mpsdk_get_your_discount_amount);
+        }
+    }
+
+    private void configureButton(final View mainContainer) {
+        final MeliButton button = mainContainer.findViewById(R.id.button);
+        button.setText(R.string.mpsdk_continue_label);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                if (getActions() != null) {
+                    getActions().closeDialog();
+                }
+            }
+        });
+    }
+}

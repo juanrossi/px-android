@@ -3,7 +3,7 @@ package com.mercadopago.listeners.card;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import com.mercadopago.callbacks.card.TicketIdentificationNumberEditTextCallback;
+import com.mercadopago.android.px.callbacks.card.TicketIdentificationNumberEditTextCallback;
 
 /**
  * Created by mromar on 29/09/17.

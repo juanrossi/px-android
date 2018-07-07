@@ -2,10 +2,10 @@ package com.mercadopago.hooks;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.Component;
-import com.mercadopago.components.NextAction;
-import com.mercadopago.components.RendererFactory;
-import com.mercadopago.components.ToolbarComponent;
+import com.mercadopago.android.px.components.Component;
+import com.mercadopago.android.px.components.NextAction;
+import com.mercadopago.android.px.components.RendererFactory;
+import com.mercadopago.android.px.components.ToolbarComponent;
 import com.mercadopago.android.px.model.PaymentData;
 
 import java.util.Map;

@@ -2,7 +2,7 @@ package com.mercadopago.plugins;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.Action;
+import com.mercadopago.android.px.components.Action;
 import com.mercadopago.plugins.model.PluginPayment;
 
 public class PaymentPluginProcessorResultAction extends Action {

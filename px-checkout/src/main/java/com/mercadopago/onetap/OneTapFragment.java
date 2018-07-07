@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mercadopago.R;
-import com.mercadopago.core.MercadoPagoComponents;
+import com.mercadopago.android.px.core.MercadoPagoComponents;
 import com.mercadopago.internal.datasource.PluginService;
 import com.mercadopago.internal.di.Session;
 import com.mercadopago.android.px.model.Card;

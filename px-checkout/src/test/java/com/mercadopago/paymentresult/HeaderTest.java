@@ -1,7 +1,7 @@
 package com.mercadopago.paymentresult;
 
-import com.mercadopago.components.Action;
-import com.mercadopago.components.ActionDispatcher;
+import com.mercadopago.android.px.components.Action;
+import com.mercadopago.android.px.components.ActionDispatcher;
 import com.mercadopago.paymentresult.components.Header;
 import com.mercadopago.paymentresult.components.Icon;
 import com.mercadopago.paymentresult.props.HeaderProps;

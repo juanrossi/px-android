@@ -2,7 +2,7 @@ package com.mercadopago.review_and_confirm.models;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import com.mercadopago.components.CustomComponent;
+import com.mercadopago.android.px.components.CustomComponent;
 import java.math.BigDecimal;
 
 public class ReviewAndConfirmPreferences {

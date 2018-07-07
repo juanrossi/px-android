@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.mercadopago.R;
-import com.mercadopago.components.Renderer;
+import com.mercadopago.android.px.components.Renderer;
 import com.mercadopago.paymentresult.props.IconProps;
 import com.mercadopago.util.CircleTransform;
 import com.mercadopago.util.ScaleUtil;

@@ -4,9 +4,9 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
-import com.mercadopago.callbacks.CallbackHolder;
-import com.mercadopago.callbacks.PaymentResultCallback;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.android.px.callbacks.CallbackHolder;
+import com.mercadopago.android.px.callbacks.PaymentResultCallback;
+import com.mercadopago.android.px.core.CheckoutStore;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.paymentresult.model.Badge;
 

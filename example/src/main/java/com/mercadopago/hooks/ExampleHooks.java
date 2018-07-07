@@ -2,7 +2,7 @@ package com.mercadopago.hooks;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.Component;
+import com.mercadopago.android.px.components.Component;
 import com.mercadopago.hooks.components.PaymentConfirm;
 import com.mercadopago.hooks.components.PaymentMethodConfirm;
 import com.mercadopago.hooks.components.PaymentTypeConfirm;

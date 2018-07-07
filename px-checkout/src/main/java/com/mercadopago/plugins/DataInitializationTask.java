@@ -1,7 +1,7 @@
 package com.mercadopago.plugins;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.android.px.core.CheckoutStore;
 import java.util.Map;
 
 public abstract class DataInitializationTask {

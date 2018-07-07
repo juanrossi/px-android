@@ -20,7 +20,7 @@
 -keep class com.mercadopago.android.px.model.** { *; } #dtos
 -keep class com.mercadopago.viewmodel.** { *; } #dtos
 -keep class com.mercadopago.android.px.preferences.** { *; } #dtos
--keep class com.mercadopago.constants.PaymentTypes { *; } #dtos
+-keep class com.mercadopago.android.px.constants.PaymentTypes { *; } #dtos
 -keep class com.mercadopago.plugins.PaymentResultAction { *; } #dtos
 -keep class com.mercadopago.plugins.model.** { *; } #dtos
 
@@ -29,7 +29,7 @@
 -dontnote com.mercadopago.android.px.model.**
 -dontnote com.mercadopago.viewmodel.**
 -dontnote com.mercadopago.plugins.PaymentResultAction
--dontnote com.mercadopago.constants.PaymentTypes
+-dontnote com.mercadopago.android.px.constants.PaymentTypes
 -dontnote com.mercadopago.plugins.model.**
 -dontnote com.mercadopago.util.MercadoPagoESCImpl #se usa esta clase pero no se tiene la lib
 

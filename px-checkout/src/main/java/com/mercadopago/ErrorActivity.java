@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-import com.mercadopago.controllers.CheckoutErrorHandler;
+import com.mercadopago.android.px.controllers.CheckoutErrorHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.tracker.FlowHandler;

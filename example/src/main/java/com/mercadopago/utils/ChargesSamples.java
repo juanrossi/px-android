@@ -2,7 +2,7 @@ package com.mercadopago.utils;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.PaymentTypes;

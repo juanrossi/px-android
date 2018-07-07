@@ -3,7 +3,7 @@ package com.mercadopago.utils;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import com.mercadopago.SampleTopFragment;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.example.R;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.plugins.MainPaymentProcessor;

@@ -2,7 +2,7 @@ package com.mercadopago.providers;
 
 import android.content.Context;
 
-import com.mercadopago.core.MercadoPagoServicesAdapter;
+import com.mercadopago.android.px.core.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.mvp.TaggedCallback;
 

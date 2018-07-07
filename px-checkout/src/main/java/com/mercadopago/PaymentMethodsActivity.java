@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.adapters.PaymentMethodsAdapter;
-import com.mercadopago.core.MercadoPagoComponents;
+import com.mercadopago.android.px.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.preferences.PaymentPreference;

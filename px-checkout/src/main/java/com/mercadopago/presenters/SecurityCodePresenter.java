@@ -1,7 +1,7 @@
 package com.mercadopago.presenters;
 
-import com.mercadopago.callbacks.FailureRecovery;
-import com.mercadopago.controllers.PaymentMethodGuessingController;
+import com.mercadopago.android.px.callbacks.FailureRecovery;
+import com.mercadopago.android.px.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.services.exceptions.CardTokenException;
 import com.mercadopago.android.px.model.Card;

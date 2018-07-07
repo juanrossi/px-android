@@ -1,7 +1,7 @@
 package com.mercadopago.utils;
 
 import android.support.v4.util.Pair;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import java.util.Collection;
 
 final class DiscountSamples {

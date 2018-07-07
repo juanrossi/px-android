@@ -2,8 +2,8 @@ package com.mercadopago.plugins.components;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.NextAction;
-import com.mercadopago.components.RendererFactory;
+import com.mercadopago.android.px.components.NextAction;
+import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.plugins.PluginComponent;
 import com.mercadopago.util.TextUtils;
 

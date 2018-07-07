@@ -4,9 +4,9 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
 import android.support.annotation.Nullable;
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.Component;
-import com.mercadopago.components.RendererFactory;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.Component;
+import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.review_and_confirm.models.ItemModel;
 import com.mercadopago.util.TextUtils;
 

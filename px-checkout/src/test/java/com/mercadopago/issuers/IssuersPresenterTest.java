@@ -1,6 +1,6 @@
 package com.mercadopago.issuers;
 
-import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.mocks.Issuers;
 import com.mercadopago.mocks.PaymentMethods;

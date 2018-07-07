@@ -2,8 +2,8 @@ package com.mercadopago.paymentresult;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.Mutator;
-import com.mercadopago.components.MutatorPropsListener;
+import com.mercadopago.android.px.components.Mutator;
+import com.mercadopago.android.px.components.MutatorPropsListener;
 import com.mercadopago.android.px.model.Instruction;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.paymentresult.props.HeaderProps;

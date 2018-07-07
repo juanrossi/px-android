@@ -1,6 +1,6 @@
 package com.mercadopago.paymentresult;
 
-import com.mercadopago.components.ActionDispatcher;
+import com.mercadopago.android.px.components.ActionDispatcher;
 import com.mercadopago.mocks.Instructions;
 import com.mercadopago.android.px.model.Instruction;
 import com.mercadopago.paymentresult.components.AccreditationComment;

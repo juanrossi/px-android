@@ -20,9 +20,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import android.widget.TextView;
-import com.mercadopago.callbacks.card.CardSecurityCodeEditTextCallback;
-import com.mercadopago.controllers.CheckoutTimer;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.callbacks.card.CardSecurityCodeEditTextCallback;
+import com.mercadopago.android.px.controllers.CheckoutTimer;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.android.px.services.exceptions.CardTokenException;

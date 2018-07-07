@@ -3,7 +3,7 @@ package com.mercadopago.providers;
 import android.content.Context;
 
 import com.mercadopago.R;
-import com.mercadopago.core.MercadoPagoServicesAdapter;
+import com.mercadopago.android.px.core.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.services.exceptions.CardTokenException;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardToken;

@@ -2,7 +2,7 @@ package com.mercadopago.internal.datasource;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.android.px.core.CheckoutStore;
 import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.services.adapters.MPCall;
 import com.mercadopago.android.px.services.callbacks.Callback;

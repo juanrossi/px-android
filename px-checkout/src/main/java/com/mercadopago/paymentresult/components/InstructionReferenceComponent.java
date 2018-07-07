@@ -2,8 +2,8 @@ package com.mercadopago.paymentresult.components;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.Component;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.Component;
 import com.mercadopago.android.px.model.InstructionReference;
 
 /**

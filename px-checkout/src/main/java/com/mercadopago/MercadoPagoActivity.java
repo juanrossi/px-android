@@ -3,7 +3,7 @@ package com.mercadopago;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.mercadopago.callbacks.FailureRecovery;
+import com.mercadopago.android.px.callbacks.FailureRecovery;
 
 @Deprecated
 public abstract class MercadoPagoActivity extends MercadoPagoBaseActivity {

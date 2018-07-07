@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mercadopago.components.Renderer;
+import com.mercadopago.android.px.components.Renderer;
 import com.mercadopago.example.R;
 import com.mercadopago.plugins.model.ExitAction;
 

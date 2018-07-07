@@ -1,6 +1,6 @@
 package com.mercadopago.review_and_confirm.components.actions;
 
-import com.mercadopago.components.Action;
+import com.mercadopago.android.px.components.Action;
 
 /**
  * Created by lbais on 2/3/18.

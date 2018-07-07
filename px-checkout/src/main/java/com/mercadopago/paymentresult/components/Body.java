@@ -2,13 +2,13 @@ package com.mercadopago.paymentresult.components;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.Component;
-import com.mercadopago.components.CustomComponent;
-import com.mercadopago.components.PaymentMethodComponent;
-import com.mercadopago.components.Receipt;
-import com.mercadopago.components.TotalAmount;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.Component;
+import com.mercadopago.android.px.components.CustomComponent;
+import com.mercadopago.android.px.components.PaymentMethodComponent;
+import com.mercadopago.android.px.components.Receipt;
+import com.mercadopago.android.px.components.TotalAmount;
+import com.mercadopago.android.px.core.CheckoutStore;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.paymentresult.PaymentResultProvider;

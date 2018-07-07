@@ -3,10 +3,10 @@ package com.mercadopago.plugins.components;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.Component;
-import com.mercadopago.components.PaymentMethodComponent;
-import com.mercadopago.components.RendererFactory;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.Component;
+import com.mercadopago.android.px.components.PaymentMethodComponent;
+import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.plugins.model.BusinessPayment;
 
 public class BusinessPaymentContainer extends Component<BusinessPaymentContainer.Props, Void> {

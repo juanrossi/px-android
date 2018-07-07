@@ -7,14 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.mercadopago.components.Action;
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.BackAction;
-import com.mercadopago.components.Component;
-import com.mercadopago.components.ComponentManager;
-import com.mercadopago.components.NextAction;
-import com.mercadopago.components.RendererFactory;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.android.px.components.Action;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.BackAction;
+import com.mercadopago.android.px.components.Component;
+import com.mercadopago.android.px.components.ComponentManager;
+import com.mercadopago.android.px.components.NextAction;
+import com.mercadopago.android.px.components.RendererFactory;
+import com.mercadopago.android.px.core.CheckoutStore;
 
 public class HookActivity extends AppCompatActivity implements ActionDispatcher {
 

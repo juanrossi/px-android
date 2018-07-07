@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.mercadopago.BuildConfig;
 import com.mercadopago.R;
-import com.mercadopago.core.MercadoPagoServicesAdapter;
+import com.mercadopago.android.px.core.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentMethodSearchItem;
 import com.mercadopago.tracker.Tracker;

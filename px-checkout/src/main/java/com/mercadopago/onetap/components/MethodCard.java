@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mercadopago.R;
-import com.mercadopago.components.CompactComponent;
+import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.PayerCost;

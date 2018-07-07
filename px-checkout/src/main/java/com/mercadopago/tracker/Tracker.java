@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import com.mercadopago.BuildConfig;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.android.px.core.CheckoutStore;
 import com.mercadopago.android.px.model.CardPaymentMetadata;
 import com.mercadopago.android.px.model.OneTapMetadata;
 import com.mercadopago.android.px.model.PaymentMethodSearch;

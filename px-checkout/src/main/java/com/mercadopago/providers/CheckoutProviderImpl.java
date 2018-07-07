@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.provider.FontRequest;
 import android.support.v4.provider.FontsContractCompat;
 import com.mercadopago.R;
-import com.mercadopago.core.MercadoPagoServicesAdapter;
+import com.mercadopago.android.px.core.MercadoPagoServicesAdapter;
 import com.mercadopago.exceptions.ExceptionHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.services.callbacks.Callback;

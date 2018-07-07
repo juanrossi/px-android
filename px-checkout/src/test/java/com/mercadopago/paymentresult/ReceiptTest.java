@@ -1,6 +1,6 @@
 package com.mercadopago.paymentresult;
 
-import com.mercadopago.components.Receipt;
+import com.mercadopago.android.px.components.Receipt;
 import com.mercadopago.mocks.PaymentResults;
 import com.mercadopago.android.px.model.PaymentResult;
 

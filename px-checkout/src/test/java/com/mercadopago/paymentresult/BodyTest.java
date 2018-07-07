@@ -2,9 +2,9 @@ package com.mercadopago.paymentresult;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.CustomComponent;
-import com.mercadopago.components.Receipt;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.CustomComponent;
+import com.mercadopago.android.px.components.Receipt;
 import com.mercadopago.services.constants.ProcessingModes;
 import com.mercadopago.mocks.Instructions;
 import com.mercadopago.mocks.PaymentResults;

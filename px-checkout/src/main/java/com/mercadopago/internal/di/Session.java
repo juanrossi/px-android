@@ -3,7 +3,7 @@ package com.mercadopago.internal.di;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.internal.datasource.AmountService;
 import com.mercadopago.internal.datasource.DiscountApiService;
 import com.mercadopago.internal.datasource.DiscountServiceImp;

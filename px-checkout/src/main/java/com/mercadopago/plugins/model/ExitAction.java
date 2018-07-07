@@ -6,7 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.Action;
+import com.mercadopago.android.px.components.Action;
 
 public class ExitAction extends Action implements Parcelable {
 

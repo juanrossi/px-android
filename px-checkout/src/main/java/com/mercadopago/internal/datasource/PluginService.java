@@ -2,7 +2,7 @@ package com.mercadopago.internal.datasource;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.android.px.core.CheckoutStore;
 import com.mercadopago.internal.repository.PluginRepository;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.plugins.PaymentMethodPlugin;

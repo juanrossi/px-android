@@ -1,6 +1,6 @@
 package com.mercadopago.views;
 
-import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.mvp.MvpView;

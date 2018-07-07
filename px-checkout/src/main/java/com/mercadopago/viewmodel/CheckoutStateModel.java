@@ -1,7 +1,7 @@
 package com.mercadopago.viewmodel;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.Payer;

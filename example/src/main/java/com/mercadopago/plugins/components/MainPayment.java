@@ -3,7 +3,7 @@ package com.mercadopago.plugins.components;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.RendererFactory;
+import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.plugins.PaymentPluginProcessorResultAction;
 import com.mercadopago.plugins.PluginComponent;
 import com.mercadopago.plugins.model.PluginPayment;

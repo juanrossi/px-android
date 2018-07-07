@@ -5,7 +5,7 @@ import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mercadopago.R;
-import com.mercadopago.components.CompactComponent;
+import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.internal.repository.DiscountRepository;
 import com.mercadopago.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.model.CardPaymentMetadata;

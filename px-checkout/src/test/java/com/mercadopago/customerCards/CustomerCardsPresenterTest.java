@@ -1,6 +1,6 @@
 package com.mercadopago.customerCards;
 
-import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.mocks.Cards;
 import com.mercadopago.android.px.model.Card;

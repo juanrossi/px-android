@@ -1,6 +1,6 @@
 package com.mercadopago.hooks;
 
-import com.mercadopago.components.Component;
+import com.mercadopago.android.px.components.Component;
 
 public abstract class Hook {
 

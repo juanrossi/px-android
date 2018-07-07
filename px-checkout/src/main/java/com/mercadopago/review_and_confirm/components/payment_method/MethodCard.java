@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercadopago.R;
-import com.mercadopago.components.CompactComponent;
+import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.review_and_confirm.models.PaymentModel;
 import com.mercadopago.util.ResourceUtil;
 import com.mercadopago.util.TextUtils;

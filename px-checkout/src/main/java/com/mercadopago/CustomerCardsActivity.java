@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.adapters.CustomerCardItemAdapter;
-import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.model.Card;

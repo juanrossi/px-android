@@ -5,11 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercadopago.R;
-import com.mercadopago.components.Action;
-import com.mercadopago.components.Button;
-import com.mercadopago.components.ButtonPrimary;
-import com.mercadopago.components.CompactComponent;
-import com.mercadopago.components.TermsAndConditionsComponent;
+import com.mercadopago.android.px.components.Action;
+import com.mercadopago.android.px.components.Button;
+import com.mercadopago.android.px.components.ButtonPrimary;
+import com.mercadopago.android.px.components.CompactComponent;
+import com.mercadopago.android.px.components.TermsAndConditionsComponent;
 import com.mercadopago.internal.di.ConfigurationModule;
 import com.mercadopago.internal.di.Session;
 import com.mercadopago.internal.repository.DiscountRepository;

@@ -2,7 +2,7 @@ package com.mercadopago.presenters;
 
 import android.content.Context;
 
-import com.mercadopago.callbacks.FailureRecovery;
+import com.mercadopago.android.px.callbacks.FailureRecovery;
 import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentType;

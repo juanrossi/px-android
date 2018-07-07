@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import com.google.gson.JsonSyntaxException;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.example.R;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.util.JsonUtil;

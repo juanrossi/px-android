@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.mercadopago.R;
-import com.mercadopago.components.Renderer;
+import com.mercadopago.android.px.components.Renderer;
 import com.mercadopago.customviews.MPTextView;
 
 /**

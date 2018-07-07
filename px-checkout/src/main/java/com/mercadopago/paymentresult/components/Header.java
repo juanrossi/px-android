@@ -2,9 +2,9 @@ package com.mercadopago.paymentresult.components;
 
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.Component;
-import com.mercadopago.components.RendererFactory;
+import com.mercadopago.android.px.components.ActionDispatcher;
+import com.mercadopago.android.px.components.Component;
+import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.paymentresult.props.HeaderProps;
 import com.mercadopago.paymentresult.props.IconProps;
 

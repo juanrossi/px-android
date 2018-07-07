@@ -3,11 +3,9 @@ package com.mercadopago.util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
 import com.mercadopago.R;
-import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.android.px.core.CheckoutStore;
 import com.mercadopago.plugins.PaymentMethodPlugin;
-import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 public class ResourceUtil {
 

@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mercadopago.R;
-import com.mercadopago.components.CompactComponent;
+import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.internal.datasource.PluginService;
 import com.mercadopago.internal.repository.PluginRepository;
 import com.mercadopago.plugins.model.PaymentMethodInfo;

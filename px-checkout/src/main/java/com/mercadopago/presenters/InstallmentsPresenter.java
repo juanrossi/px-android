@@ -1,9 +1,9 @@
 package com.mercadopago.presenters;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.callbacks.FailureRecovery;
-import com.mercadopago.callbacks.OnSelectedCallback;
-import com.mercadopago.controllers.PaymentMethodGuessingController;
+import com.mercadopago.android.px.callbacks.FailureRecovery;
+import com.mercadopago.android.px.callbacks.OnSelectedCallback;
+import com.mercadopago.android.px.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.internal.repository.AmountRepository;
 import com.mercadopago.internal.repository.DiscountRepository;

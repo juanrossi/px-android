@@ -3,7 +3,7 @@ package com.mercadopago.listeners.card;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import com.mercadopago.callbacks.card.CardExpiryDateEditTextCallback;
+import com.mercadopago.android.px.callbacks.card.CardExpiryDateEditTextCallback;
 
 /**
  * Created by vaserber on 10/19/16.

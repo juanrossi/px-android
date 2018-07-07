@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mercadopago.components.Renderer;
+import com.mercadopago.android.px.components.Renderer;
 import com.mercadopago.example.R;
 
 public class SamplePaymentRenderer extends Renderer<SamplePayment> {

@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercadopago.R;
-import com.mercadopago.components.Action;
-import com.mercadopago.components.Button;
-import com.mercadopago.components.ButtonLink;
-import com.mercadopago.components.CompactComponent;
+import com.mercadopago.android.px.components.Action;
+import com.mercadopago.android.px.components.Button;
+import com.mercadopago.android.px.components.ButtonLink;
+import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.review_and_confirm.models.PaymentModel;
 

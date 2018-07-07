@@ -1,14 +1,14 @@
 package com.mercadopago.paymentresult;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.callbacks.FailureRecovery;
-import com.mercadopago.components.Action;
-import com.mercadopago.components.ActionsListener;
-import com.mercadopago.components.LinkAction;
-import com.mercadopago.components.NextAction;
-import com.mercadopago.components.RecoverPaymentAction;
-import com.mercadopago.components.ResultCodeAction;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.callbacks.FailureRecovery;
+import com.mercadopago.android.px.components.Action;
+import com.mercadopago.android.px.components.ActionsListener;
+import com.mercadopago.android.px.components.LinkAction;
+import com.mercadopago.android.px.components.NextAction;
+import com.mercadopago.android.px.components.RecoverPaymentAction;
+import com.mercadopago.android.px.components.ResultCodeAction;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.services.constants.ProcessingModes;
 import com.mercadopago.android.px.model.Instruction;
