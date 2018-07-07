@@ -7,6 +7,8 @@ task androidJavadocs(type: Javadoc) {
     if (org.gradle.internal.jvm.Jvm.current().getJavaVersion().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
 }
 
 task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
