@@ -5,7 +5,7 @@ import android.support.v4.util.Pair;
 import com.mercadopago.SampleTopFragment;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.example.R;
-import com.mercadopago.model.Payment;
+import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.plugins.MainPaymentProcessor;
 import com.mercadopago.plugins.SamplePaymentMethodPlugin;
 import com.mercadopago.plugins.model.BusinessPayment;

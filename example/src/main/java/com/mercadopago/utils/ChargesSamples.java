@@ -3,12 +3,12 @@ package com.mercadopago.utils;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import com.mercadopago.core.MercadoPagoCheckout;
-import com.mercadopago.model.Campaign;
-import com.mercadopago.model.Discount;
-import com.mercadopago.model.PaymentTypes;
-import com.mercadopago.model.Sites;
-import com.mercadopago.model.commission.PaymentMethodChargeRule;
-import com.mercadopago.model.commission.PaymentTypeChargeRule;
+import com.mercadopago.android.px.model.Campaign;
+import com.mercadopago.android.px.model.Discount;
+import com.mercadopago.android.px.model.PaymentTypes;
+import com.mercadopago.android.px.model.Sites;
+import com.mercadopago.android.px.model.commission.PaymentMethodChargeRule;
+import com.mercadopago.android.px.model.commission.PaymentTypeChargeRule;
 import java.math.BigDecimal;
 import java.util.Collection;
 
