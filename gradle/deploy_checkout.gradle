@@ -1,8 +1,8 @@
 ext {
     versionToDeploy = version_to_deploy as String
-    artifactLib = 'tracking'
-    libraryName = 'com.mercadopago.android.px.tracking'
-    libraryDescription = 'MercadoPago Tracking Android'
+    artifactLib = 'checkout'
+    libraryName = 'com.mercadopago.android.px.checkout'
+    libraryDescription = 'MercadoPago Android Checkout'
     siteUrl = 'https://github.com/mercadopago/px-android'
     gitUrl = 'https://github.com/mercadopago/px-android.git'
     licenseName = 'The Apache Software License, Version 2.0'
