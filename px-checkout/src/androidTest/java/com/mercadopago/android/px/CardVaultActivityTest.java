@@ -22,7 +22,7 @@ import com.mercadopago.android.px.model.commission.ChargeRule;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.services.util.FakeAPI;
 import com.mercadopago.android.px.test.StaticMock;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
