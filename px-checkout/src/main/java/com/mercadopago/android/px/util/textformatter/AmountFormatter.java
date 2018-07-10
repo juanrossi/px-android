@@ -1,4 +1,4 @@
-package com.mercadopago.util.textformatter;
+package com.mercadopago.android.px.util.textformatter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

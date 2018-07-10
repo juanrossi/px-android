@@ -1,4 +1,4 @@
-package com.mercadopago.util;
+package com.mercadopago.android.px.util;
 
 import android.support.annotation.Nullable;
 

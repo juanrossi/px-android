@@ -1,4 +1,4 @@
-package com.mercadopago.util.textformatter;
+package com.mercadopago.android.px.util.textformatter;
 
 import android.text.Spannable;
 

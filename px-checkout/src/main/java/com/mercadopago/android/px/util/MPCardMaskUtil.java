@@ -1,4 +1,4 @@
-package com.mercadopago.util;
+package com.mercadopago.android.px.util;
 
 import com.mercadopago.android.px.model.IdentificationType;
 

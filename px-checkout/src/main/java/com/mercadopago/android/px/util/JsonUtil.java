@@ -1,4 +1,4 @@
-package com.mercadopago.util;
+package com.mercadopago.android.px.util;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

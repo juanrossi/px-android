@@ -1,4 +1,4 @@
-package com.mercadopago.util;
+package com.mercadopago.android.px.util;
 
 /**
  * Created by vaserber on 11/10/16.

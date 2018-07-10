@@ -1,11 +1,11 @@
-package com.mercadopago.util;
+package com.mercadopago.android.px.util;
 
 import com.mercadopago.android.px.model.Sites;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 /**
  * Created by marlanti on 4/6/17.

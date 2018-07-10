@@ -1,4 +1,4 @@
-package com.mercadopago.util;
+package com.mercadopago.android.px.util;
 
 import android.support.v4.view.ViewCompat;
 import android.view.View;
