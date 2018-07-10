@@ -7,7 +7,7 @@ import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.services.exceptions.ApiException;
-import com.mercadopago.util.MercadoPagoESC;
+import com.mercadopago.android.px.util.MercadoPagoESC;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Before;

@@ -18,11 +18,11 @@ import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.Bin;
 import com.mercadopago.android.px.model.PaymentMethod;
-import com.mercadopago.util.MPAnimationUtils;
-import com.mercadopago.util.MPCardMaskUtil;
-import com.mercadopago.util.MPCardUIUtils;
-import com.mercadopago.util.ScaleUtil;
-import com.mercadopago.util.ViewUtils;
+import com.mercadopago.android.px.util.MPAnimationUtils;
+import com.mercadopago.android.px.util.MPCardMaskUtil;
+import com.mercadopago.android.px.util.MPCardUIUtils;
+import com.mercadopago.android.px.util.ScaleUtil;
+import com.mercadopago.android.px.util.ViewUtils;
 
 /**
  * Created by vaserber on 9/29/16.

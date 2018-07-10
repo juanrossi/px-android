@@ -22,12 +22,12 @@ import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.services.exceptions.CheckoutPreferenceException;
 import com.mercadopago.android.px.uicontrollers.FontCache;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.EscUtil;
-import com.mercadopago.util.MercadoPagoESC;
-import com.mercadopago.util.MercadoPagoUtil;
-import com.mercadopago.util.QueryBuilder;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.EscUtil;
+import com.mercadopago.android.px.util.MercadoPagoESC;
+import com.mercadopago.android.px.util.MercadoPagoUtil;
+import com.mercadopago.android.px.util.QueryBuilder;
+import com.mercadopago.android.px.util.TextUtils;
 
 public class CheckoutProviderImpl implements CheckoutProvider {
 

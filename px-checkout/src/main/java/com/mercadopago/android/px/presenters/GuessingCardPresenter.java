@@ -36,8 +36,8 @@ import com.mercadopago.android.px.tracker.MPTrackingContext;
 import com.mercadopago.android.px.uicontrollers.card.CardView;
 import com.mercadopago.android.px.uicontrollers.card.FrontCardView;
 import com.mercadopago.android.px.views.GuessingCardActivityView;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.MPCardMaskUtil;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.MPCardMaskUtil;
 import java.util.ArrayList;
 import java.util.List;
 

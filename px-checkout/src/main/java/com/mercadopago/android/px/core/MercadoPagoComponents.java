@@ -31,7 +31,7 @@ import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.paymentresult.PaymentResultActivity;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 import java.math.BigDecimal;
 import java.util.List;
 

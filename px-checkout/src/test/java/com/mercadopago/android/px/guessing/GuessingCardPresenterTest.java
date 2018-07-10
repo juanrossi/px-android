@@ -38,7 +38,7 @@ import com.mercadopago.android.px.uicontrollers.card.CardView;
 import com.mercadopago.android.px.utils.CardTestUtils;
 import com.mercadopago.android.px.utils.StubSuccessMpCall;
 import com.mercadopago.android.px.views.GuessingCardActivityView;
-import com.mercadopago.util.ApiUtil;
+import com.mercadopago.android.px.util.ApiUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

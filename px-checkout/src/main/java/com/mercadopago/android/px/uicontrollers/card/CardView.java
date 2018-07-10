@@ -9,7 +9,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.model.PaymentMethod;
-import com.mercadopago.util.MPAnimationUtils;
+import com.mercadopago.android.px.util.MPAnimationUtils;
 
 /**
  * Created by vaserber on 10/21/16.

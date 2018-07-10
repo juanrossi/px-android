@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.android.px.review_and_confirm.models.PaymentModel;
-import com.mercadopago.util.MercadoPagoUtil;
-import com.mercadopago.util.ResourceUtil;
+import com.mercadopago.android.px.util.MercadoPagoUtil;
+import com.mercadopago.android.px.util.ResourceUtil;
 
 class MethodOff extends CompactComponent<MethodOff.Props, Void> {
 

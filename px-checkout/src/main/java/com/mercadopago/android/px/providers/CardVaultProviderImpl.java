@@ -7,8 +7,8 @@ import com.mercadopago.android.px.model.Installment;
 import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.mvp.TaggedCallback;
-import com.mercadopago.util.MercadoPagoESC;
-import com.mercadopago.util.MercadoPagoESCImpl;
+import com.mercadopago.android.px.util.MercadoPagoESC;
+import com.mercadopago.android.px.util.MercadoPagoESCImpl;
 import java.math.BigDecimal;
 import java.util.List;
 

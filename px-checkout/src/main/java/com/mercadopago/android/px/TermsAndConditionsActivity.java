@@ -9,8 +9,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 import com.mercadopago.android.px.tracker.Tracker;
-import com.mercadopago.util.ErrorUtil;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.ErrorUtil;
+import com.mercadopago.android.px.util.TextUtils;
 
 public class TermsAndConditionsActivity extends MercadoPagoActivity {
 

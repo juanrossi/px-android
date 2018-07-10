@@ -17,8 +17,8 @@ import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.Renderer;
 import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.android.px.customviews.MPTextView;
-import com.mercadopago.util.BitmapUtils;
-import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.android.px.util.BitmapUtils;
+import com.mercadopago.android.px.util.ScaleUtil;
 import java.util.List;
 
 /**

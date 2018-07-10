@@ -9,10 +9,10 @@ import com.mercadopago.android.px.mvp.MvpPresenter;
 import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.providers.CustomerCardsProvider;
 import com.mercadopago.android.px.views.CustomerCardsView;
-import com.mercadopago.util.ApiUtil;
+import com.mercadopago.android.px.util.ApiUtil;
 import java.util.List;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 /**
  * Created by mromar on 4/10/17.

@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.android.px.review_and_confirm.models.PaymentModel;
-import com.mercadopago.util.ResourceUtil;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.ResourceUtil;
+import com.mercadopago.android.px.util.TextUtils;
 import java.util.Locale;
 
 class MethodCard extends CompactComponent<MethodCard.Props, Void> {

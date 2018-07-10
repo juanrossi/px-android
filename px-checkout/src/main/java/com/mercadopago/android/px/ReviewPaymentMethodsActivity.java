@@ -13,7 +13,7 @@ import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.presenters.ReviewPaymentMethodsPresenter;
 import com.mercadopago.android.px.providers.ReviewPaymentMethodsProviderImpl;
 import com.mercadopago.android.px.views.ReviewPaymentMethodsView;
-import com.mercadopago.util.ErrorUtil;
+import com.mercadopago.android.px.util.ErrorUtil;
 import java.lang.reflect.Type;
 import java.util.List;
 

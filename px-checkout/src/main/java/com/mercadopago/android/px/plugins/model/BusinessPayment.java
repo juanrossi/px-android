@@ -11,7 +11,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.model.ExternalFragment;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 
 @SuppressWarnings("unused")
 public class BusinessPayment implements PluginPayment, Parcelable {

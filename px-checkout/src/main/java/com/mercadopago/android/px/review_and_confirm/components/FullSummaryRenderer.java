@@ -19,7 +19,7 @@ import com.mercadopago.android.px.services.util.CurrenciesUtil;
 import com.mercadopago.android.px.uicontrollers.payercosts.PayerCostColumn;
 import java.math.BigDecimal;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 /**
  * Created by mromar on 2/28/18.

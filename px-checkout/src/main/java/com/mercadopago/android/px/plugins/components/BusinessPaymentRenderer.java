@@ -20,7 +20,7 @@ import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.android.px.paymentresult.components.Header;
 import com.mercadopago.android.px.paymentresult.props.HeaderProps;
 import com.mercadopago.android.px.plugins.model.ExitAction;
-import com.mercadopago.util.FragmentUtil;
+import com.mercadopago.android.px.util.FragmentUtil;
 
 public class BusinessPaymentRenderer extends Renderer<BusinessPaymentContainer> {
 

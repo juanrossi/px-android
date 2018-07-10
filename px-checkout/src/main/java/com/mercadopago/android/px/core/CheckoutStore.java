@@ -12,7 +12,7 @@ import com.mercadopago.android.px.plugins.PaymentProcessor;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
 import com.mercadopago.android.px.review_and_confirm.models.ReviewAndConfirmPreferences;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

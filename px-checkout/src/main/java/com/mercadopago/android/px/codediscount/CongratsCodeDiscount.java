@@ -8,7 +8,7 @@ import com.mercadolibre.android.ui.widgets.MeliButton;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.android.px.model.Discount;
-import com.mercadopago.util.textformatter.TextFormatter;
+import com.mercadopago.android.px.util.textformatter.TextFormatter;
 import javax.annotation.Nonnull;
 
 class CongratsCodeDiscount extends CompactComponent<CongratsCodeDiscount.Props, CodeDiscountDialog.Actions> {

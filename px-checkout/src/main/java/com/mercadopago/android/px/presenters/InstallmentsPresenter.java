@@ -22,8 +22,8 @@ import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.providers.InstallmentsProvider;
 import com.mercadopago.android.px.views.AmountView;
 import com.mercadopago.android.px.views.InstallmentsActivityView;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.InstallmentsUtil;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.InstallmentsUtil;
 import java.util.List;
 
 public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView, InstallmentsProvider> implements

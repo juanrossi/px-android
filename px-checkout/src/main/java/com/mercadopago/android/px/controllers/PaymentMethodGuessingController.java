@@ -4,7 +4,7 @@ import com.mercadopago.android.px.model.CardInformation;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.android.px.model.Setting;
-import com.mercadopago.util.MercadoPagoUtil;
+import com.mercadopago.android.px.util.MercadoPagoUtil;
 import java.util.ArrayList;
 import java.util.List;
 

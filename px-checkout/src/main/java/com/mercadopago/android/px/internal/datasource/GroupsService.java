@@ -18,7 +18,7 @@ import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.constants.ProcessingModes;
 import com.mercadopago.android.px.services.core.Settings;
 import com.mercadopago.android.px.services.exceptions.ApiException;
-import com.mercadopago.util.MercadoPagoESC;
+import com.mercadopago.android.px.util.MercadoPagoESC;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;

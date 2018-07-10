@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.uicontrollers.identification.IdentificationView;
-import com.mercadopago.util.MPCardMaskUtil;
+import com.mercadopago.android.px.util.MPCardMaskUtil;
 
 /**
  * Created by vaserber on 10/20/16.

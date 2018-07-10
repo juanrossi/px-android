@@ -8,7 +8,7 @@ import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.uicontrollers.paymentmethods.PaymentMethodViewController;
-import com.mercadopago.util.MercadoPagoUtil;
+import com.mercadopago.android.px.util.MercadoPagoUtil;
 
 /**
  * Created by mreverter on 28/6/16.

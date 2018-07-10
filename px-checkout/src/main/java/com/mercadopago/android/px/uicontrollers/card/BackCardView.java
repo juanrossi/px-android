@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.PaymentMethod;
-import com.mercadopago.util.MPCardMaskUtil;
-import com.mercadopago.util.ScaleUtil;
-import com.mercadopago.util.ViewUtils;
+import com.mercadopago.android.px.util.MPCardMaskUtil;
+import com.mercadopago.android.px.util.ScaleUtil;
+import com.mercadopago.android.px.util.ViewUtils;
 
 /**
  * Created by vaserber on 10/19/16.

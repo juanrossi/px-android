@@ -31,7 +31,7 @@ import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.views.AmountView;
 import com.mercadopago.android.px.views.PaymentVaultView;
-import com.mercadopago.util.MercadoPagoUtil;
+import com.mercadopago.android.px.util.MercadoPagoUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

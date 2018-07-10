@@ -9,11 +9,11 @@ import com.mercadopago.android.px.mvp.MvpPresenter;
 import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.providers.PayerInformationProvider;
 import com.mercadopago.android.px.views.PayerInformationView;
-import com.mercadopago.util.ApiUtil;
+import com.mercadopago.android.px.util.ApiUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 /**
  * Created by mromar on 9/25/17.

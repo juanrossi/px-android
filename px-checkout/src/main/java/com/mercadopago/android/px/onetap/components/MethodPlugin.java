@@ -10,7 +10,7 @@ import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.android.px.internal.datasource.PluginService;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.plugins.model.PaymentMethodInfo;
-import com.mercadopago.util.ViewUtils;
+import com.mercadopago.android.px.util.ViewUtils;
 import javax.annotation.Nonnull;
 
 class MethodPlugin extends CompactComponent<MethodPlugin.Props, Void> {

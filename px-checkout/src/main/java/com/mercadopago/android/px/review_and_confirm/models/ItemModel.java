@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.mercadopago.android.px.services.util.CurrenciesUtil;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 import java.math.BigDecimal;
 
 public class ItemModel implements Parcelable {

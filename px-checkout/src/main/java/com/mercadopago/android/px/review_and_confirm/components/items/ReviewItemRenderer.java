@@ -13,9 +13,9 @@ import android.widget.LinearLayout;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.Renderer;
 import com.mercadopago.android.px.customviews.MPTextView;
-import com.mercadopago.util.CircleTransform;
-import com.mercadopago.util.ScaleUtil;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.CircleTransform;
+import com.mercadopago.android.px.util.ScaleUtil;
+import com.mercadopago.android.px.util.TextUtils;
 import com.squareup.picasso.Picasso;
 import java.util.Locale;
 

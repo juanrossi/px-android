@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
-import static com.mercadopago.util.TextUtils.isNotEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isNotEmpty;
 
 public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> {
 

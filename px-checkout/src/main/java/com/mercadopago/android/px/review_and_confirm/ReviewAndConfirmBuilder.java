@@ -19,7 +19,7 @@ import com.mercadopago.android.px.review_and_confirm.models.LineSeparatorType;
 import com.mercadopago.android.px.review_and_confirm.models.PaymentModel;
 import com.mercadopago.android.px.review_and_confirm.models.SummaryModel;
 import com.mercadopago.android.px.review_and_confirm.models.TermsAndConditionsModel;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 import java.util.List;
 
 public class ReviewAndConfirmBuilder {

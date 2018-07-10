@@ -9,11 +9,11 @@ import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.Card;
-import com.mercadopago.util.MercadoPagoUtil;
+import com.mercadopago.android.px.util.MercadoPagoUtil;
 import java.util.List;
 import java.util.Locale;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 public class CustomerCardItemAdapter extends RecyclerView.Adapter<CustomerCardItemAdapter.ViewHolder> {
 

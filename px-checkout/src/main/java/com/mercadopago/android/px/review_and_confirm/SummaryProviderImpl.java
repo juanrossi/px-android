@@ -6,7 +6,7 @@ import android.support.v4.content.ContextCompat;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.review_and_confirm.models.ReviewAndConfirmPreferences;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 public class SummaryProviderImpl implements SummaryProvider {
 

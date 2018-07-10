@@ -15,7 +15,7 @@ import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.Site;
-import com.mercadopago.util.textformatter.TextFormatter;
+import com.mercadopago.android.px.util.textformatter.TextFormatter;
 import java.math.BigDecimal;
 
 public class AmountView extends LinearLayoutCompat {

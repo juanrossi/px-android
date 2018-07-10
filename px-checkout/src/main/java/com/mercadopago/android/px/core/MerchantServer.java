@@ -9,7 +9,7 @@ import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.services.adapters.ErrorHandlingCallAdapter;
 import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.util.HttpClientUtil;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 import java.util.Map;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

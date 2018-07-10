@@ -17,8 +17,8 @@ import com.mercadopago.android.px.providers.SecurityCodeProvider;
 import com.mercadopago.android.px.services.exceptions.CardTokenException;
 import com.mercadopago.android.px.uicontrollers.card.CardView;
 import com.mercadopago.android.px.views.SecurityCodeActivityView;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.TextUtils;
 
 /**
  * Created by vaserber on 10/26/16.

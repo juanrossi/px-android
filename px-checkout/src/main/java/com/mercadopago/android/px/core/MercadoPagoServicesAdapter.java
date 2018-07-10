@@ -8,7 +8,7 @@ import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentBody;
 import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.core.MercadoPagoServices;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;

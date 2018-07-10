@@ -44,10 +44,10 @@ import com.mercadopago.android.px.tracking.utils.TrackingUtil;
 import com.mercadopago.android.px.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.android.px.uicontrollers.card.CardView;
 import com.mercadopago.android.px.views.SecurityCodeActivityView;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.ErrorUtil;
-import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.MPCardUIUtils;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.ErrorUtil;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.MPCardUIUtils;
 
 /**
  * Created by vaserber on 10/26/16.

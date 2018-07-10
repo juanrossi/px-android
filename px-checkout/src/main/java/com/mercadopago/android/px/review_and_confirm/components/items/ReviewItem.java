@@ -7,7 +7,7 @@ import com.mercadopago.android.px.components.ActionDispatcher;
 import com.mercadopago.android.px.components.Component;
 import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.android.px.review_and_confirm.models.ItemModel;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 
 public class ReviewItem extends Component<ReviewItem.Props, Void> {
 

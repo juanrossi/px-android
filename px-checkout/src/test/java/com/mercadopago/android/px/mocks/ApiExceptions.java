@@ -2,7 +2,7 @@ package com.mercadopago.android.px.mocks;
 
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.utils.ResourcesUtil;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 
 public class ApiExceptions {
 

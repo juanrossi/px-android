@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.mercadopago.android.px.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 public class MercadoPagoCheckout implements Serializable {
 

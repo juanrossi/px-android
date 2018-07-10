@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mercadopago.android.px.model.BankDeal;
-import com.mercadopago.util.ViewUtils;
+import com.mercadopago.android.px.util.ViewUtils;
 import com.squareup.picasso.Callback;
 
 public class BankDealDetailActivity extends AppCompatActivity implements Callback {

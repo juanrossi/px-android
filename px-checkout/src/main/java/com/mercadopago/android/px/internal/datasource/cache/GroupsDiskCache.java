@@ -7,7 +7,7 @@ import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.services.adapters.MPCall;
 import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.exceptions.ApiException;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

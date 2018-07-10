@@ -43,11 +43,11 @@ import com.mercadopago.android.px.viewmodel.CardPaymentModel;
 import com.mercadopago.android.px.viewmodel.CheckoutStateModel;
 import com.mercadopago.android.px.viewmodel.OneTapModel;
 import com.mercadopago.android.px.views.CheckoutView;
-import com.mercadopago.util.ErrorUtil;
-import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.MercadoPagoESCImpl;
-import com.mercadopago.util.TextUtils;
-import com.mercadopago.util.ViewUtils;
+import com.mercadopago.android.px.util.ErrorUtil;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.MercadoPagoESCImpl;
+import com.mercadopago.android.px.util.TextUtils;
+import com.mercadopago.android.px.util.ViewUtils;
 import com.squareup.picasso.Picasso;
 import java.math.BigDecimal;
 

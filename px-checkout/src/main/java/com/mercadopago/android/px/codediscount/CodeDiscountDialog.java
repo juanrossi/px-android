@@ -17,7 +17,7 @@ import com.mercadopago.android.px.callbacks.OnDiscountRetrieved;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.services.util.TextUtil;
-import com.mercadopago.util.FlipModalAnimationUtil;
+import com.mercadopago.android.px.util.FlipModalAnimationUtil;
 
 import static android.graphics.Typeface.NORMAL;
 import static com.mercadolibre.android.ui.widgets.MeliButton.State.DISABLED;

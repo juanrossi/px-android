@@ -11,7 +11,7 @@ import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.PaymentMethodSearchItem;
 import com.mercadopago.android.px.model.PaymentTypes;
-import com.mercadopago.util.ResourceUtil;
+import com.mercadopago.android.px.util.ResourceUtil;
 
 public class PaymentMethodSearchOption implements PaymentMethodSearchViewController {
 

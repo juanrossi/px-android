@@ -22,12 +22,12 @@ import com.mercadopago.android.px.providers.CustomerCardsProviderImpl;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.uicontrollers.GridSpacingItemDecoration;
 import com.mercadopago.android.px.views.CustomerCardsView;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.ErrorUtil;
-import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.MercadoPagoUtil;
-import com.mercadopago.util.ScaleUtil;
-import com.mercadopago.util.ViewUtils;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.ErrorUtil;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.MercadoPagoUtil;
+import com.mercadopago.android.px.util.ScaleUtil;
+import com.mercadopago.android.px.util.ViewUtils;
 import java.lang.reflect.Type;
 import java.util.List;
 

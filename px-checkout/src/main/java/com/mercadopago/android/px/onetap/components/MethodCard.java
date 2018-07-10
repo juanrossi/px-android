@@ -11,8 +11,8 @@ import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.PayerCost;
-import com.mercadopago.util.ResourceUtil;
-import com.mercadopago.util.textformatter.TextFormatter;
+import com.mercadopago.android.px.util.ResourceUtil;
+import com.mercadopago.android.px.util.textformatter.TextFormatter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

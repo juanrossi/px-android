@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.customviews.MPTextView;
-import com.mercadopago.util.textformatter.TextFormatter;
+import com.mercadopago.android.px.util.textformatter.TextFormatter;
 
 public class TotalAmountRenderer extends Renderer<TotalAmount> {
 

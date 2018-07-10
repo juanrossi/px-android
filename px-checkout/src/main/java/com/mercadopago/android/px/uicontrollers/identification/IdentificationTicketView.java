@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.customviews.MPTextView;
-import com.mercadopago.util.MPCardMaskUtil;
+import com.mercadopago.android.px.util.MPCardMaskUtil;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 /**
  * Created by mromar on 9/27/17.

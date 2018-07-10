@@ -9,7 +9,7 @@ import com.mercadopago.android.px.model.commission.ChargeRule;
 import com.mercadopago.android.px.model.commission.PaymentMethodRule;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.FlowPreference;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 import java.lang.reflect.Type;
 import java.util.List;
 

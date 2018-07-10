@@ -10,7 +10,7 @@ import com.mercadopago.android.px.mvp.MvpPresenter;
 import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.providers.IssuersProvider;
 import com.mercadopago.android.px.views.IssuersActivityView;
-import com.mercadopago.util.ApiUtil;
+import com.mercadopago.android.px.util.ApiUtil;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -59,10 +59,10 @@ import com.mercadopago.android.px.uicontrollers.paymentmethodsearch.PluginPaymen
 import com.mercadopago.android.px.views.AmountView;
 import com.mercadopago.android.px.views.DiscountDetailDialog;
 import com.mercadopago.android.px.views.PaymentVaultView;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.ErrorUtil;
-import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.ErrorUtil;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.ScaleUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

@@ -9,7 +9,7 @@ import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.providers.PaymentMethodsProvider;
 import com.mercadopago.android.px.views.PaymentMethodsView;
-import com.mercadopago.util.ApiUtil;
+import com.mercadopago.android.px.util.ApiUtil;
 import java.util.ArrayList;
 import java.util.List;
 

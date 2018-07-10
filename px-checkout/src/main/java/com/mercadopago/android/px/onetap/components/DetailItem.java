@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.CompactComponent;
 import com.mercadopago.android.px.model.Item;
-import com.mercadopago.util.ViewUtils;
-import com.mercadopago.util.textformatter.TextFormatter;
+import com.mercadopago.android.px.util.ViewUtils;
+import com.mercadopago.android.px.util.textformatter.TextFormatter;
 import javax.annotation.Nonnull;
 
 class DetailItem extends CompactComponent<Item, Void> {

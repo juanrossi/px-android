@@ -18,10 +18,10 @@ import com.mercadopago.android.px.tracker.FlowHandler;
 import com.mercadopago.android.px.tracker.MPTrackingContext;
 import com.mercadopago.android.px.tracking.model.ScreenViewEvent;
 import com.mercadopago.android.px.tracking.utils.TrackingUtil;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.ErrorUtil;
-import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.ViewUtils;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.ErrorUtil;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.ViewUtils;
 import java.lang.reflect.Type;
 import java.util.List;
 

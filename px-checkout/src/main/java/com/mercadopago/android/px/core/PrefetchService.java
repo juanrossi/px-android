@@ -12,7 +12,7 @@ import com.mercadopago.android.px.services.CheckoutService;
 import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.core.Settings;
 import com.mercadopago.android.px.services.exceptions.ApiException;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 import java.util.Map;
 
 class PrefetchService {

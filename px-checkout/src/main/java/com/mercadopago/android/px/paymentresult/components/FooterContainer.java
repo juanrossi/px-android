@@ -16,7 +16,7 @@ import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.paymentresult.PaymentResultProvider;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
 import com.mercadopago.android.px.review_and_confirm.components.actions.ChangePaymentMethodAction;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 
 public class FooterContainer extends Component<FooterContainer.Props, Void> {
 

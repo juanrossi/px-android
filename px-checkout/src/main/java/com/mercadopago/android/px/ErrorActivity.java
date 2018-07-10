@@ -12,9 +12,9 @@ import com.mercadopago.android.px.tracker.FlowHandler;
 import com.mercadopago.android.px.tracker.MPTrackingContext;
 import com.mercadopago.android.px.tracking.model.ScreenViewEvent;
 import com.mercadopago.android.px.tracking.utils.TrackingUtil;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.ErrorUtil;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.ErrorUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 
 public class ErrorActivity extends MercadoPagoBaseActivity {
 

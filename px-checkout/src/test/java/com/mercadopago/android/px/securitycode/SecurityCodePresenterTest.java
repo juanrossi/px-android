@@ -24,7 +24,7 @@ import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.services.exceptions.CardTokenException;
 import com.mercadopago.android.px.utils.MVPStructure;
 import com.mercadopago.android.px.views.SecurityCodeActivityView;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

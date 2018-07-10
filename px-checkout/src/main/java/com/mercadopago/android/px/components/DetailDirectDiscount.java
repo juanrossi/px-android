@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Discount;
-import com.mercadopago.util.textformatter.TextFormatter;
+import com.mercadopago.android.px.util.textformatter.TextFormatter;
 import javax.annotation.Nonnull;
 
 public class DetailDirectDiscount extends CompactComponent<DetailDirectDiscount.Props, Void> {

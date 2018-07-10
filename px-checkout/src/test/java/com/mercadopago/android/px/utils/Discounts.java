@@ -2,7 +2,7 @@ package com.mercadopago.android.px.utils;
 
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.services.exceptions.ApiException;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 
 public class Discounts {
 

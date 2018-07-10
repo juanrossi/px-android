@@ -22,7 +22,7 @@ import com.mercadopago.android.px.onetap.components.OneTapContainer;
 import com.mercadopago.android.px.tracker.Tracker;
 import com.mercadopago.android.px.viewmodel.CardPaymentModel;
 import com.mercadopago.android.px.viewmodel.OneTapModel;
-import com.mercadopago.util.JsonUtil;
+import com.mercadopago.android.px.util.JsonUtil;
 import java.math.BigDecimal;
 
 import static android.app.Activity.RESULT_CANCELED;

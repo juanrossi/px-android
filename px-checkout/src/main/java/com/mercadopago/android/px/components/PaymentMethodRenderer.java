@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.customviews.MPTextView;
 import com.mercadopago.android.px.model.PaymentTypes;
-import com.mercadopago.util.ResourceUtil;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.ResourceUtil;
+import com.mercadopago.android.px.util.TextUtils;
 import java.util.Locale;
 
 public class PaymentMethodRenderer extends Renderer<PaymentMethodComponent> {

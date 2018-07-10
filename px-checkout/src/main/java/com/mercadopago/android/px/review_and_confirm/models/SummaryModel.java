@@ -12,7 +12,7 @@ import com.mercadopago.android.px.model.Site;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 /**
  * Created by mromar on 3/2/18.

@@ -6,7 +6,7 @@ import com.mercadopago.android.px.mvp.MvpPresenter;
 import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.providers.DiscountsProvider;
 import com.mercadopago.android.px.views.DiscountsActivityView;
-import com.mercadopago.util.ApiUtil;
+import com.mercadopago.android.px.util.ApiUtil;
 import java.math.BigDecimal;
 
 public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, DiscountsProvider> {

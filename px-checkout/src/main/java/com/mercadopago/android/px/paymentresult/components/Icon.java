@@ -5,7 +5,7 @@ import com.mercadopago.android.px.components.ActionDispatcher;
 import com.mercadopago.android.px.components.Component;
 import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.android.px.paymentresult.props.IconProps;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 
 /**
  * Created by vaserber on 10/23/17.

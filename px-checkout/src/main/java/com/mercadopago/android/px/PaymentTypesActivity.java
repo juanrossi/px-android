@@ -32,10 +32,10 @@ import com.mercadopago.android.px.uicontrollers.FontCache;
 import com.mercadopago.android.px.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.android.px.uicontrollers.card.FrontCardView;
 import com.mercadopago.android.px.views.PaymentTypesActivityView;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.ErrorUtil;
-import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.ErrorUtil;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.ScaleUtil;
 import java.lang.reflect.Type;
 import java.util.List;
 

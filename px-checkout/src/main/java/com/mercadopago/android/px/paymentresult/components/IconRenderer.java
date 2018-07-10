@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.components.Renderer;
 import com.mercadopago.android.px.paymentresult.props.IconProps;
-import com.mercadopago.util.CircleTransform;
-import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.android.px.util.CircleTransform;
+import com.mercadopago.android.px.util.ScaleUtil;
 import com.squareup.picasso.Picasso;
 
 /**

@@ -22,8 +22,8 @@ import com.mercadopago.android.px.providers.CardVaultProvider;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.tracking.utils.TrackingUtil;
 import com.mercadopago.android.px.views.CardVaultView;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.TextUtils;
 import java.util.List;
 
 public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultProvider> {

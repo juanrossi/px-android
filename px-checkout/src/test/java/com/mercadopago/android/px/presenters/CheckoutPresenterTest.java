@@ -46,7 +46,7 @@ import com.mercadopago.android.px.utils.StubSuccessMpCall;
 import com.mercadopago.android.px.viewmodel.CheckoutStateModel;
 import com.mercadopago.android.px.viewmodel.OneTapModel;
 import com.mercadopago.android.px.views.CheckoutView;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;

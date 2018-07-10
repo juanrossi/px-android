@@ -14,7 +14,7 @@ import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.android.px.review_and_confirm.models.SummaryModel;
 import com.mercadopago.android.px.services.util.CurrenciesUtil;
 
-import static com.mercadopago.util.TextUtils.isEmpty;
+import static com.mercadopago.android.px.util.TextUtils.isEmpty;
 
 public class CompactSummaryRenderer extends Renderer<CompactSummary> {
 

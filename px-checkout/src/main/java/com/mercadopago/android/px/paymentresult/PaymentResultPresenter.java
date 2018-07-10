@@ -21,7 +21,7 @@ import com.mercadopago.android.px.review_and_confirm.components.actions.ChangePa
 import com.mercadopago.android.px.services.constants.ProcessingModes;
 import com.mercadopago.android.px.tracking.model.ScreenViewEvent;
 import com.mercadopago.android.px.tracking.utils.TrackingUtil;
-import com.mercadopago.util.ApiUtil;
+import com.mercadopago.android.px.util.ApiUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

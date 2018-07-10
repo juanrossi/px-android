@@ -20,7 +20,7 @@ import com.mercadopago.android.px.onetap.OneTap;
 import com.mercadopago.android.px.review_and_confirm.models.LineSeparatorType;
 import com.mercadopago.android.px.review_and_confirm.models.TermsAndConditionsModel;
 import com.mercadopago.android.px.viewmodel.OneTapModel;
-import com.mercadopago.util.ViewUtils;
+import com.mercadopago.android.px.util.ViewUtils;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
