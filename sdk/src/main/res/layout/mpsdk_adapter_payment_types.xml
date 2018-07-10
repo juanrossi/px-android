@@ -6,8 +6,7 @@
     android:orientation="vertical"
     android:focusable="true"
     android:background="@drawable/mpsdk_item_focusable_list"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -22,6 +21,6 @@
             tools:text="payment type"/>
     </FrameLayout>
 
-    <include layout="@layout/mpsdk_view_dashed_line_separator"/>
+    <include layout="@layout/mpsdk_view_separator_dashed_line"/>
 
 </LinearLayout>

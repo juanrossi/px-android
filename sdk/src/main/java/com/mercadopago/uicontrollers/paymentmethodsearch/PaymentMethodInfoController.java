@@ -2,6 +2,7 @@ package com.mercadopago.uicontrollers.paymentmethodsearch;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,84 +10,82 @@ import android.widget.ImageView;
 
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
-import com.mercadopago.plugins.model.PaymentMethodInfo;
-import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.util.TextUtils;
 
-/**
- * Created by mreverter on 29/4/16.
- */
 public class PaymentMethodInfoController implements PaymentMethodSearchViewController {
 
     private static final int COMMENT_MAX_LENGTH = 75;
 
-    protected PaymentMethodInfo mItem;
-    protected Context mContext;
-    protected View mView;
-    protected MPTextView mName;
-    protected MPTextView mDescription;
-    protected ImageView mIcon;
-    protected DecorationPreference mDecorationPreference;
-    protected View.OnClickListener mListener;
+    protected PaymentMethodInfoModel item;
+    protected Context context;
+    protected View view;
+    protected MPTextView name;
+    protected MPTextView description;
+    protected ImageView icon;
+    protected View.OnClickListener listener;
+
 
     public PaymentMethodInfoController(@NonNull final Context context,
-                                       @NonNull final PaymentMethodInfo item,
-                                       @NonNull final DecorationPreference decorationPreference) {
-        mContext = context;
-        mItem = item;
-        mDecorationPreference = decorationPreference;
+                                       @NonNull final PaymentMethodInfoModel item) {
+        this.context = context;
+        this.item = item;
     }
 
+    @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
-        mView = LayoutInflater.from(mContext)
+        view = LayoutInflater.from(context)
                 .inflate(R.layout.mpsdk_row_pm_info_item, parent, attachToRoot);
-        if (mListener != null) {
-            mView.setOnClickListener(mListener);
+        if (listener != null) {
+            view.setOnClickListener(listener);
         }
-        mView.setTag(mItem.id);
-        return mView;
+        view.setTag(item.getId());
+        return view;
     }
 
     @Override
     public View getView() {
-        return mView;
+        return view;
     }
 
+    @Override
     public void initializeControls() {
-        mName = mView.findViewById(R.id.mpsdk_name);
-        mDescription = mView.findViewById(R.id.mpsdk_description);
-        mIcon = mView.findViewById(R.id.mpsdk_image);
+        name = view.findViewById(R.id.mpsdk_name);
+        description = view.findViewById(R.id.mpsdk_description);
+        icon = view.findViewById(R.id.mpsdk_image);
     }
 
+    @Override
     public void draw() {
 
-
-
-        if (TextUtils.isEmpty(mItem.name)) {
-            mName.setVisibility(View.GONE);
+        if (TextUtils.isEmpty(item.getName())) {
+            name.setVisibility(View.GONE);
         } else {
-            mName.setVisibility(View.VISIBLE);
-            mName.setText(mItem.name);
+            name.setVisibility(View.VISIBLE);
+            name.setText(item.getName());
         }
 
-        if (TextUtils.isNotEmpty(mItem.description)
-                && mItem.description.length() < COMMENT_MAX_LENGTH) {
-            mDescription.setText(mItem.description);
+        if (shouldShowDescription()) {
+                description.setText(item.getDescription());
         }
 
-        if (mItem.icon == R.drawable.mpsdk_none) {
-            mIcon.setVisibility(View.GONE);
+        if (item.getIcon() == R.drawable.mpsdk_none) {
+            icon.setVisibility(View.GONE);
         } else {
-            mIcon.setVisibility(View.VISIBLE);
-            mIcon.setImageResource(mItem.icon);
+            icon.setVisibility(View.VISIBLE);
+            icon.setImageResource(item.getIcon());
         }
+    }
+
+    @VisibleForTesting
+    boolean shouldShowDescription() {
+        return TextUtils.isNotEmpty(item.getDescription()) && item.getDescription().length() < COMMENT_MAX_LENGTH;
     }
 
     @Override
     public void setOnClickListener(View.OnClickListener listener) {
-        mListener = listener;
-        if (mView != null) {
-            mView.setOnClickListener(listener);
+        this.listener = listener;
+        if (view != null) {
+            view.setOnClickListener(listener);
         }
     }
 }

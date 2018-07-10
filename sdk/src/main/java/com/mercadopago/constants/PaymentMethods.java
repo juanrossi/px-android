@@ -1,10 +1,12 @@
 package com.mercadopago.constants;
 
-/**
- * Created by mromar on 6/21/16.
- */
 public class PaymentMethods {
 
+    /**
+     * @deprecated ACCOUNT_MONEY is deprecated, will be removed in future releases as part
+     * of payment methods plugins implementation.
+     */
+    @Deprecated
     public static final String ACCOUNT_MONEY = "account_money";
 
     public class ARGENTINA {

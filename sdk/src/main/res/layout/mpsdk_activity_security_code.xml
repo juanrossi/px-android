@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mpsdk_white"
@@ -24,11 +23,20 @@
                 android:id="@+id/mpsdkSecurityCodeActivityBackground"
                 android:layout_width="match_parent"
                 android:layout_height="208dp"
-                android:background="@color/mpsdk_background_blue">
+                android:background="@color/mpsdk_background">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/mpsdkToolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/mpsdk_background"
+                    android:theme="@style/ToolbarTheme"
+                    app:popupTheme="@style/Theme.MercadoPagoTheme.NoActionBar">
+
+                </android.support.v7.widget.Toolbar>
 
                 <com.mercadopago.customviews.MPTextView
                     android:id="@+id/mpsdkTimerTextView"
-                    style="@style/mpsdk_title_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|right"
@@ -37,9 +45,9 @@
                     android:layout_marginTop="14dp"
                     android:background="@drawable/mpsdk_title_toolbar"
                     android:gravity="center_vertical"
+                    android:textColor="@color/mpsdk_toolbar_text"
                     android:textSize="17dp"
                     android:visibility="gone"
-                    app:allowCustomFont="false"
                     app:font_style="mono_regular" />
 
                 <FrameLayout
@@ -65,6 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:baselineAligned="false"
                     android:weightSum="1">
 
                     <LinearLayout
@@ -96,8 +105,10 @@
                             android:inputType="number"
                             android:maxLength="4"
                             android:singleLine="true"
-                            android:textColor="@color/abc_search_url_text_selected"
+                            android:textColor="@color/mpsdk_real_black"
+                            android:textCursorDrawable="@drawable/mpsdk_cursor_input"
                             android:textSize="19dp"
+                            app:backgroundTint="@color/mpsdk_input"
                             custom:errorColor="@color/mpsdk_color_red_error" />
 
                     </LinearLayout>
@@ -131,6 +142,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:orientation="horizontal"
+                    android:baselineAligned="false"
                     android:visibility="visible"
                     android:weightSum="1">
 
@@ -179,7 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_gravity="bottom"
-                    android:background="@color/mpsdk_light_gray"
+                    android:background="@color/mpsdk_very_light_gray"
                     android:visibility="gone">
 
                     <com.mercadopago.customviews.MPTextView
@@ -191,13 +203,7 @@
                         android:textSize="14sp" />
                 </FrameLayout>
 
-                <ProgressBar
-                    android:id="@+id/mpsdkProgressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:visibility="gone" />
+                <include layout="@layout/mpsdk_view_progress_bar_small"/>
             </FrameLayout>
         </LinearLayout>
     </ScrollView>

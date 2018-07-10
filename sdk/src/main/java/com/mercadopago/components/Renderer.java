@@ -1,16 +1,18 @@
 package com.mercadopago.components;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
-import android.view.View;
 import android.content.res.Resources;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.text.Spanned;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.mercadopago.util.TextUtil;
-
+import com.mercadopago.util.TextUtils;
 
 /**
  * Created by vaserber on 10/20/17.
@@ -18,8 +20,8 @@ import com.mercadopago.util.TextUtil;
 
 public abstract class Renderer<T extends Component> {
 
-    protected T component;
-    protected Context context;
+    private T component;
+    private Context context;
 
     public void setComponent(@NonNull final T component) {
         this.component = component;
@@ -29,7 +31,33 @@ public abstract class Renderer<T extends Component> {
         this.context = context;
     }
 
-    public abstract View render();
+    public View render() {
+        return render(null);
+    }
+
+    public View render(@Nullable final ViewGroup parent) {
+        final View view = render(component, context, parent);
+        view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                component.viewAttachedToWindow();
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                component.viewDetachedFromWindow();
+            }
+        });
+        return view;
+    }
+
+    protected abstract View render(@NonNull final T component,
+                                   @NonNull final Context context,
+                                   @Nullable final ViewGroup parent);
+
+    protected View inflate(@LayoutRes int layout, @Nullable final ViewGroup parent) {
+        return LayoutInflater.from(context).inflate(layout, parent);
+    }
 
     public void wrapHeight(@NonNull final ViewGroup viewGroup) {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -62,8 +90,24 @@ public abstract class Renderer<T extends Component> {
         }
     }
 
-    protected void setText(@NonNull final TextView view, String text) {
-        if(TextUtil.isEmpty(text)) {
+    protected void setText(@NonNull final TextView view, @Nullable final String text) {
+        if (TextUtils.isEmpty(text)) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setText(text);
+        }
+    }
+
+    protected void setText(@NonNull final TextView view, @Nullable final CharSequence text) {
+        if (TextUtils.isEmpty(text)) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setText(text);
+        }
+    }
+
+    protected void setText(@NonNull final TextView view, Spanned text) {
+        if (text == null) {
             view.setVisibility(View.GONE);
         } else {
             view.setText(text);

@@ -1,4 +1,5 @@
 .gradle
+/captures
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
@@ -7,3 +8,5 @@
 .idea
 *.iml
 *.log
+sdk/jacoco.exec
+config/

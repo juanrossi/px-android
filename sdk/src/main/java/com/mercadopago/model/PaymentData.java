@@ -1,11 +1,10 @@
 package com.mercadopago.model;
 
+import com.mercadopago.util.TextUtils;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-/**
- * Created by mreverter on 1/17/17.
- */
-public class PaymentData {
+public class PaymentData implements Serializable {
     private BigDecimal transactionAmount;
     private PaymentMethod paymentMethod;
     private Issuer issuer;
@@ -68,5 +67,9 @@ public class PaymentData {
 
     public void setTransactionAmount(BigDecimal transactionAmount) {
         this.transactionAmount = transactionAmount;
+    }
+
+    public boolean containsCardInfo() {
+        return getToken() != null && !TextUtils.isEmpty(getToken().getCardId());
     }
 }

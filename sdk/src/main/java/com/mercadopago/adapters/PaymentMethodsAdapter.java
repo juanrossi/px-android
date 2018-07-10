@@ -16,9 +16,9 @@ import java.util.List;
 
 public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAdapter.ViewHolder> {
 
-    private Activity mActivity;
-    private List<PaymentMethod> mData;
-    private View.OnClickListener mListener = null;
+    private final Activity mActivity;
+    private final List<PaymentMethod> mData;
+    private View.OnClickListener mListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -28,8 +28,8 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
         public ViewHolder(View v, View.OnClickListener listener) {
 
             super(v);
-            mPaymentMethodImage = (ImageView) v.findViewById(R.id.mpsdkPmImage);
-            mPaymentMethodName = (TextView) v.findViewById(R.id.mpsdkPmName);
+            mPaymentMethodImage = v.findViewById(R.id.mpsdkPmImage);
+            mPaymentMethodName = v.findViewById(R.id.mpsdkPmName);
             if (listener != null) {
                 v.setOnClickListener(listener);
             }
@@ -67,10 +67,6 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
     @Override
     public int getItemCount() {
         return mData.size();
-    }
-
-    public PaymentMethod getItem(int position) {
-        return mData.get(position);
     }
 
     public View.OnClickListener getListener() {

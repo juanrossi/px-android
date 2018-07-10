@@ -1,17 +1,15 @@
 package com.mercadopago.exceptions;
 
-import com.mercadopago.model.ApiException;
 
-/**
- * Created by mromar on 3/2/16.
- */
+import com.mercadopago.lite.exceptions.ApiException;
+
 public class MercadoPagoError {
 
     private String message;
     private String errorDetail;
     private String requestOrigin;
     private ApiException apiException;
-    private boolean recoverable;
+    private final boolean recoverable;
 
     public MercadoPagoError(String message, boolean recoverable) {
         this.message = message;
@@ -20,14 +18,14 @@ public class MercadoPagoError {
 
     public MercadoPagoError(String message, String detail, boolean recoverable) {
         this.message = message;
-        this.errorDetail = detail;
+        errorDetail = detail;
         this.recoverable = recoverable;
     }
 
     public MercadoPagoError(ApiException apiException, String requestOrigin) {
         this.apiException = apiException;
         this.requestOrigin = requestOrigin;
-        this.recoverable = apiException.isRecoverable();
+        recoverable = apiException != null && apiException.isRecoverable();
     }
 
     public ApiException getApiException() {
@@ -47,10 +45,7 @@ public class MercadoPagoError {
     }
 
     public String getErrorDetail() {
-        if (errorDetail == null) {
-            errorDetail = "";
-        }
-        return errorDetail;
+        return errorDetail == null ? "" : errorDetail;
     }
 
     public boolean isApiException() {

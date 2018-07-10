@@ -2,26 +2,21 @@ package com.mercadopago.uicontrollers.paymentmethodsearch;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.mercadopago.R;
-import com.mercadopago.constants.PaymentMethods;
-import com.mercadopago.constants.PaymentTypes;
+import com.mercadopago.model.PaymentTypes;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.PaymentMethodSearchItem;
-import com.mercadopago.preferences.DecorationPreference;
-import com.mercadopago.util.MercadoPagoUtil;
+import com.mercadopago.util.ResourceUtil;
 
-/**
- * Created by mreverter on 29/4/16.
- */
 public class PaymentMethodSearchOption implements PaymentMethodSearchViewController {
 
     private static final int COMMENT_MAX_LENGTH = 75;
-    private static final String TO_TINT_IMAGES_PREFIX = "grey_";
 
     protected PaymentMethodSearchItem mItem;
     protected Context mContext;
@@ -29,15 +24,14 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
     protected MPTextView mDescription;
     protected MPTextView mComment;
     protected ImageView mIcon;
-    protected DecorationPreference mDecorationPreference;
     protected View.OnClickListener mListener;
 
-    public PaymentMethodSearchOption(Context context, PaymentMethodSearchItem item, DecorationPreference decorationPreference) {
+    public PaymentMethodSearchOption(Context context, PaymentMethodSearchItem item) {
         mContext = context;
         mItem = item;
-        mDecorationPreference = decorationPreference;
     }
 
+    @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
                 .inflate(R.layout.mpsdk_row_pm_search_item, parent, attachToRoot);
@@ -52,10 +46,11 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
         return mView;
     }
 
+    @Override
     public void initializeControls() {
-        mDescription = (MPTextView) mView.findViewById(R.id.mpsdkDescription);
-        mComment = (MPTextView) mView.findViewById(R.id.mpsdkComment);
-        mIcon = (ImageView) mView.findViewById(R.id.mpsdkImage);
+        mDescription = mView.findViewById(R.id.mpsdkDescription);
+        mComment = mView.findViewById(R.id.mpsdkComment);
+        mIcon = mView.findViewById(R.id.mpsdkImage);
 
     }
 
@@ -65,6 +60,7 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
                 item.getId().equals(PaymentTypes.PREPAID_CARD)));
     }
 
+    @Override
     public void draw() {
         if (mItem.hasDescription()) {
             mDescription.setVisibility(View.VISIBLE);
@@ -78,16 +74,18 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
 
         int resourceId = 0;
 
-        Boolean needsTint = itemNeedsTint(mItem);
-        String imageId;
-        if (needsTint) {
-            imageId = TO_TINT_IMAGES_PREFIX + mItem.getId();
-        } else {
-            imageId = mItem.getId();
+        final boolean needsTint = needsTint();
+
+        final StringBuilder imageName = new StringBuilder();
+        if (!mItem.getId().isEmpty()) {
+            if (needsTint) {
+                imageName.append(ResourceUtil.TINT_PREFIX);
+            }
+            imageName.append(mItem.getId());
         }
 
         if (mItem.isIconRecommended()) {
-            resourceId = MercadoPagoUtil.getPaymentMethodSearchItemIcon(mContext, imageId);
+            resourceId = ResourceUtil.getIconResource(mContext, imageName.toString());
         }
 
         if (resourceId != 0) {
@@ -96,16 +94,16 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
             mIcon.setVisibility(View.GONE);
         }
 
-        if (needsTint) {
-            mIcon.setColorFilter(mDecorationPreference.getBaseColor(), PorterDuff.Mode.MULTIPLY);
+        if(needsTint) {
+            mIcon.setColorFilter(ContextCompat.getColor(mContext, R.color.mpsdk_main_color),
+                PorterDuff.Mode.MULTIPLY);
         }
     }
 
-    private boolean itemNeedsTint(PaymentMethodSearchItem paymentMethodSearchItem) {
-        return mDecorationPreference != null && mDecorationPreference.hasColors()
-                && (paymentMethodSearchItem.isGroup()
-                || paymentMethodSearchItem.isPaymentType()
-                || paymentMethodSearchItem.getId().contains(PaymentMethods.BRASIL.BOLBRADESCO));
+    private boolean needsTint() {
+        final int originalColor = ContextCompat.getColor(mContext, R.color.mpsdk_original_main_color);
+        final int realColor = ContextCompat.getColor(mContext, R.color.mpsdk_main_color);
+        return (originalColor != realColor) && (mItem.isGroup() || mItem.isPaymentType());
     }
 
     @Override

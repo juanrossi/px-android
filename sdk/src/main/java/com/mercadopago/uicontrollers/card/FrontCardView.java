@@ -14,16 +14,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.model.Bin;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.MPAnimationUtils;
 import com.mercadopago.util.MPCardMaskUtil;
 import com.mercadopago.util.MPCardUIUtils;
-import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.util.ViewUtils;
 
 /**
  * Created by vaserber on 9/29/16.
@@ -49,7 +48,7 @@ public class FrontCardView {
     public static final int EDITING_TEXT_VIEW_ALPHA = 255;
 
 
-    private Context mContext;
+    private final Context mContext;
     private View mView;
     private String mMode;
     private String mSize;
@@ -58,7 +57,6 @@ public class FrontCardView {
     private PaymentMethod mPaymentMethod;
     private int mCardNumberLength;
     private int mSecurityCodeLength;
-    private boolean mShowSecurityCode;
     private String mLastFourDigits;
 
     //View controls
@@ -77,32 +75,30 @@ public class FrontCardView {
     private Animation mAnimFadeIn;
 
     public FrontCardView(Context context, String mode) {
-        this.mContext = context;
-        this.mMode = mode;
-        this.mCardNumberLength = CARD_NUMBER_MAX_LENGTH;
-        this.mSecurityCodeLength = CARD_SECURITY_CODE_DEFAULT_LENGTH;
-        this.mShowSecurityCode = false;
+        mContext = context;
+        mMode = mode;
+        mCardNumberLength = CARD_NUMBER_MAX_LENGTH;
+        mSecurityCodeLength = CARD_SECURITY_CODE_DEFAULT_LENGTH;
     }
 
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.mPaymentMethod = paymentMethod;
+        mPaymentMethod = paymentMethod;
     }
 
     public void setSize(String size) {
-        this.mSize = size;
+        mSize = size;
     }
 
     public void setCardNumberLength(int cardNumberLength) {
-        this.mCardNumberLength = cardNumberLength;
+        mCardNumberLength = cardNumberLength;
     }
 
     public void setSecurityCodeLength(int securityCodeLength) {
-        this.mSecurityCodeLength = securityCodeLength;
+        mSecurityCodeLength = securityCodeLength;
     }
 
     public void hasToShowSecurityCode(boolean show) {
-        this.mShowSecurityCode = show;
         if (show) {
             showEmptySecurityCode();
         } else {
@@ -111,7 +107,7 @@ public class FrontCardView {
     }
 
     public void setLastFourDigits(String lastFourDigits) {
-        this.mLastFourDigits = lastFourDigits;
+        mLastFourDigits = lastFourDigits;
     }
 
     public void initializeControls() {
@@ -119,15 +115,15 @@ public class FrontCardView {
         mCardBorder = mView.findViewById(R.id.mpsdkCardShadowBorder);
         mAnimFadeIn = AnimationUtils.loadAnimation(mContext, R.anim.mpsdk_fade_in);
         mCardNumberTextView = mView.findViewById(R.id.mpsdkCardNumberTextView);
-        mCardholderNameTextView =  mView.findViewById(R.id.mpsdkCardholderNameView);
-        mCardExpiryMonthTextView =  mView.findViewById(R.id.mpsdkCardHolderExpiryMonth);
-        mCardExpiryYearTextView =  mView.findViewById(R.id.mpsdkCardHolderExpiryYear);
-        mCardDateDividerTextView =  mView.findViewById(R.id.mpsdkCardHolderDateDivider);
-        mCardSecurityCodeTextView =  mView.findViewById(R.id.mpsdkCardSecurityCodeViewFront);
-        mBaseImageCard =  mView.findViewById(R.id.mpsdkBaseImageCard);
-        mImageCardContainer =  mView.findViewById(R.id.mpsdkImageCardContainer);
-        mCardLowApiImageView =  mView.findViewById(R.id.mpsdkCardLowApiImageView);
-        mCardLollipopImageView =  mView.findViewById(R.id.mpsdkCardLollipopImageView);
+        mCardholderNameTextView = mView.findViewById(R.id.mpsdkCardholderNameView);
+        mCardExpiryMonthTextView = mView.findViewById(R.id.mpsdkCardHolderExpiryMonth);
+        mCardExpiryYearTextView = mView.findViewById(R.id.mpsdkCardHolderExpiryYear);
+        mCardDateDividerTextView = mView.findViewById(R.id.mpsdkCardHolderDateDivider);
+        mCardSecurityCodeTextView = mView.findViewById(R.id.mpsdkCardSecurityCodeViewFront);
+        mBaseImageCard = mView.findViewById(R.id.mpsdkBaseImageCard);
+        mImageCardContainer = mView.findViewById(R.id.mpsdkImageCardContainer);
+        mCardLowApiImageView = mView.findViewById(R.id.mpsdkCardLowApiImageView);
+        mCardLollipopImageView = mView.findViewById(R.id.mpsdkCardLollipopImageView);
 
         if (mSize != null) {
             resize();
@@ -187,7 +183,7 @@ public class FrontCardView {
     public void drawEditingCardNumber(String cardNumber) {
         if (cardNumber == null || cardNumber.length() == 0) {
             mCardNumberTextView.setText(BASE_NUMBER_CARDHOLDER);
-        } else if (cardNumber.length() < MercadoPagoUtil.BIN_LENGTH || mPaymentMethod == null) {
+        } else if (cardNumber.length() < Bin.BIN_LENGTH || mPaymentMethod == null) {
             mCardNumberTextView.setText(MPCardMaskUtil.buildNumberWithMask(CARD_NUMBER_MAX_LENGTH, cardNumber));
         } else {
             mCardNumberTextView.setText(MPCardMaskUtil.buildNumberWithMask(mCardNumberLength, cardNumber));
@@ -363,7 +359,6 @@ public class FrontCardView {
     }
 
 
-
     private void resize() {
         if (mSize == null) return;
         if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
@@ -383,7 +378,7 @@ public class FrontCardView {
 
     private void resizeCard(ViewGroup cardViewContainer, int cardHeight, int cardWidth,
                             int cardHolderNameFontSize, int cardExpiryDateSize, int cardSecurityCodeSize) {
-        LayoutUtil.resizeViewGroupLayoutParams(cardViewContainer, cardHeight, cardWidth, mContext);
+        ViewUtils.resizeViewGroupLayoutParams(cardViewContainer, cardHeight, cardWidth, mContext);
 
         mCardholderNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardHolderNameFontSize);
         mCardExpiryMonthTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardExpiryDateSize);

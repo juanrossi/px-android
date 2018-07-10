@@ -9,8 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.PaymentTypesAdapter;
@@ -19,12 +19,11 @@ import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.RecyclerItemClickListener;
-import com.mercadopago.model.ApiException;
+import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentType;
 import com.mercadopago.observers.TimerObserver;
-import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.PaymentTypesPresenter;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.tracker.MPTrackingContext;
@@ -34,7 +33,6 @@ import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.uicontrollers.card.FrontCardView;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.ScaleUtil;
@@ -50,18 +48,10 @@ import java.util.List;
 public class PaymentTypesActivity extends MercadoPagoBaseActivity implements PaymentTypesActivityView, TimerObserver {
 
     protected PaymentTypesPresenter mPresenter;
-    private Activity mActivity;
-
-    //View controls
-    private PaymentTypesAdapter mPaymentTypesAdapter;
-    private RecyclerView mPaymentTypesRecyclerView;
-    private ProgressBar mProgressBar;
-    private DecorationPreference mDecorationPreference;
     //ViewMode
     protected boolean mLowResActive;
     //Low Res View
     protected Toolbar mLowResToolbar;
-    private MPTextView mLowResTitleToolbar;
     protected MPTextView mTimerTextView;
     //Normal View
     protected CollapsingToolbarLayout mCollapsingToolbar;
@@ -69,38 +59,36 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
     protected FrameLayout mCardContainer;
     protected Toolbar mNormalToolbar;
     protected FrontCardView mFrontCardView;
+    private Activity mActivity;
+    //View controls
+    private PaymentTypesAdapter mPaymentTypesAdapter;
+    private RecyclerView mPaymentTypesRecyclerView;
+    private ViewGroup mProgressLayout;
+    private MPTextView mLowResTitleToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (mPresenter == null) {
-            mPresenter = new PaymentTypesPresenter(getBaseContext());
+            mPresenter = new PaymentTypesPresenter();
         }
         mPresenter.setView(this);
         mActivity = this;
         getActivityParameters();
-        if (isCustomColorSet()) {
-            setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
-        }
+
         analizeLowRes();
         setContentView();
         mPresenter.validateActivityParameters();
     }
 
-    private boolean isCustomColorSet() {
-        return mDecorationPreference != null && mDecorationPreference.hasColors();
-    }
-
     private void getActivityParameters() {
-
         String publicKey = getIntent().getStringExtra("merchantPublicKey");
-        mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
 
         List<PaymentMethod> paymentMethods;
         try {
             Type listType = new TypeToken<List<PaymentMethod>>() {
             }.getType();
-            paymentMethods = JsonUtil.getInstance().getGson().fromJson(this.getIntent().getStringExtra("paymentMethods"), listType);
+            paymentMethods = JsonUtil.getInstance().getGson().fromJson(getIntent().getStringExtra("paymentMethods"), listType);
         } catch (Exception ex) {
             paymentMethods = null;
         }
@@ -109,7 +97,7 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
         try {
             Type listType = new TypeToken<List<PaymentType>>() {
             }.getType();
-            paymentTypes = JsonUtil.getInstance().getGson().fromJson(this.getIntent().getStringExtra("paymentTypes"), listType);
+            paymentTypes = JsonUtil.getInstance().getGson().fromJson(getIntent().getStringExtra("paymentTypes"), listType);
         } catch (Exception ex) {
             paymentTypes = null;
         }
@@ -122,9 +110,9 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
 
     public void analizeLowRes() {
         if (mPresenter.isCardInfoAvailable()) {
-            this.mLowResActive = ScaleUtil.isLowRes(this);
+            mLowResActive = ScaleUtil.isLowRes(this);
         } else {
-            this.mLowResActive = true;
+            mLowResActive = true;
         }
     }
 
@@ -141,7 +129,6 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
         mPresenter.initializePaymentMethod();
         initializeViews();
         loadViews();
-        decorate();
         showTimer();
         initializeAdapter();
         mPresenter.loadPaymentTypes();
@@ -150,8 +137,7 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
 
     protected void trackScreen() {
         MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder(this, mPresenter.getPublicKey())
-                .setCheckoutVersion(BuildConfig.VERSION_NAME)
-                .setTrackingStrategy(TrackingUtil.BATCH_STRATEGY)
+                .setVersion(BuildConfig.VERSION_NAME)
                 .build();
 
         ScreenViewEvent event = new ScreenViewEvent.Builder()
@@ -186,21 +172,21 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
     }
 
     private void initializeViews() {
-        mPaymentTypesRecyclerView = (RecyclerView) findViewById(R.id.mpsdkActivityPaymentTypesRecyclerView);
-        mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
+        mPaymentTypesRecyclerView = findViewById(R.id.mpsdkActivityPaymentTypesRecyclerView);
+        mProgressLayout = findViewById(R.id.mpsdkProgressLayout);
         if (mLowResActive) {
-            mLowResToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
-            mLowResTitleToolbar = (MPTextView) findViewById(R.id.mpsdkTitle);
+            mLowResToolbar = findViewById(R.id.mpsdkRegularToolbar);
+            mLowResTitleToolbar = findViewById(R.id.mpsdkTitle);
             mLowResToolbar.setVisibility(View.VISIBLE);
         } else {
-            mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.mpsdkCollapsingToolbar);
-            mAppBar = (AppBarLayout) findViewById(R.id.mpsdkPaymentTypesAppBar);
-            mCardContainer = (FrameLayout) findViewById(R.id.mpsdkActivityCardContainer);
-            mNormalToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
+            mCollapsingToolbar = findViewById(R.id.mpsdkCollapsingToolbar);
+            mAppBar = findViewById(R.id.mpsdkPaymentTypesAppBar);
+            mCardContainer = findViewById(R.id.mpsdkActivityCardContainer);
+            mNormalToolbar = findViewById(R.id.mpsdkRegularToolbar);
             mNormalToolbar.setVisibility(View.VISIBLE);
         }
-        mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
-        mProgressBar.setVisibility(View.GONE);
+        mTimerTextView = findViewById(R.id.mpsdkTimerTextView);
+        mProgressLayout.setVisibility(View.GONE);
     }
 
     private void loadViews() {
@@ -212,7 +198,7 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
     }
 
     private void initializeAdapter() {
-        mPaymentTypesAdapter = new PaymentTypesAdapter(this, getDpadSelectionCallback());
+        mPaymentTypesAdapter = new PaymentTypesAdapter(getDpadSelectionCallback());
         initializeAdapterListener(mPaymentTypesAdapter, mPaymentTypesRecyclerView);
     }
 
@@ -301,47 +287,16 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
         }
     }
 
-    private void decorate() {
-        if (isDecorationEnabled()) {
-            if (mLowResActive) {
-                decorateLowRes();
-            } else {
-                decorateNormal();
-            }
-        }
-    }
-
-    private boolean isDecorationEnabled() {
-        return mDecorationPreference != null && mDecorationPreference.hasColors();
-    }
-
-    private void decorateLowRes() {
-        ColorsUtil.decorateLowResToolbar(mLowResToolbar, mLowResTitleToolbar, mDecorationPreference,
-                getSupportActionBar(), this);
-        if (mTimerTextView != null) {
-            ColorsUtil.decorateTextView(mDecorationPreference, mTimerTextView, this);
-        }
-    }
-
-    private void decorateNormal() {
-        ColorsUtil.decorateNormalToolbar(mNormalToolbar, mDecorationPreference, mAppBar,
-                mCollapsingToolbar, getSupportActionBar(), this);
-        if (mTimerTextView != null) {
-            ColorsUtil.decorateTextView(mDecorationPreference, mTimerTextView, this);
-        }
-        mFrontCardView.decorateCardBorder(mDecorationPreference.getLighterColor());
-    }
-
     @Override
     public void showLoadingView() {
         mPaymentTypesRecyclerView.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void stopLoadingView() {
         mPaymentTypesRecyclerView.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
+        mProgressLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -382,6 +337,6 @@ public class PaymentTypesActivity extends MercadoPagoBaseActivity implements Pay
     @Override
     public void onFinish() {
         setResult(MercadoPagoCheckout.TIMER_FINISHED_RESULT_CODE);
-        this.finish();
+        finish();
     }
 }

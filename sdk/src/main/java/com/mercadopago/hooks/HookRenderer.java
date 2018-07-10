@@ -1,7 +1,7 @@
 package com.mercadopago.hooks;
 
-import android.support.annotation.CallSuper;
-import android.view.LayoutInflater;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -10,16 +10,15 @@ import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
 
-public abstract class HookRenderer extends Renderer<HookComponent> {
+public abstract class HookRenderer<T extends HookComponent> extends Renderer<T> {
 
     @Override
-    @CallSuper
-    public View render() {
-        final ViewGroup view = (ViewGroup) LayoutInflater.from(context)
-                .inflate(R.layout.mpsdk_hooks_layout, null);
-        view.addView(RendererFactory.create(context, component.getToolbarComponent()).render());
+    public View render(@NonNull final T component, @NonNull final Context context, final ViewGroup parent) {
+        final ViewGroup view = (ViewGroup) inflate(R.layout.mpsdk_hooks_layout, parent);
 
-        final View contents = renderContents();
+        RendererFactory.create(context, component.getToolbarComponent()).render(view);
+
+        final View contents = renderContents(component, context);
         final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0, 1f);
@@ -28,5 +27,5 @@ public abstract class HookRenderer extends Renderer<HookComponent> {
         return view;
     }
 
-    public abstract View renderContents();
+    public abstract View renderContents(final T component, final Context context);
 }

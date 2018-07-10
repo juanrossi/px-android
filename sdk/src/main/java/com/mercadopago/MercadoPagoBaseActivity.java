@@ -1,8 +1,6 @@
 package com.mercadopago;
 
-import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +42,22 @@ public abstract class MercadoPagoBaseActivity extends AppCompatActivity {
         if (cfg.locale.getLanguage() != null && !current.getLanguage().equals(cfg.locale.getLanguage())) {
             getResources().updateConfiguration(cfg, null);
         }
+    }
+
+    public void overrideTransitionIn() {
+        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+    }
+
+    public void overrideTransitionOut() {
+        overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
+    }
+
+    public void overrideTransitionFadeInFadeOut() {
+        overridePendingTransition(R.anim.mpsdk_fade_in_seamless, R.anim.mpsdk_fade_out_seamless);
+    }
+
+    public void overrideTransitionWithNoAnimation() {
+        overridePendingTransition(R.anim.mpsdk_no_change_animation, R.anim.mpsdk_no_change_animation);
     }
 
 }

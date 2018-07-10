@@ -1,19 +1,20 @@
 package com.mercadopago.hooks.components;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mercadopago.examples.R;
+import com.mercadopago.example.R;
 import com.mercadopago.hooks.HookRenderer;
 
-public class PaymentTypeConfirmRenderer extends HookRenderer {
+public class PaymentTypeConfirmRenderer extends HookRenderer<PaymentTypeConfirm> {
 
     @Override
-    public View renderContents() {
+    public View renderContents(final PaymentTypeConfirm component, final Context context) {
 
         final View view = LayoutInflater.from(context)
-                .inflate(R.layout.mpsdk_example_hook_payment_type_confirm, null);
+                .inflate(R.layout.hook_payment_type_confirm, null);
 
         final TextView label = view.findViewById(R.id.label);
         label.setText(component.props.paymentTypeId);

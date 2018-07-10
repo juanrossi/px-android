@@ -18,13 +18,13 @@ public class PaymentBody {
     private String couponCode;
     private Payer payer;
     private Float couponAmount;
-    private Integer campaignId;
+    private String campaignId;
 
     public void setCouponAmount(Float couponAmount) {
         this.couponAmount = couponAmount;
     }
 
-    public void setCampaignId(Integer campaignId) {
+    public void setCampaignId(String campaignId) {
         this.campaignId = campaignId;
     }
 
@@ -97,30 +97,30 @@ public class PaymentBody {
     }
 
     public Boolean getBinaryMode() {
-        return this.binaryMode;
+        return binaryMode;
     }
 
     public String getEmail() {
-        return this.email;
+        return email;
     }
 
     public String getPublicKey() {
-        return this.publicKey;
+        return publicKey;
     }
 
     public Payer getPayer() {
-        return this.payer;
+        return payer;
     }
 
     public String getCouponCode() {
-        return this.couponCode;
+        return couponCode;
     }
 
     public Float getCouponAmount() {
-        return this.couponAmount;
+        return couponAmount;
     }
 
-    public Integer getCampaignId() {
-        return this.campaignId;
+    public String getCampaignId() {
+        return campaignId;
     }
 }

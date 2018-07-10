@@ -1,8 +1,7 @@
 package com.mercadopago.discounts;
 
-import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Discount;
-import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.presenters.DiscountsPresenter;
 import com.mercadopago.providers.DiscountsProvider;
 import com.mercadopago.views.DiscountsActivityView;
@@ -10,10 +9,10 @@ import com.mercadopago.views.DiscountsActivityView;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockingDetails;
 
 /**
  * Created by mromar on 1/24/17.
@@ -22,29 +21,11 @@ import static org.junit.Assert.assertTrue;
 public class DiscountsPresenterTest {
 
     @Test
-    public void showDiscountSummaryWhenGetDirectDiscount() {
-        MockedView mockedView = new MockedView();
-        DiscountMockedResourcesProvider provider = new DiscountMockedResourcesProvider();
-
-        DiscountsPresenter presenter = new DiscountsPresenter();
-        presenter.setDirectDiscountEnabled(true);
-        presenter.setTransactionAmount(new BigDecimal(100));
-
-        presenter.attachResourcesProvider(provider);
-        presenter.attachView(mockedView);
-
-        presenter.initialize();
-
-        assertTrue(mockedView.drawedSummary);
-    }
-
-    @Test
     public void showDiscountCodeRequestWhenDirectDiscountIsNotEnabled() {
         MockedView mockedView = new MockedView();
         DiscountMockedResourcesProvider provider = new DiscountMockedResourcesProvider();
 
         DiscountsPresenter presenter = new DiscountsPresenter();
-        presenter.setDirectDiscountEnabled(false);
         presenter.setTransactionAmount(new BigDecimal(100));
 
         presenter.attachResourcesProvider(provider);
@@ -61,10 +42,9 @@ public class DiscountsPresenterTest {
         DiscountMockedResourcesProvider provider = new DiscountMockedResourcesProvider();
 
         DiscountsPresenter presenter = new DiscountsPresenter();
-        Discount discount = new Discount();
+        Discount discount = mock(Discount.class);
 
         presenter.setDiscount(discount);
-        presenter.setDirectDiscountEnabled(false);
         presenter.setTransactionAmount(new BigDecimal(100));
 
         presenter.attachResourcesProvider(provider);
@@ -152,18 +132,13 @@ public class DiscountsPresenterTest {
     private class DiscountMockedResourcesProvider implements DiscountsProvider {
 
         @Override
-        public void getDirectDiscount(String transactionAmount, String payerEmail, OnResourcesRetrievedCallback<Discount> onResourcesRetrievedCallback) {
-            onResourcesRetrievedCallback.onSuccess(new Discount());
+        public void getDirectDiscount(String transactionAmount, String payerEmail, TaggedCallback<Discount> taggedCallback) {
+            taggedCallback.onSuccess(mock(Discount.class));
         }
 
         @Override
-        public void getCodeDiscount(String transactionAmount, String payerEmail, String discountCode, OnResourcesRetrievedCallback<Discount> onResourcesRetrievedCallback) {
-            onResourcesRetrievedCallback.onSuccess(new Discount());
-        }
-
-        @Override
-        public void getCampaigns(OnResourcesRetrievedCallback<List<Campaign>> onResourcesRetrievedCallback) {
-            onResourcesRetrievedCallback.onSuccess(new ArrayList<Campaign>());
+        public void getCodeDiscount(String transactionAmount, String payerEmail, String discountCode, TaggedCallback<Discount> taggedCallback) {
+            taggedCallback.onSuccess(mock(Discount.class));
         }
 
         @Override

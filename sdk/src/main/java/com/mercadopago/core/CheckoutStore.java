@@ -1,42 +1,49 @@
 package com.mercadopago.core;
 
 import android.support.annotation.NonNull;
-
 import com.mercadopago.hooks.CheckoutHooks;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
+import com.mercadopago.plugins.DataInitializationTask;
 import com.mercadopago.plugins.PaymentMethodPlugin;
-import com.mercadopago.plugins.PaymentPlugin;
-import com.mercadopago.plugins.model.PaymentMethodInfo;
-import com.mercadopago.preferences.DecorationPreference;
-
+import com.mercadopago.plugins.PaymentProcessor;
+import com.mercadopago.preferences.CheckoutPreference;
+import com.mercadopago.preferences.PaymentResultScreenPreference;
+import com.mercadopago.review_and_confirm.models.ReviewAndConfirmPreferences;
+import com.mercadopago.util.TextUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+
+import static com.mercadopago.plugins.PaymentProcessor.PAYMENT_PROCESSOR_KEY;
 
 public class CheckoutStore {
 
     private static final CheckoutStore INSTANCE = new CheckoutStore();
 
-    //Read only data
-    private DecorationPreference decorationPreference;
+    //Preferences
+    private PaymentResultScreenPreference paymentResultScreenPreference;
+    private CheckoutPreference checkoutPreference;
+    private ReviewAndConfirmPreferences reviewAndConfirmPreferences;
+
+    //Config
+    private DataInitializationTask dataInitializationTask;
     private List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
-    private Map<String, PaymentPlugin> paymentPlugins = new HashMap<>();
+    private Map<String, PaymentProcessor> paymentPlugins = new HashMap<>();
     private CheckoutHooks checkoutHooks;
-    private Hook hook;
 
     //App state
-    private Map<String, Object> data = new HashMap();
-    private PaymentMethodInfo selectedPaymentMethod;
+    private Hook hook;
+    private final Map<String, Object> data = new HashMap<>();
 
     //Payment
     private PaymentResult paymentResult;
     private PaymentData paymentData;
     private Payment payment;
-
 
     private CheckoutStore() {
     }
@@ -45,32 +52,50 @@ public class CheckoutStore {
         return INSTANCE;
     }
 
-    public DecorationPreference getDecorationPreference() {
-        return decorationPreference;
+    public CheckoutPreference getCheckoutPreference() {
+        return checkoutPreference;
     }
 
-    public void setDecorationPreference(@NonNull final DecorationPreference decorationPreference) {
-        this.decorationPreference = decorationPreference;
+    public PaymentResultScreenPreference getPaymentResultScreenPreference() {
+        if (paymentResultScreenPreference == null) {
+            paymentResultScreenPreference = new PaymentResultScreenPreference.Builder().build();
+        }
+        return paymentResultScreenPreference;
     }
 
+    @NonNull
+    public ReviewAndConfirmPreferences getReviewAndConfirmPreferences() {
+        if (reviewAndConfirmPreferences == null) {
+            reviewAndConfirmPreferences = new ReviewAndConfirmPreferences.Builder().build();
+        }
+        return reviewAndConfirmPreferences;
+    }
+
+    public void setPaymentResultScreenPreference(PaymentResultScreenPreference paymentResultScreenPreference) {
+        this.paymentResultScreenPreference = paymentResultScreenPreference;
+    }
+
+    public void setCheckoutPreference(final CheckoutPreference checkoutPreference) {
+        this.checkoutPreference = checkoutPreference;
+    }
+
+    public DataInitializationTask getDataInitializationTask() {
+        return dataInitializationTask;
+    }
+
+    public void setDataInitializationTask(DataInitializationTask dataInitializationTask) {
+        this.dataInitializationTask = dataInitializationTask;
+    }
+
+    @NonNull
     public List<PaymentMethodPlugin> getPaymentMethodPluginList() {
         return paymentMethodPluginList;
     }
 
     public PaymentMethodPlugin getPaymentMethodPluginById(@NonNull final String id) {
-        for (PaymentMethodPlugin plugin : paymentMethodPluginList) {
-            if (plugin.getPaymentMethodInfo().id.equalsIgnoreCase(id)) {
+        for (final PaymentMethodPlugin plugin : paymentMethodPluginList) {
+            if (plugin.getId().equalsIgnoreCase(id)) {
                 return plugin;
-            }
-        }
-        return null;
-    }
-
-    public PaymentMethodInfo getPaymentMethodPluginInfoById(@NonNull final String id) {
-        for (PaymentMethodPlugin plugin : paymentMethodPluginList) {
-            final PaymentMethodInfo info = plugin.getPaymentMethodInfo();
-            if (info.id.equalsIgnoreCase(id)) {
-                return info;
             }
         }
         return null;
@@ -80,16 +105,49 @@ public class CheckoutStore {
         this.paymentMethodPluginList = paymentMethodPluginList;
     }
 
-    public PaymentMethodInfo getSelectedPaymentMethod() {
-        return selectedPaymentMethod;
+    public boolean hasEnabledPaymentMethodPlugin() {
+        boolean result = false;
+        for (final PaymentMethodPlugin plugin : paymentMethodPluginList) {
+            if (plugin.isEnabled(CheckoutStore.getInstance().getData())) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
-    public void setPaymentPlugins(Map<String, PaymentPlugin> paymentPlugins) {
+    @Nonnull
+    public List<String> getEnabledPaymentMethodPluginsIds() {
+        final List<String> pluginIds = new ArrayList<>();
+        for (final PaymentMethodPlugin plugin : paymentMethodPluginList) {
+            if (plugin.isEnabled(CheckoutStore.getInstance().getData())) {
+                pluginIds.add(plugin.getId());
+            }
+        }
+        return pluginIds;
+    }
+
+    public PaymentMethodPlugin getFirstEnabledPlugin() {
+        for (final PaymentMethodPlugin plugin : paymentMethodPluginList) {
+            if (plugin.isEnabled(CheckoutStore.getInstance().getData())) {
+                return plugin;
+            }
+        }
+        return null;
+    }
+
+    public int getPaymentMethodPluginCount() {
+        int count = 0;
+        for (final PaymentMethodPlugin plugin : paymentMethodPluginList) {
+            if (plugin.isEnabled(CheckoutStore.getInstance().getData())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void setPaymentPlugins(Map<String, PaymentProcessor> paymentPlugins) {
         this.paymentPlugins = paymentPlugins;
-    }
-
-    public void setSelectedPaymentMethod(PaymentMethodInfo selectedPaymentMethod) {
-        this.selectedPaymentMethod = selectedPaymentMethod;
     }
 
     public Hook getHook() {
@@ -112,19 +170,31 @@ public class CheckoutStore {
         return data;
     }
 
-    public PaymentPlugin getPaymentPluginByMethod(@NonNull final String paymentMethod) {
-        return paymentPlugins.get(paymentMethod);
+    public PaymentProcessor doesPaymentProcessorSupportPaymentMethodSelected(
+        @NonNull final String selectedPaymentMethodId) {
+        PaymentProcessor paymentProcessor = null;
+        if (!TextUtils.isEmpty(selectedPaymentMethodId)) {
+            paymentProcessor = paymentPlugins.get(PAYMENT_PROCESSOR_KEY);
+            if (paymentProcessor == null || !paymentProcessor.support(selectedPaymentMethodId, getData())) {
+                paymentProcessor = paymentPlugins.get(selectedPaymentMethodId);
+            }
+        }
+        return paymentProcessor;
     }
 
-    public void addPaymentPlugins(@NonNull final PaymentPlugin paymentPlugin, @NonNull final String paymentMethod) {
-        this.paymentPlugins.put(paymentMethod, paymentPlugin);
+    public boolean hasPaymentProcessor() {
+        return paymentPlugins.containsKey(PAYMENT_PROCESSOR_KEY);
+    }
+
+    public void addPaymentPlugins(@NonNull final PaymentProcessor paymentProcessor, @NonNull final String paymentMethod) {
+        paymentPlugins.put(paymentMethod, paymentProcessor);
     }
 
     public PaymentData getPaymentData() {
         return paymentData;
     }
 
-    public void setPaymentData(PaymentData paymentData) {
+    public void setPaymentData(final PaymentData paymentData) {
         this.paymentData = paymentData;
     }
 
@@ -144,7 +214,18 @@ public class CheckoutStore {
         this.paymentResult = paymentResult;
     }
 
+    public void setReviewAndConfirmPreferences(final ReviewAndConfirmPreferences reviewAndConfirmPreferences) {
+        this.reviewAndConfirmPreferences = reviewAndConfirmPreferences;
+    }
+
     public void reset() {
-        data.clear();
+        paymentResult = null;
+        paymentData = null;
+        payment = null;
+    }
+
+    public void resetPlugins() {
+        paymentPlugins = new HashMap<>();
+        paymentMethodPluginList = new ArrayList<>();
     }
 }

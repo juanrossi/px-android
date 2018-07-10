@@ -9,12 +9,9 @@ import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchView
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mreverter on 18/1/16.
- */
 public class PaymentMethodSearchItemAdapter extends RecyclerView.Adapter<PaymentMethodSearchItemAdapter.ViewHolder> {
 
-    private List<PaymentMethodSearchViewController> mItems;
+    private final List<PaymentMethodSearchViewController> mItems;
 
     public PaymentMethodSearchItemAdapter() {
         mItems = new ArrayList<>();
@@ -22,11 +19,8 @@ public class PaymentMethodSearchItemAdapter extends RecyclerView.Adapter<Payment
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
-
         CustomViewController item = mItems.get(position);
-
         item.inflateInParent(parent, false);
-
         return new ViewHolder(item);
     }
 
@@ -51,8 +45,8 @@ public class PaymentMethodSearchItemAdapter extends RecyclerView.Adapter<Payment
     }
 
     public void clear() {
-        int size = this.mItems.size();
-        this.mItems.clear();
+        int size = mItems.size();
+        mItems.clear();
         notifyItemRangeRemoved(0, size);
     }
 
@@ -62,7 +56,7 @@ public class PaymentMethodSearchItemAdapter extends RecyclerView.Adapter<Payment
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private CustomViewController mViewController;
+        private final CustomViewController mViewController;
 
         public ViewHolder(CustomViewController viewController) {
             super(viewController.getView());

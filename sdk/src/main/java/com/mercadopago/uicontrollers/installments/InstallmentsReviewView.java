@@ -1,17 +1,17 @@
 package com.mercadopago.uicontrollers.installments;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatButton;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.lite.util.CurrenciesUtil;
 import com.mercadopago.model.PayerCost;
-import com.mercadopago.preferences.DecorationPreference;
-import com.mercadopago.util.CurrenciesUtil;
 
 /**
  * Created by mromar on 2/3/17.
@@ -20,71 +20,46 @@ import com.mercadopago.util.CurrenciesUtil;
 public class InstallmentsReviewView implements InstallmentsView {
 
     //Local vars
-    private Context mContext;
-    private PayerCost mPayerCost;
-    private String mCurrencyId;
-    private DecorationPreference mDecorationPreference;
+    private final Context mContext;
+    private final PayerCost mPayerCost;
+    private final String mCurrencyId;
 
     //Views
     private View mView;
     private MPTextView mInstallmentsAmount;
     private MPTextView mTotalAmount;
     private MPTextView mCftpercent;
-    private MPTextView mContinueTextButton;
-    private FrameLayout mInstallmentsContinueButton;
+    private AppCompatButton mInstallmentsContinueButton;
 
-    public InstallmentsReviewView(Context context, PayerCost payerCost, String currencyId, DecorationPreference decorationPreference) {
+    public InstallmentsReviewView(Context context, PayerCost payerCost, String currencyId) {
         mContext = context;
         mPayerCost = payerCost;
         mCurrencyId = currencyId;
-        mDecorationPreference = decorationPreference;
     }
 
     @Override
     public void draw() {
-        decorateButton();
         setInstallmentAmountText();
         setTotalAmountWithRateText();
         setCFTPercentText();
     }
 
-    private void decorateButton() {
-        if (mDecorationPreference != null && mDecorationPreference.hasColors()) {
-            mInstallmentsContinueButton.setBackgroundColor(mDecorationPreference.getBaseColor());
-            if (mDecorationPreference.isDarkFontEnabled()) {
-                mContinueTextButton.setTextColor(mDecorationPreference.getDarkFontColor(mContext));
-            }
-        }
-    }
-
     private void setInstallmentAmountText() {
-        StringBuilder stringBuilder = new StringBuilder();
+        String installments = mPayerCost.getInstallments().toString();
+        final String x = mContext.getString(R.string.mpsdk_installments_by);
+        final Spanned spannedInstallmentsText = CurrenciesUtil.getSpannedAmountWithCurrencySymbol(mPayerCost.getInstallmentAmount(), mCurrencyId);
 
-        stringBuilder.append(mPayerCost.getInstallments());
-        stringBuilder.append(" ");
-        stringBuilder.append(mContext.getString(R.string.mpsdk_installments_by));
-        stringBuilder.append(" ");
-
-        stringBuilder.append(CurrenciesUtil.formatNumber(mPayerCost.getInstallmentAmount(), mCurrencyId));
-        Spanned spannedInstallmentsText = CurrenciesUtil.formatCurrencyInText(mPayerCost.getInstallmentAmount(),
-                mCurrencyId, stringBuilder.toString(), false, true);
-
-        mInstallmentsAmount.setText(spannedInstallmentsText);
+        mInstallmentsAmount
+            .setText(new SpannableStringBuilder(installments).append(x).append(" ").append(spannedInstallmentsText));
     }
 
     private void setTotalAmountWithRateText() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("(");
-        stringBuilder.append(CurrenciesUtil.formatNumber(mPayerCost.getTotalAmount(), mCurrencyId));
-        stringBuilder.append(")");
-        Spanned spannedFullAmountText = CurrenciesUtil.formatCurrencyInText(mPayerCost.getTotalAmount(),
-                mCurrencyId, stringBuilder.toString(), false, true);
-
-        mTotalAmount.setText(spannedFullAmountText);
+        final Spanned spannedInstallmentsText = CurrenciesUtil.getSpannedAmountWithCurrencySymbol(mPayerCost.getTotalAmount(), mCurrencyId);
+        mTotalAmount.setText(TextUtils.concat("(", spannedInstallmentsText, ")"));
     }
 
     private void setCFTPercentText() {
-        String cftPercent = mContext.getString(R.string.mpsdk_installments_cft) + " " + mPayerCost.getCFTPercent();
+        String cftPercent = mContext.getString(R.string.mpsdk_installments_cft, mPayerCost.getCFTPercent());
         mCftpercent.setText(cftPercent);
     }
 
@@ -95,11 +70,10 @@ public class InstallmentsReviewView implements InstallmentsView {
 
     @Override
     public void initializeControls() {
-        mInstallmentsContinueButton = (FrameLayout) mView.findViewById(R.id.mpsdkInstallmentsContinueButton);
-        mContinueTextButton = (MPTextView) mView.findViewById(R.id.mpsdkInstallmentsButtonText);
-        mInstallmentsAmount = (MPTextView) mView.findViewById(R.id.mpsdkInstallmentsAmount);
-        mTotalAmount = (MPTextView) mView.findViewById(R.id.mpsdkReviewTotalAmount);
-        mCftpercent = (MPTextView) mView.findViewById(R.id.mpsdkCftpercent);
+        mInstallmentsContinueButton = mView.findViewById(R.id.mpsdkInstallmentsContinueButton);
+        mInstallmentsAmount = mView.findViewById(R.id.mpsdkInstallmentsAmount);
+        mTotalAmount = mView.findViewById(R.id.mpsdkReviewTotalAmount);
+        mCftpercent = mView.findViewById(R.id.mpsdkCftpercent);
     }
 
     @Override

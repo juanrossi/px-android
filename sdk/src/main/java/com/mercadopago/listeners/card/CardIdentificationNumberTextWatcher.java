@@ -11,15 +11,15 @@ import com.mercadopago.callbacks.card.CardIdentificationNumberEditTextCallback;
 
 public class CardIdentificationNumberTextWatcher implements TextWatcher {
 
-    private CardIdentificationNumberEditTextCallback mEditTextCallback;
+    private final CardIdentificationNumberEditTextCallback mEditTextCallback;
 
     public CardIdentificationNumberTextWatcher(CardIdentificationNumberEditTextCallback editTextCallback) {
-        this.mEditTextCallback = editTextCallback;
+        mEditTextCallback = editTextCallback;
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+        //Do something
     }
 
     @Override

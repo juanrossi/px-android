@@ -1,44 +1,48 @@
 package com.mercadopago;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.mercadopago.constants.Sites;
-import com.mercadopago.customviews.MPTextView;
-import com.mercadopago.preferences.DecorationPreference;
+import com.mercadopago.tracker.Tracker;
 import com.mercadopago.util.ErrorUtil;
-
-import static android.text.TextUtils.isEmpty;
+import com.mercadopago.util.TextUtils;
 
 public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
+    public static final String EXTRA_URL = "extra_url";
+    public static final String EXTRA_PUBLIC_KEY = "extra_public_key";
+
     protected View mMPTermsAndConditionsView;
-    protected View mBankDealsTermsAndConditionsView;
     protected WebView mTermsAndConditionsWebView;
-    protected ProgressBar mProgressbar;
-    protected MPTextView mBankDealsLegalsTextView;
+    protected ViewGroup mProgressLayout;
     protected Toolbar mToolbar;
     protected TextView mTitle;
 
-    protected DecorationPreference mDecorationPreference;
-    protected String mBankDealsTermsAndConditions;
-    protected String mSiteId;
+    private String url;
+    private String publicKey;
+
+    public static void start(final Context context, final String url, final String publicKey) {
+        Intent intent = new Intent(context, TermsAndConditionsActivity.class);
+        intent.putExtra(EXTRA_URL, url);
+        intent.putExtra(EXTRA_PUBLIC_KEY, publicKey);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void getActivityParameters() {
-        mBankDealsTermsAndConditions = getIntent().getStringExtra("bankDealLegals");
-        mSiteId = getIntent().getStringExtra("siteId");
+        url = getIntent().getStringExtra(EXTRA_URL);
+        publicKey = getIntent().getStringExtra(EXTRA_PUBLIC_KEY);
     }
 
     @Override
     protected void validateActivityParameters() throws IllegalStateException {
-        if (mBankDealsTermsAndConditions == null
-                && mSiteId == null) {
-            throw new IllegalStateException("bank deal terms or site id required");
+        if (TextUtils.isEmpty(url)) {
+            throw new IllegalStateException("no site provided");
         }
     }
 
@@ -49,22 +53,18 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
 
     @Override
     protected void initializeControls() {
-        mBankDealsTermsAndConditionsView = findViewById(R.id.mpsdkBankDealsTermsAndConditions);
-        mProgressbar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
+        mProgressLayout = findViewById(R.id.mpsdkProgressLayout);
         mMPTermsAndConditionsView = findViewById(R.id.mpsdkMPTermsAndConditions);
-        mTermsAndConditionsWebView = (WebView) findViewById(R.id.mpsdkTermsAndConditionsWebView);
-        mBankDealsLegalsTextView = (MPTextView) findViewById(R.id.mpsdkTermsAndConditions);
+        mTermsAndConditionsWebView = findViewById(R.id.mpsdkTermsAndConditionsWebView);
         mTermsAndConditionsWebView.setVerticalScrollBarEnabled(true);
         mTermsAndConditionsWebView.setHorizontalScrollBarEnabled(true);
         initializeToolbar();
     }
 
-
     private void initializeToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.mpsdkToolbar);
+        mToolbar = findViewById(R.id.mpsdkToolbar);
         setSupportActionBar(mToolbar);
-        mTitle = (TextView) findViewById(R.id.mpsdkTitle);
-
+        mTitle = findViewById(R.id.mpsdkTitle);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -74,20 +74,12 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
                 onBackPressed();
             }
         });
-
-        decorate(mToolbar);
-        decorateFont(mTitle);
     }
 
     @Override
     protected void onValidStart() {
-        if (!isEmpty(mBankDealsTermsAndConditions)) {
-            mMPTermsAndConditionsView.setVisibility(View.GONE);
-            showBankDealsTermsAndConditions();
-        } else if (!isEmpty(mSiteId)) {
-            mBankDealsTermsAndConditionsView.setVisibility(View.GONE);
-            showMPTermsAndConditions();
-        }
+        Tracker.trackDiscountTermsAndConditions(getApplicationContext(), publicKey);
+        showMPTermsAndConditions();
     }
 
     @Override
@@ -96,33 +88,15 @@ public class TermsAndConditionsActivity extends MercadoPagoActivity {
     }
 
     private void showMPTermsAndConditions() {
-        mProgressbar.setVisibility(View.VISIBLE);
+        mProgressLayout.setVisibility(View.VISIBLE);
         mTermsAndConditionsWebView.setWebViewClient(new WebViewClient() {
+            @Override
             public void onPageFinished(WebView view, String url) {
-                mProgressbar.setVisibility(View.GONE);
+                mProgressLayout.setVisibility(View.GONE);
                 mMPTermsAndConditionsView.setVisibility(View.VISIBLE);
             }
         });
-        if (Sites.ARGENTINA.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.ar/ayuda/terminos-y-condiciones_299");
-        } else if (Sites.MEXICO.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.mx/ayuda/terminos-y-condiciones_715");
-        } else if (Sites.BRASIL.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.br/ajuda/termos-e-condicoes_300");
-        } else if (Sites.CHILE.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.cl/ayuda/terminos-y-condiciones_299");
-        } else if (Sites.VENEZUELA.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.ve/ayuda/terminos-y-condiciones_299");
-        } else if (Sites.PERU.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.pe/ayuda/terminos-condiciones-uso_2483");
-        } else if (Sites.COLOMBIA.getId().equals(mSiteId)) {
-            mTermsAndConditionsWebView.loadUrl("https://www.mercadopago.com.co/ayuda/terminos-y-condiciones_299");
-        } else {
-            finish();
-        }
-    }
 
-    private void showBankDealsTermsAndConditions() {
-        mBankDealsLegalsTextView.setText(mBankDealsTermsAndConditions);
+        mTermsAndConditionsWebView.loadUrl(url);
     }
 }

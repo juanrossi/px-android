@@ -4,7 +4,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 import com.mercadopago.callbacks.card.TicketIdentificationNameEditTextCallback;
-import com.mercadopago.callbacks.card.TicketIdentificationNumberEditTextCallback;
 
 /**
  * Created by mromar on 29/09/17.
@@ -12,15 +11,15 @@ import com.mercadopago.callbacks.card.TicketIdentificationNumberEditTextCallback
 
 public class TicketIdentificationNameTextWatcher implements TextWatcher {
 
-    private TicketIdentificationNameEditTextCallback mEditTextCallback;
+    private final TicketIdentificationNameEditTextCallback mEditTextCallback;
 
     public TicketIdentificationNameTextWatcher(TicketIdentificationNameEditTextCallback editTextCallback) {
-        this.mEditTextCallback = editTextCallback;
+        mEditTextCallback = editTextCallback;
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+        //Do something
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.mercadopago.util;
 import android.content.Context;
 
 import com.mercadopago.R;
+import com.mercadopago.exceptions.BinException;
+import com.mercadopago.model.Bin;
 import com.mercadopago.model.PaymentMethod;
 
 import java.text.SimpleDateFormat;
@@ -12,18 +14,11 @@ import java.util.List;
 
 public class MercadoPagoUtil {
 
-    public static final int BIN_LENGTH = 6;
-
     private static final String SDK_PREFIX = "mpsdk_";
 
     public static int getPaymentMethodIcon(Context context, String paymentMethodId) {
 
         return getPaymentMethodPicture(context, SDK_PREFIX, paymentMethodId);
-    }
-
-    public static int getPaymentMethodImage(Context context, String paymentMethodId) {
-
-        return getPaymentMethodPicture(context, SDK_PREFIX + "img_tc_", paymentMethodId);
     }
 
     private static int getPaymentMethodPicture(Context context, String type, String paymentMethodId) {
@@ -56,41 +51,10 @@ public class MercadoPagoUtil {
         return resource;
     }
 
-    public static String getCVVDescriptor(Context context, PaymentMethod paymentMethod) {
-
-        if ("amex".equals(paymentMethod.getId())) {
-            return String.format(context.getString(com.mercadopago.R.string.mpsdk_cod_seg_desc_amex), 4);
-        } else {
-            return String.format(context.getString(com.mercadopago.R.string.mpsdk_cod_seg_desc), 3);
-        }
-    }
-
-    public static int getCVVImageResource(Context context, PaymentMethod paymentMethod) {
-
-        return getPaymentMethodImage(context, paymentMethod.getId());
-    }
-
-    public static String formatDate(Context context, Date date) {
-
-        String result;
-        try {
-            result = new SimpleDateFormat("dd MM yyyy HH:mm").format(date);
-            String[] splitString = result.split(" ");
-            result = context.getString(R.string.mpsdk_format_date, splitString[0], splitString[1], splitString[2], splitString[3]);
-        } catch (Exception ex) {
-            // do nothing
-            result = ex.getMessage();
-        }
-        return result;
-    }
-
     public static boolean isCard(String paymentTypeId) {
 
-        if ((paymentTypeId != null) && (paymentTypeId.equals("credit_card") || paymentTypeId.equals("debit_card") || paymentTypeId.equals("prepaid_card"))) {
-            return true;
-        } else {
-            return false;
-        }
+        return (paymentTypeId != null) && (paymentTypeId.equals("credit_card") || paymentTypeId.equals("debit_card") ||
+            paymentTypeId.equals("prepaid_card"));
     }
 
     public static String getAccreditationTimeMessage(Context context, int milliseconds) {
@@ -129,7 +93,7 @@ public class MercadoPagoUtil {
     }
 
     public static List<PaymentMethod> getValidPaymentMethodsForBin(String bin, List<PaymentMethod> paymentMethods) {
-        if (bin.length() == BIN_LENGTH) {
+        if (bin.length() == Bin.BIN_LENGTH) {
             List<PaymentMethod> validPaymentMethods = new ArrayList<>();
             for (PaymentMethod pm : paymentMethods) {
                 if (pm.isValidForBin(bin)) {
@@ -137,7 +101,8 @@ public class MercadoPagoUtil {
                 }
             }
             return validPaymentMethods;
-        } else
-            throw new RuntimeException("Invalid bin: " + BIN_LENGTH + " digits needed, " + bin.length() + " found");
+        }
+
+        throw new BinException(bin.length());
     }
 }

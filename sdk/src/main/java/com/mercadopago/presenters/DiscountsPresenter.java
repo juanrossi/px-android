@@ -3,15 +3,12 @@ package com.mercadopago.presenters;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Discount;
 import com.mercadopago.mvp.MvpPresenter;
-import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.providers.DiscountsProvider;
-
-import java.math.BigDecimal;
+import com.mercadopago.util.ApiUtil;
 import com.mercadopago.views.DiscountsActivityView;
 
-/**
- * Created by mromar on 11/29/16.
- */
+import java.math.BigDecimal;
 
 public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, DiscountsProvider> {
 
@@ -22,11 +19,10 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     private String mPayerEmail;
     private BigDecimal mTransactionAmount;
     private Discount mDiscount;
-    private Boolean mDirectDiscountEnabled;
 
     @Override
     public void attachView(DiscountsActivityView discountsView) {
-        this.mDiscountsView = discountsView;
+        mDiscountsView = discountsView;
     }
 
     public void initialize() {
@@ -38,37 +34,17 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void initDiscountFlow() {
-        if (mDirectDiscountEnabled && isTransactionAmountValid()) {
-            mDiscountsView.hideDiscountSummary();
-            getDirectDiscount();
-        } else {
-            mDiscountsView.requestDiscountCode();
-        }
+        mDiscountsView.requestDiscountCode();
     }
 
     private Boolean isTransactionAmountValid() {
         return mTransactionAmount != null && mTransactionAmount.compareTo(BigDecimal.ZERO) > 0;
     }
 
-    private void getDirectDiscount() {
-        getResourcesProvider().getDirectDiscount(mTransactionAmount.toString(), mPayerEmail, new OnResourcesRetrievedCallback<Discount>() {
-            @Override
-            public void onSuccess(Discount discount) {
-                mDiscount = discount;
-                mDiscountsView.drawSummary();
-            }
-
-            @Override
-            public void onFailure(MercadoPagoError error) {
-                mDiscountsView.requestDiscountCode();
-            }
-        });
-    }
-
     private void getCodeDiscount(final String discountCode) {
         mDiscountsView.showProgressBar();
 
-        getResourcesProvider().getCodeDiscount(mTransactionAmount.toString(), mPayerEmail, discountCode, new OnResourcesRetrievedCallback<Discount>() {
+        getResourcesProvider().getCodeDiscount(mTransactionAmount.toString(), mPayerEmail, discountCode, new TaggedCallback<Discount>(ApiUtil.RequestOrigin.GET_CODE_DISCOUNT) {
             @Override
             public void onSuccess(Discount discount) {
                 mDiscountsView.setSoftInputModeSummary();
@@ -76,14 +52,13 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
                 mDiscountsView.hideProgressBar();
 
                 mDiscount = discount;
-                mDiscount.setCouponCode(discountCode);
                 mDiscountsView.drawSummary();
             }
 
             @Override
             public void onFailure(MercadoPagoError error) {
                 mDiscountsView.hideProgressBar();
-                if(error.isApiException()) {
+                if (error.isApiException()) {
                     String errorMessage = getResourcesProvider().getApiErrorMessage(error.getApiException().getError());
                     mDiscountsView.showCodeInputError(errorMessage);
                 } else {
@@ -106,31 +81,23 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     public Discount getDiscount() {
-        return this.mDiscount;
+        return mDiscount;
     }
 
     public void setMerchantPublicKey(String publicKey) {
-        this.mPublicKey = publicKey;
+        mPublicKey = publicKey;
     }
 
     public void setPayerEmail(String payerEmail) {
-        this.mPayerEmail = payerEmail;
+        mPayerEmail = payerEmail;
     }
 
     public void setDiscount(Discount discount) {
-        this.mDiscount = discount;
+        mDiscount = discount;
     }
 
     public void setTransactionAmount(BigDecimal transactionAmount) {
-        this.mTransactionAmount = transactionAmount;
-    }
-
-    public void setDirectDiscountEnabled(Boolean directDiscountEnabled) {
-        this.mDirectDiscountEnabled = directDiscountEnabled;
-    }
-
-    public Boolean getDirectDiscountEnabled() {
-        return this.mDirectDiscountEnabled;
+        mTransactionAmount = transactionAmount;
     }
 
     public String getCurrencyId() {
@@ -146,7 +113,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     public String getPublicKey() {
-        return this.mPublicKey;
+        return mPublicKey;
     }
 
     private boolean isEmpty(String discountCode) {

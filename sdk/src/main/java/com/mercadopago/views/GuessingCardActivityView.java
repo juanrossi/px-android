@@ -1,28 +1,19 @@
 package com.mercadopago.views;
 
 import com.mercadopago.controllers.PaymentMethodGuessingController;
-import com.mercadopago.exceptions.CardTokenException;
 import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.model.ApiException;
-import com.mercadopago.model.Discount;
+import com.mercadopago.lite.exceptions.ApiException;
+import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpView;
-
-import java.math.BigDecimal;
 import java.util.List;
-
-/**
- * Created by vaserber on 10/13/16.
- */
 
 public interface GuessingCardActivityView extends MvpView {
     void onValidStart();
-
-    void onInvalidStart(String message);
 
     void initializeTimer();
 
@@ -100,15 +91,13 @@ public interface GuessingCardActivityView extends MvpView {
 
     void setSoftInputMode();
 
-    void showDiscountRow(BigDecimal transactionAmount);
+    void finishCardFlow(PaymentMethod paymentMethod, Token token, List<Issuer> issuers);
 
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, List<Issuer> issuers);
+    void finishCardFlow(PaymentMethod paymentMethod, Token token, Issuer issuer,
+        List<PayerCost> payerCosts);
 
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, Issuer issuer, List<PayerCost> payerCosts);
-
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, Issuer issuer, PayerCost payerCost);
-
-    void startDiscountActivity(BigDecimal transactionAmount);
+    void finishCardFlow(PaymentMethod paymentMethod, Token token, Issuer issuer,
+        PayerCost payerCost);
 
     void hideProgress();
 

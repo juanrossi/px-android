@@ -1,135 +1,85 @@
-apply plugin: 'com.android.library'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'jacoco-android'
-
-task jacocoFullTestReport(type: JacocoReport, dependsOn: ['jacocoTestReport', 'createDevDebugCoverageReport']) {
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
+buildscript {
+    repositories {
+        google()
+        jcenter()
     }
 
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories = files([mainSrc])
-    classDirectories = files([debugTree])
-    executionData = fileTree(dir: "$buildDir", includes: [
-            "jacoco/testDevDebugUnitTest.exec", "outputs/code-coverage/connected/flavors/DEV/*coverage.ec"
-    ])
+    dependencies {
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
+        classpath 'com.monits:static-code-analysis-plugin:2.6.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+    }
 }
 
+apply plugin: 'com.android.library'
+
 android {
-    compileSdkVersion api_level.toInteger()
-    buildToolsVersion build_tools_version
+    compileSdkVersion api_level as int
+    buildToolsVersion build_tools_version as String
+
     defaultConfig {
-        minSdkVersion min_api_level.toInteger()
-        targetSdkVersion api_level.toInteger()
+        minSdkVersion min_api_level as int
+        targetSdkVersion api_level as int
         versionCode 1
-        versionName '3.8.1'
+        versionName version_to_deploy as String
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'proguard-rules.txt'
+        multiDexEnabled true
     }
-    packagingOptions {
-        exclude 'META-INF/services/com.fasterxml.jackson.core.JsonFactory'
-        exclude 'META-INF/DEPENDENCIES.txt'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/notice.txt'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/dependencies.txt'
-        exclude 'META-INF/LGPL2.1'
-        exclude 'META-INF/ASL2.0'
-        exclude 'LICENSE.txt'
+
+    dexOptions {
+        preDexLibraries !(travisBuild)
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     buildTypes {
         debug {
             testCoverageEnabled true
-            multiDexEnabled true
-            versionNameSuffix " Debug"
-            debuggable true
         }
-    }
-
-    project.gradle.taskGraph.whenReady {
-        connectedDevDebugAndroidTest {
-            ignoreFailures = true
-        }
-    }
-
-    dexOptions {
-        // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
-        preDexLibraries = preDexEnabled && !travisBuild
-    }
-
-    lintOptions {
-        abortOnError false
-    }
-
-    flavorDimensions "environment"
-
-    productFlavors {
-        dev {
-            dimension "environment"
-            buildConfigField "String", "API_VERSION", "\"beta\""
-        }
-        prod {
-            dimension "environment"
-            buildConfigField "String", "API_VERSION", "\"v1\""
-        }
-    }
-}
-
-project.gradle.taskGraph.whenReady {
-    connectedDevDebugAndroidTest {
-        ignoreFailures = true
     }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation project(':testlib')
 
-    androidTestCompile "com.android.support.test.espresso:espresso-core:2.2.2"
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:2.2.2"
-    androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
-        exclude module: 'support-v4'
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-        exclude group: 'com.android.support', module: 'design'
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
-    }
+    testImplementation "junit:junit:$junit"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
 
-    testCompile "junit:junit:$junit"
-    testCompile "org.mockito:mockito-core:2.+"
 
-    compile "com.android.support:cardview-v7:$support_library_version"
-    compile "com.android.support:recyclerview-v7:$support_library_version"
-    compile "com.android.support:support-v4:$support_library_version"
-    compile "com.android.support:appcompat-v7:$support_library_version"
-    compile "com.android.support:design:$support_library_version"
-    compile "com.android.support:percent:$support_library_version"
-    compile "com.android.support:support-annotations:$support_library_version"
+    implementation "com.android.support:cardview-v7:$support_library_version"
+    implementation "com.android.support:recyclerview-v7:$support_library_version"
+    implementation "com.android.support:support-v4:$support_library_version"
+    implementation "com.android.support:appcompat-v7:$support_library_version"
+    implementation "com.android.support:design:$support_library_version"
+    implementation "com.android.support:percent:$support_library_version"
+    implementation "com.android.support:support-annotations:$support_library_version"
 
-    compile "com.squareup.okhttp3:okhttp:$okhttp"
-    compile "com.squareup.okhttp3:okhttp-urlconnection:$okhttp"
-    compile "com.squareup.okhttp3:logging-interceptor:$okhttp"
-    compile "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
 
-    compile("com.squareup.retrofit2:converter-gson:$retrofit") {
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit") {
         exclude group: "com.google.code.gson", module: "gson"
     }
+    api project(':services')
+    api project(':tracking')
 
-    compile "com.google.code.gson:gson:$gson"
-    compile "com.squareup.picasso:picasso:$picasso"
-    compile "com.mercadopago:services:1.0.1"
-    compile 'com.mercadopago:tracking:3.0.2'
+    implementation "com.google.code.gson:gson:$gson"
+    implementation "com.squareup.picasso:picasso:$picasso"
+    implementation "com.mercadolibre.android:ui:$meli_ui_lib"
+    implementation "com.android.support:multidex:$multidex"
 }
-configurations {
-    archives {
-        extendsFrom configurations.default
-    }
-}
+
+apply from: "$rootDir/gradle/jacoco.gradle"
+apply from: "$rootDir/gradle/static-analysis.gradle"
+apply from: "$rootDir/gradle/deploy.gradle" 

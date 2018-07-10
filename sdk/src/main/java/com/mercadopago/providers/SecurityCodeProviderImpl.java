@@ -3,33 +3,24 @@ package com.mercadopago.providers;
 import android.content.Context;
 
 import com.mercadopago.R;
-import com.mercadopago.callbacks.Callback;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
-import com.mercadopago.exceptions.CardTokenException;
-import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.model.ApiException;
+import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardToken;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.SavedCardToken;
 import com.mercadopago.model.SavedESCCardToken;
-import com.mercadopago.model.SecurityCodeIntent;
+import com.mercadopago.model.requests.SecurityCodeIntent;
 import com.mercadopago.model.Token;
-import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.util.MercadoPagoESC;
 import com.mercadopago.util.MercadoPagoESCImpl;
-import com.mercadopago.util.ApiUtil;
-
-
-/**
- * Created by marlanti on 7/18/17.
- */
 
 public class SecurityCodeProviderImpl implements SecurityCodeProvider {
 
     private final Context mContext;
     private final MercadoPagoServicesAdapter mMercadoPagoServicesAdapter;
-    private MercadoPagoESC mercadoPagoESC;
+    private final MercadoPagoESC mercadoPagoESC;
 
     private static final String TOKEN_AND_CARD_NOT_SET_MESSAGE = "token and card can't both be null";
     private static final String TOKEN_AND_CARD_WITHOUT_RECOVERY_SET_MESSAGE = "can't set token and card at the same time without payment recovery";
@@ -37,15 +28,9 @@ public class SecurityCodeProviderImpl implements SecurityCodeProvider {
     private static final String CARD_INFO_NOT_SET = "card info can't be null";
 
     public SecurityCodeProviderImpl(Context context, String publicKey, String privateKey, boolean escEnabled) {
-        this.mContext = context;
-
-        mMercadoPagoServicesAdapter = new MercadoPagoServicesAdapter.Builder()
-                .setContext(context)
-                .setPublicKey(publicKey)
-                .setPrivateKey(privateKey)
-                .build();
-
-        this.mercadoPagoESC = new MercadoPagoESCImpl(context, escEnabled);
+        mContext = context;
+        mMercadoPagoServicesAdapter = new MercadoPagoServicesAdapter(context, publicKey, privateKey);
+        mercadoPagoESC = new MercadoPagoESCImpl(context, escEnabled);
     }
 
     @Override
@@ -79,70 +64,26 @@ public class SecurityCodeProviderImpl implements SecurityCodeProvider {
     }
 
     @Override
-    public void cloneToken(final String tokenId, final OnResourcesRetrievedCallback<Token> onResourcesRetrievedCallback) {
-        mMercadoPagoServicesAdapter.cloneToken(tokenId, new Callback<Token>() {
-            @Override
-            public void success(Token token) {
-                onResourcesRetrievedCallback.onSuccess(token);
-            }
-
-            @Override
-            public void failure(ApiException apiException) {
-                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.CREATE_TOKEN));
-
-            }
-        });
+    public void cloneToken(final String tokenId, final TaggedCallback<Token> taggedCallback) {
+        mMercadoPagoServicesAdapter.cloneToken(tokenId, taggedCallback);
     }
 
     @Override
-    public void putSecurityCode(final String securityCode, final String tokenId, final OnResourcesRetrievedCallback<Token> onResourcesRetrievedCallback) {
+    public void putSecurityCode(final String securityCode, final String tokenId, final TaggedCallback<Token> taggedCallback) {
         SecurityCodeIntent securityCodeIntent = new SecurityCodeIntent();
         securityCodeIntent.setSecurityCode(securityCode);
-
-        mMercadoPagoServicesAdapter.putSecurityCode(tokenId, securityCodeIntent, new Callback<Token>() {
-            @Override
-            public void success(Token token) {
-                onResourcesRetrievedCallback.onSuccess(token);
-            }
-
-            @Override
-            public void failure(ApiException apiException) {
-                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.CREATE_TOKEN));
-            }
-        });
+        mMercadoPagoServicesAdapter.putSecurityCode(tokenId, securityCodeIntent, taggedCallback);
     }
 
     @Override
-    public void createToken(final SavedCardToken savedCardToken, final OnResourcesRetrievedCallback<Token> onResourcesRetrievedCallback) {
-
-        mMercadoPagoServicesAdapter.createToken(savedCardToken, new Callback<Token>() {
-            @Override
-            public void success(Token token) {
-                onResourcesRetrievedCallback.onSuccess(token);
-            }
-
-            @Override
-            public void failure(ApiException apiException) {
-                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.CREATE_TOKEN));
-            }
-        });
+    public void createToken(final SavedCardToken savedCardToken, final TaggedCallback<Token> taggedCallback) {
+        mMercadoPagoServicesAdapter.createToken(savedCardToken, taggedCallback);
 
     }
 
     @Override
-    public void createToken(SavedESCCardToken savedESCCardToken, final OnResourcesRetrievedCallback<Token> onResourcesRetrievedCallback) {
-
-        mMercadoPagoServicesAdapter.createToken(savedESCCardToken, new Callback<Token>() {
-            @Override
-            public void success(Token token) {
-                onResourcesRetrievedCallback.onSuccess(token);
-            }
-
-            @Override
-            public void failure(ApiException apiException) {
-                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.CREATE_TOKEN));
-            }
-        });
+    public void createToken(SavedESCCardToken savedESCCardToken, final TaggedCallback<Token> taggedCallback) {
+        mMercadoPagoServicesAdapter.createToken(savedESCCardToken, taggedCallback);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.mercadopago;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
@@ -11,16 +10,15 @@ import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.IdentificationTypesAdapter;
 import com.mercadopago.callbacks.card.TicketIdentificationNameEditTextCallback;
@@ -30,22 +28,19 @@ import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.listeners.card.TicketIdentificationNameTextWatcher;
 import com.mercadopago.listeners.card.TicketIdentificationNumberTextWatcher;
-import com.mercadopago.model.ApiException;
+import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Payer;
-import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.PayerInformationPresenter;
 import com.mercadopago.providers.PayerInformationProviderImpl;
 import com.mercadopago.uicontrollers.identification.IdentificationTicketView;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.util.ViewUtils;
 import com.mercadopago.views.PayerInformationView;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,9 +72,8 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     private boolean mActivityActive;
 
     //View controls
-    protected DecorationPreference mDecorationPreference;
     private ScrollView mScrollView;
-    private ProgressBar mProgressBar;
+    private ViewGroup mProgressLayout;
 
     //Input controls
     private String mCurrentEditingEditText;
@@ -90,11 +84,8 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     private LinearLayout mIdentificationLastNameInput;
     private LinearLayout mIdentificationTypeContainer;
     private LinearLayout mButtonContainer;
-    private FrameLayout mBackground;
     private FrameLayout mNextButton;
-    private TextView mNextButtonText;
     private FrameLayout mBackButton;
-    private TextView mBackButtonText;
     private FrameLayout mIdentificationCardContainer;
     private FrameLayout mErrorContainer;
     private Spinner mIdentificationTypeSpinner;
@@ -102,7 +93,6 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     private MPEditText mIdentificationNameEditText;
     private MPEditText mIdentificationLastNameEditText;
     private MPTextView mErrorTextView;
-    private TextView mBackInactiveButtonText;
     private Toolbar mLowResToolbar;
     private MPTextView mLowResTitleToolbar;
     private Toolbar mNormalToolbar;
@@ -122,15 +112,10 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
 
         configurePresenter();
 
-        if (isCustomColorSet()) {
-            setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
-        }
-
         setContentView();
         initializeControls();
         initializeToolbar();
         setListeners();
-        decorate();
         initialize();
     }
 
@@ -205,7 +190,7 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     }
 
     private void analyzeLowRes() {
-        this.mLowResActive = ScaleUtil.isLowRes(this);
+        mLowResActive = ScaleUtil.isLowRes(this);
     }
 
     private void createPresenter() {
@@ -213,7 +198,6 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     }
 
     private void getActivityParameters() {
-        mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
         mPublicKey = getIntent().getStringExtra("merchantPublicKey");
         mPayerAccessToken = getIntent().getStringExtra("payerAccessToken");
     }
@@ -229,7 +213,6 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
         } else {
             setContentViewNormal();
         }
-
     }
 
     private void setContentViewLowRes() {
@@ -241,47 +224,41 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     }
 
     private void initializeControls() {
-        mInputContainer = (LinearLayout) findViewById(R.id.mpsdkInputContainer);
-        mIdentificationNumberInput = (LinearLayout) findViewById(R.id.mpsdkCardIdentificationInput);
-        mIdentificationNameInput = (LinearLayout) findViewById(R.id.mpsdkNameInput);
-        mIdentificationLastNameInput = (LinearLayout) findViewById(R.id.mpsdkLastNameInput);
+        mInputContainer = findViewById(R.id.mpsdkInputContainer);
+        mIdentificationNumberInput = findViewById(R.id.mpsdkCardIdentificationInput);
+        mIdentificationNameInput = findViewById(R.id.mpsdkNameInput);
+        mIdentificationLastNameInput = findViewById(R.id.mpsdkLastNameInput);
 
-        mIdentificationNumberEditText = (MPEditText) findViewById(R.id.mpsdkCardIdentificationNumber);
-        mIdentificationNameEditText = (MPEditText) findViewById(R.id.mpsdkName);
-        mIdentificationLastNameEditText = (MPEditText) findViewById(R.id.mpsdkLastName);
+        mIdentificationNumberEditText = findViewById(R.id.mpsdkCardIdentificationNumber);
+        mIdentificationNameEditText = findViewById(R.id.mpsdkName);
+        mIdentificationLastNameEditText = findViewById(R.id.mpsdkLastName);
 
-        mIdentificationTypeSpinner = (Spinner) findViewById(R.id.mpsdkCardIdentificationType);
-        mIdentificationTypeContainer = (LinearLayout) findViewById(R.id.mpsdkCardIdentificationTypeContainer);
+        mIdentificationTypeSpinner = findViewById(R.id.mpsdkCardIdentificationType);
+        mIdentificationTypeContainer = findViewById(R.id.mpsdkCardIdentificationTypeContainer);
 
-        mNextButton = (FrameLayout) findViewById(R.id.mpsdkNextButton);
-        mNextButtonText = (TextView) findViewById(R.id.mpsdkNextButtonText);
+        mNextButton = findViewById(R.id.mpsdkNextButton);
+        mBackButton = findViewById(R.id.mpsdkBackButton);
 
-        mBackButton = (FrameLayout) findViewById(R.id.mpsdkBackButton);
-        mBackButtonText = (TextView) findViewById(R.id.mpsdkBackButtonText);
+        mScrollView = findViewById(R.id.mpsdkScrollViewContainer);
+        mProgressLayout = findViewById(R.id.mpsdkProgressLayout);
 
-        mScrollView = (ScrollView) findViewById(R.id.mpsdkScrollViewContainer);
-        mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
-
-        mBackground = (FrameLayout) findViewById(R.id.mpsdkBackground);
-        mIdentificationCardContainer = (FrameLayout) findViewById(R.id.mpsdkIdentificationCardContainer);
+        mIdentificationCardContainer = findViewById(R.id.mpsdkIdentificationCardContainer);
 
         mIdentificationTicketView = new IdentificationTicketView(this);
         mIdentificationTicketView.inflateInParent(mIdentificationCardContainer, true);
         mIdentificationTicketView.initializeControls();
 
-        mBackInactiveButtonText = (TextView) findViewById(R.id.mpsdkBackInactiveButtonText);
-
-        mButtonContainer = (LinearLayout) findViewById(R.id.mpsdkButtonContainer);
-        mErrorContainer = (FrameLayout) findViewById(R.id.mpsdkErrorContainer);
-        mErrorTextView = (MPTextView) findViewById(R.id.mpsdkErrorTextView);
+        mButtonContainer = findViewById(R.id.mpsdkButtonContainer);
+        mErrorContainer = findViewById(R.id.mpsdkErrorContainer);
+        mErrorTextView = findViewById(R.id.mpsdkErrorTextView);
 
         if (mLowResActive) {
-            mLowResToolbar = (Toolbar) findViewById(R.id.mpsdkLowResToolbar);
-            mLowResTitleToolbar = (MPTextView) findViewById(R.id.mpsdkTitle);
+            mLowResToolbar = findViewById(R.id.mpsdkLowResToolbar);
+            mLowResTitleToolbar = findViewById(R.id.mpsdkTitle);
             mLowResTitleToolbar.setText(getResources().getText(R.string.mpsdk_fill_your_data));
             mLowResToolbar.setVisibility(View.VISIBLE);
         } else {
-            mNormalToolbar = (Toolbar) findViewById(R.id.mpsdkTransparentToolbar);
+            mNormalToolbar = findViewById(R.id.mpsdkTransparentToolbar);
         }
 
         showProgressBar();
@@ -293,20 +270,22 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
         mIdentificationTicketView.setIdentificationType(identificationTypes.get(0));
         mIdentificationTicketView.drawIdentificationTypeName();
 
-        mIdentificationTypeSpinner.setAdapter(new IdentificationTypesAdapter(this, identificationTypes));
+        mIdentificationTypeSpinner.setAdapter(new IdentificationTypesAdapter(identificationTypes));
         mIdentificationTypeContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showProgressBar() {
-        mInputContainer.setVisibility(View.INVISIBLE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        mInputContainer.setVisibility(View.GONE);
+        mButtonContainer.setVisibility(View.GONE);
+        mProgressLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
         mInputContainer.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
+        mButtonContainer.setVisibility(View.VISIBLE);
+        mProgressLayout.setVisibility(View.GONE);
     }
 
     private void setListeners() {
@@ -474,7 +453,7 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                //Do something
             }
         });
         mIdentificationTypeSpinner.setOnTouchListener(new View.OnTouchListener() {
@@ -581,6 +560,7 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
 
     private void fullScrollDown() {
         Runnable r = new Runnable() {
+            @Override
             public void run() {
                 mScrollView.fullScroll(View.FOCUS_DOWN);
             }
@@ -616,21 +596,27 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
             case IDENTIFICATION_LAST_NAME_INPUT:
                 if (mPresenter.validateLastName()) {
                     mIdentificationLastNameInput.setVisibility(View.GONE);
-                    mPresenter.createPayer();
-                    finishWithPayer();
+                    showFinishCardFlow();
                     return true;
                 }
                 return false;
             case IDENTIFICATION_BUSINESS_NAME_INPUT:
                 if (mPresenter.validateBusinessName()) {
                     mIdentificationNameInput.setVisibility(View.GONE);
-                    mPresenter.createPayer();
-                    finishWithPayer();
+                    showFinishCardFlow();
                     return true;
                 }
                 return false;
+            default:
+                return false;
         }
-        return false;
+    }
+
+    private void showFinishCardFlow() {
+        ViewUtils.hideKeyboard(this);
+        showProgressBar();
+        mPresenter.createPayer();
+        finishWithPayer();
     }
 
     private boolean checkIsEmptyOrValid() {
@@ -651,8 +637,10 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
                     return true;
                 }
                 return false;
+            default:
+                return false;
+
         }
-        return false;
     }
 
     private void requestIdentificationNumberFocus() {
@@ -691,7 +679,7 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
     }
 
     private void checkChangeErrorView() {
-        if (mErrorState != null && mErrorState.equals(ERROR_STATE)) {
+        if (ERROR_STATE.equals(mErrorState)) {
             clearErrorView();
         }
     }
@@ -734,21 +722,21 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
 
     @Override
     public void setErrorIdentificationNumber() {
-        LayoutUtil.openKeyboard(mIdentificationNumberEditText);
+        ViewUtils.openKeyboard(mIdentificationNumberEditText);
         mIdentificationNumberEditText.toggleLineColorOnError(true);
         mIdentificationNumberEditText.requestFocus();
     }
 
     @Override
     public void setErrorName() {
-        LayoutUtil.openKeyboard(mIdentificationNameEditText);
+        ViewUtils.openKeyboard(mIdentificationNameEditText);
         mIdentificationNameEditText.toggleLineColorOnError(true);
         mIdentificationNameEditText.requestFocus();
     }
 
     @Override
     public void setErrorLastName() {
-        LayoutUtil.openKeyboard(mIdentificationLastNameEditText);
+        ViewUtils.openKeyboard(mIdentificationLastNameEditText);
         mIdentificationLastNameEditText.toggleLineColorOnError(true);
         mIdentificationLastNameEditText.requestFocus();
     }
@@ -758,40 +746,5 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
         returnIntent.putExtra("payer", JsonUtil.getInstance().toJson(mPresenter.getPayer()));
         setResult(RESULT_OK, returnIntent);
         finish();
-    }
-
-    private boolean isCustomColorSet() {
-        return mDecorationPreference != null && mDecorationPreference.hasColors();
-    }
-
-    private void decorate() {
-        if (isDecorationEnabled()) {
-            if (mLowResActive) {
-                decorateLowRes();
-            } else {
-                decorateNormal();
-            }
-        }
-    }
-
-    private boolean isDecorationEnabled() {
-        return mDecorationPreference != null && mDecorationPreference.hasColors();
-    }
-
-    private void decorateLowRes() {
-        ColorsUtil.decorateLowResToolbar(mLowResToolbar, mLowResTitleToolbar, mDecorationPreference,
-                getSupportActionBar(), this);
-        mNextButtonText.setTextColor(mDecorationPreference.getDarkFontColor(this));
-        mBackButtonText.setTextColor(mDecorationPreference.getDarkFontColor(this));
-        mBackInactiveButtonText.setTextColor(ContextCompat.getColor(this, R.color.mpsdk_warm_grey));
-    }
-
-    private void decorateNormal() {
-        ColorsUtil.decorateTransparentToolbar(mNormalToolbar, mDecorationPreference,
-                getSupportActionBar(), this);
-        mBackground.setBackgroundColor(mDecorationPreference.getLighterColor());
-        mNextButtonText.setTextColor(mDecorationPreference.getDarkFontColor(this));
-        mBackButtonText.setTextColor(mDecorationPreference.getDarkFontColor(this));
-        mBackInactiveButtonText.setTextColor(ContextCompat.getColor(this, R.color.mpsdk_warm_grey));
     }
 }

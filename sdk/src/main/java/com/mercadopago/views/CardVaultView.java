@@ -1,7 +1,7 @@
 package com.mercadopago.views;
 
 import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.model.ApiException;
+import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.mvp.MvpView;
 
 /**
@@ -28,14 +28,14 @@ public interface CardVaultView extends MvpView {
 
     void askForSecurityCodeFromTokenRecovery();
 
-    void askForSecurityCodeFromInstallments();
-
-    void askForSecurityCodeWithoutInstallments();
-
     void askForInstallmentsFromIssuers();
 
     void askForInstallmentsFromNewCard();
 
     void cancelCardVault();
+
+    void animateTransitionSlideInSlideOut();
+
+    void transitionWithNoAnimation();
 
 }

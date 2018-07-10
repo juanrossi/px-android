@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:visibility="gone"
+    tools:visibility="visible"
     android:id="@+id/mpsdkRegularToolbar"
-    android:background="@color/mpsdk_colorPrimary"
+    android:background="@color/mpsdk_background"
     android:theme="@style/ToolbarTheme"
     app:popupTheme="@style/Theme.MercadoPagoTheme.NoActionBar"
     android:layout_width="match_parent"
@@ -13,15 +14,15 @@
 
     <com.mercadopago.customviews.MPTextView
         android:id="@+id/mpsdkTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:lines="1"
         android:gravity="center_vertical"
-        android:textColor="@color/mpsdk_white"
-        style="@style/mpsdk_title_text"/>
+        style="@style/mpsdk_toolbar_text_large"/>
 
     <com.mercadopago.customviews.MPTextView
-        android:id="@+id/mpsdkButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
@@ -29,8 +30,8 @@
         android:layout_marginEnd="16dp"
         android:paddingTop="10dp"
         android:textSize="16dp"
-        android:visibility="gone"
-        style="@style/mpsdk_title_text"/>
+        android:textColor="@color/mpsdk_toolbar_text"
+        android:visibility="gone"/>
 
     <com.mercadopago.customviews.MPTextView
         android:id="@+id/mpsdkTimerTextView"
@@ -42,10 +43,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="14dp"
         android:textSize="17dp"
+        android:textColor="@color/mpsdk_toolbar_text"
         android:background="@drawable/mpsdk_title_toolbar"
         android:visibility="gone"
-        app:font_style="mono_regular"
-        app:allowCustomFont="false"
-        style="@style/mpsdk_title_text"/>
+        app:font_style="mono_regular"/>
 
 </android.support.v7.widget.Toolbar>

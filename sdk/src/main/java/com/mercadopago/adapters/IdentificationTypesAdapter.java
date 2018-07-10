@@ -1,7 +1,5 @@
 package com.mercadopago.adapters;
 
-import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +13,18 @@ import java.util.List;
 
 public class IdentificationTypesAdapter extends BaseAdapter {
 
-    private List<IdentificationType> mData;
-    private static LayoutInflater mInflater = null;
+    private final List<IdentificationType> mData;
 
-    public IdentificationTypesAdapter(Activity activity, List<IdentificationType> data) {
+    public IdentificationTypesAdapter(List<IdentificationType> data) {
         mData = data;
-        mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @Override
     public int getCount() {
         return mData.size();
     }
 
+    @Override
     public Object getItem(int position) {
         try {
             return mData.get(position);
@@ -35,26 +33,22 @@ public class IdentificationTypesAdapter extends BaseAdapter {
         }
     }
 
-    public List<IdentificationType> getIdentificationTypes() {
-        return mData;
-    }
-
+    @Override
     public long getItemId(int position) {
         return position;
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View row = convertView;
 
         if (convertView == null)
-            row = mInflater.inflate(R.layout.mpsdk_row_simple_spinner, parent, false);
+            row = LayoutInflater.from(parent.getContext()).inflate(R.layout.mpsdk_row_simple_spinner, parent, false);
 
         IdentificationType identificationType = mData.get(position);
-
-        MPTextView label = (MPTextView) row.findViewById(R.id.mpsdkLabel);
+        MPTextView label = row.findViewById(R.id.mpsdkItemTitle);
         label.setText(identificationType.getName());
-
         return row;
     }
 }

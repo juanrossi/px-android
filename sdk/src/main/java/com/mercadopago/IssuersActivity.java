@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.google.gson.reflect.TypeToken;
-
 import com.mercadopago.adapters.IssuersAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
@@ -20,12 +19,11 @@ import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.listeners.RecyclerItemClickListener;
-import com.mercadopago.model.ApiException;
+import com.mercadopago.lite.exceptions.ApiException;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.observers.TimerObserver;
-import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.IssuersPresenter;
 import com.mercadopago.providers.IssuersProviderImpl;
 import com.mercadopago.tracker.FlowHandler;
@@ -36,7 +34,6 @@ import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.uicontrollers.card.FrontCardView;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.ScaleUtil;
@@ -55,7 +52,6 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
 
     // Local vars
     protected boolean mActivityActive;
-    protected DecorationPreference mDecorationPreference;
     protected String mPublicKey;
     protected String mPrivateKey;
 
@@ -87,10 +83,6 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
         mPresenter.attachView(this);
         mPresenter.attachResourcesProvider(new IssuersProviderImpl(this, mPublicKey, mPrivateKey));
 
-        if (isCustomColorSet()) {
-            setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
-        }
-
         mActivityActive = true;
 
         analyzeLowRes();
@@ -106,7 +98,6 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
     }
 
     private void getActivityParameters() {
-        mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
         mPublicKey = getIntent().getStringExtra("merchantPublicKey");
         mPrivateKey = getIntent().getStringExtra("payerAccessToken");
 
@@ -114,25 +105,21 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
         try {
             Type listType = new TypeToken<List<Issuer>>() {
             }.getType();
-            issuers = JsonUtil.getInstance().getGson().fromJson(this.getIntent().getStringExtra("issuers"), listType);
+            issuers = JsonUtil.getInstance().getGson().fromJson(getIntent().getStringExtra("issuers"), listType);
         } catch (Exception ex) {
             issuers = null;
         }
 
-        mPresenter.setPaymentMethod(JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("paymentMethod"), PaymentMethod.class));
-        mPresenter.setCardInfo(JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("cardInfo"), CardInfo.class));
+        mPresenter.setPaymentMethod(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentMethod"), PaymentMethod.class));
+        mPresenter.setCardInfo(JsonUtil.getInstance().fromJson(getIntent().getStringExtra("cardInfo"), CardInfo.class));
         mPresenter.setIssuers(issuers);
-    }
-
-    private boolean isCustomColorSet() {
-        return mDecorationPreference != null && mDecorationPreference.hasColors();
     }
 
     public void analyzeLowRes() {
         if (mPresenter.isRequiredCardDrawn()) {
-            this.mLowResActive = ScaleUtil.isLowRes(this);
+            mLowResActive = ScaleUtil.isLowRes(this);
         } else {
-            this.mLowResActive = true;
+            mLowResActive = true;
         }
     }
 
@@ -153,9 +140,9 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
     }
 
     private void initializeControls() {
-        mIssuersRecyclerView = (RecyclerView) findViewById(R.id.mpsdkActivityIssuersView);
-        mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
-        mProgressLayout = (ViewGroup) findViewById(R.id.mpsdkProgressLayout);
+        mIssuersRecyclerView = findViewById(R.id.mpsdkActivityIssuersView);
+        mTimerTextView = findViewById(R.id.mpsdkTimerTextView);
+        mProgressLayout = findViewById(R.id.mpsdkProgressLayout);
 
         if (mLowResActive) {
             initializeLowResControls();
@@ -166,8 +153,8 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
     }
 
     private void initializeLowResControls() {
-        mLowResToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
-        mLowResTitleToolbar = (MPTextView) findViewById(R.id.mpsdkTitle);
+        mLowResToolbar = findViewById(R.id.mpsdkRegularToolbar);
+        mLowResTitleToolbar = findViewById(R.id.mpsdkTitle);
 
         if (CheckoutTimer.getInstance().isTimerEnabled()) {
             Toolbar.LayoutParams marginParams = new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -181,17 +168,16 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
     }
 
     private void initializeNormalControls() {
-        mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.mpsdkCollapsingToolbar);
-        mAppBar = (AppBarLayout) findViewById(R.id.mpsdkIssuersAppBar);
-        mCardContainer = (FrameLayout) findViewById(R.id.mpsdkActivityCardContainer);
-        mNormalToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
+        mCollapsingToolbar = findViewById(R.id.mpsdkCollapsingToolbar);
+        mAppBar = findViewById(R.id.mpsdkIssuersAppBar);
+        mCardContainer = findViewById(R.id.mpsdkActivityCardContainer);
+        mNormalToolbar = findViewById(R.id.mpsdkRegularToolbar);
         mNormalToolbar.setVisibility(View.VISIBLE);
     }
 
     private void initialize() {
         loadViews();
         hideHeader();
-        decorate();
         showTimer();
         trackScreen();
     }
@@ -199,16 +185,15 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
 
     protected void trackScreen() {
         MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder(this, mPublicKey)
-                .setCheckoutVersion(BuildConfig.VERSION_NAME)
-                .setTrackingStrategy(TrackingUtil.BATCH_STRATEGY)
+                .setVersion(BuildConfig.VERSION_NAME)
                 .build();
 
         ScreenViewEvent event = new ScreenViewEvent.Builder()
                 .setFlowId(FlowHandler.getInstance().getFlowId())
                 .setScreenId(TrackingUtil.SCREEN_ID_ISSUERS)
                 .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM_ISSUERS)
-                .addMetaData(TrackingUtil.METADATA_PAYMENT_TYPE_ID, mPresenter.getPaymentMethod().getPaymentTypeId())
-                .addMetaData(TrackingUtil.METADATA_PAYMENT_METHOD_ID, mPresenter.getPaymentMethod().getId())
+                .addProperty(TrackingUtil.PROPERTY_PAYMENT_TYPE_ID, mPresenter.getPaymentMethod().getPaymentTypeId())
+                .addProperty(TrackingUtil.PROPERTY_PAYMENT_METHOD_ID, mPresenter.getPaymentMethod().getId())
                 .build();
 
         mpTrackingContext.trackEvent(event);
@@ -281,37 +266,6 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
         }
     }
 
-    private void decorate() {
-        if (isDecorationEnabled()) {
-            if (mLowResActive) {
-                decorateLowRes();
-            } else {
-                decorateNormal();
-            }
-        }
-    }
-
-    private boolean isDecorationEnabled() {
-        return mDecorationPreference != null && mDecorationPreference.hasColors();
-    }
-
-    private void decorateLowRes() {
-        ColorsUtil.decorateLowResToolbar(mLowResToolbar, mLowResTitleToolbar, mDecorationPreference,
-                getSupportActionBar(), this);
-        if (mTimerTextView != null) {
-            ColorsUtil.decorateTextView(mDecorationPreference, mTimerTextView, this);
-        }
-    }
-
-    private void decorateNormal() {
-        ColorsUtil.decorateNormalToolbar(mNormalToolbar, mDecorationPreference, mAppBar,
-                mCollapsingToolbar, getSupportActionBar(), this);
-        if (mTimerTextView != null) {
-            ColorsUtil.decorateTextView(mDecorationPreference, mTimerTextView, this);
-        }
-        mFrontCardView.decorateCardBorder(mDecorationPreference.getLighterColor());
-    }
-
     private void showTimer() {
         if (CheckoutTimer.getInstance().isTimerEnabled()) {
             CheckoutTimer.getInstance().addObserver(this);
@@ -321,7 +275,7 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
     }
 
     private void initializeAdapter(OnSelectedCallback<Integer> onSelectedCallback) {
-        mIssuersAdapter = new IssuersAdapter(this, onSelectedCallback);
+        mIssuersAdapter = new IssuersAdapter(onSelectedCallback);
         initializeAdapterListener(mIssuersAdapter, mIssuersRecyclerView);
     }
 
@@ -383,13 +337,14 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
     @Override
     public void onFinish() {
         setResult(MercadoPagoCheckout.TIMER_FINISHED_RESULT_CODE);
-        this.finish();
+        finish();
     }
 
     @Override
     public void showIssuers(List<Issuer> issuersList, OnSelectedCallback<Integer> onSelectedCallback) {
         initializeAdapter(onSelectedCallback);
         mIssuersAdapter.addResults(issuersList);
+        stopLoadingView();
     }
 
     @Override
@@ -410,8 +365,11 @@ public class IssuersActivity extends MercadoPagoBaseActivity implements IssuersA
         returnIntent.putExtra("issuer", JsonUtil.getInstance().toJson(issuer));
         setResult(RESULT_OK, returnIntent);
         finish();
+        animateTransitionSlideInSlideOut();
+    }
 
-        overridePendingTransition(R.anim.mpsdk_hold, R.anim.mpsdk_hold);
+    public void animateTransitionSlideInSlideOut() {
+        overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 
     @Override

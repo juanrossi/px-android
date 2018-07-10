@@ -15,3 +15,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keepclassmembers class okhttp3.Dispatcher {
+	*** setIdleCallback(***);
+	*** runningCallsCount();
+}
+-keepclassmembers public class android.support.v7.widget.RecyclerView {
+	*** scrollToPosition(***);
+	*** findViewHolderForPosition(***);
+}

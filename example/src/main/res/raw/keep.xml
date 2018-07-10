@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- KEPT RESOURCES with usages in xml files which are not recognized by Android Linter-->
+<!-- @color/button,@color/button_pressed,@color/button_disabled -->
+
+<!-- KEPT RESOURCES whose names are dynamically generated -->
+<!-- with format:  -->
+
+
+<resources xmlns:tools="http://schemas.android.com/tools"
+
+    tools:keep="@color/button,@color/button_pressed,@color/button_disabled"
+
+    />

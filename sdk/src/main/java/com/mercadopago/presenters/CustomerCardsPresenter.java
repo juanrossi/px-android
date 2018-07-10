@@ -6,14 +6,13 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Customer;
 import com.mercadopago.mvp.MvpPresenter;
-import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.mvp.TaggedCallback;
 import com.mercadopago.providers.CustomerCardsProvider;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.views.CustomerCardsView;
-
 import java.util.List;
 
-import static com.mercadopago.util.TextUtil.isEmpty;
+import static com.mercadopago.util.TextUtils.isEmpty;
 
 /**
  * Created by mromar on 4/10/17.
@@ -39,7 +38,7 @@ public class CustomerCardsPresenter extends MvpPresenter<CustomerCardsView, Cust
     private void getCustomerAsync() {
         getView().showProgress();
 
-        getResourcesProvider().getCustomer(new OnResourcesRetrievedCallback<Customer>() {
+        getResourcesProvider().getCustomer(new TaggedCallback<Customer>(ApiUtil.RequestOrigin.GET_CUSTOMER) {
             @Override
             public void onSuccess(Customer customer) {
                 mCards = customer.getCards();
@@ -102,7 +101,7 @@ public class CustomerCardsPresenter extends MvpPresenter<CustomerCardsView, Cust
     }
 
     public void setCards(List<Card> cards) {
-        this.mCards = cards;
+        mCards = cards;
     }
 
     public String getCustomTitle() {
@@ -110,7 +109,7 @@ public class CustomerCardsPresenter extends MvpPresenter<CustomerCardsView, Cust
     }
 
     public void setCustomTitle(String customTitle) {
-        this.mCustomTitle = customTitle;
+        mCustomTitle = customTitle;
     }
 
     public String getSelectionConfirmPromptText() {
@@ -118,14 +117,14 @@ public class CustomerCardsPresenter extends MvpPresenter<CustomerCardsView, Cust
     }
 
     public void setSelectionConfirmPromptText(String selectionConfirmPromptText) {
-        this.mSelectionConfirmPromptText = selectionConfirmPromptText;
+        mSelectionConfirmPromptText = selectionConfirmPromptText;
     }
 
     public void setCustomActionMessage(String customActionMessage) {
-        this.mActionMessage = customActionMessage;
+        mActionMessage = customActionMessage;
     }
 
     public void setFailureRecovery(FailureRecovery failureRecovery) {
-        this.mFailureRecovery = failureRecovery;
+        mFailureRecovery = failureRecovery;
     }
 }

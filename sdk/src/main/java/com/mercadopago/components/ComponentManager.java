@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListener<T> {
 
-    private Activity activity;
+    private final Activity activity;
     private Component root;
     private ActionsListener actionsListener;
     private Renderer renderer;
@@ -26,7 +26,7 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
 
     private void render() {
         if (renderer != null && !activity.isFinishing()) {
-            activity.setContentView(renderer.render());
+            activity.setContentView(renderer.render(null));
         }
     }
 
@@ -40,7 +40,7 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
     public void render(@NonNull final Component component, @NonNull final ViewGroup parent) {
         setComponent(component);
         if (renderer != null && !activity.isFinishing()) {
-            parent.addView(renderer.render());
+            renderer.render(parent);
         }
     }
 
@@ -50,7 +50,9 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
 
     @Override
     public void dispatch(@NonNull final Action action) {
-        if (actionsListener != null) {
+        if (action instanceof PropsUpdatedAction) {
+            render();
+        } else if (actionsListener != null) {
             actionsListener.onAction(action);
         }
     }
