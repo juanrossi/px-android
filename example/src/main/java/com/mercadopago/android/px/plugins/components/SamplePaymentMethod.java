@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import com.mercadopago.android.px.components.NextAction;
 import com.mercadopago.android.px.components.RendererFactory;
 import com.mercadopago.android.px.plugins.PluginComponent;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 
 public class SamplePaymentMethod extends PluginComponent<SamplePaymentMethod.SampleState> {
 

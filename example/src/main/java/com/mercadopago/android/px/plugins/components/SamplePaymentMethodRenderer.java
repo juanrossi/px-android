@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.mercadopago.android.px.plugins.PluginRenderer;
 import com.mercadopago.example.R;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.TextUtils;
 
 /**
  * Created by nfortuna on 12/13/17.

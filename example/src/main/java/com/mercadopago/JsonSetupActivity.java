@@ -22,8 +22,8 @@ import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.utils.CheckoutConfiguration;
 import com.mercadopago.example.R;
-import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.TextUtils;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.TextUtils;
 
 public class JsonSetupActivity extends AppCompatActivity {
 
