@@ -35,9 +35,9 @@ import com.mercadopago.android.px.services.exceptions.CardTokenException;
 import com.mercadopago.android.px.tracker.MPTrackingContext;
 import com.mercadopago.android.px.uicontrollers.card.CardView;
 import com.mercadopago.android.px.uicontrollers.card.FrontCardView;
-import com.mercadopago.android.px.views.GuessingCardActivityView;
 import com.mercadopago.android.px.util.ApiUtil;
 import com.mercadopago.android.px.util.MPCardMaskUtil;
+import com.mercadopago.android.px.views.GuessingCardActivityView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -985,8 +985,10 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
             getView().showError(new MercadoPagoError(getResourcesProvider().getMissingPayerCostsErrorMessage(), false),
                 ApiUtil.RequestOrigin.GET_INSTALLMENTS);
         } else if (payerCosts.size() == 1) {
+            final PayerCost payerCost = payerCosts.get(0);
+            userSelectionRepository.select(payerCost);
             getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mIssuer,
-                payerCosts.get(0));
+                payerCost);
         } else {
             getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mIssuer, payerCosts);
         }
