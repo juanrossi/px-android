@@ -978,6 +978,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     private void resolvePayerCosts(List<PayerCost> payerCosts) {
         PayerCost defaultPayerCost = mPaymentPreference.getDefaultInstallments(payerCosts);
         if (defaultPayerCost != null) {
+            userSelectionRepository.select(defaultPayerCost);
             getView().finishCardFlow(userSelectionRepository.getPaymentMethod(), mToken, mIssuer,
                 defaultPayerCost);
         } else if (payerCosts.isEmpty()) {
