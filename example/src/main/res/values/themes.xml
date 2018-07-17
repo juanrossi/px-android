@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="Theme.AppTheme" parent="Theme.AppCompat.Light">
-        <item name="android:textColorPrimary">@color/mpsdk_white</item>
-        <item name="actionMenuTextColor">@color/mpsdk_white</item>
+        <item name="android:textColorPrimary">@color/px_white</item>
+        <item name="actionMenuTextColor">@color/px_white</item>
 
     </style>
 
     <style name="Theme.AppTheme.Grey" parent="Theme.AppTheme">
-        <item name="background">@color/mpsdk_review_gray_background</item>
+        <item name="background">@color/px_review_gray_background</item>
     </style>
 
     <style name="Theme.AppTheme.Amex" parent="Theme.AppTheme">
-        <item name="background">@color/mpsdk_amex</item>
+        <item name="background">@color/px_amex</item>
     </style>
     `
 

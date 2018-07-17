@@ -1,0 +1,83 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
+        classpath 'com.monits:static-code-analysis-plugin:2.6.3'
+    }
+}
+
+apply plugin:'com.android.library'
+
+android {
+    compileSdkVersion api_level as int
+    buildToolsVersion build_tools_version as String
+
+    defaultConfig {
+        minSdkVersion min_api_level as int
+        targetSdkVersion api_level as int
+        versionCode 1
+        versionName version_to_deploy as String
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'proguard-rules.pro'
+        multiDexEnabled true
+    }
+
+    dexOptions {
+        preDexLibraries !(travisBuild)
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+    }
+}
+
+dependencies {
+    androidTestImplementation project(':testlib')
+
+    testImplementation "junit:junit:$junit"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+
+
+    implementation "com.android.support:cardview-v7:$support_library_version"
+    implementation "com.android.support:recyclerview-v7:$support_library_version"
+    implementation "com.android.support:support-v4:$support_library_version"
+    implementation "com.android.support:appcompat-v7:$support_library_version"
+    implementation "com.android.support:design:$support_library_version"
+    implementation "com.android.support:percent:$support_library_version"
+    implementation "com.android.support:support-annotations:$support_library_version"
+
+    implementation "com.squareup.okhttp3:okhttp:$okhttp"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit") {
+        exclude group:"com.google.code.gson", module:"gson"
+    }
+    api project(':px-services')
+    api project(':px-tracking')
+
+    implementation "com.google.code.gson:gson:$gson"
+    implementation "com.squareup.picasso:picasso:$picasso"
+    implementation "com.mercadolibre.android:ui:$meli_ui_lib"
+    implementation "com.android.support:multidex:$multidex"
+}
+
+apply from:"$rootDir/gradle/jacoco.gradle"
+apply from:"$rootDir/gradle/static-analysis.gradle"
+apply from:"$rootDir/gradle/deploy_checkout.gradle"

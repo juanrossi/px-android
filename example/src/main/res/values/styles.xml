@@ -1,12 +1,12 @@
 <resources>
 
     <style name="form_label">
-        <item name="android:textSize">@dimen/mpsdk_regular_text</item>
+        <item name="android:textSize">@dimen/px_regular_text</item>
         <item name="android:textColor">#333333</item>
     </style>
 
     <style name="big_label">
-        <item name="android:textSize">@dimen/mpsdk_big_text</item>
+        <item name="android:textSize">@dimen/px_big_text</item>
         <item name="android:textColor">#333333</item>
     </style>
 

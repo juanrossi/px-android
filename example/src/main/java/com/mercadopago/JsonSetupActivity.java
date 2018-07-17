@@ -18,12 +18,12 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import com.google.gson.JsonSyntaxException;
-import com.mercadopago.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.preferences.CheckoutPreference;
+import com.mercadopago.android.px.utils.CheckoutConfiguration;
 import com.mercadopago.example.R;
-import com.mercadopago.preferences.CheckoutPreference;
-import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.TextUtils;
-import com.mercadopago.utils.CheckoutConfiguration;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.TextUtils;
 
 public class JsonSetupActivity extends AppCompatActivity {
 
@@ -93,7 +93,8 @@ public class JsonSetupActivity extends AppCompatActivity {
         MercadoPagoCheckout.Builder checkoutBuilder;
 
         if (!TextUtils.isEmpty(mConfiguration.getPrefId())) {
-            checkoutBuilder = new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), mConfiguration.getPrefId());
+            checkoutBuilder =
+                new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), mConfiguration.getPrefId());
         } else {
             CheckoutPreference preference = createCheckoutPreference(mConfiguration);
             checkoutBuilder = new MercadoPagoCheckout.Builder(mConfiguration.getPublicKey(), preference);
@@ -112,8 +113,9 @@ public class JsonSetupActivity extends AppCompatActivity {
     }
 
     private CheckoutPreference createCheckoutPreference(CheckoutConfiguration checkoutConfiguration) {
-        return new CheckoutPreference.Builder(checkoutConfiguration.getSite(), checkoutConfiguration.getPayerEmail(), checkoutConfiguration.getItems())
-                .build();
+        return new CheckoutPreference.Builder(checkoutConfiguration.getSite(), checkoutConfiguration.getPayerEmail(),
+            checkoutConfiguration.getItems())
+            .build();
     }
 
     private void validateJson() {
@@ -132,12 +134,12 @@ public class JsonSetupActivity extends AppCompatActivity {
 
     private void updateSetupStatus(boolean ok) {
         if (ok) {
-            Drawable okImage = getResources().getDrawable(R.drawable.mpsdk_ok_sign);
+            Drawable okImage = getResources().getDrawable(R.drawable.px_ok_sign);
             okImage.setColorFilter(ContextCompat.getColor(this, R.color.examples_green), PorterDuff.Mode.SRC_ATOP);
             mStatusImageView.setImageDrawable(okImage);
             mStartCheckoutButton.setEnabled(true);
         } else {
-            mStatusImageView.setImageResource(R.drawable.mpsdk_icon_error);
+            mStatusImageView.setImageResource(R.drawable.px_icon_error);
             mStartCheckoutButton.setEnabled(false);
         }
     }

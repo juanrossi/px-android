@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:orientation="vertical"
-    android:theme="@style/Theme.AppTheme.Amex">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            android:theme="@style/Theme.AppTheme.Amex">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
                 android:layout_gravity="center_vertical"
                 android:orientation="vertical">
 
-                <com.mercadopago.customviews.MPTextView
+                <com.mercadopago.android.px.customviews.MPTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -33,9 +33,9 @@
                     android:gravity="center_vertical"
                     android:text="Payment METHOD"
                     android:textColor="@color/ui_meli_black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"/>
 
-                <com.mercadopago.customviews.MPTextView
+                <com.mercadopago.android.px.customviews.MPTextView
                     android:id="@+id/label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                     android:gravity="center"
                     android:textColor="@color/ui_meli_black"
                     android:textSize="27sp"
-                    tools:text="Tarjeta" />
+                    tools:text="Tarjeta"/>
 
             </LinearLayout>
 
@@ -52,14 +52,14 @@
 
         <Button
             android:id="@+id/button"
-            style="@style/mpsdk_button_normal"
+            style="@style/px_button_normal"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="25dp"
             android:background="@drawable/button"
             android:text="Continuar"
-            android:textColor="@color/mpsdk_white_background"
-            android:textSize="16dp" />
+            android:textColor="@color/px_white_background"
+            android:textSize="16dp"/>
 
     </LinearLayout>
 </ScrollView>

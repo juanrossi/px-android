@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="px_homebanking">banca en línea de</string>
+    <string name="px_card_installments_title">¿En cuántas mensualidades?</string>
+    <string name="px_error_message_invalid_installments">Número de mensualidades inválido</string>
+</resources>

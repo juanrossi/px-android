@@ -1,0 +1,5 @@
+{
+  "checkout_version": "3.0.0",
+  "platform": "native/android",
+  "public_key": "public_key"
+}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/mpsdkPaymentMethodContainer"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/px_white"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/px_l_alternative_margin">
+
+    <FrameLayout
+        android:layout_width="@dimen/px_m_height"
+        android:layout_height="@dimen/px_m_height"
+        android:layout_marginTop="@dimen/px_l_alternative_margin"
+        android:background="@drawable/px_light_grey_circle">
+
+        <ImageView
+            android:id="@+id/mpsdkPaymentMethodIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:padding="@dimen/px_xxs_margin"
+            tools:src="@drawable/px_amex"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/mpsdkTotalAmountContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/px_s_alternative_1_margin"/>
+
+    <com.mercadopago.android.px.customviews.MPTextView
+        android:id="@+id/mpsdkPaymentMethodDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/px_xxs_alternative_margin"
+        android:gravity="center"
+        android:paddingLeft="@dimen/px_m_margin"
+        android:paddingRight="@dimen/px_m_margin"
+        android:textColor="@color/ui_meli_dark_grey"
+        android:textSize="@dimen/px_s_text"
+        tools:text="Master terminada en 1234"/>
+
+    <com.mercadopago.android.px.customviews.MPTextView
+        android:id="@+id/mpsdkStatementDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/px_m_alternative_1_margin"
+        android:gravity="center"
+        android:textColor="@color/ui_meli_dark_grey"
+        android:textSize="@dimen/px_xxs_text"
+        tools:text="En tu estado de cuenta verás el cargo como\n MERCADOPAGO"/>
+</LinearLayout>

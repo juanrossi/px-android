@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.MercadoPagoTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/px_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/ui_meli_grey</item>
+        <item name="colorControlNormal">@color/px_color_new_card_text</item>
+        <item name="actionMenuTextColor">@color/px_white</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+</resources>

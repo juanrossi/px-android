@@ -1,0 +1,17 @@
+ext {
+    versionToDeploy = version_to_deploy as String
+    artifactLib = 'checkout'
+    libraryName = 'com.mercadopago.android.px.checkout'
+    libraryDescription = 'MercadoPago Android Checkout'
+    siteUrl = 'https://github.com/mercadopago/px-android'
+    gitUrl = 'https://github.com/mercadopago/px-android.git'
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    groupName = "com.mercadopago.android.px"
+}
+
+version = versionToDeploy
+group = groupName
+archivesBaseName = artifactLib
+
+apply from:"$rootDir/gradle/deploy_base.gradle"

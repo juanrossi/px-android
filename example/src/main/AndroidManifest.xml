@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mercadopago.example">
+          package="com.mercadopago.example">
 
     <application
         android:name="com.mercadopago.SampleApplication"
@@ -14,18 +14,18 @@
             android:label="@string/title_activity_checkout_example">
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity
             android:name="com.mercadopago.JsonSetupActivity"
-            android:label="@string/title_activity_checkout_example" />
+            android:label="@string/title_activity_checkout_example"/>
 
         <activity
             android:name="com.mercadopago.SelectCheckoutActivity"
-            android:label="@string/title_activity_checkout_example" />
+            android:label="@string/title_activity_checkout_example"/>
 
     </application>
 
