@@ -2,6 +2,9 @@ package com.mercadopago.android.px.services.core;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Build;
+import android.os.LocaleList;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.CardToken;
@@ -165,7 +168,7 @@ public class MercadoPagoServices {
 
     public void getBankDeals(final Callback<List<BankDeal>> callback) {
         BankDealService service = getDefaultRetrofit(mContext).create(BankDealService.class);
-        service.getBankDeals(this.mPublicKey, mPrivateKey, mContext.getResources().getConfiguration().locale.toString())
+        service.getBankDeals(this.mPublicKey, mPrivateKey, getLocale())
             .enqueue(callback);
     }
 
@@ -179,7 +182,23 @@ public class MercadoPagoServices {
         PaymentService service = getDefaultRetrofit(mContext).create(PaymentService.class);
         service.getInstallments(Settings.servicesVersion, this.mPublicKey, mPrivateKey, bin, amount, issuerId,
             paymentMethodId,
-            mContext.getResources().getConfiguration().locale.toString(), mProcessingMode).enqueue(callback);
+            getLocale(), mProcessingMode).enqueue(callback);
+    }
+
+    private String getLocale() {
+
+        final Configuration configuration = mContext.getResources().getConfiguration();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            final LocaleList locales = configuration.getLocales();
+            if (!locales.isEmpty()) {
+                return locales.get(0).getLanguage();
+            } else {
+                return configuration.locale.getLanguage();
+            }
+        } else {
+            return configuration.locale.getLanguage();
+        }
     }
 
     public void getIssuers(String paymentMethodId, String bin, final Callback<List<Issuer>> callback) {
