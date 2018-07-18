@@ -2,9 +2,6 @@ package com.mercadopago.android.px.internal.di;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.os.Build;
-import android.os.LocaleList;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.datasource.cache.FileManager;
 import com.mercadopago.android.px.util.JsonUtil;
@@ -46,21 +43,5 @@ class ApplicationModule implements PreferenceComponent {
 
     public Retrofit getRetrofitClient() {
         return getDefaultRetrofit(context);
-    }
-
-    /* default */ String getLanguage() {
-
-        final Configuration configuration = context.getResources().getConfiguration();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            final LocaleList locales = configuration.getLocales();
-            if (!locales.isEmpty()) {
-                return locales.get(0).getLanguage();
-            } else {
-                return configuration.locale.getLanguage();
-            }
-        } else {
-            return configuration.locale.getLanguage();
-        }
     }
 }
