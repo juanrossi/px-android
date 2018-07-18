@@ -157,7 +157,4 @@
     <color name="px_background_loading">#FFFFFF</color>
     <color name="px_tint_loading">@color/px_main_color</color>
 
-
-    <color name="px_ui_components_warning_color">#FBAB60</color>
-
 </resources>
