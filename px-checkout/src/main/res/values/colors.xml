@@ -132,6 +132,7 @@
     <!-- Toolbar and status bar default -->
     <color name="px_background">@color/px_main_color</color>
     <color name="px_status_bar">#008CD6</color>
+    <color name="ui_components_android_color_primary_dark">#008CD6</color>
     <color name="px_toolbar_text">#FFFFFF</color>
 
     <!-- Discount modal and discount description -->
