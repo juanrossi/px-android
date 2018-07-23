@@ -88,6 +88,7 @@ public final class ExamplesUtils {
 
     public static List<Pair<String, Builder>> getOptions() {
         final List<Pair<String, Builder>> options = new ArrayList<>(BusinessSamples.getAll());
+        OneTapSamples.addAll(options);
         ChargesSamples.addAll(options);
         DiscountSamples.addAll(options);
         options.add(new Pair<>("Review and Confirm - Custom exit", customExitReviewAndConfirm()));
