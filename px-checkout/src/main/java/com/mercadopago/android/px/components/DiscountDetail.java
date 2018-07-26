@@ -58,7 +58,11 @@ public class DiscountDetail extends CompactComponent<DiscountDetail.Props, Void>
     private void configureDetailMessage(final View mainContainer) {
         final TextView detailTextView = mainContainer.findViewById(R.id.detail);
         if (props.campaign.hasMaxCouponAmount()) {
-            setDetailMessage(detailTextView, R.string.px_one_shot_discount_detail, mainContainer);
+            if (props.campaign.isAlwaysOnDiscount()) {
+                setDetailMessage(detailTextView, R.string.px_always_on_discount_detail, mainContainer);
+            } else {
+                setDetailMessage(detailTextView, R.string.px_one_shot_discount_detail, mainContainer);
+            }
         } else {
             detailTextView.setVisibility(View.GONE);
         }

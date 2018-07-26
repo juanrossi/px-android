@@ -80,12 +80,12 @@ public class Campaign implements Serializable, Parcelable {
         return CODE_TYPE_NONE.contains(codeType);
     }
 
-    public int getMaxRedeemPerUser() {
-        return maxRedeemPerUser;
-    }
-
     public boolean isOneShotDiscount() {
         return maxRedeemPerUser == 1;
+    }
+
+    public boolean isAlwaysOnDiscount() {
+        return maxRedeemPerUser > 1;
     }
 
     /* default */ Campaign(final Parcel in) {
