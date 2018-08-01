@@ -1,6 +1,7 @@
 package com.mercadopago.android.px.presenters;
 
 import android.support.annotation.NonNull;
+
 import com.mercadopago.android.px.callbacks.FailureRecovery;
 import com.mercadopago.android.px.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.constants.PaymentMethods;
@@ -32,6 +33,7 @@ import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.views.AmountView;
 import com.mercadopago.android.px.views.PaymentVaultView;
 import com.mercadopago.android.px.util.MercadoPagoUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +43,15 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     private static final String MISMATCHING_PAYMENT_METHOD_ERROR = "Payment method in search not found";
 
-    @NonNull private final PaymentSettingRepository configuration;
-    @NonNull private final UserSelectionRepository userSelectionRepository;
-    @NonNull private final PluginRepository pluginRepository;
+    @NonNull
+    private final PaymentSettingRepository configuration;
+    @NonNull
+    private final UserSelectionRepository userSelectionRepository;
+    @NonNull
+    private final PluginRepository pluginRepository;
     private final DiscountRepository discountRepository;
-    @NonNull private final GroupsRepository groupsRepository;
+    @NonNull
+    private final GroupsRepository groupsRepository;
 
     private PaymentMethodSearchItem selectedSearchItem;
 
@@ -79,8 +85,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         }
     }
 
-    /* default */ void initPaymentVaultFlow() {
-
+    public void initPaymentVaultFlow() {
         initializeAmountRow();
 
         groupsRepository.getGroups().enqueue(new Callback<PaymentMethodSearch>() {
@@ -88,6 +93,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             public void success(final PaymentMethodSearch paymentMethodSearch) {
                 if (isViewAttached()) {
                     PaymentVaultPresenter.this.paymentMethodSearch = paymentMethodSearch;
+                    getView().onSuccessCodeDiscountCallback(discountRepository.getDiscount());
                     initPaymentMethodSearch();
                 }
             }
@@ -103,11 +109,12 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
                         initPaymentVaultFlow();
                     }
                 });
+                getView().onFailureCodeDiscountCallback();
             }
         });
     }
 
-    /* default */ void setFailureRecovery(FailureRecovery failureRecovery) {
+    /* default */ void setFailureRecovery(final FailureRecovery failureRecovery) {
         this.failureRecovery = failureRecovery;
     }
 
@@ -170,7 +177,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     private void resolveAvailablePaymentMethods() {
         if (noPaymentMethodsAvailable()) {
             showEmptyPaymentMethodsError();
-        } else if (isOnlyOneItemAvailable()) {
+        } else if (isOnlyOneItemAvailable() && !isDiscountAvailable()) {
             if (CheckoutStore.getInstance().hasEnabledPaymentMethodPlugin()) {
                 selectPluginPaymentMethod(CheckoutStore.getInstance().getFirstEnabledPlugin());
             } else if (paymentMethodSearch.getGroups() != null && !paymentMethodSearch.getGroups().isEmpty()) {
@@ -269,7 +276,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         return selectedCard;
     }
 
-    private Card getCardById(final List<Card> savedCards, final String cardId) {
+    private Card getCardById(final Iterable<Card> savedCards, final String cardId) {
         Card foundCard = null;
         for (final Card card : savedCards) {
             if (card.getId().equals(cardId)) {
@@ -497,5 +504,9 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     public void onPaymentMethodReturned() {
         getView().finishPaymentMethodSelection(userSelectionRepository.getPaymentMethod());
+    }
+
+    private boolean isDiscountAvailable() {
+        return discountRepository.getDiscount() != null || discountRepository.hasCodeCampaign();
     }
 }
