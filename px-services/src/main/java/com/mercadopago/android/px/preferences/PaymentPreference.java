@@ -17,7 +17,13 @@ public class PaymentPreference implements Serializable {
     private Integer defaultInstallments;
     private List<PaymentMethod> excludedPaymentMethods;
     private List<PaymentType> excludedPaymentTypes;
+
+    @SerializedName("default_payment_method_id")
     private String defaultPaymentMethodId;
+
+    @SerializedName("default_card_id")
+    private String defaultCardId;
+
     private String defaultPaymentTypeId;
 
     public void setMaxAcceptedInstallments(Integer installments) {
