@@ -3,7 +3,6 @@ package com.mercadopago.android.px.presenters;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-
 import com.mercadopago.android.px.callbacks.FailureRecovery;
 import com.mercadopago.android.px.core.CheckoutStore;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
@@ -11,6 +10,7 @@ import com.mercadopago.android.px.core.MercadoPagoComponents;
 import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.hooks.Hook;
 import com.mercadopago.android.px.hooks.HookHelper;
+import com.mercadopago.android.px.internal.navigation.DefaultPaymentMethodDriver;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
@@ -41,14 +41,13 @@ import com.mercadopago.android.px.providers.CheckoutProvider;
 import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.services.exceptions.CheckoutPreferenceException;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.TextUtils;
 import com.mercadopago.android.px.viewmodel.CardPaymentModel;
 import com.mercadopago.android.px.viewmodel.CheckoutStateModel;
 import com.mercadopago.android.px.viewmodel.OneTapModel;
 import com.mercadopago.android.px.views.CheckoutView;
-import com.mercadopago.android.px.util.ApiUtil;
-import com.mercadopago.android.px.util.JsonUtil;
-import com.mercadopago.android.px.util.TextUtils;
-
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
@@ -236,9 +235,30 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     /* default */ void startFlow(final PaymentMethodSearch paymentMethodSearch) {
+
+        new DefaultPaymentMethodDriver(paymentMethodSearch,
+            paymentConfiguration.getCheckoutPreference().getPaymentPreference())
+            .drive(new DefaultPaymentMethodDriver.PaymentMethodDriverCallback() {
+                @Override
+                public void driveToPaymentVault() {
+                    getView().showPaymentMethodSelection();
+                }
+
+                @Override
+                public void driveToCardVault(@NonNull final Card card) {
+                    ///
+                }
+
+                @Override
+                public void doNothing() {
+                    noDefaultPaymentMethods(paymentMethodSearch);
+                }
+            });
+    }
+
+    /* default */ void noDefaultPaymentMethods(final PaymentMethodSearch paymentMethodSearch) {
         saveIsOneTap(paymentMethodSearch);
         savePaymentMethodQuantity(paymentMethodSearch);
-
         if (state.paymentDataInput != null) {
             showReviewAndConfirm();
         } else if (state.paymentResultInput != null && state.paymentResultInput.getPaymentData() != null) {
@@ -246,7 +266,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         } else if (state.isOneTap) {
             getView().hideProgress();
             getView().showOneTap(OneTapModel.from(paymentMethodSearch, paymentConfiguration,
-                    CheckoutStore.getInstance().getReviewAndConfirmPreferences()));
+                CheckoutStore.getInstance().getReviewAndConfirmPreferences()));
         } else {
             getView().showPaymentMethodSelection();
         }

@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.preferences;
 
+import android.support.annotation.Nullable;
 import com.google.gson.annotations.SerializedName;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.PayerCost;
@@ -94,6 +95,7 @@ public class PaymentPreference implements Serializable {
         }
     }
 
+    @Nullable
     public String getDefaultPaymentMethodId() {
         return defaultPaymentMethodId;
     }
@@ -199,5 +201,10 @@ public class PaymentPreference implements Serializable {
             }
         }
         return supportedCards;
+    }
+
+    @Nullable
+    public String getDefaultCardId() {
+        return defaultCardId;
     }
 }
