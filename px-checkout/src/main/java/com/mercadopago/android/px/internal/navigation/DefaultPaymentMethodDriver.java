@@ -26,14 +26,10 @@ public class DefaultPaymentMethodDriver {
     }
 
     public void drive(final PaymentMethodDriverCallback paymentMethodDriverCallback) {
-        if (preference == null) {
-            paymentMethodDriverCallback.doNothing();
-        } else if (isCard() && !isValid(preference.getDefaultCardId())) {
-            paymentMethodDriverCallback.driveToPaymentVault();
-        } else if (isCard() && isValid(preference.getDefaultCardId())) {
+        if (preference != null && isCard() && isValid(preference.getDefaultCardId())) {
             paymentMethodDriverCallback.driveToCardVault(paymentMethods.getCardById(preference.getDefaultCardId()));
         } else {
-            paymentMethodDriverCallback.driveToPaymentVault();
+            paymentMethodDriverCallback.doNothing();
         }
     }
 
@@ -42,8 +38,6 @@ public class DefaultPaymentMethodDriver {
     }
 
     public interface PaymentMethodDriverCallback {
-
-        void driveToPaymentVault();
 
         void driveToCardVault(@NonNull final Card card);
 

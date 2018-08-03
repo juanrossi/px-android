@@ -1292,6 +1292,11 @@ public class CheckoutPresenterTest {
         }
 
         @Override
+        public void showSavedCardFlow(final Card card) {
+
+        }
+
+        @Override
         public void showError(MercadoPagoError error) {
             this.showingError = true;
             this.errorShown = error;

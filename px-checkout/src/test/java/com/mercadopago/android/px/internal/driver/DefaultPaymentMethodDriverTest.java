@@ -41,10 +41,18 @@ public class DefaultPaymentMethodDriverTest {
     }
 
     @Test
+    public void whenPaymentPreferenceIsNotNullAndCardIdIsNullThenDoNothing(){
+        when(paymentPreference.getDefaultPaymentMethodId()).thenReturn(null);
+        handler.drive(paymentMethodDriverCallback);
+        verify(paymentMethodDriverCallback).doNothing();
+        verifyNoMoreInteractions(paymentMethodDriverCallback);
+    }
+
+    @Test
     public void whenPaymentMethodIsCardAndCardIdIsNullThenAutomaticSelectionDriveToPaymentVault() {
         when(paymentPreference.getDefaultPaymentMethodId()).thenReturn(STUB_CARD_VISA);
         handler.drive(paymentMethodDriverCallback);
-        verify(paymentMethodDriverCallback).driveToPaymentVault();
+        verify(paymentMethodDriverCallback).doNothing();
         verifyNoMoreInteractions(paymentMethodDriverCallback);
     }
 
@@ -52,7 +60,16 @@ public class DefaultPaymentMethodDriverTest {
     public void whenPaymentMethodIsNotCardAndAnyCardIdThenAutomaticSelectionDriveToPaymentVault() {
         when(paymentPreference.getDefaultPaymentMethodId()).thenReturn(PaymentTypes.TICKET);
         handler.drive(paymentMethodDriverCallback);
-        verify(paymentMethodDriverCallback).driveToPaymentVault();
+        verify(paymentMethodDriverCallback).doNothing();
+        verifyNoMoreInteractions(paymentMethodDriverCallback);
+    }
+
+    @Test
+    public void whenPaymentMethodIsCardAndCardIdIsNotNullButIsNotValidThenAutomaticSelectionDriveToPaymentVault() {
+        when(paymentPreference.getDefaultPaymentMethodId()).thenReturn(STUB_CARD_VISA);
+        when(paymentPreference.getDefaultCardId()).thenReturn("4321");
+        handler.drive(paymentMethodDriverCallback);
+        verify(paymentMethodDriverCallback).doNothing();
         verifyNoMoreInteractions(paymentMethodDriverCallback);
     }
 
@@ -63,15 +80,6 @@ public class DefaultPaymentMethodDriverTest {
         final Card card = paymentMethods.getCardById(STUB_CARD_ID_PM_STUB_SOURCE);
         handler.drive(paymentMethodDriverCallback);
         verify(paymentMethodDriverCallback).driveToCardVault(card);
-        verifyNoMoreInteractions(paymentMethodDriverCallback);
-    }
-
-    @Test
-    public void whenPaymentMethodIsCardAndCardIdIsNotNullButIsNotValidThenAutomaticSelectionDriveToPaymentVault() {
-        when(paymentPreference.getDefaultPaymentMethodId()).thenReturn(STUB_CARD_VISA);
-        when(paymentPreference.getDefaultCardId()).thenReturn("4321");
-        handler.drive(paymentMethodDriverCallback);
-        verify(paymentMethodDriverCallback).driveToPaymentVault();
         verifyNoMoreInteractions(paymentMethodDriverCallback);
     }
 }
