@@ -203,6 +203,10 @@ public class PaymentPreference implements Serializable {
         return supportedCards;
     }
 
+    public void setDefaultCardId(String defaultCardId){
+        this.defaultCardId = defaultCardId;
+    }
+
     @Nullable
     public String getDefaultCardId() {
         return defaultCardId;
