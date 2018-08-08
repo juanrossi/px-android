@@ -442,6 +442,12 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
     }
 
+    @Override
+    public void showNewCardFlow() {
+        getCardVaultActivityBuilder()
+            .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
+    }
+
     private void resolvePaymentResultRequest(final int resultCode, final Intent data) {
         if (resultCode == RESULT_CANCELED && data != null) {
             final String nextAction = data.getStringExtra(EXTRA_NEXT_ACTION);

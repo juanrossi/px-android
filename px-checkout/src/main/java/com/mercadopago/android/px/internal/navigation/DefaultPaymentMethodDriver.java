@@ -13,6 +13,7 @@ public class DefaultPaymentMethodDriver {
 
     @NonNull private final PaymentMethodSearch paymentMethods;
     @Nullable private final PaymentPreference preference;
+    private boolean newCard;
 
     public DefaultPaymentMethodDriver(@NonNull final PaymentMethodSearch paymentMethods,
         @Nullable final PaymentPreference preference) {
@@ -26,8 +27,16 @@ public class DefaultPaymentMethodDriver {
     }
 
     public void drive(final PaymentMethodDriverCallback paymentMethodDriverCallback) {
-        if (preference != null && isCard() && isValid(preference.getDefaultCardId())) {
-            paymentMethodDriverCallback.driveToCardVault(paymentMethods.getCardById(preference.getDefaultCardId()));
+        if (preference != null) {
+            if (isCard() && isValid(preference.getDefaultCardId())) {
+                final Card card = paymentMethods.getCardById(preference.getDefaultCardId());
+                card.setPaymentMethod(paymentMethods.getPaymentMethodById(preference.getDefaultPaymentMethodId()));
+                paymentMethodDriverCallback.driveToCardVault(card);
+            } else if (isNewCard()) {
+                paymentMethodDriverCallback.driveToNewCardFlow();
+            } else {
+                paymentMethodDriverCallback.doNothing();
+            }
         } else {
             paymentMethodDriverCallback.doNothing();
         }
@@ -37,10 +46,18 @@ public class DefaultPaymentMethodDriver {
         return !TextUtil.isEmpty(cardId) && paymentMethods.getCardById(cardId) != null;
     }
 
+    public boolean isNewCard() {
+        final PaymentMethod paymentMethod =
+            paymentMethods.getPaymentMethodByPaymentTypeId(preference.getDefaultPaymentMethodId());
+        return preference.getDefaultCardId() == null && paymentMethod != null && PaymentTypes.isCardPaymentType(paymentMethod.getPaymentTypeId());
+    }
+
     public interface PaymentMethodDriverCallback {
 
         void driveToCardVault(@NonNull final Card card);
 
         void doNothing();
+
+        void driveToNewCardFlow();
     }
 }

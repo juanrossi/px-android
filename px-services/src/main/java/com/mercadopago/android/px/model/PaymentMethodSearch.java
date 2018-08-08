@@ -123,6 +123,20 @@ public class PaymentMethodSearch implements Serializable {
         return foundPaymentMethod;
     }
 
+    @Nullable
+    public PaymentMethod getPaymentMethodByPaymentTypeId(@Nullable String paymentTypeId) {
+        PaymentMethod foundPaymentMethod = null;
+        if (paymentMethods != null) {
+            for (PaymentMethod paymentMethod : paymentMethods) {
+                if (paymentMethod.getId().equalsIgnoreCase(paymentTypeId)) {
+                    foundPaymentMethod = paymentMethod;
+                    break;
+                }
+            }
+        }
+        return foundPaymentMethod;
+    }
+
     public Card getCardById(String cardId) {
         Card foundCard = null;
         if (cards != null) {

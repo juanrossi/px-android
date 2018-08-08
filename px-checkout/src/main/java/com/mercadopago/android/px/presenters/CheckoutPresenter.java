@@ -245,9 +245,15 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
                 }
 
                 @Override
+                public void driveToNewCardFlow() {
+                    getView().showNewCardFlow();
+                }
+
+                @Override
                 public void doNothing() {
                     noDefaultPaymentMethods(paymentMethodSearch);
                 }
+
             });
     }
 
@@ -579,8 +585,12 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void onCardFlowCancel() {
-        state.paymentMethodEdited = true;
-        getView().showPaymentMethodSelection();
+        if(paymentConfiguration.getCheckoutPreference().getPaymentPreference().getDefaultCardId() != null){
+            cancelCheckout();
+        } else {
+            state.paymentMethodEdited = true;
+            getView().showPaymentMethodSelection();
+        }
     }
 
     public void onCustomReviewAndConfirmResponse(final Integer customResultCode) {
