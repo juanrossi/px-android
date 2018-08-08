@@ -128,7 +128,7 @@ public class PaymentMethodSearch implements Serializable {
         PaymentMethod foundPaymentMethod = null;
         if (paymentMethods != null) {
             for (PaymentMethod paymentMethod : paymentMethods) {
-                if (paymentMethod.getId().equalsIgnoreCase(paymentTypeId)) {
+                if (paymentMethod.getPaymentTypeId().equalsIgnoreCase(paymentTypeId)) {
                     foundPaymentMethod = paymentMethod;
                     break;
                 }

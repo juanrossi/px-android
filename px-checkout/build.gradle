@@ -59,7 +59,7 @@ publishing .publications {
         maven(MavenPublication) {
             groupId 'com.mercadopago' //You can either define these here or get them from project conf elsewhere
             artifactId 'px'
-            version '2.91'
+            version '2.93'
             artifact "$buildDir/outputs/aar/checkout-release.aar" //aar artifact you want to publish
         }
 }

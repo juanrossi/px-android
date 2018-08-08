@@ -2,10 +2,12 @@ package com.mercadopago.android.px.internal.navigation;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentTypes;
+import com.mercadopago.android.px.model.Setting;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.services.util.TextUtil;
 
@@ -30,7 +32,12 @@ public class DefaultPaymentMethodDriver {
         if (preference != null) {
             if (isCard() && isValid(preference.getDefaultCardId())) {
                 final Card card = paymentMethods.getCardById(preference.getDefaultCardId());
-                card.setPaymentMethod(paymentMethods.getPaymentMethodById(preference.getDefaultPaymentMethodId()));
+                final PaymentMethod paymentMethod =
+                    paymentMethods.getPaymentMethodById(preference.getDefaultPaymentMethodId());
+                if(card.getSecurityCode() == null && paymentMethod.getSettings() != null && paymentMethod.getSettings().get(0) != null) {
+                    card.setSecurityCode((paymentMethod.getSettings().get(0)).getSecurityCode());
+                }
+                card.setPaymentMethod(paymentMethod);
                 paymentMethodDriverCallback.driveToCardVault(card);
             } else if (isNewCard()) {
                 paymentMethodDriverCallback.driveToNewCardFlow();

@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 public class DefaultPaymentMethodDriverTest {
 
     private static final String STUB_CARD_VISA = "visa";
+    private static final String STUB_DEBIT_CARD = "credit_card";
     private static final String STUB_CARD_ID_PM_STUB_SOURCE = "122232111";
 
     @Mock private DefaultPaymentMethodDriver.PaymentMethodDriverCallback paymentMethodDriverCallback;
@@ -42,7 +43,7 @@ public class DefaultPaymentMethodDriverTest {
 
     @Test
     public void whenPaymentMethodIsCardAndCardIdIsNullThenDriveToNewCardFlow(){
-        when(paymentPreference.getDefaultPaymentMethodId()).thenReturn(STUB_CARD_VISA);
+        when(paymentPreference.getDefaultPaymentMethodId()).thenReturn(STUB_DEBIT_CARD);
         handler.drive(paymentMethodDriverCallback);
         verify(paymentMethodDriverCallback).driveToNewCardFlow();
         verifyNoMoreInteractions(paymentMethodDriverCallback);
@@ -50,7 +51,7 @@ public class DefaultPaymentMethodDriverTest {
 
     @Test
     public void whenPaymentMethodIsCardAndCardIdIsNullThenAutomaticSelectionDriveToNewCardFlow() {
-        when(paymentPreference.getDefaultPaymentMethodId()).thenReturn(STUB_CARD_VISA);
+        when(paymentPreference.getDefaultPaymentMethodId()).thenReturn(STUB_DEBIT_CARD);
         when(paymentPreference.getDefaultCardId()).thenReturn(null);
         handler.drive(paymentMethodDriverCallback);
         verify(paymentMethodDriverCallback).driveToNewCardFlow();

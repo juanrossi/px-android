@@ -36,6 +36,7 @@ import com.mercadopago.android.px.plugins.model.BusinessPayment;
 import com.mercadopago.android.px.plugins.model.BusinessPaymentModel;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.FlowPreference;
+import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
 import com.mercadopago.android.px.providers.CheckoutProvider;
 import com.mercadopago.android.px.services.callbacks.Callback;
@@ -241,6 +242,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             .drive(new DefaultPaymentMethodDriver.PaymentMethodDriverCallback() {
                 @Override
                 public void driveToCardVault(@NonNull final Card card) {
+                    userSelectionRepository.select(card.getPaymentMethod());
                     getView().showSavedCardFlow(card);
                 }
 
@@ -585,12 +587,17 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void onCardFlowCancel() {
-        if(paymentConfiguration.getCheckoutPreference().getPaymentPreference().getDefaultCardId() != null){
+        if(shouldCancelCheckout()){
             cancelCheckout();
         } else {
             state.paymentMethodEdited = true;
             getView().showPaymentMethodSelection();
         }
+    }
+
+    private boolean shouldCancelCheckout() {
+        final PaymentPreference paymentPreference = paymentConfiguration.getCheckoutPreference().getPaymentPreference();
+        return paymentPreference.getDefaultCardId() != null || paymentPreference.getDefaultPaymentMethodId() != null;
     }
 
     public void onCustomReviewAndConfirmResponse(final Integer customResultCode) {

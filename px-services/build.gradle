@@ -46,7 +46,7 @@ publishing .publications {
     maven(MavenPublication) {
         groupId 'com.mercadopago' //You can either define these here or get them from project conf elsewhere
         artifactId 'services'
-        version '2.8'
+        version '2.91'
         artifact "$buildDir/outputs/aar/services-debug.aar" //aar artifact you want to publish
     }
 }
