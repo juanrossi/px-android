@@ -70,6 +70,8 @@ public class MercadoPagoCheckout implements Serializable {
     @Nullable
     private final Campaign campaign;
 
+    private final boolean notAvailableDiscount;
+
     private final boolean binaryMode;
 
     @Nullable
@@ -88,6 +90,7 @@ public class MercadoPagoCheckout implements Serializable {
         binaryMode = builder.binaryMode;
         discount = builder.discount;
         campaign = builder.campaign;
+        notAvailableDiscount = builder.notAvailableDiscount;
         charges = builder.charges;
         paymentResult = builder.paymentResult;
         paymentData = builder.paymentData;
@@ -211,6 +214,10 @@ public class MercadoPagoCheckout implements Serializable {
         return campaign;
     }
 
+    public boolean isNotAvailableDiscount() {
+        return notAvailableDiscount;
+    }
+
     @NonNull
     public List<ChargeRule> getCharges() {
         return charges;
@@ -261,6 +268,8 @@ public class MercadoPagoCheckout implements Serializable {
         final List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
 
         Boolean binaryMode = false;
+
+        Boolean notAvailableDiscount = false;
 
         @NonNull
         FlowPreference flowPreference = new FlowPreference.Builder().build();
@@ -317,6 +326,16 @@ public class MercadoPagoCheckout implements Serializable {
         public Builder setDiscount(@NonNull final Discount discount, @NonNull final Campaign campaign) {
             this.discount = discount;
             this.campaign = campaign;
+            return this;
+        }
+
+        /**
+         * By enabling this feature you'll inform that payer's discount is no more applicable,
+         * because payer has reached the limit.
+         * You have to set a payment processor to apply this feature.
+         */
+        public Builder discountNotAvailable() {
+            notAvailableDiscount = true;
             return this;
         }
 
