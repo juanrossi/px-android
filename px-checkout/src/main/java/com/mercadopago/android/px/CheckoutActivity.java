@@ -432,6 +432,19 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         overrideTransitionFadeInFadeOut();
     }
 
+    @Override
+    public void showSavedCardFlow(final Card card) {
+        getCardVaultActivityBuilder()
+            .setCard(card)
+            .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
+    }
+
+    @Override
+    public void showNewCardFlow() {
+        getCardVaultActivityBuilder()
+            .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
+    }
+
     private void resolvePaymentResultRequest(final int resultCode, final Intent data) {
         if (resultCode == RESULT_CANCELED && data != null) {
             final String nextAction = data.getStringExtra(EXTRA_NEXT_ACTION);
@@ -448,6 +461,15 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         }
     }
 
+    private MercadoPagoComponents.Activities.CardVaultActivityBuilder getCardVaultActivityBuilder(){
+        return new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
+            .setMerchantPublicKey(merchantPublicKey)
+            .setInstallmentsEnabled(true)
+            .setInstallmentsReviewEnabled(presenter.isInstallmentsReviewScreenEnabled())
+            .setShowBankDeals(presenter.getShowBankDeals())
+            .setESCEnabled(presenter.isESCEnabled());
+    }
+
     @Override
     public void startPaymentRecoveryFlow(final PaymentRecovery paymentRecovery) {
         PaymentPreference paymentPreference = presenter.getCheckoutPreference().getPaymentPreference();
@@ -458,15 +480,10 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
         paymentPreference.setDefaultPaymentTypeId(presenter.getSelectedPaymentMethod().getPaymentTypeId());
 
-        new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
-                .setMerchantPublicKey(merchantPublicKey)
-                .setInstallmentsEnabled(true)
-                .setInstallmentsReviewEnabled(presenter.isInstallmentsReviewScreenEnabled())
-                .setPaymentRecovery(paymentRecovery)
-                .setShowBankDeals(presenter.getShowBankDeals())
-                .setESCEnabled(presenter.isESCEnabled())
-                .setCard(presenter.getSelectedCard())
-                .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
+        getCardVaultActivityBuilder()
+            .setPaymentRecovery(paymentRecovery)
+            .setCard(presenter.getSelectedCard())
+            .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
         overrideTransitionIn();
     }
 
