@@ -589,17 +589,36 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void onCardFlowCancel() {
-        if(shouldCancelCheckout()){
-            cancelCheckout();
-        } else {
-            state.paymentMethodEdited = true;
-            getView().showPaymentMethodSelection();
-        }
-    }
+        groupsRepository.getGroups().execute(new Callback<PaymentMethodSearch>() {
+            @Override
+            public void success(final PaymentMethodSearch paymentMethodSearch) {
+                new DefaultPaymentMethodDriver(paymentMethodSearch,
+                    paymentConfiguration.getCheckoutPreference().getPaymentPreference()).drive(
+                    new DefaultPaymentMethodDriver.PaymentMethodDriverCallback() {
+                        @Override
+                        public void driveToCardVault(@NonNull final Card card) {
+                            cancelCheckout();
+                        }
 
-    private boolean shouldCancelCheckout() {
-        final PaymentPreference paymentPreference = paymentConfiguration.getCheckoutPreference().getPaymentPreference();
-        return paymentPreference.getDefaultCardId() != null || paymentPreference.getDefaultPaymentMethodId() != null;
+                        @Override
+                        public void driveToNewCardFlow() {
+                            cancelCheckout();
+                        }
+
+                        @Override
+                        public void doNothing() {
+                            state.paymentMethodEdited = true;
+                            getView().showPaymentMethodSelection();
+                        }
+                    });
+            }
+
+            @Override
+            public void failure(final ApiException apiException) {
+                state.paymentMethodEdited = true;
+                getView().showPaymentMethodSelection();
+            }
+        });
     }
 
     public void onCustomReviewAndConfirmResponse(final Integer customResultCode) {
