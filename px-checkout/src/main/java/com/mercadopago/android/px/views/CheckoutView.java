@@ -3,6 +3,7 @@ package com.mercadopago.android.px.views;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.hooks.Hook;
+import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentRecovery;
@@ -64,4 +65,8 @@ public interface CheckoutView extends MvpView {
     void exitCheckout(int resCode);
 
     void transitionOut();
+
+    void showSavedCardFlow(Card card);
+
+    void showNewCardFlow();
 }

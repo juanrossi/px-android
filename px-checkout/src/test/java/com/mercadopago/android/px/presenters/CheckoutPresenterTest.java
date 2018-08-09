@@ -1256,6 +1256,7 @@ public class CheckoutPresenterTest {
         PaymentData paymentDataFinalResponse;
         boolean showingPaymentResult = false;
         boolean checkoutCanceled = false;
+        boolean showingCardFlow = false;
         Payment paymentFinalResponse;
         boolean finishedCheckoutWithoutPayment = false;
         boolean showingPaymentRecoveryFlow = false;
@@ -1289,6 +1290,16 @@ public class CheckoutPresenterTest {
         @Override
         public void transitionOut() {
             //Do nothing
+        }
+
+        @Override
+        public void showSavedCardFlow(final Card card) {
+
+        }
+
+        @Override
+        public void showNewCardFlow() {
+
         }
 
         @Override

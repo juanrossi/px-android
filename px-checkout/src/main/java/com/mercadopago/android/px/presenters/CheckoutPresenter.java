@@ -11,6 +11,7 @@ import com.mercadopago.android.px.core.MercadoPagoComponents;
 import com.mercadopago.android.px.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.hooks.Hook;
 import com.mercadopago.android.px.hooks.HookHelper;
+import com.mercadopago.android.px.internal.navigation.DefaultPaymentMethodDriver;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
@@ -36,18 +37,19 @@ import com.mercadopago.android.px.plugins.model.BusinessPayment;
 import com.mercadopago.android.px.plugins.model.BusinessPaymentModel;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.FlowPreference;
+import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.preferences.PaymentResultScreenPreference;
 import com.mercadopago.android.px.providers.CheckoutProvider;
 import com.mercadopago.android.px.services.callbacks.Callback;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.services.exceptions.CheckoutPreferenceException;
+import com.mercadopago.android.px.util.ApiUtil;
+import com.mercadopago.android.px.util.JsonUtil;
+import com.mercadopago.android.px.util.TextUtils;
 import com.mercadopago.android.px.viewmodel.CardPaymentModel;
 import com.mercadopago.android.px.viewmodel.CheckoutStateModel;
 import com.mercadopago.android.px.viewmodel.OneTapModel;
 import com.mercadopago.android.px.views.CheckoutView;
-import com.mercadopago.android.px.util.ApiUtil;
-import com.mercadopago.android.px.util.JsonUtil;
-import com.mercadopago.android.px.util.TextUtils;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -234,6 +236,29 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     /* default */ void startFlow(final PaymentMethodSearch paymentMethodSearch) {
+
+        new DefaultPaymentMethodDriver(paymentMethodSearch,
+            paymentConfiguration.getCheckoutPreference().getPaymentPreference())
+            .drive(new DefaultPaymentMethodDriver.PaymentMethodDriverCallback() {
+                @Override
+                public void driveToCardVault(@NonNull final Card card) {
+                    userSelectionRepository.select(card.getPaymentMethod());
+                    getView().showSavedCardFlow(card);
+                }
+
+                @Override
+                public void driveToNewCardFlow() {
+                    getView().showNewCardFlow();
+                }
+
+                @Override
+                public void doNothing() {
+                    noDefaultPaymentMethods(paymentMethodSearch);
+                }
+            });
+    }
+
+    /* default */ void noDefaultPaymentMethods(final PaymentMethodSearch paymentMethodSearch) {
         saveIsOneTap(paymentMethodSearch);
         savePaymentMethodQuantity(paymentMethodSearch);
 
@@ -562,8 +587,36 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void onCardFlowCancel() {
-        state.paymentMethodEdited = true;
-        getView().showPaymentMethodSelection();
+        groupsRepository.getGroups().execute(new Callback<PaymentMethodSearch>() {
+            @Override
+            public void success(final PaymentMethodSearch paymentMethodSearch) {
+                new DefaultPaymentMethodDriver(paymentMethodSearch,
+                    paymentConfiguration.getCheckoutPreference().getPaymentPreference()).drive(
+                    new DefaultPaymentMethodDriver.PaymentMethodDriverCallback() {
+                        @Override
+                        public void driveToCardVault(@NonNull final Card card) {
+                            cancelCheckout();
+                        }
+
+                        @Override
+                        public void driveToNewCardFlow() {
+                            cancelCheckout();
+                        }
+
+                        @Override
+                        public void doNothing() {
+                            state.paymentMethodEdited = true;
+                            getView().showPaymentMethodSelection();
+                        }
+                    });
+            }
+
+            @Override
+            public void failure(final ApiException apiException) {
+                state.paymentMethodEdited = true;
+                getView().showPaymentMethodSelection();
+            }
+        });
     }
 
     public void onCustomReviewAndConfirmResponse(final Integer customResultCode) {
