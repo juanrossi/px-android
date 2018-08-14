@@ -33,12 +33,14 @@ import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
+import com.mercadopago.android.px.model.Setting;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.mvp.TaggedCallback;
 import com.mercadopago.android.px.plugins.model.BusinessPayment;
 import com.mercadopago.android.px.plugins.model.BusinessPaymentModel;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.FlowPreference;
+import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.providers.CheckoutProvider;
 import com.mercadopago.android.px.services.exceptions.ApiException;
 import com.mercadopago.android.px.services.exceptions.CheckoutPreferenceException;
@@ -47,6 +49,7 @@ import com.mercadopago.android.px.viewmodel.CheckoutStateModel;
 import com.mercadopago.android.px.viewmodel.OneTapModel;
 import com.mercadopago.android.px.views.CheckoutView;
 import com.mercadopago.android.px.util.TextUtils;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -375,6 +378,68 @@ public class CheckoutPresenterTest {
             .onPaymentMethodSelectionResponse(null, null, null, null);
         verify(checkoutView).showReviewAndConfirm(false);
         verifyNoMoreInteractions(checkoutView);
+    }
+
+    @Test
+    public void whenDefaultCardIdValidSelectedThenShowSecurityCode(){
+        final CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE,view,provider);
+        PaymentMethodSearch search = mockPaymentMethodSearchForDriver(true);
+        presenter.startFlow(search);
+        assertTrue(view.showingSavedCardFlow);
+    }
+
+    @Test
+    public void whenDefaultCardIdInvalidSelectedThenShowPaymentVault(){
+        final CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE,view,provider);
+        PaymentMethodSearch search = mockPaymentMethodSearchForDriver(false);
+        presenter.startFlow(search);
+        assertTrue(view.showingPaymentMethodSelection);
+    }
+
+    @Test
+    public void whenDefaultCardIdIsNullAndDefaultPaymentTypeIsValidThenShowNewCardFlow(){
+        final CheckoutPresenter presenter = getBasePresenter(PAYMENT_RESULT_CODE,view,provider);
+        PaymentMethodSearch search = mockPaymentMethodSearchForNewCardDriver();
+        presenter.startFlow(search);
+        assertTrue(view.showingNewCardFlow);
+    }
+
+    @NonNull
+    private PaymentMethodSearch mockPaymentMethodSearchForNewCardDriver(){
+        PaymentMethodSearch search = mock(PaymentMethodSearch.class);
+        final CheckoutPreference checkoutPreference = mock(CheckoutPreference.class);
+        when(configuration.getCheckoutPreference()).thenReturn(checkoutPreference);
+        final PaymentPreference paymentPreference = mock(PaymentPreference.class);
+        when(checkoutPreference.getPaymentPreference()).thenReturn(paymentPreference);
+        when(configuration.getCheckoutPreference().getPaymentPreference().getDefaultCardId()).thenReturn(null);
+        when(configuration.getCheckoutPreference().getPaymentPreference().getDefaultPaymentTypeId()).thenReturn("debit_card");
+        return search;
+    }
+
+    @NonNull
+
+    private PaymentMethodSearch mockPaymentMethodSearchForDriver(boolean isValidCard) {
+        PaymentMethodSearch search = mock(PaymentMethodSearch.class);
+        PaymentMethod paymentMethod = mock(PaymentMethod.class);
+        when(paymentMethod.getPaymentTypeId()).thenReturn("debit_card");
+        final ArrayList settingsList = mock(ArrayList.class);
+        final Setting setting = mock(Setting.class);
+        when(setting.getSecurityCode()).thenReturn(null);
+        when(settingsList.get(any(int.class))).thenReturn(setting);
+        when(paymentMethod.getSettings()).thenReturn(settingsList);
+        when(search.getPaymentMethodById(any(String.class))).thenReturn(paymentMethod);
+        if(isValidCard) {
+            when(search.getCardById(any(String.class))).thenReturn(new Card());
+        } else {
+            when(search.getCardById(any(String.class))).thenReturn(null);
+        }
+        final CheckoutPreference checkoutPreference = mock(CheckoutPreference.class);
+        when(configuration.getCheckoutPreference()).thenReturn(checkoutPreference);
+        final PaymentPreference paymentPreference = mock(PaymentPreference.class);
+        when(checkoutPreference.getPaymentPreference()).thenReturn(paymentPreference);
+        when(configuration.getCheckoutPreference().getPaymentPreference().getDefaultCardId()).thenReturn("260077840");
+        when(configuration.getCheckoutPreference().getPaymentPreference().getDefaultPaymentMethodId()).thenReturn("debcabal");
+        return search;
     }
 
     @Test
@@ -1256,7 +1321,8 @@ public class CheckoutPresenterTest {
         PaymentData paymentDataFinalResponse;
         boolean showingPaymentResult = false;
         boolean checkoutCanceled = false;
-        boolean showingCardFlow = false;
+        boolean showingNewCardFlow = false;
+        boolean showingSavedCardFlow = false;
         Payment paymentFinalResponse;
         boolean finishedCheckoutWithoutPayment = false;
         boolean showingPaymentRecoveryFlow = false;
@@ -1294,12 +1360,12 @@ public class CheckoutPresenterTest {
 
         @Override
         public void showSavedCardFlow(final Card card) {
-
+            this.showingSavedCardFlow = true;
         }
 
         @Override
         public void showNewCardFlow() {
-
+            this.showingNewCardFlow = true;
         }
 
         @Override
