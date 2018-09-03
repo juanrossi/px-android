@@ -3,6 +3,7 @@
 _03_09_2018_
 
 * Fix: dynamic id declaration
+* Fix: code discount
 
 ## VERSION 4.0.0
 
