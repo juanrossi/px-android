@@ -54,6 +54,7 @@ public class MercadoPagoPaymentProcessor implements PaymentProcessor {
             new PaymentBody(paymentSettings.getTransactionId(), data.paymentData, data.checkoutPreference);
         paymentBody.setBinaryMode(data.checkoutPreference.isBinaryMode());
         paymentBody.setPublicKey(publicKey);
+        paymentBody.setCouponCode(data.paymentData.getCouponCode());
 
         //TODO idempotency key, customer id?
 
