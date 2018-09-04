@@ -24,8 +24,7 @@ public class Setting implements Parcelable, Serializable {
     private CardNumber cardNumber;
     private SecurityCode securityCode;
 
-    @SuppressWarnings("WeakerAccess")
-    Setting(final Parcel in) {
+    private Setting(final Parcel in) {
         bin = in.readParcelable(Bin.class.getClassLoader());
         cardNumber = in.readParcelable(CardNumber.class.getClassLoader());
         securityCode = in.readParcelable(SecurityCode.class.getClassLoader());
