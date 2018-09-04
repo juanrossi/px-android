@@ -9,20 +9,13 @@ import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.Installment;
 import com.mercadopago.android.px.model.Issuer;
-import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.Token;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Created by vaserber on 8/24/17.
- */
-
 public interface GuessingCardProvider extends ResourcesProvider {
 
     MPTrackingContext getTrackingContext();
-
-    void getPaymentMethodsAsync(final TaggedCallback<List<PaymentMethod>> taggedCallback);
 
     void createTokenAsync(CardToken cardToken, final TaggedCallback<Token> taggedCallback);
 
@@ -46,8 +39,6 @@ public interface GuessingCardProvider extends ResourcesProvider {
     String getMissingPayerCostsErrorMessage();
 
     String getMissingIdentificationTypesErrorMessage();
-
-    String getMissingPublicKeyErrorMessage();
 
     String getInvalidIdentificationNumberErrorMessage();
 
