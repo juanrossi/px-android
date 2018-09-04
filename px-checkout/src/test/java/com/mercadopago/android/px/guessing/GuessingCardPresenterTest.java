@@ -23,7 +23,6 @@ import com.mercadopago.android.px.mocks.Tokens;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardToken;
-import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.Identification;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.Installment;
@@ -1133,15 +1132,17 @@ public class GuessingCardPresenterTest {
 
         @Override
         public void finishCardFlow(final PaymentMethod paymentMethod, final Token token, final List<Issuer> issuers) {
+            // Empty body
         }
 
         @Override
         public void askForPaymentType() {
+            // Empty body
         }
 
         @Override
         public void showFinishCardFlow() {
-
+            // Empty body
         }
     }
 
@@ -1150,7 +1151,6 @@ public class GuessingCardPresenterTest {
         private static final String MULTIPLE_INSTALLMENTS = "multiple installments";
         private static final String MISSING_INSTALLMENTS = "missing installments";
         private static final String MISSING_PAYER_COSTS = "missing payer costs";
-        private static final String MISSING_PUBLIC_KEY = "missing public key";
         private static final String MISSING_IDENTIFICATION_TYPES = "missing identification types";
         private static final String INVALID_IDENTIFICATION_NUMBER = "invalid identification number";
         private static final String INVALID_EMPTY_NAME = "invalid empty name";
@@ -1159,52 +1159,39 @@ public class GuessingCardPresenterTest {
         private static final String PAYMENT_METHODS_NOT_FOUND = "payment methods not found error";
         private static final String IDENTIFICATION_TYPES_NOT_FOUND = "identification types not found error";
         private static final String INVALID_FIELD = "invalid field";
-        MercadoPagoError failedResponse;
+        private MercadoPagoError failedResponse;
         private boolean shouldFail;
-        private List<Installment> successfulInstallmentsResponse;
         private List<IdentificationType> successfulIdentificationTypesResponse;
         private List<BankDeal> successfulBankDealsResponse;
         private Token successfulTokenResponse;
         private List<Issuer> successfulIssuersResponse;
-        private Discount successfulDiscountResponse;
-        private List<PaymentMethod> successfulPaymentMethodsResponse;
 
-        /* default */  void setResponse(final MercadoPagoError exception) {
-            shouldFail = true;
-            failedResponse = exception;
-        }
-
-        /* default */ void setInstallmentsResponse(final List<Installment> installmentList) {
-            shouldFail = false;
-            successfulInstallmentsResponse = installmentList;
-        }
-
-        /* default */ void setIdentificationTypesResponse(final List<IdentificationType> identificationTypes) {
+        private void setIdentificationTypesResponse(final List<IdentificationType> identificationTypes) {
             shouldFail = false;
             successfulIdentificationTypesResponse = identificationTypes;
         }
 
-        /* default */ void setIdentificationTypesResponse(final MercadoPagoError exception) {
+        private void setIdentificationTypesResponse(final MercadoPagoError exception) {
             shouldFail = true;
             failedResponse = exception;
         }
 
-        /* default */ void setBankDealsResponse(final List<BankDeal> bankDeals) {
+        private void setBankDealsResponse(final List<BankDeal> bankDeals) {
             shouldFail = false;
             successfulBankDealsResponse = bankDeals;
         }
 
-        /* default */ void setTokenResponse(final Token token) {
+        private void setTokenResponse(final Token token) {
             shouldFail = false;
             successfulTokenResponse = token;
         }
 
-        /* default */ void setIssuersResponse(final List<Issuer> issuers) {
+        private void setIssuersResponse(final List<Issuer> issuers) {
             shouldFail = false;
             successfulIssuersResponse = issuers;
         }
 
-        /* default */ void setPaymentMethodsResponse(final MercadoPagoError exception) {
+        private void setPaymentMethodsResponse(final MercadoPagoError exception) {
             shouldFail = true;
             failedResponse = exception;
         }
@@ -1267,7 +1254,7 @@ public class GuessingCardPresenterTest {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);
             } else {
-                taggedCallback.onSuccess(successfulInstallmentsResponse);
+                taggedCallback.onSuccess(null);
             }
         }
 
