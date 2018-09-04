@@ -101,7 +101,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         @NonNull final AdvancedConfiguration advancedConfiguration,
         @NonNull final PaymentPreference paymentPreference,
         @NonNull final PaymentRecovery paymentRecovery
-        ) {
+    ) {
         mAmountRepository = amountRepository;
         mUserSelectionRepository = userSelectionRepository;
         mPaymentSettingRepository = paymentSettingRepository;
@@ -210,6 +210,10 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         return mSecurityCodeLocation;
     }
 
+    public void setSecurityCodeLocation(String securityCodeLocation) {
+        mSecurityCodeLocation = securityCodeLocation;
+    }
+
     public int getSecurityCodeLength() {
         return mSecurityCodeLength;
     }
@@ -232,10 +236,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
 
     public void setPaymentTypesList(@Nullable final List<PaymentType> paymentTypesList) {
         mPaymentTypesList = paymentTypesList;
-    }
-
-    public void setIdentificationTypesList(@Nullable final List<IdentificationType> identificationTypesList) {
-        mIdentificationTypes = identificationTypesList;
     }
 
     public Identification getIdentification() {
@@ -636,6 +636,10 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         return mIdentificationType;
     }
 
+    public void setIdentificationType(IdentificationType identificationType) {
+        mIdentificationType = identificationType;
+    }
+
     public String getCardNumber() {
         return mCardNumber;
     }
@@ -916,7 +920,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     }
 
     @SuppressWarnings("WeakerAccess")
-    protected  void getInstallments() {
+    protected void getInstallments() {
         final CheckoutPreference checkoutPreference = mPaymentSettingRepository.getCheckoutPreference();
         if (checkoutPreference != null) {
             final DifferentialPricing differentialPricing = checkoutPreference.getDifferentialPricing();

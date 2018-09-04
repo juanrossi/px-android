@@ -309,7 +309,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                             identificationTypesList = null;
                         }
                         mPresenter.setPaymentTypesList(paymentTypesList);
-                        mPresenter.setIdentificationTypesList(identificationTypesList);
+                        mPresenter.resolveIdentificationTypes(identificationTypesList);
                         mPresenter.setBankDealsList(bankDealsList);
                         mPresenter.getPaymentMethods();
                         mPresenter.saveBin(savedInstanceState.getString(CARD_INFO_BIN_BUNDLE));
@@ -325,6 +325,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                             .fromJson(savedInstanceState.getString(IDENTIFICATION_BUNDLE), Identification.class);
                         identification.setNumber(idNumber);
                         mPresenter.setIdentification(identification);
+                        mPresenter.setSecurityCodeLocation(savedInstanceState.getString(SEC_CODE_LOCATION_BUNDLE));
                         final CardToken cardToken = JsonUtil.getInstance()
                             .fromJson(savedInstanceState.getString(CARD_TOKEN_BUNDLE), CardToken.class);
                         cardToken.getCardholder().setIdentification(identification);
@@ -332,6 +333,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                             .fromJson(savedInstanceState.getString(IDENTIFICATION_TYPE_BUNDLE),
                                 IdentificationType.class);
                         mPresenter.setCardToken(cardToken);
+                        mPresenter.setIdentificationType(identificationType);
                         mPresenter.setPaymentRecovery(JsonUtil.getInstance()
                             .fromJson(savedInstanceState.getString(PAYMENT_RECOVERY_BUNDLE), PaymentRecovery.class));
                         mLowResActive = savedInstanceState.getBoolean(LOW_RES_BUNDLE);
