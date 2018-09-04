@@ -146,7 +146,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         return cardInfo;
     }
 
-    public Integer getCardNumberLength() {
+    public int getCardNumberLength() {
         return PaymentMethodGuessingController.getCardNumberLength(paymentMethod, bin);
     }
 

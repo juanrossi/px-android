@@ -278,7 +278,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         return mUserSelectionRepository.getPaymentMethod() != null && mBin != null;
     }
 
-    public Integer getCardNumberLength() {
+    public int getCardNumberLength() {
         return PaymentMethodGuessingController.getCardNumberLength(mUserSelectionRepository.getPaymentMethod(), mBin);
     }
 

@@ -25,7 +25,7 @@ public class PaymentMethodGuessingController {
         mSavedBin = "";
     }
 
-    public static Integer getCardNumberLength(@Nullable final PaymentMethod paymentMethod, final String bin) {
+    public static int getCardNumberLength(@Nullable final PaymentMethod paymentMethod, final String bin) {
 
         if (paymentMethod == null || bin == null) {
             return CardInformation.CARD_NUMBER_MAX_LENGTH;
