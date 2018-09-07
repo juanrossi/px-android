@@ -107,8 +107,12 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         if (savedInstanceState != null) {
             final Session session = Session.getSession(this);
             final ConfigurationModule configurationModule = session.getConfigurationModule();
+            CheckoutStateModel state = (CheckoutStateModel) getLastCustomNonConfigurationInstance();
+            if (state == null) {
+                state = new CheckoutStateModel();
+            }
             presenter =
-                new CheckoutPresenter((CheckoutStateModel) getLastCustomNonConfigurationInstance(),
+                new CheckoutPresenter(state,
                     configurationModule.getPaymentSettings(), session.getAmountRepository(),
                     configurationModule.getUserSelectionRepository(),
                     session.getDiscountRepository(),
