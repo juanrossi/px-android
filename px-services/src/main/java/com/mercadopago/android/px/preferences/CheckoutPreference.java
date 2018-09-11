@@ -48,7 +48,6 @@ public class CheckoutPreference implements Serializable {
     @SerializedName("payment_methods")
     @Nullable private final PaymentPreference paymentPreference;
 
-
     @Nullable private final Date expirationDateTo;
 
     @Nullable private final Date expirationDateFrom;
@@ -81,6 +80,7 @@ public class CheckoutPreference implements Serializable {
         conceptId = builder.conceptId;
         payer = new Payer();
         payer.setEmail(builder.payerEmail);
+        isBinaryMode = builder.isBinaryMode;
 
         paymentPreference = new PaymentPreference();
         paymentPreference.setExcludedPaymentTypeIds(builder.excludedPaymentTypes);
@@ -253,6 +253,7 @@ public class CheckoutPreference implements Serializable {
         /* default */ @Nullable DifferentialPricing differentialPricing;
         /* default */ BigDecimal conceptAmount;
         /* default */ String conceptId;
+        /* default */ boolean isBinaryMode = false;
 
         /**
          * Builder for custom CheckoutPreference construction.
@@ -322,6 +323,21 @@ public class CheckoutPreference implements Serializable {
          */
         public Builder addExcludedPaymentTypes(@NonNull final Collection<String> paymentTypeIds) {
             excludedPaymentTypes.addAll(paymentTypeIds);
+            return this;
+        }
+
+        /**
+         * If enableBinaryMode is called, processed payment can only be APPROVED or REJECTED.
+         * Default value is false.
+         * <p>
+         * Non compatible with PaymentProcessor.
+         * <p>
+         * Non compatible with off payments methods
+         *
+         * @return builder to keep operating
+         */
+        public Builder setBinaryMode(final boolean isBinaryMode) {
+            this.isBinaryMode = isBinaryMode;
             return this;
         }
 
