@@ -14,6 +14,7 @@ public class CardNumberTextWatcher implements TextWatcher {
     private final PaymentMethodGuessingController mController;
     private final PaymentMethodSelectionCallback mPaymentSelectionCallback;
     private final CardNumberEditTextCallback mEditTextCallback;
+    private boolean isPaymentMethodCleared;
 
     public CardNumberTextWatcher(final PaymentMethodGuessingController controller,
         final PaymentMethodSelectionCallback paymentSelectionCallback,
@@ -21,6 +22,7 @@ public class CardNumberTextWatcher implements TextWatcher {
         mController = controller;
         mPaymentSelectionCallback = paymentSelectionCallback;
         mEditTextCallback = editTextCallback;
+        isPaymentMethodCleared = true;
     }
 
     @Override
@@ -48,12 +50,14 @@ public class CardNumberTextWatcher implements TextWatcher {
             return;
         }
         final String number = s.toString().replaceAll("\\s", "");
-        if (number.length() == Bin.BIN_LENGTH - 1) {
+        if (number.length() == Bin.BIN_LENGTH - 1 && !isPaymentMethodCleared) {
             mPaymentSelectionCallback.onPaymentMethodCleared();
-        } else if (number.length() == Bin.BIN_LENGTH) {
+            isPaymentMethodCleared = true;
+        } else if (number.length() == Bin.BIN_LENGTH && isPaymentMethodCleared) {
             final String mBin = number.subSequence(0, Bin.BIN_LENGTH).toString();
             final List<PaymentMethod> list = mController.guessPaymentMethodsByBin(mBin);
             mPaymentSelectionCallback.onPaymentMethodListSet(list, mBin);
+            isPaymentMethodCleared = false;
         }
     }
 }

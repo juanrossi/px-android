@@ -316,7 +316,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
                         .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_PENDING_CONTINGENCY)
                         .build();
                 getView()
-                    .showPaymentResult(paymentResult, amountRepository.getAmountToPay(), discountRepository.getDiscount());
+                    .showPaymentResult(paymentResult, amountRepository.getAmountToPay(),
+                        discountRepository.getDiscount());
             } else if (mercadoPagoError.isInternalServerError()) {
                 resolveInternalServerError(mercadoPagoError);
             } else if (mercadoPagoError.isBadRequestError()) {
@@ -327,10 +328,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         } else {
             getView().showError(mercadoPagoError);
         }
-
     }
-
-
 
     private void resolveInternalServerError(final MercadoPagoError mercadoPagoError) {
         getView().showError(mercadoPagoError);

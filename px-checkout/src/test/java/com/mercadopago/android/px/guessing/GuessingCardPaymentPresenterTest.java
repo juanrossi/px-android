@@ -4,7 +4,7 @@ import com.mercadopago.android.px.configuration.AdvancedConfiguration;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardActivityView;
-import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardPresenter;
+import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardPaymentPresenter;
 import com.mercadopago.android.px.internal.features.providers.GuessingCardProvider;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
@@ -22,6 +22,7 @@ import com.mercadopago.android.px.mocks.PaymentMethods;
 import com.mercadopago.android.px.mocks.Tokens;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.Card;
+import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.Identification;
 import com.mercadopago.android.px.model.IdentificationType;
@@ -32,6 +33,7 @@ import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentRecovery;
+import com.mercadopago.android.px.model.PaymentType;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.ApiException;
@@ -58,13 +60,14 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("PMD.ExcessiveClassLength")
 @RunWith(MockitoJUnitRunner.class)
-public class GuessingCardPresenterTest {
+public class GuessingCardPaymentPresenterTest {
 
     private final MockedView mockedView = new MockedView();
     private final MockedProvider provider = new MockedProvider();
-    @Mock private MPTrackingContext trackingContext;
-    private GuessingCardPresenter presenter;
+    @Mock /* default */ MPTrackingContext trackingContext;
+    private GuessingCardPaymentPresenter presenter;
 
     @Mock private AmountRepository amountRepository;
     @Mock private UserSelectionRepository userSelectionRepository;
@@ -80,9 +83,10 @@ public class GuessingCardPresenterTest {
         when(groupsRepository.getGroups()).thenReturn(new StubSuccessMpCall<>(paymentMethodSearch));
         when(paymentMethodSearch.getPaymentMethods()).thenReturn(pm);
         when(advancedConfiguration.isBankDealsEnabled()).thenReturn(true);
-        presenter = new GuessingCardPresenter(amountRepository, userSelectionRepository, paymentSettingRepository,
-            groupsRepository,
-            advancedConfiguration, new PaymentPreference(), buildMockedPaymentRecovery());
+        presenter =
+            new GuessingCardPaymentPresenter(amountRepository, userSelectionRepository, paymentSettingRepository,
+                groupsRepository,
+                advancedConfiguration, new PaymentPreference(), buildMockedPaymentRecovery());
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
     }
@@ -165,9 +169,7 @@ public class GuessingCardPresenterTest {
         mockedGuessedPaymentMethods.add(PaymentMethods.getPaymentMethodOnVisa());
         mockedGuessedPaymentMethods.add(PaymentMethods.getPaymentMethodOnDebit());
 
-        presenter.resolvePaymentMethodListSet(mockedGuessedPaymentMethods, Cards.MOCKED_BIN_VISA);
-
-        assertTrue(presenter.hasToShowPaymentTypes());
+        assertTrue(presenter.shouldAskPaymentType(mockedGuessedPaymentMethods));
     }
 
     @Test
@@ -236,14 +238,12 @@ public class GuessingCardPresenterTest {
         mockedGuessedPaymentMethods.add(PaymentMethods.getPaymentMethodOnVisa());
 
         presenter.resolvePaymentMethodListSet(mockedGuessedPaymentMethods, Cards.MOCKED_BIN_VISA);
-        when(userSelectionRepository.hasSelectedPaymentMethod()).thenReturn(true);
         assertTrue(mockedView.paymentMethodSet);
 
         presenter.resolvePaymentMethodCleared();
 
         assertFalse(mockedView.errorState);
         assertTrue(mockedView.cardNumberLengthDefault);
-        assertTrue(mockedView.cardNumberMaskDefault);
         assertTrue(mockedView.securityCodeInputErased);
         assertTrue(mockedView.clearCardView);
     }
@@ -366,7 +366,7 @@ public class GuessingCardPresenterTest {
         assertEquals(1, paymentMethodsWithExclusionsList.size());
         assertNotNull(presenter.getPaymentMethod());
         assertEquals("debmaster", presenter.getPaymentMethod().getId());
-        assertFalse(presenter.hasToShowPaymentTypes());
+        assertFalse(presenter.shouldAskPaymentType(paymentMethodsWithExclusionsList));
     }
 
     @Test
@@ -384,7 +384,6 @@ public class GuessingCardPresenterTest {
 
         final List<PaymentMethod> mockedGuessedPaymentMethods = new ArrayList<>();
         mockedGuessedPaymentMethods.add(PaymentMethods.getPaymentMethodWithWrongSecurityCodeSettings());
-        when(userSelectionRepository.hasSelectedPaymentMethod()).thenReturn(false);
         when(userSelectionRepository.getPaymentMethod()).thenReturn(null);
         presenter.resolvePaymentMethodListSet(mockedGuessedPaymentMethods, Cards.MOCKED_BIN_VISA);
         assertTrue(mockedView.paymentMethodSet);
@@ -437,7 +436,6 @@ public class GuessingCardPresenterTest {
 
         final PaymentPreference paymentPreference = new PaymentPreference();
 
-        when(userSelectionRepository.hasSelectedPaymentMethod()).thenReturn(false);
         when(userSelectionRepository.getPaymentMethod()).thenReturn(null);
 
         final List<PaymentMethod> paymentMethodList = PaymentMethods.getPaymentMethodListMLA();
@@ -716,9 +714,10 @@ public class GuessingCardPresenterTest {
         final PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setExcludedPaymentMethodIds(excludedPaymentMethodIds);
 
-        presenter = new GuessingCardPresenter(amountRepository, userSelectionRepository, paymentSettingRepository,
-            groupsRepository,
-            advancedConfiguration, new PaymentPreference(), buildMockedPaymentRecovery());
+        presenter =
+            new GuessingCardPaymentPresenter(amountRepository, userSelectionRepository, paymentSettingRepository,
+                groupsRepository,
+                advancedConfiguration, new PaymentPreference(), buildMockedPaymentRecovery());
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(provider);
 
@@ -783,21 +782,6 @@ public class GuessingCardPresenterTest {
     }
 
     @Test
-    public void whenGuessedPaymentMethodsListIsNullThenPaymentMethodShouldBeUndefined() {
-        final boolean shouldAskPaymentType = presenter.shouldAskPaymentType(null);
-        assertTrue(shouldAskPaymentType);
-    }
-
-    @Test
-    public void whenGuessedPaymentMethodsListIsEmptyThenPaymentMethodShouldBeUndefined() {
-
-        final List<PaymentMethod> paymentMethodList = new ArrayList<>();
-
-        final boolean shouldAskPaymentType = presenter.shouldAskPaymentType(paymentMethodList);
-        assertTrue(shouldAskPaymentType);
-    }
-
-    @Test
     public void whenUniquePaymentMethodGuessedThenPaymentMethodShouldDefined() {
 
         final PaymentMethod creditCard = new PaymentMethod();
@@ -831,7 +815,6 @@ public class GuessingCardPresenterTest {
         protected String savedIdentificationNumber;
         protected boolean errorState;
         protected boolean cardNumberLengthDefault;
-        protected boolean cardNumberMaskDefault;
         protected boolean securityCodeInputErased;
         protected boolean clearCardView;
         protected boolean identificationTypesInitialized;
@@ -855,13 +838,21 @@ public class GuessingCardPresenterTest {
         }
 
         @Override
+        public void recoverCardViews(final boolean lowResActive, final String cardNumber, final String cardHolderName,
+            final String expiryMonth, final String expiryYear, final String identificationNumber,
+            final IdentificationType identificationType) {
+            // Empty body
+        }
+
+        @Override
         public void clearSecurityCodeEditText() {
             securityCodeInputErased = true;
         }
 
         @Override
-        public void clearCardNumberEditTextMask() {
-            cardNumberMaskDefault = true;
+        public void askForPaymentType(final List<PaymentMethod> paymentMethods, final List<PaymentType> paymentTypes,
+            final CardInfo cardInfo) {
+            // Empty body
         }
 
         @Override
@@ -883,17 +874,17 @@ public class GuessingCardPresenterTest {
 
         @Override
         public void clearErrorIdentificationNumber() {
-
+            // Empty method
         }
 
         @Override
         public void setSoftInputMode() {
-
+            // Empty method
         }
 
         @Override
         public void setErrorContainerListener() {
-
+            // Empty method
         }
 
         @Override
@@ -911,7 +902,7 @@ public class GuessingCardPresenterTest {
 
         @Override
         public void hideProgress() {
-
+            // Empty method
         }
 
         @Override
@@ -1087,12 +1078,7 @@ public class GuessingCardPresenterTest {
 
         @Override
         public void showIdentificationInput() {
-
-        }
-
-        @Override
-        public void showSecurityCodeInput() {
-
+            // Empty method
         }
 
         @Override
@@ -1136,12 +1122,12 @@ public class GuessingCardPresenterTest {
         }
 
         @Override
-        public void askForPaymentType() {
+        public void showFinishCardFlow() {
             // Empty body
         }
 
         @Override
-        public void showFinishCardFlow() {
+        public void eraseDefaultSpace() {
             // Empty body
         }
     }
@@ -1159,39 +1145,39 @@ public class GuessingCardPresenterTest {
         private static final String PAYMENT_METHODS_NOT_FOUND = "payment methods not found error";
         private static final String IDENTIFICATION_TYPES_NOT_FOUND = "identification types not found error";
         private static final String INVALID_FIELD = "invalid field";
-        private MercadoPagoError failedResponse;
+        /* default */ MercadoPagoError failedResponse;
         private boolean shouldFail;
         private List<IdentificationType> successfulIdentificationTypesResponse;
         private List<BankDeal> successfulBankDealsResponse;
         private Token successfulTokenResponse;
         private List<Issuer> successfulIssuersResponse;
 
-        private void setIdentificationTypesResponse(final List<IdentificationType> identificationTypes) {
+        /* default */ void setIdentificationTypesResponse(final List<IdentificationType> identificationTypes) {
             shouldFail = false;
             successfulIdentificationTypesResponse = identificationTypes;
         }
 
-        private void setIdentificationTypesResponse(final MercadoPagoError exception) {
+        /* default */ void setIdentificationTypesResponse(final MercadoPagoError exception) {
             shouldFail = true;
             failedResponse = exception;
         }
 
-        private void setBankDealsResponse(final List<BankDeal> bankDeals) {
+        /* default */ void setBankDealsResponse(final List<BankDeal> bankDeals) {
             shouldFail = false;
             successfulBankDealsResponse = bankDeals;
         }
 
-        private void setTokenResponse(final Token token) {
+        /* default */ void setTokenResponse(final Token token) {
             shouldFail = false;
             successfulTokenResponse = token;
         }
 
-        private void setIssuersResponse(final List<Issuer> issuers) {
+        /* default */ void setIssuersResponse(final List<Issuer> issuers) {
             shouldFail = false;
             successfulIssuersResponse = issuers;
         }
 
-        private void setPaymentMethodsResponse(final MercadoPagoError exception) {
+        /* default */ void setPaymentMethodsResponse(final MercadoPagoError exception) {
             shouldFail = true;
             failedResponse = exception;
         }
