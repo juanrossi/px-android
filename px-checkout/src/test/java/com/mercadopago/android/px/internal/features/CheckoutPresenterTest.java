@@ -2,6 +2,7 @@ package com.mercadopago.android.px.internal.features;
 
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
+import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.features.hooks.Hook;
 import com.mercadopago.android.px.internal.features.providers.CheckoutProvider;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
@@ -75,6 +76,7 @@ public class CheckoutPresenterTest {
     @Mock private GroupsRepository groupsRepository;
     @Mock private PluginRepository pluginRepository;
     @Mock private PaymentRepository paymentRepository;
+    @Mock private InternalConfiguration internalConfiguration;
 
     private MockedView stubView;
     private MockedProvider stubProvider;
@@ -124,7 +126,8 @@ public class CheckoutPresenterTest {
             userSelectionRepository, discountRepository,
             groupsRepository,
             pluginRepository,
-            paymentRepository);
+            paymentRepository,
+            internalConfiguration);
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
         return presenter;
@@ -420,7 +423,7 @@ public class CheckoutPresenterTest {
     }
 
     @Test
-    public void whenPaymentSelectionErrorAndPaymentMethodChangeRequestedFromReviewAndConfirmThenBackToReviewAndConfirm(){
+    public void whenPaymentSelectionErrorAndPaymentMethodChangeRequestedFromReviewAndConfirmThenBackToReviewAndConfirm() {
         final CheckoutPresenter presenter = getPresenter();
         final MercadoPagoError mercadoPagoError = mock(MercadoPagoError.class);
 
@@ -435,7 +438,7 @@ public class CheckoutPresenterTest {
     }
 
     @Test
-    public void whenPaymentSelectionErrorAndPaymentMethodChangeNotRequestedFromReviewAndConfirmThenCancelCheckout(){
+    public void whenPaymentSelectionErrorAndPaymentMethodChangeNotRequestedFromReviewAndConfirmThenCancelCheckout() {
         final CheckoutPresenter presenter = getPresenter();
         final MercadoPagoError mercadoPagoError = mock(MercadoPagoError.class);
 
@@ -682,10 +685,8 @@ public class CheckoutPresenterTest {
             return null;
         }
 
-
         public void setCheckoutPreferenceResponse(CheckoutPreference preference) {
             this.preference = preference;
         }
-
     }
 }

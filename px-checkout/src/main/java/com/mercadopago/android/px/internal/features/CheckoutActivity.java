@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
@@ -116,7 +117,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                     session.getDiscountRepository(),
                     session.getGroupsRepository(),
                     session.getPluginRepository(),
-                    session.getPaymentRepository());
+                    session.getPaymentRepository(),
+                    session.getInternalConfiguration());
             privateKey = savedInstanceState.getString(EXTRA_PRIVATE_KEY);
             merchantPublicKey = savedInstanceState.getString(EXTRA_PUBLIC_KEY);
             configurePresenter();
@@ -147,7 +149,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             session.getDiscountRepository(),
             session.getGroupsRepository(),
             session.getPluginRepository(),
-            session.getPaymentRepository());
+            session.getPaymentRepository(),
+            session.getInternalConfiguration());
     }
 
     @Override
@@ -334,7 +337,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     private void resolvePaymentVaultRequest(final int resultCode, final Intent data) {
         if (resultCode == RESULT_OK) {
-
             presenter.onPaymentMethodSelectionResponse();
         } else if (isErrorResult(data)) {
             final MercadoPagoError mercadoPagoError =
@@ -410,7 +412,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             final String nextAction = data.getStringExtra(EXTRA_NEXT_ACTION);
             presenter.onPaymentResultCancel(nextAction);
         } else {
-
             if (data != null && data.hasExtra(EXTRA_RESULT_CODE)) {
                 final Integer finalResultCode = data.getIntExtra(EXTRA_RESULT_CODE, PAYMENT_RESULT_CODE);
                 customDataBundle = data;

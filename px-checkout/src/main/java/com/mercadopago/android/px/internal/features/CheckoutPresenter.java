@@ -6,11 +6,13 @@ import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
+import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.datasource.CheckoutStore;
 import com.mercadopago.android.px.internal.datasource.PluginInitializationTask;
 import com.mercadopago.android.px.internal.features.hooks.Hook;
 import com.mercadopago.android.px.internal.features.hooks.HookHelper;
 import com.mercadopago.android.px.internal.features.providers.CheckoutProvider;
+import com.mercadopago.android.px.internal.features.review_and_confirm.ReviewAndConfirmActivity;
 import com.mercadopago.android.px.internal.navigation.DefaultPaymentMethodDriver;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
@@ -35,7 +37,6 @@ import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
-import com.mercadopago.android.px.model.SecurityCode;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.CheckoutPreferenceException;
@@ -67,6 +68,9 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     @NonNull
     private final UserSelectionRepository userSelectionRepository;
 
+    @NonNull
+    private final InternalConfiguration internalConfiguration;
+
     private transient FailureRecovery failureRecovery;
 
     private PluginInitializationTask pluginInitializationTask; //instance saved as attribute to cancel and avoid crash
@@ -78,7 +82,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         @NonNull final DiscountRepository discountRepository,
         @NonNull final GroupsRepository groupsRepository,
         @NonNull final PluginRepository pluginRepository,
-        @NonNull final PaymentRepository paymentRepository) {
+        @NonNull final PaymentRepository paymentRepository,
+        @NonNull final InternalConfiguration internalConfiguration) {
         this.paymentSettingRepository = paymentSettingRepository;
         this.amountRepository = amountRepository;
         this.userSelectionRepository = userSelectionRepository;
@@ -86,6 +91,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         this.groupsRepository = groupsRepository;
         this.pluginRepository = pluginRepository;
         this.paymentRepository = paymentRepository;
+        this.internalConfiguration = internalConfiguration;
         state = persistentData;
     }
 
@@ -379,11 +385,21 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     public void onPaymentResultCancel(final String nextAction) {
         if (!TextUtil.isEmpty(nextAction)) {
             if (nextAction.equals(PaymentResult.SELECT_OTHER_PAYMENT_METHOD)) {
-                state.paymentMethodEdited = true;
-                getView().showPaymentMethodSelection();
+                resolvePaymentMethodChange();
             } else if (nextAction.equals(PaymentResult.RECOVER_PAYMENT)) {
                 recoverPayment();
             }
+        }
+    }
+
+    private void resolvePaymentMethodChange() {
+        if (internalConfiguration.shouldExitOnPaymentMethodChange()) {
+            getView()
+                .finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD,
+                    (Payment) state.createdPayment);
+        } else {
+            state.paymentMethodEdited = true;
+            getView().showPaymentMethodSelection();
         }
     }
 
@@ -606,13 +622,18 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void onChangePaymentMethod(final boolean fromReviewAndConfirm) {
-        //TODO remove when navigation is corrected and works with stack.
-        state.editPaymentMethodFromReviewAndConfirm = fromReviewAndConfirm;
-        state.paymentMethodEdited = true;
-        getView().showPaymentMethodSelection();
         if (fromReviewAndConfirm) {
             //Button "change payment method" in R&C
             getView().transitionOut();
+        }
+
+        if (internalConfiguration.shouldExitOnPaymentMethodChange()) {
+            getView().finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD);
+        } else {
+            //TODO remove when navigation is corrected and works with stack.
+            state.editPaymentMethodFromReviewAndConfirm = fromReviewAndConfirm;
+            state.paymentMethodEdited = true;
+            getView().showPaymentMethodSelection();
         }
     }
 
@@ -621,7 +642,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     @Override
-    public void onCvvRequired(@NonNull final Card card) {
+    public void onCvvRequired(
+        @NonNull final Card card) {
         //TODO check.
         if (isViewAttached()) {
             getView().showSavedCardFlow(card);
@@ -636,7 +658,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     @Override
-    public void onPaymentFinished(@NonNull final Payment payment) {
+    public void onPaymentFinished(
+        @NonNull final Payment payment) {
         if (isViewAttached()) {
             getView().hideProgress();
             state.createdPayment = payment;
@@ -648,7 +671,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     @Override
-    public void onPaymentFinished(@NonNull final GenericPayment genericPayment) {
+    public void onPaymentFinished(
+        @NonNull final GenericPayment genericPayment) {
         if (isViewAttached()) {
             getView().hideProgress();
             state.createdPayment = genericPayment;
@@ -660,7 +684,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     @Override
-    public void onPaymentFinished(@NonNull final BusinessPayment businessPayment) {
+    public void onPaymentFinished(
+        @NonNull final BusinessPayment businessPayment) {
         if (isViewAttached()) {
             getView().hideProgress();
             state.createdPayment = businessPayment;
@@ -672,7 +697,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     @Override
-    public void onPaymentError(@NonNull final MercadoPagoError error) {
+    public void onPaymentError(
+        @NonNull final MercadoPagoError error) {
         if (isViewAttached()) {
             getView().hideProgress();
             recoverCreatePayment(error);
