@@ -264,6 +264,7 @@ public class PaymentResultTest {
         presenter.setAmount(new BigDecimal("100"));
         ;
 
+
         MockedPropsView mockedView = new MockedPropsView();
         MockedProvider mockedProvider = new MockedProvider();
 

@@ -5,6 +5,7 @@ import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.features.hooks.Hook;
 import com.mercadopago.android.px.internal.features.providers.CheckoutProvider;
+import com.mercadopago.android.px.internal.features.review_and_confirm.ReviewAndConfirmActivity;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
@@ -15,16 +16,11 @@ import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.internal.viewmodel.BusinessPaymentModel;
 import com.mercadopago.android.px.internal.viewmodel.CheckoutStateModel;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
-import com.mercadopago.android.px.mocks.Installments;
-import com.mercadopago.android.px.mocks.Issuers;
 import com.mercadopago.android.px.mocks.PaymentMethodSearchs;
-import com.mercadopago.android.px.mocks.PaymentMethods;
 import com.mercadopago.android.px.mocks.Payments;
-import com.mercadopago.android.px.mocks.Tokens;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Customer;
 import com.mercadopago.android.px.model.Discount;
-import com.mercadopago.android.px.model.IPayment;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.Payer;
 import com.mercadopago.android.px.model.PayerCost;
@@ -325,6 +321,29 @@ public class CheckoutPresenterTest {
         verify(checkoutView).showPaymentMethodSelection();
         verifyNoMoreInteractions(checkoutView);
         verifyNoMoreInteractions(checkoutProvider);
+    }
+
+    @Test
+    public void whenUserSelectChangePaymentMethodFromPaymentResultAndExitOnIsTrueThenNotShowPaymentMethodSelection() {
+        final CheckoutPresenter presenter = getPresenter();
+
+        when(internalConfiguration.shouldExitOnPaymentMethodChange()).thenReturn(true);
+
+        presenter.onPaymentResultCancel(PaymentResult.SELECT_OTHER_PAYMENT_METHOD);
+
+        verify(checkoutView).finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD,
+            (Payment) presenter.getState().createdPayment);
+    }
+
+    @Test
+    public void whenUserSelectChangePaymentMethodFromReviewAndConfirmAndExitOnIsTrueThenNotShowPaymentMehotdSelection() {
+        final CheckoutPresenter presenter = getPresenter();
+
+        when(internalConfiguration.shouldExitOnPaymentMethodChange()).thenReturn(true);
+
+        presenter.onChangePaymentMethod();
+
+        verify(checkoutView).finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD);
     }
 
     @Test
