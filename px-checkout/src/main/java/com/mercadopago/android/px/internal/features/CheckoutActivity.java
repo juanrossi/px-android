@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
@@ -272,6 +271,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
      * @param data intent data that can contains a {@link BusinessPayment}
      */
     private void paymentResultOk(final Intent data) {
+        trackPayment();
         if (PaymentProcessorPluginActivity.isBusiness(data)) {
             final BusinessPayment businessPayment = PaymentProcessorPluginActivity.getBusinessPayment(data);
             presenter.onPaymentFinished(businessPayment);
@@ -282,6 +282,19 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             final Payment payment = PaymentProcessorPluginActivity.getPayment(data);
             presenter.onPaymentFinished(payment);
         }
+    }
+
+    private void trackPayment(){
+        final MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder(this, merchantPublicKey)
+            .setVersion(BuildConfig.VERSION_NAME)
+            .build();
+        final ActionEvent event = new ActionEvent.Builder()
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            .setAction(TrackingUtil.SCREEN_ID_CHECKOUT)
+            .build();
+        mpTrackingContext.clearExpiredTracks();
+        mpTrackingContext.trackEvent(event);
+
     }
 
     private void resolveReviewAndConfirmRequest(final int resultCode, final Intent data) {

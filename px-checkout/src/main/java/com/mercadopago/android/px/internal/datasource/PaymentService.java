@@ -28,6 +28,7 @@ import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.services.Callback;
+import com.mercadopago.android.px.tracking.internal.MPTracker;
 
 import static com.mercadopago.android.px.internal.util.TextUtil.isEmpty;
 
@@ -125,11 +126,13 @@ public class PaymentService implements PaymentRepository {
     private void payWithCard(final PaymentServiceHandler paymentServiceHandler) {
         if (hasValidSavedCardInfo()) {
             if (paymentSettingRepository.getToken() != null) { // Paying with saved card with token
+                MPTracker.getInstance().trackToken(paymentSettingRepository.getToken().getId());
                 pay(paymentServiceHandler);
             } else { // Token does not exists - must generate one or ask for CVV.
                 checkEscAvailability(paymentServiceHandler);
             }
         } else if (hasValidNewCardInfo()) { // New card payment
+            MPTracker.getInstance().trackToken(paymentSettingRepository.getToken().getId());
             pay(paymentServiceHandler);
         } else { // Guessing card could not tokenize or obtain card information.
             paymentServiceHandler.onPaymentError(getError());

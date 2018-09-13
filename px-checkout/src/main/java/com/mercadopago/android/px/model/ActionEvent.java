@@ -1,11 +1,8 @@
 package com.mercadopago.android.px.model;
 
+import android.support.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
-
-/**
- * Created by vaserber on 6/5/17.
- */
 
 public class ActionEvent extends Event {
 
@@ -16,18 +13,18 @@ public class ActionEvent extends Event {
     private String label;
     private String value;
 
-    private ActionEvent(Builder builder) {
+    private ActionEvent(final Builder builder) {
         super();
         setType(TYPE_ACTION);
         setFlowId(builder.flowId);
         setTimestamp(System.currentTimeMillis());
         setProperties(builder.properties);
-        this.screenId = builder.screenId;
-        this.screenName = builder.screenName;
-        this.action = builder.action;
-        this.category = builder.category;
-        this.label = builder.label;
-        this.value = builder.value;
+        screenId = builder.screenId;
+        screenName = builder.screenName;
+        action = builder.action;
+        category = builder.category;
+        label = builder.label;
+        value = builder.value;
     }
 
     public String getScreenId() {
@@ -65,42 +62,42 @@ public class ActionEvent extends Event {
         private String value;
         private Map<String, String> properties = new HashMap<>();
 
-        public Builder setFlowId(String flowId) {
+        public Builder setFlowId(@NonNull final String flowId) {
             this.flowId = flowId;
             return this;
         }
 
-        public Builder setScreenId(String screenId) {
+        public Builder setScreenId(@NonNull final String screenId) {
             this.screenId = screenId;
             return this;
         }
 
-        public Builder setScreenName(String screenName) {
+        public Builder setScreenName(@NonNull final String screenName) {
             this.screenName = screenName;
             return this;
         }
 
-        public Builder setAction(String action) {
+        public Builder setAction(@NonNull final String action) {
             this.action = action;
             return this;
         }
 
-        public Builder setCategory(String category) {
+        public Builder setCategory(@NonNull final String category) {
             this.category = category;
             return this;
         }
 
-        public Builder setLabel(String label) {
+        public Builder setLabel(@NonNull final String label) {
             this.label = label;
             return this;
         }
 
-        public Builder setValue(String value) {
+        public Builder setValue(@NonNull final String value) {
             this.value = value;
             return this;
         }
 
-        public Builder addProperty(String key, String value) {
+        public Builder addProperty(@NonNull String key, @NonNull String value) {
             properties.put(key, value);
             return this;
         }

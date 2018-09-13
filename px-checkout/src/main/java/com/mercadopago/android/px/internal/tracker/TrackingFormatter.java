@@ -10,10 +10,6 @@ import com.mercadopago.android.px.model.PaymentTypes;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by marlanti on 3/12/18.
- */
-
 public final class TrackingFormatter {
 
     private static final int MAX_LENGTH = 3000;
