@@ -44,7 +44,6 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.services.Callback;
 import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -103,6 +102,18 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     public void initialize() {
         getView().showProgress();
         configurePreference();
+    }
+
+    @Override
+    public void attachView(final CheckoutView view) {
+        super.attachView(view);
+        paymentRepository.attach(this);
+    }
+
+    @Override
+    public void detachView() {
+        paymentRepository.detach();
+        super.detachView();
     }
 
     private void configurePreference() {
@@ -291,7 +302,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     public void createPayment() {
         getView().showProgress();
-        paymentRepository.startPayment(this);
+        paymentRepository.startPayment();
     }
 
     private void continuePaymentWithoutESC() {

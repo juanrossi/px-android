@@ -282,14 +282,24 @@ public class CheckoutPresenterTest {
         //When Ok Response from Review And confirm
         presenter.onPaymentConfirmation();
 
+        verify(paymentRepository).attach(presenter);
         verify(paymentRepository).getPaymentData();
         verify(checkoutView).showProgress();
-        verify(paymentRepository).startPayment(presenter);
+        verify(paymentRepository).startPayment();
 
         verifyNoMoreInteractions(checkoutView);
         verifyNoMoreInteractions(checkoutProvider);
         verifyNoMoreInteractions(paymentRepository);
         verifyNoMoreInteractions(userSelectionRepository);
+    }
+
+    @Test
+    public void whenPresenterDetachedThenPaymentRepositoryIsDetached(){
+        final CheckoutPresenter presenter = getPresenter();
+        verify(paymentRepository).attach(presenter);
+        presenter.detachView();
+        verify(paymentRepository).detach();
+        verifyNoMoreInteractions(paymentRepository);
     }
 
     @Test
@@ -382,7 +392,7 @@ public class CheckoutPresenterTest {
         presenter.onCardFlowResponse();
 
         verify(checkoutView).showProgress();
-        verify(paymentRepository).startPayment(presenter);
+        verify(paymentRepository).startPayment();
     }
 
     @Test
@@ -394,6 +404,7 @@ public class CheckoutPresenterTest {
         presenter.onCardFlowResponse();
 
         verify(paymentRepository).getPaymentData();
+        verify(paymentRepository).attach(presenter);
         verify(checkoutView).showReviewAndConfirm(false);
         verifyNoMoreInteractions(checkoutView);
         verifyNoMoreInteractions(paymentRepository);

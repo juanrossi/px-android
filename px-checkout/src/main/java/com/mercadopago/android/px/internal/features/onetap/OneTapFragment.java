@@ -83,6 +83,12 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     @Override
+    public void onPause() {
+        presenter.onViewPaused();
+        super.onPause();
+    }
+
+    @Override
     public void updateViews(final OneTapModel model) {
         oneTapView.update(model);
     }
@@ -98,6 +104,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     @Override
     public void onDetach() {
         callback = null;
+        presenter.detachView();
         super.onDetach();
     }
 
@@ -114,7 +121,6 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         final Bundle arguments = getArguments();
         if (arguments != null) {
             final Session session = Session.getSession(view.getContext());
-
             final OneTapModel model = (OneTapModel) arguments.getSerializable(ARG_ONE_TAP_MODEL);
             presenter = new OneTapPresenter(model, session.getPaymentRepository());
             configureView(view, presenter, model);

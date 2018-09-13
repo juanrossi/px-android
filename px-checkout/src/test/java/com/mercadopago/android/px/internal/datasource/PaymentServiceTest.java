@@ -75,21 +75,24 @@ public class PaymentServiceTest {
     @Test
     public void whenOneTapPaymentIsCardSelectCard() {
         final Card card = creditCardPresetMock();
-        paymentService.startOneTapPayment(oneTapModel, handler);
+        paymentService.attach(handler);
+        paymentService.startOneTapPayment(oneTapModel);
         verify(userSelectionRepository).select(card);
     }
 
     @Test
     public void whenOneTapPaymentIsCardSelectPayerCost() {
         creditCardPresetMock();
-        paymentService.startOneTapPayment(oneTapModel, handler);
+        paymentService.attach(handler);
+        paymentService.startOneTapPayment(oneTapModel);
         verify(userSelectionRepository).select(cardPaymentMetadata.getAutoSelectedInstallment());
     }
 
     @Test
     public void whenOneTapPaymentIsCardSelectPayerCostAndCard() {
         final Card card = creditCardPresetMock();
-        paymentService.startOneTapPayment(oneTapModel, handler);
+        paymentService.attach(handler);
+        paymentService.startOneTapPayment(oneTapModel);
         verify(userSelectionRepository).select(card);
         verify(userSelectionRepository).select(cardPaymentMetadata.getAutoSelectedInstallment());
     }
@@ -100,7 +103,8 @@ public class PaymentServiceTest {
         when(escManager.hasEsc(card)).thenReturn(true);
         when(tokenRepository.createToken(card)).thenReturn(new StubFailMpCall(mock(ApiException.class)));
 
-        paymentService.startOneTapPayment(oneTapModel, handler);
+        paymentService.attach(handler);
+        paymentService.startOneTapPayment(oneTapModel);
 
         verify(escManager).hasEsc(card);
         verifyNoMoreInteractions(escManager);
@@ -121,7 +125,8 @@ public class PaymentServiceTest {
 
         when(tokenRepository.createToken(card)).thenReturn(tokenMPCall);
 
-        paymentService.startOneTapPayment(oneTapModel, handler);
+        paymentService.attach(handler);
+        paymentService.startOneTapPayment(oneTapModel);
 
         verify(escManager).hasEsc(card);
         verifyNoMoreInteractions(escManager);
@@ -135,7 +140,8 @@ public class PaymentServiceTest {
         final Card card = savedCreditCardOneTapPresent();
         when(escManager.hasEsc(card)).thenReturn(false);
 
-        paymentService.startOneTapPayment(oneTapModel, handler);
+        paymentService.attach(handler);
+        paymentService.startOneTapPayment(oneTapModel);
 
         verify(escManager).hasEsc(card);
         verifyNoMoreInteractions(escManager);

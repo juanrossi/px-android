@@ -86,7 +86,8 @@ public final class PaymentProcessorPluginActivity extends AppCompatActivity
                 .getPaymentConfiguration()
                 .getPaymentProcessor();
 
-        paymentServiceHandlerWrapper = createWrapper(session);
+        paymentServiceHandlerWrapper = new PaymentServiceHandlerWrapper(session.getPaymentRepository(),
+            new EscManagerImp(session.getMercadoPagoESC()));
 
         final CheckoutPreference checkoutPreference = configurationModule.getPaymentSettings().getCheckoutPreference();
         final PaymentProcessor.CheckoutData checkoutData =
@@ -107,9 +108,22 @@ public final class PaymentProcessorPluginActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        paymentServiceHandlerWrapper.setHandler(createWrapper());
+        paymentServiceHandlerWrapper.processMessages();
+    }
+
+    @Override
+    protected void onPause() {
+        paymentServiceHandlerWrapper.setHandler(null);
+        super.onPause();
+    }
+
     @NonNull
-    private PaymentServiceHandlerWrapper createWrapper(final Session session) {
-        return new PaymentServiceHandlerWrapper(new PaymentServiceHandler() {
+    private PaymentServiceHandler createWrapper() {
+        return new PaymentServiceHandler() {
             @Override
             public void onCvvRequired(@NonNull final Card card) {
                 // do nothing
@@ -155,7 +169,7 @@ public final class PaymentProcessorPluginActivity extends AppCompatActivity
                 //TODO verify error handling
                 ErrorUtil.startErrorActivity(PaymentProcessorPluginActivity.this, error);
             }
-        }, session.getPaymentRepository(), new EscManagerImp(session.getMercadoPagoESC()));
+        };
     }
 
     @Override
