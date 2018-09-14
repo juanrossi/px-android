@@ -294,7 +294,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             .build();
         mpTrackingContext.clearExpiredTracks();
         mpTrackingContext.trackEvent(event);
-
     }
 
     private void resolveReviewAndConfirmRequest(final int resultCode, final Intent data) {

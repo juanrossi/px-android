@@ -14,10 +14,6 @@ import com.mercadopago.android.px.model.Token;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Created by vaserber on 8/24/17.
- */
-
 public interface GuessingCardProvider extends ResourcesProvider {
 
     MPTrackingContext getTrackingContext();

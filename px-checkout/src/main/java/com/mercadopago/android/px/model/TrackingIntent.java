@@ -3,63 +3,32 @@ package com.mercadopago.android.px.model;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
-/**
- * Created by vaserber on 6/5/17.
- */
-
 public class TrackingIntent implements Serializable {
 
     @SerializedName("public_key")
-    public String mPublicKey;
+    public String publicKey;
     @SerializedName("token")
-    public String mCardToken;
+    public String cardToken;
     @SerializedName("sdk_flavor")
-    public String mFlavor;
+    public String flavor;
     @SerializedName("sdk_platform")
-    public String mPlatform;
+    public String platform;
     @SerializedName("sdk_type")
-    public String mType;
+    public String type;
     @SerializedName("sdk_version")
-    public String mSdkVersion;
+    public String version;
     @SerializedName("site_id")
-    public String mSite;
+    public String site;
 
-    public TrackingIntent(String mPublicKey, String mCardToken, String mFlavor, String mPlatform, String mType,
-        String mSdkVersion, String mSite) {
-        this.mPublicKey = mPublicKey;
-        this.mCardToken = mCardToken;
-        this.mFlavor = mFlavor;
-        this.mPlatform = mPlatform;
-        this.mType = mType;
-        this.mSdkVersion = mSdkVersion;
-        this.mSite = mSite;
-    }
-
-    public void setPublicKey(String publicKey) {
-        this.mPublicKey = publicKey;
-    }
-
-    public void setCardToken(String cardToken) {
-        this.mCardToken = cardToken;
-    }
-
-    public void setFlavor(String flavor) {
-        this.mFlavor = flavor;
-    }
-
-    public void setPlatform(String platform) {
-        this.mPlatform = platform;
-    }
-
-    public void setType(String type) {
-        this.mType = type;
-    }
-
-    public void setSdkVersion(String sdkVersion) {
-        this.mSdkVersion = sdkVersion;
-    }
-
-    public void setSite(String site) {
-        this.mSite = site;
+    public TrackingIntent(final String publicKey, final String cardToken, final String flavor,
+        final String platform, final String type,
+        final String version, final String site) {
+        this.publicKey = publicKey;
+        this.cardToken = cardToken;
+        this.flavor = flavor;
+        this.platform = platform;
+        this.type = type;
+        this.version = version;
+        this.site = site;
     }
 }

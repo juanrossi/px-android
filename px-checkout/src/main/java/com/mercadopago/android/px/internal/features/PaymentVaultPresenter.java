@@ -14,6 +14,7 @@ import com.mercadopago.android.px.internal.repository.GroupsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
+import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.internal.view.AmountView;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CustomSearchItem;
@@ -349,6 +350,10 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     public void setSelectedSearchItem(PaymentMethodSearchItem mSelectedSearchItem) {
         selectedSearchItem = mSelectedSearchItem;
+    }
+
+    public MPTrackingContext getTrackingContext() {
+        return getResourcesProvider().getTrackingContext();
     }
 
     //###Hooks HACKS #######################################################

@@ -99,7 +99,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     public static final String SEC_CODE_LENGTH_BUNDLE = "mCardSecurityCodeLength";
     public static final String CARD_NUMBER_LENGTH_BUNDLE = "mCardNumberLength";
     public static final String SEC_CODE_LOCATION_BUNDLE = "mSecurityCodeLocation";
-    public static final String CARD_TOKEN_BUNDLE = "mCardToken";
+    public static final String CARD_TOKEN_BUNDLE = "cardToken";
     public static final String CARD_INFO_BIN_BUNDLE = "mBin";
     public static final String EXPIRY_MONTH_BUNDLE = "mExpiryMonth";
     public static final String EXPIRY_YEAR_BUNDLE = "mExpiryYear";

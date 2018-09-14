@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.core.PaymentMethodPlugin;
 import com.mercadopago.android.px.internal.adapters.PaymentMethodSearchItemAdapter;
@@ -35,6 +36,8 @@ import com.mercadopago.android.px.internal.features.uicontrollers.paymentmethods
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
+import com.mercadopago.android.px.internal.tracker.FlowHandler;
+import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.internal.util.ErrorUtil;
 import com.mercadopago.android.px.internal.util.JsonUtil;
 import com.mercadopago.android.px.internal.util.ScaleUtil;
@@ -42,6 +45,7 @@ import com.mercadopago.android.px.internal.view.AmountView;
 import com.mercadopago.android.px.internal.view.DiscountDetailDialog;
 import com.mercadopago.android.px.internal.view.GridSpacingItemDecoration;
 import com.mercadopago.android.px.internal.view.MPTextView;
+import com.mercadopago.android.px.model.ActionEvent;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CustomSearchItem;
 import com.mercadopago.android.px.model.Discount;
@@ -55,6 +59,7 @@ import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.PaymentPreference;
+import com.mercadopago.android.px.tracking.internal.utils.TrackingUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,7 +68,7 @@ import java.util.List;
 import static com.mercadopago.android.px.core.MercadoPagoCheckout.EXTRA_ERROR;
 
 public class PaymentVaultActivity extends MercadoPagoBaseActivity
-        implements PaymentVaultView, DiscountListener {
+    implements PaymentVaultView, DiscountListener {
 
     public static final int COLUMN_SPACING_DP_VALUE = 20;
     public static final int COLUMNS = 2;
@@ -242,7 +247,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     }
 
     private List<PaymentMethodSearchViewController> createPluginItemsViewControllers(
-            final List<PaymentMethodInfo> infoItems) {
+        final List<PaymentMethodInfo> infoItems) {
         final PluginRepository pluginRepository = Session.getSession(this).getPluginRepository();
         final List<PaymentMethodSearchViewController> controllers = new ArrayList<>();
         for (final PaymentMethodInfo infoItem : infoItems) {
@@ -377,12 +382,12 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
 
     private boolean shouldFinishOnBack(final Intent data) {
         return !Session.getSession(this).getPluginRepository().hasEnabledPaymentMethodPlugin() &&
-                (presenter.getSelectedSearchItem() != null &&
-                        (!presenter.getSelectedSearchItem().hasChildren()
-                                || (presenter.getSelectedSearchItem().getChildren().size() == 1))
-                        || (presenter.getSelectedSearchItem() == null &&
-                        presenter.isOnlyOneItemAvailable()) ||
-                        (data != null) && (data.getStringExtra(EXTRA_ERROR) != null));
+            (presenter.getSelectedSearchItem() != null &&
+                (!presenter.getSelectedSearchItem().hasChildren()
+                    || (presenter.getSelectedSearchItem().getChildren().size() == 1))
+                || (presenter.getSelectedSearchItem() == null &&
+                presenter.isOnlyOneItemAvailable()) ||
+                (data != null) && (data.getStringExtra(EXTRA_ERROR) != null));
     }
 
     @Override
@@ -568,7 +573,18 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
 
     @Override
     public void showDetailDialog() {
+        trackDetailDialog();
         DiscountDetailDialog.showDialog(getSupportFragmentManager());
+    }
+
+    private void trackDetailDialog() {
+        final ActionEvent event = new ActionEvent.Builder()
+            .setFlowId(FlowHandler.getInstance().getFlowId())
+            //TODO change screenID
+            .setAction(TrackingUtil.SCREEN_ID_CHECKOUT)
+            .build();
+
+        presenter.getTrackingContext().trackEvent(event);
     }
 
     @Override

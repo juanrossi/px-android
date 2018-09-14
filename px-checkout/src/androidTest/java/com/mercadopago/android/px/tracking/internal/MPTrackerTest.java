@@ -17,8 +17,6 @@ import com.mercadopago.android.px.model.ScreenViewEvent;
 import com.mercadopago.android.px.model.StackTraceInfo;
 import com.mercadopago.android.px.model.TrackingIntent;
 import com.mercadopago.android.px.tracking.PXEventListener;
-import com.mercadopago.android.px.tracking.internal.MPTracker;
-import com.mercadopago.android.px.tracking.internal.StrategyMode;
 import com.mercadopago.android.px.tracking.internal.strategies.TrackingStrategy;
 import com.mercadopago.android.px.tracking.mocks.MPMockedTrackingService;
 
@@ -242,12 +240,12 @@ public class MPTrackerTest {
 
         final TrackingIntent trackingIntent = MPTracker.getInstance().trackToken(MOCKED_TOKEN_ID);
 
-        assertEquals(MOCKED_PAYMENT_PLATFORM, trackingIntent.mPlatform);
-        assertEquals(MOCKED_PUBLIC_KEY, trackingIntent.mPublicKey);
-        assertEquals(MOCKED_CHECKOUT_VERSION, trackingIntent.mSdkVersion);
-        assertEquals(MOCKED_SITE_ID, trackingIntent.mSite);
-        assertEquals(MOCKED_SDK_TYPE, trackingIntent.mType);
-        assertEquals(MOCKED_TOKEN_ID, trackingIntent.mCardToken);
+        assertEquals(MOCKED_PAYMENT_PLATFORM, trackingIntent.platform);
+        assertEquals(MOCKED_PUBLIC_KEY, trackingIntent.publicKey);
+        assertEquals(MOCKED_CHECKOUT_VERSION, trackingIntent.version);
+        assertEquals(MOCKED_SITE_ID, trackingIntent.site);
+        assertEquals(MOCKED_SDK_TYPE, trackingIntent.type);
+        assertEquals(MOCKED_TOKEN_ID, trackingIntent.cardToken);
     }
 
     @Test

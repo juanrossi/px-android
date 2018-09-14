@@ -2,6 +2,7 @@ package com.mercadopago.android.px.internal.features.providers;
 
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.base.ResourcesProvider;
+import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentMethodSearchItem;
 
@@ -22,4 +23,5 @@ public interface PaymentVaultProvider extends ResourcesProvider {
 
     void trackChildrenScreen(@NonNull PaymentMethodSearchItem paymentMethodSearchItem, @NonNull String siteId);
 
+    MPTrackingContext getTrackingContext();
 }

@@ -6,11 +6,11 @@ import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
 import com.mercadopago.android.px.internal.di.Session;
+import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.internal.tracker.Tracker;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentMethodSearchItem;
 import com.mercadopago.android.px.tracking.internal.MPTracker;
-
 
 public class PaymentVaultProviderImpl implements PaymentVaultProvider {
 
@@ -18,6 +18,7 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
 
     private final MercadoPagoESC mercadoPagoESC;
     private final String merchantPublicKey;
+    private MPTrackingContext trackingContext;
 
     public PaymentVaultProviderImpl(final Context context) {
         this.context = context;
@@ -70,5 +71,15 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
         final @NonNull String siteId) {
         initializeMPTracker(siteId);
         Tracker.trackPaymentVaultChildrenScreen(context, merchantPublicKey, paymentMethodSearchItem);
+    }
+
+    @Override
+    public MPTrackingContext getTrackingContext() {
+        if (trackingContext == null) {
+            trackingContext = new MPTrackingContext.Builder(context, merchantPublicKey)
+                .setVersion(BuildConfig.VERSION_NAME)
+                .build();
+        }
+        return trackingContext;
     }
 }
