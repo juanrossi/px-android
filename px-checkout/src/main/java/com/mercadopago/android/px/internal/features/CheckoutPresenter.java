@@ -45,7 +45,6 @@ import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.services.Callback;
 import com.mercadopago.android.px.tracking.internal.MPTracker;
 import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -661,7 +660,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     @Override
     public void onPaymentFinished(
         @NonNull final Payment payment) {
-        MPTracker.getInstance().trackPayment(payment.getId(), payment.getPaymentTypeId());
+        trackOffPayment(payment);
         if (isViewAttached()) {
             getView().hideProgress();
             state.createdPayment = payment;
@@ -669,6 +668,12 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
                 .showPaymentResult(paymentRepository.createPaymentResult(payment),
                     amountRepository.getAmountToPay(),
                     discountRepository.getDiscount());
+        }
+    }
+
+    private void trackOffPayment(@NonNull final Payment payment) {
+        if (!payment.isCardPaymentType(payment.getPaymentTypeId())) {
+            MPTracker.getInstance().trackPayment(payment.getId(), payment.getPaymentTypeId());
         }
     }
 
