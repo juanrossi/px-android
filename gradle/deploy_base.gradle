@@ -136,7 +136,7 @@ bintray {
             name = versionToDeploy
             desc = libraryDescription
             vcsTag = versionToDeploy
-            released = new Date()
+            released = project.hasProperty('deploy') ? new Date() : null
         }
     }
 }
