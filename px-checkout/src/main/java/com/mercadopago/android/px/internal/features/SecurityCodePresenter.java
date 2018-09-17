@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
-import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.internal.features.providers.SecurityCodeProvider;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
@@ -34,10 +33,10 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
 
     //Activity parameters
     private PaymentMethod mPaymentMethod;
-    protected CardInfo mCardInfo;
-    protected Card mCard;
-    protected Token mToken;
-    protected PaymentRecovery mPaymentRecovery;
+    private CardInfo mCardInfo;
+    private Card mCard;
+    private Token mToken;
+    private PaymentRecovery mPaymentRecovery;
 
     public SecurityCodePresenter(@NonNull final PaymentSettingRepository paymentSettingRepository) {
         this.paymentSettingRepository = paymentSettingRepository;
@@ -139,8 +138,7 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
     public void initializeSettings() {
         if (mCardInfo != null) {
 
-            final Setting setting = PaymentMethodGuessingController
-                .getSettingByPaymentMethodAndBin(mPaymentMethod, mCardInfo.getFirstSixDigits());
+            final Setting setting = Setting.getSettingByPaymentMethodAndBin(mPaymentMethod, mCardInfo.getFirstSixDigits());
 
             initializeSecurityCodeSettings(setting);
             initializeCardNumberSettings(setting);

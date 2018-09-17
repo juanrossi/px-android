@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import com.mercadopago.android.px.internal.features.cardvault.CardVaultActivity;
-import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardActivity;
 import com.mercadopago.android.px.internal.features.paymentresult.PaymentResultActivity;
 import com.mercadopago.android.px.internal.util.JsonUtil;
 import com.mercadopago.android.px.model.BankDeal;
@@ -41,7 +40,7 @@ public class MercadoPagoComponents {
         public static final int REJECTION_REQUEST_CODE = 9;
         public static final int PAYMENT_VAULT_REQUEST_CODE = 10;
         public static final int BANK_DEALS_REQUEST_CODE = 11;
-        public static final int GUESSING_CARD_REQUEST_CODE = 13;
+        public static final int GUESSING_CARD_FOR_PAYMENT_REQUEST_CODE = 13;
         public static final int INSTRUCTIONS_REQUEST_CODE = 14;
         public static final int CARD_VAULT_REQUEST_CODE = 15;
         public static final int CONGRATS_REQUEST_CODE = 16;
@@ -64,7 +63,7 @@ public class MercadoPagoComponents {
 
             private Activity activity;
 
-            public PaymentVaultActivityBuilder setActivity(Activity activity) {
+            public PaymentVaultActivityBuilder setActivity(final Activity activity) {
                 this.activity = activity;
                 return this;
             }
@@ -89,17 +88,17 @@ public class MercadoPagoComponents {
             private PaymentRecovery paymentRecovery;
             private boolean automaticSelection;
 
-            public CardVaultActivityBuilder setCard(Card card) {
+            public CardVaultActivityBuilder setCard(final Card card) {
                 this.card = card;
                 return this;
             }
 
-            public CardVaultActivityBuilder setPaymentRecovery(PaymentRecovery paymentRecovery) {
+            public CardVaultActivityBuilder setPaymentRecovery(final PaymentRecovery paymentRecovery) {
                 this.paymentRecovery = paymentRecovery;
                 return this;
             }
 
-            public CardVaultActivityBuilder setAutomaticSelection(Boolean automaticSelection) {
+            public CardVaultActivityBuilder setAutomaticSelection(final Boolean automaticSelection) {
                 this.automaticSelection = automaticSelection;
                 return this;
             }
@@ -112,7 +111,7 @@ public class MercadoPagoComponents {
                 return intent;
             }
 
-            public void startActivity(@NonNull final Activity context, int reqCode) {
+            public void startActivity(@NonNull final Activity context, final int reqCode) {
                 context.startActivityForResult(getIntent(context), reqCode);
             }
 
@@ -121,61 +120,17 @@ public class MercadoPagoComponents {
             }
         }
 
-        public static class GuessingCardActivityBuilder {
-            private Activity activity;
-            private PaymentPreference paymentPreference;
-            private Card card;
-            private PaymentRecovery paymentRecovery;
-
-            public GuessingCardActivityBuilder setActivity(Activity activity) {
-                this.activity = activity;
-                return this;
-            }
-
-            public GuessingCardActivityBuilder setCard(Card card) {
-                this.card = card;
-                return this;
-            }
-
-            public GuessingCardActivityBuilder setPaymentRecovery(PaymentRecovery paymentRecovery) {
-                this.paymentRecovery = paymentRecovery;
-                return this;
-            }
-
-            public GuessingCardActivityBuilder setPaymentPreference(PaymentPreference paymentPreference) {
-                this.paymentPreference = paymentPreference;
-                return this;
-            }
-
-            public void startActivity() {
-
-                if (activity == null) {
-                    throw new IllegalStateException("activity is null");
-                }
-
-                startGuessingCardActivity();
-            }
-
-            private void startGuessingCardActivity() {
-                final Intent intent = new Intent(activity, GuessingCardActivity.class);
-                intent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
-                intent.putExtra("paymentRecovery", JsonUtil.getInstance().toJson(paymentRecovery));
-                intent.putExtra("card", JsonUtil.getInstance().toJson(card));
-                activity.startActivityForResult(intent, GUESSING_CARD_REQUEST_CODE);
-            }
-        }
-
         public static class PaymentMethodsActivityBuilder {
 
             private Activity activity;
             private PaymentPreference paymentPreference;
 
-            public PaymentMethodsActivityBuilder setActivity(Activity activity) {
+            public PaymentMethodsActivityBuilder setActivity(final Activity activity) {
                 this.activity = activity;
                 return this;
             }
 
-            public PaymentMethodsActivityBuilder setPaymentPreference(PaymentPreference paymentPreference) {
+            public PaymentMethodsActivityBuilder setPaymentPreference(final PaymentPreference paymentPreference) {
                 this.paymentPreference = paymentPreference;
                 return this;
             }
@@ -188,7 +143,7 @@ public class MercadoPagoComponents {
             }
 
             private void startPaymentMethodsActivity() {
-                Intent paymentMethodsIntent = new Intent(activity, PaymentMethodsActivity.class);
+                final Intent paymentMethodsIntent = new Intent(activity, PaymentMethodsActivity.class);
                 paymentMethodsIntent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
 
                 activity.startActivityForResult(paymentMethodsIntent, PAYMENT_METHODS_REQUEST_CODE);
@@ -200,17 +155,17 @@ public class MercadoPagoComponents {
             private CardInfo cardInformation;
             private List<Issuer> issuers;
 
-            public IssuersActivityBuilder setActivity(Activity activity) {
+            public IssuersActivityBuilder setActivity(final Activity activity) {
                 this.activity = activity;
                 return this;
             }
 
-            public IssuersActivityBuilder setCardInfo(CardInfo cardInformation) {
+            public IssuersActivityBuilder setCardInfo(final CardInfo cardInformation) {
                 this.cardInformation = cardInformation;
                 return this;
             }
 
-            public IssuersActivityBuilder setIssuers(List<Issuer> issuers) {
+            public IssuersActivityBuilder setIssuers(final List<Issuer> issuers) {
                 this.issuers = issuers;
                 return this;
             }
@@ -223,7 +178,7 @@ public class MercadoPagoComponents {
             }
 
             private void startIssuersActivity() {
-                Intent intent = new Intent(activity, IssuersActivity.class);
+                final Intent intent = new Intent(activity, IssuersActivity.class);
                 intent.putExtra("issuers", JsonUtil.getInstance().toJson(issuers));
                 intent.putExtra("cardInfo", JsonUtil.getInstance().toJson(cardInformation));
                 activity.startActivityForResult(intent, ISSUERS_REQUEST_CODE);
@@ -236,22 +191,22 @@ public class MercadoPagoComponents {
             private List<PayerCost> payerCosts;
             private PaymentPreference paymentPreference;
 
-            public InstallmentsActivityBuilder setActivity(Activity activity) {
+            public InstallmentsActivityBuilder setActivity(final Activity activity) {
                 this.activity = activity;
                 return this;
             }
 
-            public InstallmentsActivityBuilder setCardInfo(CardInfo cardInformation) {
+            public InstallmentsActivityBuilder setCardInfo(final CardInfo cardInformation) {
                 cardInfo = cardInformation;
                 return this;
             }
 
-            public InstallmentsActivityBuilder setPaymentPreference(PaymentPreference paymentPreference) {
+            public InstallmentsActivityBuilder setPaymentPreference(final PaymentPreference paymentPreference) {
                 this.paymentPreference = paymentPreference;
                 return this;
             }
 
-            public InstallmentsActivityBuilder setPayerCosts(List<PayerCost> payerCosts) {
+            public InstallmentsActivityBuilder setPayerCosts(final List<PayerCost> payerCosts) {
                 this.payerCosts = payerCosts;
                 return this;
             }
@@ -281,37 +236,37 @@ public class MercadoPagoComponents {
             private PaymentRecovery paymentRecovery;
             private String reason;
 
-            public SecurityCodeActivityBuilder setActivity(Activity activity) {
+            public SecurityCodeActivityBuilder setActivity(final Activity activity) {
                 this.activity = activity;
                 return this;
             }
 
-            public SecurityCodeActivityBuilder setCardInfo(CardInfo cardInformation) {
+            public SecurityCodeActivityBuilder setCardInfo(final CardInfo cardInformation) {
                 this.cardInformation = cardInformation;
                 return this;
             }
 
-            public SecurityCodeActivityBuilder setTrackingReason(String reason) {
+            public SecurityCodeActivityBuilder setTrackingReason(final String reason) {
                 this.reason = reason;
                 return this;
             }
 
-            public SecurityCodeActivityBuilder setPaymentRecovery(PaymentRecovery paymentRecovery) {
+            public SecurityCodeActivityBuilder setPaymentRecovery(final PaymentRecovery paymentRecovery) {
                 this.paymentRecovery = paymentRecovery;
                 return this;
             }
 
-            public SecurityCodeActivityBuilder setPaymentMethod(PaymentMethod paymentMethod) {
+            public SecurityCodeActivityBuilder setPaymentMethod(final PaymentMethod paymentMethod) {
                 this.paymentMethod = paymentMethod;
                 return this;
             }
 
-            public SecurityCodeActivityBuilder setCard(Card card) {
+            public SecurityCodeActivityBuilder setCard(final Card card) {
                 this.card = card;
                 return this;
             }
 
-            public SecurityCodeActivityBuilder setToken(Token token) {
+            public SecurityCodeActivityBuilder setToken(final Token token) {
                 this.token = token;
                 return this;
             }
@@ -355,22 +310,22 @@ public class MercadoPagoComponents {
             private List<PaymentMethod> paymentMethods;
             private List<PaymentType> paymentTypes;
 
-            public PaymentTypesActivityBuilder setActivity(Activity activity) {
+            public PaymentTypesActivityBuilder setActivity(final Activity activity) {
                 this.activity = activity;
                 return this;
             }
 
-            public PaymentTypesActivityBuilder setCardInfo(CardInfo cardInformation) {
+            public PaymentTypesActivityBuilder setCardInfo(final CardInfo cardInformation) {
                 this.cardInformation = cardInformation;
                 return this;
             }
 
-            public PaymentTypesActivityBuilder setPaymentMethods(List<PaymentMethod> paymentMethods) {
+            public PaymentTypesActivityBuilder setPaymentMethods(@Nullable final List<PaymentMethod> paymentMethods) {
                 this.paymentMethods = paymentMethods;
                 return this;
             }
 
-            public PaymentTypesActivityBuilder setPaymentTypes(List<PaymentType> paymentTypes) {
+            public PaymentTypesActivityBuilder setPaymentTypes(final List<PaymentType> paymentTypes) {
                 this.paymentTypes = paymentTypes;
                 return this;
             }
@@ -390,7 +345,7 @@ public class MercadoPagoComponents {
             }
 
             private void startSecurityCodeActivity() {
-                Intent intent = new Intent(activity, PaymentTypesActivity.class);
+                final Intent intent = new Intent(activity, PaymentTypesActivity.class);
                 intent.putExtra("paymentMethods", JsonUtil.getInstance().toJson(paymentMethods));
                 intent.putExtra("paymentTypes", JsonUtil.getInstance().toJson(paymentTypes));
                 intent.putExtra("cardInfo", JsonUtil.getInstance().toJson(cardInformation));
@@ -404,7 +359,7 @@ public class MercadoPagoComponents {
             private PaymentResult paymentResult;
             private BigDecimal amount;
 
-            public PaymentResultActivityBuilder setActivity(Activity activity) {
+            public PaymentResultActivityBuilder setActivity(final Activity activity) {
                 this.activity = activity;
                 return this;
             }
@@ -414,12 +369,12 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public PaymentResultActivityBuilder setAmount(BigDecimal amount) {
+            public PaymentResultActivityBuilder setAmount(final BigDecimal amount) {
                 this.amount = amount;
                 return this;
             }
 
-            public PaymentResultActivityBuilder setPaymentResult(PaymentResult paymentResult) {
+            public PaymentResultActivityBuilder setPaymentResult(final PaymentResult paymentResult) {
                 this.paymentResult = paymentResult;
                 return this;
             }
@@ -451,12 +406,12 @@ public class MercadoPagoComponents {
             private Activity activity;
             private List<BankDeal> bankDeals;
 
-            public BankDealsActivityBuilder setActivity(Activity activity) {
+            public BankDealsActivityBuilder setActivity(final Activity activity) {
                 this.activity = activity;
                 return this;
             }
 
-            public BankDealsActivityBuilder setBankDeals(List<BankDeal> bankDeals) {
+            public BankDealsActivityBuilder setBankDeals(final List<BankDeal> bankDeals) {
                 this.bankDeals = bankDeals;
                 return this;
             }
@@ -469,7 +424,7 @@ public class MercadoPagoComponents {
             }
 
             private void startBankDealsActivity() {
-                Intent bankDealsIntent = new Intent(activity, BankDealsActivity.class);
+                final Intent bankDealsIntent = new Intent(activity, BankDealsActivity.class);
                 if (bankDeals != null) {
                     bankDealsIntent.putExtra("bankDeals", JsonUtil.getInstance().toJson(bankDeals));
                 }
@@ -482,12 +437,12 @@ public class MercadoPagoComponents {
             private Activity activity;
             private List<PaymentMethod> paymentMethods;
 
-            public ReviewPaymentMethodsActivityBuilder setActivity(Activity activity) {
+            public ReviewPaymentMethodsActivityBuilder setActivity(final Activity activity) {
                 this.activity = activity;
                 return this;
             }
 
-            public ReviewPaymentMethodsActivityBuilder setPaymentMethods(List<PaymentMethod> paymentMethods) {
+            public ReviewPaymentMethodsActivityBuilder setPaymentMethods(final List<PaymentMethod> paymentMethods) {
                 this.paymentMethods = paymentMethods;
                 return this;
             }
@@ -506,7 +461,7 @@ public class MercadoPagoComponents {
             }
 
             private void startReviewPaymentMethodsActivity() {
-                Intent intent = new Intent(activity, ReviewPaymentMethodsActivity.class);
+                final Intent intent = new Intent(activity, ReviewPaymentMethodsActivity.class);
                 intent.putExtra("paymentMethods", JsonUtil.getInstance().toJson(paymentMethods));
                 activity.startActivityForResult(intent, REVIEW_PAYMENT_METHODS_REQUEST_CODE);
             }

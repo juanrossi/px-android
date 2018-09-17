@@ -16,15 +16,15 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
-/**
- * Created by mromar on 10/20/17.
- */
-
 public interface PaymentService {
 
     @GET("/v1/payment_methods")
     MPCall<List<PaymentMethod>> getPaymentMethods(@Query("public_key") String publicKey,
         @Query("access_token") String privateKey);
+
+    @GET("/{version}/px_mobile_api/payment_methods/cards")
+    MPCall<List<PaymentMethod>> getCardPaymentMethods(@Path(value = "version", encoded = true) String version,
+        @Query("access_token") String accessToken);
 
     @GET("/{version}/checkout/payment_methods/installments")
     MPCall<List<Installment>> getInstallments(@Path(value = "version", encoded = true) String version,
