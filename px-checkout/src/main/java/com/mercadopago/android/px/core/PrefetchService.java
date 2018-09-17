@@ -4,9 +4,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.core.Settings;
-import com.mercadopago.android.px.internal.datasource.PluginInitializationTask;
+import com.mercadopago.android.px.internal.datasource.PluginInitializationAsync;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
+import com.mercadopago.android.px.internal.repository.PluginInitTask;
+import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.internal.services.CheckoutService;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
@@ -95,15 +97,18 @@ class PrefetchService {
     }
 
     /* default */ void initPlugins() {
-        final PluginInitializationTask initTask = session.getPluginRepository().getInitTask();
-        initTask.initPlugins(new PluginInitializationTask.DataInitializationCallbacks() {
+        final PluginRepository pluginRepository = session.getPluginRepository();
+        final PluginInitTask initTask = pluginRepository.getInitTask(true);
+        initTask.init(new PluginInitializationAsync.DataInitializationCallbacks() {
             @Override
             public void onDataInitialized() {
+                pluginRepository.initialized();
                 fetchGroups();
             }
 
             @Override
             public void onFailure(@NonNull final Exception e) {
+                pluginRepository.initialized();
                 fetchGroups();
             }
         });

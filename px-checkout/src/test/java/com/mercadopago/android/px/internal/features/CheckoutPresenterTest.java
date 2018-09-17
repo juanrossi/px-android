@@ -115,7 +115,7 @@ public class CheckoutPresenterTest {
         final CheckoutView view,
         final CheckoutProvider provider) {
 
-        when(pluginRepository.getInitTask()).thenReturn(new PluginInitializationSuccess());
+        when(pluginRepository.getInitTask(false)).thenReturn(new PluginInitializationSuccess());
 
         final CheckoutStateModel model = new CheckoutStateModel();
         final CheckoutPresenter presenter = new CheckoutPresenter(model, paymentSettingRepository, amountRepository,

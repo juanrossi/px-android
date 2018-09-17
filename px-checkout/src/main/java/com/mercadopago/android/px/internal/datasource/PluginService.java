@@ -6,6 +6,7 @@ import com.mercadopago.android.px.configuration.PaymentConfiguration;
 import com.mercadopago.android.px.core.PaymentMethodPlugin;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
+import com.mercadopago.android.px.internal.repository.PluginInitTask;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentMethodInfo;
@@ -18,12 +19,18 @@ public class PluginService implements PluginRepository {
     @NonNull private final PaymentSettingRepository paymentSettings;
     @NonNull private final DiscountRepository discountRepository;
 
+    /**
+     * represents if the plugin has been initialized.
+     */
+    private boolean hasBeenInitialized;
+
     public PluginService(@NonNull final Context context,
         @NonNull final PaymentSettingRepository paymentSettings,
         @NonNull final DiscountRepository discountRepository) {
         this.context = context;
         this.paymentSettings = paymentSettings;
         this.discountRepository = discountRepository;
+        hasBeenInitialized = false;
     }
 
     @Override
@@ -92,11 +99,38 @@ public class PluginService implements PluginRepository {
     }
 
     @Override
-    public PluginInitializationTask getInitTask() {
-        return new PluginInitializationTask(all(),
-            new PaymentMethodPlugin.CheckoutData(paymentSettings.getCheckoutPreference(),
-                discountRepository.getDiscount(),
-                paymentSettings.getPrivateKey()));
+    public PluginInitTask getInitTask(final boolean sync) {
+        if (hasBeenInitialized) {
+            return new PluginInitTask() {
+                @Override
+                public void init(@NonNull final DataInitializationCallbacks callback) {
+                    callback.onDataInitialized();
+                }
+
+                @Override
+                public void cancel() {
+                    // Do nothing
+                }
+            };
+        } else {
+            if (sync) {
+                return new PluginInitSync(all(),
+                    new PaymentMethodPlugin.CheckoutData(paymentSettings.getCheckoutPreference(),
+                        discountRepository.getDiscount(),
+                        paymentSettings.getPrivateKey()));
+            } else {
+                return new PluginInitializationAsync(all(),
+                    new PaymentMethodPlugin.CheckoutData(paymentSettings.getCheckoutPreference(),
+                        discountRepository.getDiscount(),
+                        paymentSettings.getPrivateKey()));
+            }
+
+        }
+    }
+
+    @Override
+    public void initialized() {
+        hasBeenInitialized = true;
     }
 
     @Override

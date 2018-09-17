@@ -8,7 +8,7 @@ import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.datasource.CheckoutStore;
-import com.mercadopago.android.px.internal.datasource.PluginInitializationTask;
+import com.mercadopago.android.px.internal.datasource.PluginInitializationAsync;
 import com.mercadopago.android.px.internal.features.hooks.Hook;
 import com.mercadopago.android.px.internal.features.hooks.HookHelper;
 import com.mercadopago.android.px.internal.features.providers.CheckoutProvider;
@@ -19,6 +19,7 @@ import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
+import com.mercadopago.android.px.internal.repository.PluginInitTask;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.internal.util.ApiUtil;
@@ -72,7 +73,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private transient FailureRecovery failureRecovery;
 
-    private PluginInitializationTask pluginInitializationTask; //instance saved as attribute to cancel and avoid crash
+    private PluginInitTask pluginInitializationTask; //instance saved as attribute to cancel and avoid crash
 
     public CheckoutPresenter(@NonNull final CheckoutStateModel persistentData,
         @NonNull final PaymentSettingRepository paymentSettingRepository,
@@ -142,20 +143,22 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void initializePluginsData() {
-        pluginInitializationTask = pluginRepository.getInitTask();
-        pluginInitializationTask.execute(getDataInitializationCallback());
+        pluginInitializationTask = pluginRepository.getInitTask(false);
+        pluginInitializationTask.init(getDataInitializationCallback());
     }
 
     @NonNull
-    private PluginInitializationTask.DataInitializationCallbacks getDataInitializationCallback() {
-        return new PluginInitializationTask.DataInitializationCallbacks() {
+    private PluginInitializationAsync.DataInitializationCallbacks getDataInitializationCallback() {
+        return new PluginInitializationAsync.DataInitializationCallbacks() {
             @Override
             public void onDataInitialized() {
+                pluginRepository.initialized();
                 finishInitializingPluginsData();
             }
 
             @Override
             public void onFailure(@NonNull final Exception e) {
+                pluginRepository.initialized();
                 finishInitializingPluginsData();
             }
         };
