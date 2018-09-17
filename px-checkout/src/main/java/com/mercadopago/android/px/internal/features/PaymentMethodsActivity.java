@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.adapters.PaymentMethodsAdapter;
+import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.providers.PaymentMethodsProvider;
 import com.mercadopago.android.px.internal.features.providers.PaymentMethodsProviderImpl;
 import com.mercadopago.android.px.internal.util.ErrorUtil;
@@ -38,7 +39,8 @@ public class PaymentMethodsActivity extends MercadoPagoBaseActivity implements P
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPresenter = new PaymentMethodsPresenter();
+        mPresenter =
+            new PaymentMethodsPresenter(Session.getSession(this).getConfigurationModule().getUserSelectionRepository());
 
         try {
             getActivityParameters();

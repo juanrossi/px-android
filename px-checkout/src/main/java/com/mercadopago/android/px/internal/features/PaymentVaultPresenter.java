@@ -188,6 +188,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     private void selectItem(final PaymentMethodSearchItem item, final Boolean automaticSelection) {
+        userSelectionRepository.select((Card) null);
         if (item.hasChildren()) {
             getView().showSelectedItem(item);
         } else if (item.isPaymentType()) {
@@ -273,9 +274,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         if (skipHook || (!hook1Displayed && !showHook1(itemId))) {
             skipHook = false;
             if (PaymentTypes.isCardPaymentType(itemId)) {
-                // TODO refactor renew configuration for screen recursion
-                configuration.getCheckoutPreference().getPaymentPreference().setDefaultPaymentTypeId(itemId);
-                configuration.configure(configuration.getCheckoutPreference());
+                userSelectionRepository.select(itemId);
                 getView().startCardFlow(automaticSelection);
             } else {
                 getView().startPaymentMethodsSelection(configuration.getCheckoutPreference().getPaymentPreference());

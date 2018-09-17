@@ -1,9 +1,11 @@
 package com.mercadopago.android.px.internal.features;
 
+import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.features.providers.PaymentMethodsProvider;
+import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.internal.util.ApiUtil;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentTypes;
@@ -18,6 +20,11 @@ public class PaymentMethodsPresenter extends MvpPresenter<PaymentMethodsView, Pa
     private PaymentPreference paymentPreference;
     private List<String> supportedPaymentTypes;
     private FailureRecovery failureRecovery;
+    @NonNull private UserSelectionRepository userSelectionRepository;
+
+    public PaymentMethodsPresenter(@NonNull final UserSelectionRepository userSelectionRepository) {
+        this.userSelectionRepository = userSelectionRepository;
+    }
 
     public void setShowBankDeals(boolean showBankDeals) {
         this.showBankDeals = showBankDeals;
@@ -97,7 +104,7 @@ public class PaymentMethodsPresenter extends MvpPresenter<PaymentMethodsView, Pa
         } else {
             supportedPaymentMethods = paymentPreference.getSupportedPaymentMethods(paymentMethods);
             supportedPaymentMethods =
-                getPaymentMethodsOfType(paymentPreference.getDefaultPaymentTypeId(), supportedPaymentMethods);
+                getPaymentMethodsOfType(userSelectionRepository.getPaymentType(), supportedPaymentMethods);
         }
         return supportedPaymentMethods;
     }

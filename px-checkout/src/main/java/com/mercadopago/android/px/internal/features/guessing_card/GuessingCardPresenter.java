@@ -307,7 +307,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         final List<PaymentMethod> supportedPaymentMethods =
             mPaymentPreference.getSupportedPaymentMethods(paymentMethodSearch.getPaymentMethods());
         mPaymentMethodGuessingController = new PaymentMethodGuessingController(
-            supportedPaymentMethods, mPaymentPreference.getDefaultPaymentTypeId(),
+            supportedPaymentMethods, userSelectionRepository.getPaymentType(),
             mPaymentPreference.getExcludedPaymentTypes());
 
         startGuessingForm();
@@ -356,15 +356,7 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
     }
 
     public String getPaymentTypeId() {
-        if (mPaymentMethodGuessingController == null) {
-            if (mPaymentPreference == null) {
-                return null;
-            } else {
-                return mPaymentPreference.getDefaultPaymentTypeId();
-            }
-        } else {
-            return mPaymentMethodGuessingController.getPaymentTypeId();
-        }
+        return userSelectionRepository.getPaymentType();
     }
 
     private void loadPaymentMethods() {
