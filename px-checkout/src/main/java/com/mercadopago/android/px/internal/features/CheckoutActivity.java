@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
@@ -37,7 +38,6 @@ import com.mercadopago.android.px.model.GenericPayment;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
-import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.tracking.internal.MPTracker;
@@ -57,9 +57,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     private static final String EXTRA_PAYMENT_METHOD_CHANGED = "paymentMethodChanged";
     private static final String EXTRA_NEXT_ACTION = "nextAction";
     private static final String EXTRA_RESULT_CODE = "resultCode";
-    private static final String EXTRA_CARD = "card";
-    private static final String EXTRA_TOKEN = "token";
-    private static final String EXTRA_PERSISTENT_DATA = "extra_persistent_data";
     private static final String EXTRA_PRIVATE_KEY = "extra_private_key";
     private static final String EXTRA_PUBLIC_KEY = "extra_public_key";
 
@@ -99,6 +96,11 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     protected void onSaveInstanceState(final Bundle outState) {
         outState.putString(EXTRA_PRIVATE_KEY, privateKey);
         outState.putString(EXTRA_PUBLIC_KEY, merchantPublicKey);
+        if (presenter != null) {
+            final CheckoutStateModel state = presenter.getState();
+            state.toBundle(outState);
+        }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -107,24 +109,24 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         if (savedInstanceState != null) {
             final Session session = Session.getSession(this);
             final ConfigurationModule configurationModule = session.getConfigurationModule();
+
             presenter =
-                new CheckoutPresenter((CheckoutStateModel) getLastCustomNonConfigurationInstance(),
+                new CheckoutPresenter(CheckoutStateModel.fromBundle(savedInstanceState),
                     configurationModule.getPaymentSettings(), session.getAmountRepository(),
                     configurationModule.getUserSelectionRepository(),
                     session.getDiscountRepository(),
                     session.getGroupsRepository(),
                     session.getPluginRepository(),
-                    session.getPaymentRepository());
+                    session.getPaymentRepository(),
+                    session.getInternalConfiguration());
             privateKey = savedInstanceState.getString(EXTRA_PRIVATE_KEY);
             merchantPublicKey = savedInstanceState.getString(EXTRA_PUBLIC_KEY);
             configurePresenter();
-            presenter.initialize();
-        }
-    }
 
-    @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-        return presenter.getState();
+            if (presenter.getState().isOneTap) {
+                presenter.retrievePaymentMethodSearch();
+            }
+        }
     }
 
     protected CheckoutPresenter getActivityParameters() {
@@ -147,7 +149,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             session.getDiscountRepository(),
             session.getGroupsRepository(),
             session.getPluginRepository(),
-            session.getPaymentRepository());
+            session.getPaymentRepository(),
+            session.getInternalConfiguration());
     }
 
     @Override
@@ -334,10 +337,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     private void resolvePaymentVaultRequest(final int resultCode, final Intent data) {
         if (resultCode == RESULT_OK) {
-            final Token token = JsonUtil.getInstance().fromJson(data.getStringExtra(EXTRA_TOKEN), Token.class);
-            final Card card = JsonUtil.getInstance().fromJson(data.getStringExtra(EXTRA_CARD), Card.class);
-
-            presenter.onPaymentMethodSelectionResponse(token, card);
+            presenter.onPaymentMethodSelectionResponse();
         } else if (isErrorResult(data)) {
             final MercadoPagoError mercadoPagoError =
                 JsonUtil.getInstance().fromJson(data.getStringExtra(EXTRA_ERROR), MercadoPagoError.class);
@@ -412,7 +412,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             final String nextAction = data.getStringExtra(EXTRA_NEXT_ACTION);
             presenter.onPaymentResultCancel(nextAction);
         } else {
-
             if (data != null && data.hasExtra(EXTRA_RESULT_CODE)) {
                 final Integer finalResultCode = data.getIntExtra(EXTRA_RESULT_CODE, PAYMENT_RESULT_CODE);
                 customDataBundle = data;
@@ -429,7 +428,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         paymentPreference.setDefaultPaymentTypeId(presenter.getSelectedPaymentMethod().getPaymentTypeId());
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
             .setPaymentRecovery(paymentRecovery)
-            .setCard(presenter.getSelectedCard())
             .startActivity(this, MercadoPagoComponents.Activities.CARD_VAULT_REQUEST_CODE);
         overrideTransitionIn();
     }

@@ -9,9 +9,9 @@ import com.mercadopago.android.px.model.PaymentResult;
 
 public interface PaymentRepository {
 
-    void startPayment(@NonNull final PaymentServiceHandler paymentServiceHandler);
+    void startPayment();
 
-    void startOneTapPayment(@NonNull final OneTapModel oneTapModel, @NonNull final PaymentServiceHandler paymentServiceHandler);
+    void startOneTapPayment(@NonNull final OneTapModel oneTapModel);
 
     @NonNull
     PaymentData getPaymentData();
@@ -20,4 +20,8 @@ public interface PaymentRepository {
     PaymentResult createPaymentResult(IPayment genericPayment);
 
     int getPaymentTimeout();
+
+    void attach(@NonNull final PaymentServiceHandler handler);
+
+    void detach();
 }

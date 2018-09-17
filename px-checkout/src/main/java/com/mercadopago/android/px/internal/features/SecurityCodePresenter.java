@@ -62,6 +62,10 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
         mPaymentRecovery = paymentRecovery;
     }
 
+    public PaymentRecovery getPaymentRecovery() {
+        return mPaymentRecovery;
+    }
+
     public CardInfo getCardInfo() {
         return mCardInfo;
     }

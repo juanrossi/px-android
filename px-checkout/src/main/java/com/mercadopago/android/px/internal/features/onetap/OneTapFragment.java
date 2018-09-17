@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.tracker.FlowHandler;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.internal.tracker.Tracker;
+import com.mercadopago.android.px.internal.util.StatusBarDecorator;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Card;
@@ -53,6 +55,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     private ExplodingFragment explodingFragment;
     private Toolbar toolbar;
     private OneTapView oneTapView;
+    private boolean explodingProcess;
 
     public static OneTapFragment getInstance(@NonNull final OneTapModel oneTapModel) {
         final OneTapFragment oneTapFragment = new OneTapFragment();
@@ -74,6 +77,15 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         super.onResume();
         final OneTapModel model = (OneTapModel) getArguments().getSerializable(ARG_ONE_TAP_MODEL);
         presenter.onViewResumed(model);
+        if (explodingFragment != null && explodingFragment.isAdded() && !explodingProcess) {
+            cancelLoading();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        presenter.onViewPaused();
+        super.onPause();
     }
 
     @Override
@@ -92,6 +104,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     @Override
     public void onDetach() {
         callback = null;
+        presenter.detachView();
         super.onDetach();
     }
 
@@ -108,7 +121,6 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         final Bundle arguments = getArguments();
         if (arguments != null) {
             final Session session = Session.getSession(view.getContext());
-
             final OneTapModel model = (OneTapModel) arguments.getSerializable(ARG_ONE_TAP_MODEL);
             presenter = new OneTapPresenter(model, session.getPaymentRepository());
             configureView(view, presenter, model);
@@ -219,6 +231,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     @Override
     public void showPaymentResult(@NonNull final IPayment paymentResult) {
+        explodingProcess = false;
         //TODO refactor
         if (getActivity() != null) {
             //TODO refactor
@@ -252,7 +265,14 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     public void cancelLoading() {
         showToolbar();
         oneTapView.showButton();
+        explodingProcess = false;
+        restoreStatusBar();
         getChildFragmentManager().beginTransaction().remove(explodingFragment).commitNow();
+    }
+
+    private void restoreStatusBar() {
+        new StatusBarDecorator(getActivity().getWindow())
+            .setupStatusBarColor(ContextCompat.getColor(getContext(), R.color.px_colorPrimaryDark));
     }
 
     private void showToolbar() {
@@ -280,6 +300,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         getChildFragmentManager().beginTransaction()
             .replace(R.id.exploding_frame, explodingFragment)
             .commitNow();
+        explodingProcess = true;
     }
 
     @Override

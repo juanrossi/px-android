@@ -63,5 +63,7 @@ public interface OneTap {
         void onAmountShowMore();
 
         void onViewResumed(final OneTapModel model);
+
+        void onViewPaused();
     }
 }

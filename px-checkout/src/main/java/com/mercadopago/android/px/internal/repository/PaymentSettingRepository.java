@@ -54,4 +54,5 @@ public interface PaymentSettingRepository {
     @Nullable
     Token getToken();
 
+    boolean hasToken();
 }
