@@ -38,15 +38,7 @@ The MercadoPago Android Payment Experience makes it easy to collect your user's 
 Add this line to your app's `build.gradle` inside the `dependencies` section:
 
     implementation 'com.mercadopago.android:px:checkout:4.0.2'
-
-Also, inside the `repositories` section add this repository:
-
-````
-  maven {
-      url "http://dl.bintray.com/mercadolibre/android-public"
-  }
-````
-
+    
 ## 🐒 How to use?
 
 Only **3** steps needed to create a basic checkout using `MercadoPagoCheckout`:
