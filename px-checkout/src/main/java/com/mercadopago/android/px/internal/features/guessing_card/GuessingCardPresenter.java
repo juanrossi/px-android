@@ -40,6 +40,7 @@ import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.services.Callback;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.CardTokenException;
+import com.mercadopago.android.px.tracking.internal.MPTracker;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -829,20 +830,21 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
         getResourcesProvider()
             .createTokenAsync(mCardToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
                 @Override
-                public void onSuccess(Token token) {
+                public void onSuccess(final Token token) {
                     resolveTokenRequest(token);
                 }
 
                 @Override
-                public void onFailure(MercadoPagoError error) {
+                public void onFailure(final MercadoPagoError error) {
                     resolveTokenCreationError(error, ApiUtil.RequestOrigin.CREATE_TOKEN);
                 }
             });
     }
 
-    public void resolveTokenRequest(Token token) {
+    public void resolveTokenRequest(final Token token) {
         mToken = token;
         paymentSettingRepository.configure(mToken);
+        MPTracker.getInstance().trackToken(mToken.getId());
         getIssuers();
     }
 
