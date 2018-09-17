@@ -207,7 +207,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             .drive(new DefaultPaymentMethodDriver.PaymentMethodDriverCallback() {
                 @Override
                 public void driveToCardVault(@NonNull final Card card) {
-                    userSelectionRepository.select(card.getPaymentMethod());
+                    userSelectionRepository.select(card);
                     getView().showSavedCardFlow(card);
                 }
 
