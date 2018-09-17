@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.guessing;
 
+import android.support.annotation.Nullable;
 import com.mercadopago.android.px.configuration.AdvancedConfiguration;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
@@ -861,6 +862,11 @@ public class GuessingCardPaymentPresenterTest {
         }
 
         @Override
+        public void finishCardStorageFlow(@Nullable final String cardId) {
+            // Empty body
+        }
+
+        @Override
         public void showProgress() {
             // Empty body
         }
@@ -1200,6 +1206,16 @@ public class GuessingCardPaymentPresenterTest {
 
         @Override
         public void getIdentificationTypesAsync(final TaggedCallback<List<IdentificationType>> taggedCallback) {
+            if (shouldFail) {
+                taggedCallback.onFailure(failedResponse);
+            } else {
+                taggedCallback.onSuccess(successfulIdentificationTypesResponse);
+            }
+        }
+
+        @Override
+        public void getIdentificationTypesAsync(final String accessToken,
+            final TaggedCallback<List<IdentificationType>> taggedCallback) {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);
             } else {
