@@ -63,12 +63,12 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
     public void trackInitialScreen(PaymentMethodSearch paymentMethodSearch, String siteId) {
         initializeMPTracker(siteId);
         Tracker
-            .trackPaymentVaultScreen(context, merchantPublicKey, paymentMethodSearch, mercadoPagoESC.getESCCardIds());
+            .trackPaymentVaultScreen(context, paymentMethodSearch, mercadoPagoESC.getESCCardIds());
     }
 
     public void trackChildrenScreen(@NonNull final PaymentMethodSearchItem paymentMethodSearchItem,
         final @NonNull String siteId) {
         initializeMPTracker(siteId);
-        Tracker.trackPaymentVaultChildrenScreen(context, merchantPublicKey, paymentMethodSearchItem);
+        Tracker.trackPaymentVaultChildrenScreen(context, paymentMethodSearchItem);
     }
 }

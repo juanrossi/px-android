@@ -24,8 +24,7 @@ public interface CheckoutView extends MvpView {
 
     void showPaymentMethodSelection();
 
-    void showPaymentResult(PaymentResult paymentResult, @NonNull final BigDecimal amountToPay,
-        @Nullable final Discount discount);
+    void showPaymentResult(PaymentResult paymentResult);
 
     void backToReviewAndConfirm();
 

@@ -366,7 +366,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     public boolean showHook1(final String typeId) {
-        return showHook1(typeId, MercadoPagoComponents.Activities.HOOK_1);
+        return showHook1(typeId, Constants.Activities.HOOK_1);
     }
 
     public boolean showHook1(final String typeId, final int requestCode) {
@@ -416,7 +416,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     public void selectPluginPaymentMethod(final PaymentMethodPlugin plugin) {
         userSelectionRepository.select(pluginRepository.getPluginAsPaymentMethod(plugin.getId(), PaymentTypes.PLUGIN));
-        if (!showHook1(PaymentTypes.PLUGIN, MercadoPagoComponents.Activities.HOOK_1_PLUGIN)) {
+        if (!showHook1(PaymentTypes.PLUGIN, Constants.Activities.HOOK_1_PLUGIN)) {
 
             if (plugin.isEnabled() && plugin.shouldShowFragmentOnSelection()) {
                 getView().showPaymentMethodPluginActivity();

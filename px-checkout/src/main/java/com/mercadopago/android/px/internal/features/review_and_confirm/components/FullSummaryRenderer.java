@@ -39,7 +39,7 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
         final LinearLayout disclaimerLinearLayout = summaryView.findViewById(R.id.disclaimer);
 
         //summaryDetails list
-        for (final AmountDescription amountDescription : component.getAmountDescriptionComponents()) {
+        for (final AmountDescription amountDescription : component.getAmountDescriptionComponents(context)) {
             final Renderer amountDescriptionRenderer = RendererFactory.create(context, amountDescription);
             final View amountView = amountDescriptionRenderer.render();
             summaryDetailsContainer.addView(amountView);
@@ -75,8 +75,8 @@ public class FullSummaryRenderer extends Renderer<FullSummary> {
             getFormattedAmount(component.props.summaryModel.getAmountToPay(), component.props.summaryModel.currencyId));
 
         //disclaimer
-        setText(disclaimerTextView, component.getSummary().getDisclaimerText());
-        disclaimerTextView.setTextColor(component.getSummary().getDisclaimerColor());
+        setText(disclaimerTextView, component.getSummary(context).getDisclaimerText());
+        disclaimerTextView.setTextColor(component.getSummary(context).getDisclaimerColor());
 
         return summaryView;
     }

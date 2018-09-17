@@ -3,7 +3,6 @@ package com.mercadopago.android.px.internal.features.review_and_confirm.componen
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.configuration.ReviewAndConfirmConfiguration;
-import com.mercadopago.android.px.internal.features.review_and_confirm.SummaryProvider;
 import com.mercadopago.android.px.internal.features.review_and_confirm.models.ItemsModel;
 import com.mercadopago.android.px.internal.features.review_and_confirm.models.PaymentModel;
 import com.mercadopago.android.px.internal.features.review_and_confirm.models.SummaryModel;
@@ -14,21 +13,12 @@ import com.mercadopago.android.px.internal.view.RendererFactory;
 
 public class ReviewAndConfirmContainer extends Component<ReviewAndConfirmContainer.Props, Void> {
 
-    private final SummaryProvider summaryProvider;
-
     static {
         RendererFactory.register(ReviewAndConfirmContainer.class, ReviewAndConfirmRenderer.class);
     }
 
-    public ReviewAndConfirmContainer(@NonNull final Props props,
-        @NonNull ActionDispatcher dispatcher,
-        @NonNull final SummaryProvider summaryProvider) {
+    public ReviewAndConfirmContainer(@NonNull final Props props, @NonNull final ActionDispatcher dispatcher) {
         super(props, dispatcher);
-        this.summaryProvider = summaryProvider;
-    }
-
-    SummaryProvider getSummaryProvider() {
-        return summaryProvider;
     }
 
     public boolean hasItemsEnabled() {

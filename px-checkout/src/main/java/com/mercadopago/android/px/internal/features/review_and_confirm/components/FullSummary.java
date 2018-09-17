@@ -1,9 +1,13 @@
 package com.mercadopago.android.px.internal.features.review_and_confirm.components;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.ContextCompat;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.configuration.ReviewAndConfirmConfiguration;
-import com.mercadopago.android.px.internal.features.review_and_confirm.SummaryProvider;
+import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.review_and_confirm.props.AmountDescriptionProps;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.internal.view.Component;
@@ -18,22 +22,18 @@ import static com.mercadopago.android.px.internal.util.TextUtil.isNotEmpty;
 
 public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> {
 
-    private final SummaryProvider provider;
-
     static {
         RendererFactory.register(FullSummary.class, FullSummaryRenderer.class);
     }
 
-    FullSummary(@NonNull final SummaryComponent.SummaryProps props,
-        @NonNull final SummaryProvider provider) {
+    /* default */ FullSummary(@NonNull final SummaryComponent.SummaryProps props) {
         super(props);
-        this.provider = provider;
     }
 
-    public List<AmountDescription> getAmountDescriptionComponents() {
+    public List<AmountDescription> getAmountDescriptionComponents(@NonNull final Context context) {
         final List<AmountDescription> amountDescriptionList = new ArrayList<>();
 
-        for (final SummaryDetail summaryDetail : getSummary().getSummaryDetails()) {
+        for (final SummaryDetail summaryDetail : getSummary(context).getSummaryDetails()) {
             final AmountDescriptionProps amountDescriptionProps = new AmountDescriptionProps(
                 summaryDetail.getTotalAmount(),
                 summaryDetail.getTitle(),
@@ -47,53 +47,71 @@ public class FullSummary extends Component<SummaryComponent.SummaryProps, Void> 
         return amountDescriptionList;
     }
 
+    /* default */
     @VisibleForTesting
-    Summary getSummary() {
+    Summary getSummary(@NonNull final Context context) {
+
+        final int defaultTextColor = ContextCompat.getColor(context, R.color.px_summary_text_color);
+
         final ReviewAndConfirmConfiguration reviewAndConfirmConfiguration = props.reviewAndConfirmConfiguration;
         final Summary.Builder summaryBuilder = new Summary.Builder();
 
         if (isPrefAmountDifferent(props.summaryModel.getCharges()) &&
             reviewAndConfirmConfiguration.hasProductAmount()) {
             summaryBuilder.addSummaryProductDetail(reviewAndConfirmConfiguration.getProductAmount(), getItemTitle(),
-                provider.getDefaultTextColor())
+                defaultTextColor)
 
                 .addSummaryShippingDetail(reviewAndConfirmConfiguration.getShippingAmount(),
-                    provider.getSummaryShippingTitle(), provider.getDefaultTextColor())
+                    context.getString(R.string.px_review_summary_shipping), defaultTextColor)
 
                 .addSummaryArrearsDetail(reviewAndConfirmConfiguration.getArrearsAmount(),
-                    provider.getSummaryArrearTitle(),
-                    provider.getDefaultTextColor())
+                    context.getString(R.string.px_review_summary_arrear),
+                    defaultTextColor)
 
-                .addSummaryTaxesDetail(reviewAndConfirmConfiguration.getTaxesAmount(), provider.getSummaryTaxesTitle(),
-                    provider.getDefaultTextColor())
+                .addSummaryTaxesDetail(reviewAndConfirmConfiguration.getTaxesAmount(),
+                    context.getString(R.string.px_review_summary_taxes),
+                    defaultTextColor)
 
-                .addSummaryDiscountDetail(getDiscountAmount(), provider.getSummaryDiscountsTitle(),
-                    provider.getDiscountTextColor())
+                .addSummaryDiscountDetail(getDiscountAmount(),
+                    context.getString(R.string.px_review_summary_discount),
+                    ContextCompat.getColor(context, R.color.px_discount_description))
 
                 .setDisclaimerText(reviewAndConfirmConfiguration.getDisclaimerText())
-                .setDisclaimerColor(provider.getDisclaimerTextColor());
+                .setDisclaimerColor(getDisclaimerTextColor(context));
         } else {
             summaryBuilder.addSummaryProductDetail(props.summaryModel.getItemsAmount(), getItemTitle(),
-                provider.getDefaultTextColor());
+                defaultTextColor);
 
             if (!TextUtil.isEmpty(reviewAndConfirmConfiguration.getDisclaimerText())) {
                 summaryBuilder.setDisclaimerText(reviewAndConfirmConfiguration.getDisclaimerText())
-                    .setDisclaimerColor(provider.getDisclaimerTextColor());
+                    .setDisclaimerColor(getDisclaimerTextColor(context));
             }
 
             if (isValidAmount(props.summaryModel.getCouponAmount())) {
                 summaryBuilder.addSummaryDiscountDetail(props.summaryModel.getCouponAmount(),
-                    provider.getSummaryDiscountsTitle(),
-                    provider.getDiscountTextColor());
+                    context.getString(R.string.px_review_summary_discount),
+                    ContextCompat.getColor(context, R.color.px_discount_description));
             }
         }
 
         if (props.summaryModel.hasCharges()) {
-            summaryBuilder.addSummaryChargeDetail(props.summaryModel.getCharges(), provider.getSummaryChargesTitle(),
-                provider.getDefaultTextColor());
+            summaryBuilder.addSummaryChargeDetail(props.summaryModel.getCharges(),
+                context.getString(R.string.px_review_summary_charges),
+                defaultTextColor);
         }
 
         return summaryBuilder.build();
+    }
+
+    private int getDisclaimerTextColor(@NonNull final Context context) {
+        final ReviewAndConfirmConfiguration reviewAndConfirmConfiguration =
+            Session.getSession(context).getConfigurationModule().getPaymentSettings().getAdvancedConfiguration()
+                .getReviewAndConfirmConfiguration();
+        if (TextUtil.isEmpty(reviewAndConfirmConfiguration.getDisclaimerTextColor())) {
+            return ContextCompat.getColor(context, R.color.px_default_disclaimer);
+        } else {
+            return Color.parseColor(reviewAndConfirmConfiguration.getDisclaimerTextColor());
+        }
     }
 
     private String getItemTitle() {

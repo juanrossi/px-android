@@ -1,13 +1,16 @@
 package com.mercadopago.android.px.internal.features.paymentresult;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.configuration.PaymentResultScreenConfiguration;
-import com.mercadopago.android.px.internal.features.MercadoPagoComponents;
+import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.internal.di.Session;
+import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.features.paymentresult.components.AccreditationComment;
 import com.mercadopago.android.px.internal.features.paymentresult.components.AccreditationCommentRenderer;
 import com.mercadopago.android.px.internal.features.paymentresult.components.AccreditationTime;
@@ -38,6 +41,7 @@ import com.mercadopago.android.px.internal.features.paymentresult.components.Ins
 import com.mercadopago.android.px.internal.features.paymentresult.components.InstructionsTertiaryInfoRenderer;
 import com.mercadopago.android.px.internal.features.paymentresult.components.PaymentResultContainer;
 import com.mercadopago.android.px.internal.features.paymentresult.props.PaymentResultProps;
+import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.internal.util.ErrorUtil;
@@ -48,25 +52,40 @@ import com.mercadopago.android.px.internal.view.LoadingComponent;
 import com.mercadopago.android.px.internal.view.LoadingRenderer;
 import com.mercadopago.android.px.internal.view.RendererFactory;
 import com.mercadopago.android.px.model.PaymentResult;
-import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.ScreenViewEvent;
 import com.mercadopago.android.px.model.exceptions.ApiException;
+import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import java.math.BigDecimal;
+
+import static com.mercadopago.android.px.internal.features.Constants.RESULT_ACTION;
+import static com.mercadopago.android.px.internal.features.Constants.RESULT_CUSTOM_EXIT;
 
 public class PaymentResultActivity extends AppCompatActivity implements PaymentResultNavigator {
 
+    public static final String EXTRA_NEXT_ACTION = "extra_next_action";
+    public static final String EXTRA_RESULT_CODE = "extra_result_code";
 
     public static final String CONGRATS_DISPLAY_BUNDLE = "congratsDisplay";
 
     public static final String PAYMENT_RESULT_BUNDLE = "paymentResult";
     public static final String AMOUNT_BUNDLE = "amount";
 
-    private static final String EXTRA_NEXT_ACTION = "nextAction";
-
     private PaymentResultPresenter presenter;
     private Integer congratsDisplay;
 
     private PaymentResultPropsMutator mutator;
+
+    public static Intent getIntent(@NonNull final Context context, @NonNull final PaymentResult result) {
+
+        final Session session = Session.getSession(context);
+        final DiscountRepository discountRepository = session.getDiscountRepository();
+        final Intent resultIntent = new Intent(context, PaymentResultActivity.class);
+        //TODO remove
+        resultIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(result));
+        resultIntent.putExtra("discount", JsonUtil.getInstance().toJson(discountRepository.getDiscount()));
+        resultIntent.putExtra("amount", session.getAmountRepository().getAmountToPay());
+        return resultIntent;
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -171,12 +190,12 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
 
     protected void getActivityParameters() {
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         BigDecimal amount = null;
         if (intent.getStringExtra("amount") != null) {
             amount = new BigDecimal(intent.getStringExtra("amount"));
         }
-        PaymentResult paymentResult =
+        final PaymentResult paymentResult =
             JsonUtil.getInstance().fromJson(intent.getExtras().getString("paymentResult"), PaymentResult.class);
 
         presenter.setAmount(amount);
@@ -187,24 +206,24 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == MercadoPagoComponents.Activities.CONGRATS_REQUEST_CODE) {
+        if (requestCode == Constants.Activities.CONGRATS_REQUEST_CODE) {
             finishWithOkResult(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.PENDING_REQUEST_CODE) {
+        } else if (requestCode == Constants.Activities.PENDING_REQUEST_CODE) {
             resolveRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.REJECTION_REQUEST_CODE) {
+        } else if (requestCode == Constants.Activities.REJECTION_REQUEST_CODE) {
             resolveRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.CALL_FOR_AUTHORIZE_REQUEST_CODE) {
+        } else if (requestCode == Constants.Activities.CALL_FOR_AUTHORIZE_REQUEST_CODE) {
             resolveRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.INSTRUCTIONS_REQUEST_CODE) {
+        } else if (requestCode == Constants.Activities.INSTRUCTIONS_REQUEST_CODE) {
             finishWithOkResult(resultCode, data);
         } else {
             finishWithCancelResult(data);
         }
     }
 
-    private void resolveTimerObserverResult(final int resultCode) {
-        setResult(resultCode);
-        finish();
+    @Override
+    public void onBackPressed() {
+        finishWithResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
     }
 
     private void resolveRequest(final int resultCode, final Intent data) {
@@ -226,42 +245,40 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
     }
 
     @Override
-    public void openLink(String url) {
+    public void openLink(final String url) {
         //TODO agregar try catch
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
     }
 
     @Override
-    public void finishWithResult(int resultCode) {
+    public void finishWithResult(final int resultCode) {
         final Intent intent = new Intent();
-        intent.putExtra("resultCode", resultCode);
-        setResult(resultCode, intent);
+        intent.putExtra(EXTRA_RESULT_CODE, resultCode);
+        setResult(RESULT_CUSTOM_EXIT, intent);
         finish();
     }
 
     @Override
     public void changePaymentMethod() {
         final Intent returnIntent = new Intent();
-        final String action = PaymentResult.SELECT_OTHER_PAYMENT_METHOD;
-        returnIntent.putExtra(EXTRA_NEXT_ACTION, action);
-        setResult(RESULT_CANCELED, returnIntent);
+        returnIntent.putExtra(EXTRA_NEXT_ACTION, Constants.ACTION_SELECT_OTHER_PAYMENT_METHOD);
+        setResult(RESULT_ACTION, returnIntent);
         finish();
     }
 
     @Override
     public void recoverPayment() {
         final Intent returnIntent = new Intent();
-        final String action = PaymentResult.RECOVER_PAYMENT;
-        returnIntent.putExtra(EXTRA_NEXT_ACTION, action);
-        setResult(RESULT_CANCELED, returnIntent);
+        returnIntent.putExtra(EXTRA_NEXT_ACTION, Constants.ACTION_RECOVER_PAYMENT);
+        setResult(RESULT_ACTION, returnIntent);
         finish();
     }
 
     @Override
-    public void trackScreen(ScreenViewEvent event) {
+    public void trackScreen(final ScreenViewEvent event) {
         final String publicKey = Session.getSession(this).getConfigurationModule().getPaymentSettings().getPublicKey();
-        MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder(this, publicKey)
+        final MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder(this, publicKey)
             .setVersion(BuildConfig.VERSION_NAME)
             .build();
 

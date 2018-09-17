@@ -36,6 +36,7 @@ import com.mercadopago.android.px.internal.services.GatewayService;
 import com.mercadopago.android.px.internal.util.LocaleUtil;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.model.Device;
+import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
 
 public final class Session extends ApplicationModule
     implements AmountComponent {
@@ -241,5 +242,13 @@ public final class Session extends ApplicationModule
     @NonNull
     public InternalConfiguration getInternalConfiguration() {
         return internalConfiguration == null ? new InternalConfiguration(false) : internalConfiguration;
+    }
+
+    //TODO move.
+    @NonNull
+    public BusinessModelMapper getBusinessModelMapper() {
+        return new BusinessModelMapper(getDiscountRepository(), getConfigurationModule().getPaymentSettings(),
+            getAmountRepository(),
+            getPaymentRepository());
     }
 }

@@ -2,6 +2,7 @@ package com.mercadopago.android.px.internal.datasource;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.mercadopago.android.px.core.PaymentProcessor;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandlerWrapper;
@@ -19,8 +20,10 @@ import com.mercadopago.android.px.internal.viewmodel.mappers.PaymentMethodMapper
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.IPayment;
 import com.mercadopago.android.px.model.OneTapMetadata;
+import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentMethod;
+import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.android.px.model.Token;
@@ -46,6 +49,8 @@ public class PaymentService implements PaymentRepository {
     @NonNull private final EscManager escManager;
 
     @NonNull private final PaymentServiceHandlerWrapper handlerWrapper;
+
+    @Nullable private IPayment payment;
 
     public PaymentService(@NonNull final UserSelectionRepository userSelectionRepository,
         @NonNull final PaymentSettingRepository paymentSettingRepository,
@@ -80,6 +85,41 @@ public class PaymentService implements PaymentRepository {
     @Override
     public void detach() {
         handlerWrapper.setHandler(null);
+    }
+
+    @Override
+    public void storePayment(@NonNull final IPayment iPayment) {
+        payment = iPayment;
+    }
+
+    @Nullable
+    @Override
+    public IPayment getPayment() {
+        return payment;
+    }
+
+    @Override
+    public boolean hasPayment() {
+        return payment != null;
+    }
+
+    @NonNull
+    @Override
+    public PaymentRecovery createRecoveryForInvalidESC() {
+        return new PaymentRecovery(paymentSettingRepository.getToken(), userSelectionRepository.getPaymentMethod(),
+            userSelectionRepository.getPayerCost(), userSelectionRepository.getIssuer(),
+            Payment.StatusCodes.STATUS_REJECTED,
+            Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC);
+    }
+
+    @NonNull
+    @Override
+    public PaymentRecovery createPaymentRecovery() {
+        return new PaymentRecovery(paymentSettingRepository.getToken(),
+            userSelectionRepository.getPaymentMethod(),
+            userSelectionRepository.getPayerCost(),
+            userSelectionRepository.getIssuer(), getPayment().getPaymentStatus(),
+            getPayment().getPaymentStatusDetail());
     }
 
     /**

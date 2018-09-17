@@ -176,7 +176,7 @@ public class PaymentMethodsActivity extends MercadoPagoBaseActivity implements P
         mBankDealsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MercadoPagoComponents.Activities.BankDealsActivityBuilder()
+                new Constants.Activities.BankDealsActivityBuilder()
                     .setActivity(PaymentMethodsActivity.this)
                     .startActivity();
             }

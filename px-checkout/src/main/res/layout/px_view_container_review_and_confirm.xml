@@ -54,4 +54,10 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/exploding_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="@dimen/px_xxs_margin"/>
+
 </FrameLayout>

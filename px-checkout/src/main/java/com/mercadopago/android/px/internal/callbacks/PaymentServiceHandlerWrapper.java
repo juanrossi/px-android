@@ -9,6 +9,7 @@ import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.GenericPayment;
 import com.mercadopago.android.px.model.IPayment;
 import com.mercadopago.android.px.model.Payment;
+import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
@@ -48,15 +49,16 @@ public final class PaymentServiceHandlerWrapper implements PaymentServiceHandler
     }
 
     @Override
-    public void onRecoverPaymentEscInvalid() {
-        addAndProcess(new RecoverPaymentEscInvalidMessage());
+    public void onRecoverPaymentEscInvalid(final PaymentRecovery recovery) {
+        addAndProcess(new RecoverPaymentEscInvalidMessage(recovery));
     }
 
     @Override
     public void onPaymentFinished(@NonNull final Payment payment) {
         if (handleEsc(payment)) {
-            onRecoverPaymentEscInvalid();
+            onRecoverPaymentEscInvalid(paymentRepository.createRecoveryForInvalidESC());
         } else {
+            paymentRepository.storePayment(payment);
             addAndProcess(new PaymentMessage(payment));
         }
     }
@@ -64,8 +66,9 @@ public final class PaymentServiceHandlerWrapper implements PaymentServiceHandler
     @Override
     public void onPaymentFinished(@NonNull final GenericPayment genericPayment) {
         if (handleEsc(genericPayment)) {
-            onRecoverPaymentEscInvalid();
+            onRecoverPaymentEscInvalid(paymentRepository.createRecoveryForInvalidESC());
         } else {
+            paymentRepository.storePayment(genericPayment);
             addAndProcess(new GenericPaymentMessage(genericPayment));
         }
     }
@@ -73,13 +76,14 @@ public final class PaymentServiceHandlerWrapper implements PaymentServiceHandler
     @Override
     public void onPaymentFinished(@NonNull final BusinessPayment businessPayment) {
         handleEsc(businessPayment);
+        paymentRepository.storePayment(businessPayment);
         addAndProcess(new BusinessPaymentMessage(businessPayment));
     }
 
     @Override
     public void onPaymentError(@NonNull final MercadoPagoError error) {
         if (handleEsc(error)) {
-            onRecoverPaymentEscInvalid();
+            onRecoverPaymentEscInvalid(paymentRepository.createRecoveryForInvalidESC());
         } else {
             addAndProcess(new ErrorMessage(error));
         }
@@ -132,9 +136,16 @@ public final class PaymentServiceHandlerWrapper implements PaymentServiceHandler
     }
 
     private static class RecoverPaymentEscInvalidMessage implements Message {
+
+        private final PaymentRecovery recovery;
+
+        /* default */ RecoverPaymentEscInvalidMessage(final PaymentRecovery recovery) {
+            this.recovery = recovery;
+        }
+
         @Override
         public void processMessage(@NonNull final PaymentServiceHandler handler) {
-            handler.onRecoverPaymentEscInvalid();
+            handler.onRecoverPaymentEscInvalid(recovery);
         }
     }
 

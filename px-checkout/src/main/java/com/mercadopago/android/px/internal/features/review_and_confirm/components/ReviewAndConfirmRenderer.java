@@ -62,8 +62,7 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
     private void addSummary(@NonNull final ReviewAndConfirmContainer component, final LinearLayout linearLayout) {
         final Renderer summary = RendererFactory.create(linearLayout.getContext(),
             new SummaryComponent(SummaryComponent.SummaryProps.createFrom(component.props.summaryModel,
-                component.props.preferences),
-                component.getSummaryProvider()));
+                component.props.preferences)));
         summary.render(linearLayout);
     }
 

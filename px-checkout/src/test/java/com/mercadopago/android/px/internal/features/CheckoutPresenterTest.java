@@ -20,7 +20,6 @@ import com.mercadopago.android.px.mocks.PaymentMethodSearchs;
 import com.mercadopago.android.px.mocks.Payments;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Customer;
-import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.Payer;
 import com.mercadopago.android.px.model.PayerCost;
@@ -39,14 +38,18 @@ import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.utils.PluginInitializationSuccess;
 import com.mercadopago.android.px.utils.StubSuccessMpCall;
-import java.math.BigDecimal;
+import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
 import java.util.ArrayList;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static com.mercadopago.android.px.internal.features.Constants.ACTION_RECOVER_PAYMENT;
+import static com.mercadopago.android.px.internal.features.Constants.ACTION_SELECT_OTHER_PAYMENT_METHOD;
+import static com.mercadopago.android.px.internal.features.Constants.RESULT_CHANGE_PAYMENT_METHOD;
 import static com.mercadopago.android.px.utils.StubCheckoutPreferenceUtils.stubExpiredPreference;
 import static com.mercadopago.android.px.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItem;
 import static com.mercadopago.android.px.utils.StubCheckoutPreferenceUtils.stubPreferenceOneItemAndPayer;
@@ -61,8 +64,9 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 @RunWith(MockitoJUnitRunner.class)
 public class CheckoutPresenterTest {
 
-    public static final String DEFAULT_CARD_ID = "260077840";
-    public static final String DEBIT_CARD_DEBCABAL = "debcabal";
+    private static final String DEFAULT_CARD_ID = "260077840";
+    private static final String DEBIT_CARD_DEBCABAL = "debcabal";
+
     @Mock private CheckoutView checkoutView;
     @Mock private CheckoutProvider checkoutProvider;
     @Mock private PaymentSettingRepository paymentSettingRepository;
@@ -73,6 +77,7 @@ public class CheckoutPresenterTest {
     @Mock private PluginRepository pluginRepository;
     @Mock private PaymentRepository paymentRepository;
     @Mock private InternalConfiguration internalConfiguration;
+    @Mock private BusinessModelMapper businessModelMapper;
 
     private MockedView stubView;
     private MockedProvider stubProvider;
@@ -123,7 +128,9 @@ public class CheckoutPresenterTest {
             groupsRepository,
             pluginRepository,
             paymentRepository,
-            internalConfiguration);
+            internalConfiguration,
+            businessModelMapper
+        );
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
         return presenter;
@@ -273,27 +280,6 @@ public class CheckoutPresenterTest {
     }
 
     @Test
-    public void whenPaymentIsConfirmedAndNoHookAvailableThenCreatePayment() {
-        final CheckoutPresenter presenter = getPresenter();
-        final PaymentData paymentData = mock(PaymentData.class);
-
-        when(paymentRepository.getPaymentData()).thenReturn(paymentData);
-
-        //When Ok Response from Review And confirm
-        presenter.onPaymentConfirmation();
-
-        verify(paymentRepository).attach(presenter);
-        verify(paymentRepository).getPaymentData();
-        verify(checkoutView).showProgress();
-        verify(paymentRepository).startPayment();
-
-        verifyNoMoreInteractions(checkoutView);
-        verifyNoMoreInteractions(checkoutProvider);
-        verifyNoMoreInteractions(paymentRepository);
-        verifyNoMoreInteractions(userSelectionRepository);
-    }
-
-    @Test
     public void whenPresenterDetachedThenPaymentRepositoryIsDetached(){
         final CheckoutPresenter presenter = getPresenter();
         verify(paymentRepository).attach(presenter);
@@ -307,7 +293,9 @@ public class CheckoutPresenterTest {
         final CheckoutPresenter presenter = getPresenter();
         final Payment payment = mock(Payment.class);
 
-        presenter.onPaymentFinished(payment);
+        when(paymentRepository.hasPayment()).thenReturn(true);
+        when(paymentRepository.getPayment()).thenReturn(payment);
+
         presenter.onPaymentResultResponse();
 
         verify(checkoutView).finishWithPaymentResult(payment);
@@ -326,7 +314,7 @@ public class CheckoutPresenterTest {
     public void whenPaymentIsCanceledBecauseUserWantsToSelectOtherPaymentMethodThenShowPaymentMethodSelection() {
         final CheckoutPresenter presenter = getPresenter();
 
-        presenter.onPaymentResultCancel(PaymentResult.SELECT_OTHER_PAYMENT_METHOD);
+        presenter.onPaymentResultAction(ACTION_SELECT_OTHER_PAYMENT_METHOD);
 
         verify(checkoutView).showPaymentMethodSelection();
         verifyNoMoreInteractions(checkoutView);
@@ -336,12 +324,12 @@ public class CheckoutPresenterTest {
     @Test
     public void whenUserSelectChangePaymentMethodFromPaymentResultAndExitOnIsTrueThenNotShowPaymentMethodSelection() {
         final CheckoutPresenter presenter = getPresenter();
-
+        when(paymentRepository.getPayment()).thenReturn(mock(Payment.class));
         when(internalConfiguration.shouldExitOnPaymentMethodChange()).thenReturn(true);
 
-        presenter.onPaymentResultCancel(PaymentResult.SELECT_OTHER_PAYMENT_METHOD);
+        presenter.onPaymentResultAction(ACTION_SELECT_OTHER_PAYMENT_METHOD);
 
-        verify(checkoutView).finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD);
+        verify(checkoutView).finishWithPaymentResult(Constants.RESULT_CHANGE_PAYMENT_METHOD, (Payment) paymentRepository.getPayment());
     }
 
     @Test
@@ -352,28 +340,27 @@ public class CheckoutPresenterTest {
 
         presenter.onChangePaymentMethod();
 
-        verify(checkoutView).finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD);
+        verify(checkoutView).finishWithPaymentResult(RESULT_CHANGE_PAYMENT_METHOD);
     }
 
     @Test
     public void whenPaymentIsCanceledBecausePaymentRecoveryIsRequiredAndPaymentRecoveryCreationIsValidThenStartPaymentRecoveryFlow() {
         final CheckoutPresenter presenter = getPresenter();
-        final Payment payment = mock(Payment.class);
+        final PaymentRecovery paymentRecovery = mock(PaymentRecovery.class);
+        when(paymentRepository.createPaymentRecovery()).thenReturn(paymentRecovery);
 
-        whenFlowHasRecoverableTokenProcess(payment);
+        presenter.onPaymentResultAction(ACTION_RECOVER_PAYMENT);
 
-        presenter.onPaymentFinished(payment);
-
-        presenter.onPaymentResultCancel(PaymentResult.RECOVER_PAYMENT);
-
-        verify(checkoutView).startPaymentRecoveryFlow(any(PaymentRecovery.class));
+        verify(checkoutView).startPaymentRecoveryFlow(paymentRecovery);
     }
 
+    //TODO verify, should not happen
+    @Ignore
     @Test
     public void whenPaymentIsCanceledBecausePaymentRecoveryIsRequiredButPaymentRecoveryCreationIsNotValidThenShowMercadoPagoError() {
         final CheckoutPresenter presenter = getPresenter();
 
-        presenter.onPaymentResultCancel(PaymentResult.RECOVER_PAYMENT);
+        presenter.onPaymentResultAction(ACTION_RECOVER_PAYMENT);
 
         verify(checkoutView).showError(any(MercadoPagoError.class));
         verifyNoMoreInteractions(checkoutView);
@@ -382,12 +369,11 @@ public class CheckoutPresenterTest {
     @Test
     public void whenCardFlowResponseHasRecoverableTokenProcessThenCreatePayment() {
         final CheckoutPresenter presenter = getPresenter();
-        final Payment payment = mock(Payment.class);
+        final PaymentRecovery paymentRecovery = mock(PaymentRecovery.class);
+        when(paymentRepository.hasPayment()).thenReturn(true);
+        when(paymentRepository.createPaymentRecovery()).thenReturn(paymentRecovery);
+        when(paymentRecovery.isTokenRecoverable()).thenReturn(true);
 
-        whenFlowHasRecoverableTokenProcess(payment);
-
-        presenter.onPaymentFinished(payment);
-        presenter.onPaymentResultCancel(PaymentResult.RECOVER_PAYMENT);
         presenter.onCardFlowResponse();
 
         verify(checkoutView).showProgress();
@@ -398,12 +384,16 @@ public class CheckoutPresenterTest {
     public void whenCardFlowResponseHasNotRecoverableTokenProcessAndThereIsNoAvailableHooksThenShowReviewAndConfirm() {
         final CheckoutPresenter presenter = getPresenter();
         final PaymentData paymentData = mock(PaymentData.class);
+
+        when(paymentRepository.hasPayment()).thenReturn(false);
+
         when(paymentRepository.getPaymentData()).thenReturn(paymentData);
 
         presenter.onCardFlowResponse();
 
-        verify(paymentRepository).getPaymentData();
         verify(paymentRepository).attach(presenter);
+        verify(paymentRepository).hasPayment();
+        verify(paymentRepository).getPaymentData();
         verify(checkoutView).showReviewAndConfirm(false);
         verifyNoMoreInteractions(checkoutView);
         verifyNoMoreInteractions(paymentRepository);
@@ -589,8 +579,7 @@ public class CheckoutPresenterTest {
         }
 
         @Override
-        public void showPaymentResult(PaymentResult paymentResult, @NonNull final BigDecimal amountToPay,
-            final Discount discount) {
+        public void showPaymentResult(final PaymentResult paymentResult) {
             showingPaymentMethodSelection = false;
             showingReviewAndConfirm = false;
             showingPaymentResult = true;

@@ -53,16 +53,21 @@ public final class Tracker {
 
     public static void trackScreen(final String screenId,
         final String screenName,
-        final String merchantPublicKey,
         final Context context) {
-        trackScreen(screenId, screenName, context, merchantPublicKey, new ArrayList<Pair<String, String>>());
+
+        trackScreen(screenId, screenName, context, new ArrayList<Pair<String, String>>());
     }
 
     public static void trackScreen(final String screenId,
         final String screenName,
         final Context context,
-        final String merchantPublicKey,
         @Nullable final Iterable<Pair<String, String>> properties) {
+
+        final String merchantPublicKey =
+            Session.getSession(context)
+                .getConfigurationModule()
+                .getPaymentSettings()
+                .getPublicKey();
 
         trackScreen(screenId, screenName, context, merchantPublicKey, properties, StrategyMode.NOOP_STRATEGY);
     }
@@ -87,7 +92,6 @@ public final class Tracker {
     }
 
     public static void trackReviewAndConfirmScreen(final Context context,
-        final String merchantPublicKey,
         final PaymentModel paymentModel) {
 
         final Collection<Pair<String, String>> properties = new ArrayList<>();
@@ -98,7 +102,7 @@ public final class Tracker {
 
         trackScreen(TrackingUtil.SCREEN_ID_REVIEW_AND_CONFIRM,
             TrackingUtil.SCREEN_NAME_REVIEW_AND_CONFIRM,
-            context, merchantPublicKey, properties);
+            context, properties);
     }
 
     public static void trackOneTapScreen(@NonNull final Context context,
@@ -245,7 +249,6 @@ public final class Tracker {
     }
 
     public static void trackPaymentVaultScreen(final Context context,
-        final String merchantPublicKey,
         final PaymentMethodSearch paymentMethodSearch,
         final Set<String> escCardIds) {
 
@@ -255,27 +258,25 @@ public final class Tracker {
 
         trackScreen(TrackingUtil.SCREEN_ID_PAYMENT_VAULT,
             TrackingUtil.SCREEN_NAME_PAYMENT_VAULT,
-            context, merchantPublicKey, properties);
+            context, properties);
     }
 
     public static void trackPaymentVaultChildrenScreen(@NonNull final Context context,
-        @NonNull final String merchantPublicKey,
         @NonNull final PaymentMethodSearchItem selectedItem) {
 
         final String selectedItemId = selectedItem.getId();
 
         if (TrackingUtil.GROUP_TICKET.equals(selectedItemId)) {
             trackScreen(TrackingUtil.SCREEN_ID_PAYMENT_VAULT_TICKET, TrackingUtil.SCREEN_NAME_PAYMENT_VAULT_TICKET,
-                context, merchantPublicKey, null);
+                context, null);
         } else if (TrackingUtil.GROUP_BANK_TRANSFER.equals(selectedItemId)) {
             trackScreen(TrackingUtil.SCREEN_ID_PAYMENT_VAULT_BANK_TRANSFER,
-                TrackingUtil.SCREEN_NAME_PAYMENT_VAULT_BANK_TRANSFER, context, merchantPublicKey, null);
+                TrackingUtil.SCREEN_NAME_PAYMENT_VAULT_BANK_TRANSFER, context, null);
         } else if (TrackingUtil.GROUP_CARDS.equals(selectedItemId)) {
             trackScreen(TrackingUtil.SCREEN_ID_PAYMENT_VAULT_CARDS, TrackingUtil.SCREEN_NAME_PAYMENT_VAULT_CARDS,
-                context, merchantPublicKey, null);
+                context, null);
         } else {
-            trackScreen(TrackingUtil.SCREEN_ID_PAYMENT_VAULT, TrackingUtil.SCREEN_NAME_PAYMENT_VAULT, context,
-                merchantPublicKey, null);
+            trackScreen(TrackingUtil.SCREEN_ID_PAYMENT_VAULT, TrackingUtil.SCREEN_NAME_PAYMENT_VAULT, context, null);
         }
     }
 
