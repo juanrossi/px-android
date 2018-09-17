@@ -9,10 +9,6 @@ import com.mercadopago.android.px.model.Token;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Created by vaserber on 4/18/17.
- */
-
 public interface CardVaultProvider extends ResourcesProvider {
 
     String getMissingPublicKeyErrorMessage();

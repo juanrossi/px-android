@@ -16,10 +16,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
-/**
- * Created by mromar on 10/20/17.
- */
-
 public interface PaymentService {
 
     @GET("/v1/payment_methods")

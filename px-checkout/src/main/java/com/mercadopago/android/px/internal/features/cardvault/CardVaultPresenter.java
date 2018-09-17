@@ -22,6 +22,7 @@ import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.tracking.internal.MPTracker;
 import com.mercadopago.android.px.tracking.internal.utils.TrackingUtil;
 import java.util.List;
 
@@ -220,7 +221,8 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         final String bin = TextUtil.isEmpty(cardInfo.getFirstSixDigits()) ? "" : cardInfo.getFirstSixDigits();
         final Long issuerId = this.card.getIssuer() == null ? null : this.card.getIssuer().getId();
         String paymentMethodId = card.getPaymentMethod() == null ? "" : card.getPaymentMethod().getId();
-        final DifferentialPricing differentialPricing = paymentSettingRepository.getCheckoutPreference().getDifferentialPricing();
+        final DifferentialPricing differentialPricing =
+            paymentSettingRepository.getCheckoutPreference().getDifferentialPricing();
         final Integer differentialPricingId = differentialPricing == null ? null : differentialPricing.getId();
         getResourcesProvider().getInstallmentsAsync(bin, issuerId, paymentMethodId, amountRepository.getAmountToPay(),
             differentialPricingId,
@@ -403,7 +405,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     private void createESCToken() {
         if (savedCardAvailable() && !isESCEmpty()) {
-            
+
             final SavedESCCardToken escCardToken = SavedESCCardToken.createWithEsc(card.getId(), esc);
 
             getResourcesProvider()
@@ -413,6 +415,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
                         CardVaultPresenter.this.token = token;
                         CardVaultPresenter.this.token.setLastFourDigits(card.getLastFourDigits());
                         paymentSettingRepository.configure(CardVaultPresenter.this.token);
+                        MPTracker.getInstance().trackToken(CardVaultPresenter.this.token.getId());
                         finishWithResult();
                     }
 

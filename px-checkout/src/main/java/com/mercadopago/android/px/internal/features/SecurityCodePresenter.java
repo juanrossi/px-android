@@ -20,6 +20,7 @@ import com.mercadopago.android.px.model.Setting;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.CardTokenException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.tracking.internal.MPTracker;
 
 public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView, SecurityCodeProvider> {
 
@@ -256,6 +257,7 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
                 public void onSuccess(Token token) {
                     mToken = token;
                     paymentSettingRepository.configure(mToken);
+                    MPTracker.getInstance().trackToken(mToken.getId());
                     putSecurityCode();
                 }
 
