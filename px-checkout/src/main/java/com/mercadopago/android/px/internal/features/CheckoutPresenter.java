@@ -408,9 +408,12 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private void resolvePaymentMethodChange() {
         if (internalConfiguration.shouldExitOnPaymentMethodChange()) {
-            getView()
-                .finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD,
+            if (state.createdPayment instanceof Payment) {
+                getView().finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD,
                     (Payment) state.createdPayment);
+            } else {
+                getView().finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD);
+            }
         } else {
             state.paymentMethodEdited = true;
             getView().showPaymentMethodSelection();

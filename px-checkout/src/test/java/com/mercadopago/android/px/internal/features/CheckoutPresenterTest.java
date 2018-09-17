@@ -341,8 +341,7 @@ public class CheckoutPresenterTest {
 
         presenter.onPaymentResultCancel(PaymentResult.SELECT_OTHER_PAYMENT_METHOD);
 
-        verify(checkoutView).finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD,
-            (Payment) presenter.getState().createdPayment);
+        verify(checkoutView).finishWithPaymentResult(ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD);
     }
 
     @Test
