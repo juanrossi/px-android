@@ -1401,6 +1401,15 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
+    public void finishCardStorageFlow(@Nullable final String cardId) {
+        final Intent returnIntent = new Intent();
+        returnIntent.putExtra("cardId", cardId);
+        setResult(RESULT_OK, returnIntent);
+        finish();
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
+    }
+
+    @Override
     public void finishCardFlow(final PaymentMethod paymentMethod, final Token token,
         final Issuer issuer, final PayerCost payerCost) {
         final Intent returnIntent = new Intent();

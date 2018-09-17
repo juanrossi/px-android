@@ -18,6 +18,7 @@ public class PaymentMethodService implements PaymentMethodRepository {
 
     @Override
     public MPCall<List<PaymentMethod>> getCardPaymentMethods(@NonNull final String accessToken) {
-        return mPaymentService.getCardPaymentMethods(Settings.servicesVersion, accessToken);
+        //TODO: remove BETA when the endpoint hits production
+        return mPaymentService.getCardPaymentMethods("beta", accessToken);
     }
 }
