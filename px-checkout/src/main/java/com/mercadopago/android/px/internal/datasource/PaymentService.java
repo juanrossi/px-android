@@ -207,6 +207,7 @@ public class PaymentService implements PaymentRepository {
         paymentData.setPayerCost(userSelectionRepository.getPayerCost());
         paymentData.setIssuer(userSelectionRepository.getIssuer());
         paymentData.setToken(paymentSettingRepository.getToken());
+        paymentData.setCampaign(discountRepository.getCampaign());
         paymentData.setDiscount(discountRepository.getDiscount());
         paymentData
             .setCouponCode(isEmpty(discountRepository.getDiscountCode()) ? null : discountRepository.getDiscountCode());

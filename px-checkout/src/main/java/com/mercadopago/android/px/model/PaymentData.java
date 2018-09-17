@@ -13,6 +13,11 @@ public class PaymentData implements Serializable {
     private Discount discount;
     private Payer payer;
     private String couponCode;
+    private Campaign campaign;
+
+    public Campaign getCampaign() {
+        return campaign;
+    }
 
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
@@ -80,5 +85,9 @@ public class PaymentData implements Serializable {
 
     public boolean containsCardInfo() {
         return getToken() != null && !TextUtil.isEmpty(getToken().getCardId());
+    }
+
+    public void setCampaign(final Campaign campaign) {
+        this.campaign = campaign;
     }
 }
