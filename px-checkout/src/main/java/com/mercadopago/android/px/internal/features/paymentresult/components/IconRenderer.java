@@ -2,6 +2,8 @@ package com.mercadopago.android.px.internal.features.paymentresult.components;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +15,11 @@ import com.mercadopago.android.px.internal.util.ScaleUtil;
 import com.mercadopago.android.px.internal.view.Renderer;
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by vaserber on 10/23/17.
- */
-
 public class IconRenderer extends Renderer<Icon> {
 
     @Override
-    public View render(final Icon component, final Context context, final ViewGroup parent) {
+    public View render(@NonNull final Icon component, @NonNull final Context context,
+        @Nullable final ViewGroup parent) {
         final View iconView = inflate(R.layout.px_icon, parent);
         final ImageView iconImageView = iconView.findViewById(R.id.mpsdkIconProduct);
         final ImageView iconBadgeView = iconView.findViewById(R.id.mpsdkIconBadge);
@@ -55,6 +54,7 @@ public class IconRenderer extends Renderer<Icon> {
             .resize(size, size)
             .centerInside()
             .noFade()
+            .placeholder(props.iconImage)
             .error(props.iconImage)
             .into(iconImageView);
     }
