@@ -22,7 +22,7 @@ buildscript {
 
 ext {
     travisBuild = System.getenv("TRAVIS") as boolean
-    dateNow = project.hasProperty('deploy') ? "" : new Date().format("ddMMyyyyHHmmssS")
+    dateNow = project.hasProperty('production') ? "" : new Date().format("ddMMyyyyHHmmssS")
 }
 
 subprojects {

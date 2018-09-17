@@ -7,7 +7,7 @@ apply plugin:'com.jfrog.bintray'
 apply plugin:'com.github.dcendents.android-maven'
 
 def versionToDeploy = version_to_deploy as String
-versionToDeploy = project.hasProperty('deploy') ? versionToDeploy : 'EXPERIMENTAL-' + versionToDeploy + '-' + dateNow 
+versionToDeploy = project.hasProperty('production') ? versionToDeploy : 'EXPERIMENTAL-' + versionToDeploy + '-' + dateNow
 
 version = versionToDeploy
 
@@ -35,7 +35,7 @@ task androidSourcesJar(type:Jar) {
     from android.sourceSets.main.java.sourceFiles
 }
 
-task deployTobintray {
+task publishAar {
     finalizedBy 'bintrayUpload'
 
     doLast {
@@ -123,7 +123,7 @@ bintray {
 
     configurations = ['archives']
     pkg {
-        repo = project.hasProperty('deploy') ? 'android' : 'android-experimental' 
+        repo = project.hasProperty('production') ? 'android' : 'android-experimental'
         name = libraryName
         desc = libraryDescription
         userOrg = 'mercadopago'
@@ -136,7 +136,7 @@ bintray {
             name = versionToDeploy
             desc = libraryDescription
             vcsTag = versionToDeploy
-            released = project.hasProperty('deploy') ? new Date() : null
+            released = project.hasProperty('production') ? new Date() : null
         }
     }
 }
