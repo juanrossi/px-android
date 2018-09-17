@@ -5,6 +5,12 @@
                                              android:layout_height="match_parent"
                                              tools:context="com.mercadopago.SelectCheckoutActivity">
 
+    <com.mercadopago.android.px.internal.view.MPButton
+        android:id="@+id/new_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CARD"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

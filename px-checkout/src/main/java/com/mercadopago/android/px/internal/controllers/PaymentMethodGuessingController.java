@@ -18,7 +18,7 @@ public class PaymentMethodGuessingController {
     private List<PaymentMethod> mGuessedPaymentMethods;
 
     public PaymentMethodGuessingController(final List<PaymentMethod> paymentMethods,
-        final String paymentTypeId, @Nullable final List<String> excludedPaymentTypes) {
+        @Nullable final String paymentTypeId, @Nullable final List<String> excludedPaymentTypes) {
         mAllPaymentMethods = paymentMethods;
         mExcludedPaymentTypes = excludedPaymentTypes;
         mPaymentTypeId = paymentTypeId;
@@ -38,6 +38,7 @@ public class PaymentMethodGuessingController {
         return cardNumberLength;
     }
 
+    @Nullable
     public String getPaymentTypeId() {
         return mPaymentTypeId;
     }

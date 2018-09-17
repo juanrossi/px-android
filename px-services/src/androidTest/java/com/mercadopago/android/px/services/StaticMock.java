@@ -264,7 +264,7 @@ public class StaticMock {
 //        }
 //    }
 //
-//    public static Token getToken() {
+//    public static Token createToken() {
 //
 //        try {
 //            return JsonUtil.getInstance().fromJson(getFile(InstrumentationRegistry.getContext(), "mocks/token.json"), Token.class);

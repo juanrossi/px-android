@@ -20,6 +20,8 @@ public interface GuessingCardProvider extends ResourcesProvider {
 
     void createTokenAsync(CardToken cardToken, final TaggedCallback<Token> taggedCallback);
 
+    void getCardPaymentMethods(String accessToken, final TaggedCallback<List<PaymentMethod>> taggedCallback);
+
     void getIssuersAsync(String paymentMethodId, String bin, final TaggedCallback<List<Issuer>> taggedCallback);
 
     void getInstallmentsAsync(final String bin,
@@ -30,6 +32,8 @@ public interface GuessingCardProvider extends ResourcesProvider {
         final TaggedCallback<List<Installment>> taggedCallback);
 
     void getIdentificationTypesAsync(final TaggedCallback<List<IdentificationType>> taggedCallback);
+
+    void getIdentificationTypesAsync(final String accessToken, final TaggedCallback<List<IdentificationType>> taggedCallback);
 
     void getBankDealsAsync(final TaggedCallback<List<BankDeal>> taggedCallback);
 

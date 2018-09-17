@@ -861,6 +861,11 @@ public class GuessingCardPaymentPresenterTest {
         }
 
         @Override
+        public void showProgress() {
+            // Empty body
+        }
+
+        @Override
         public void finishCardFlow(final PaymentMethod paymentMethod, final Token token, final Issuer issuer,
                                    final List<PayerCost> payerCosts) {
             // Empty body
@@ -1217,6 +1222,16 @@ public class GuessingCardPaymentPresenterTest {
                 taggedCallback.onFailure(failedResponse);
             } else {
                 taggedCallback.onSuccess(successfulTokenResponse);
+            }
+        }
+
+        @Override
+        public void getCardPaymentMethods(final String accessToken,
+            final TaggedCallback<List<PaymentMethod>> taggedCallback) {
+            if (shouldFail) {
+                taggedCallback.onFailure(failedResponse);
+            } else {
+                taggedCallback.onSuccess(null);
             }
         }
 

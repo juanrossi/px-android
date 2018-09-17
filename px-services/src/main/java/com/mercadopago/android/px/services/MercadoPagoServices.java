@@ -108,7 +108,7 @@ public class MercadoPagoServices {
             public void run() {
                 savedCardToken.setDevice(context);
                 final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-                service.getToken(publicKey, privateKey, savedCardToken).enqueue(callback);
+                service.createToken(publicKey, privateKey, savedCardToken).enqueue(callback);
             }
         }).start();
     }
@@ -119,7 +119,7 @@ public class MercadoPagoServices {
             public void run() {
                 cardToken.setDevice(context);
                 final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-                service.getToken(publicKey, privateKey, cardToken).enqueue(callback);
+                service.createToken(publicKey, privateKey, cardToken).enqueue(callback);
             }
         }).start();
     }
@@ -130,20 +130,20 @@ public class MercadoPagoServices {
             public void run() {
                 savedESCCardToken.setDevice(context);
                 final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-                service.getToken(publicKey, privateKey, savedESCCardToken).enqueue(callback);
+                service.createToken(publicKey, privateKey, savedESCCardToken).enqueue(callback);
             }
         }).start();
     }
 
     public void cloneToken(final String tokenId, final Callback<Token> callback) {
         final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-        service.getToken(tokenId, publicKey, privateKey).enqueue(callback);
+        service.cloneToken(tokenId, publicKey, privateKey).enqueue(callback);
     }
 
     public void putSecurityCode(final String tokenId, final SecurityCodeIntent securityCodeIntent,
         final Callback<Token> callback) {
         final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-        service.getToken(tokenId, publicKey, privateKey, securityCodeIntent).enqueue(callback);
+        service.updateToken(tokenId, publicKey, privateKey, securityCodeIntent).enqueue(callback);
     }
 
     public void getBankDeals(final Callback<List<BankDeal>> callback) {
@@ -156,6 +156,12 @@ public class MercadoPagoServices {
         final IdentificationService service =
             RetrofitUtil.getRetrofitClient(context).create(IdentificationService.class);
         service.getIdentificationTypes(publicKey, privateKey).enqueue(callback);
+    }
+
+    public void getIdentificationTypes(final String accessToken, final Callback<List<IdentificationType>> callback) {
+        final IdentificationService service =
+            RetrofitUtil.getRetrofitClient(context).create(IdentificationService.class);
+        service.getIdentificationTypes(null, accessToken).enqueue(callback);
     }
 
     public void getInstallments(final String bin,

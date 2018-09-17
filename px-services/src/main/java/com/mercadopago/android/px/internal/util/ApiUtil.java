@@ -108,6 +108,7 @@ public final class ApiUtil {
         public static final String GET_CODE_DISCOUNT = "GET_CODE_DISCOUNT";
         public static final String GET_CAMPAIGNS = "GET_CAMPAIGNS";
         public static final String GET_PAYMENT_METHODS = "GET_PAYMENT_METHODS";
+        public static final String GET_CARD_PAYMENT_METHODS = "GET_CARD_PAYMENT_METHODS";
         public static final String GET_IDENTIFICATION_TYPES = "GET_IDENTIFICATION_TYPES";
         public static final String GET_BANK_DEALS = "GET_BANK_DEALS";
         public static final String GET_INSTRUCTIONS = "GET_INSTRUCTIONS";

@@ -72,7 +72,7 @@ public class TokenizeService implements TokenRepository {
     }
 
     /* default */ MPCall<Token> serviceCallWrapp(@NonNull final String cardId, @NonNull final String esc) {
-        return gatewayService.getToken(paymentSettingRepository.getPublicKey(),
+        return gatewayService.createToken(paymentSettingRepository.getPublicKey(),
             paymentSettingRepository.getPrivateKey(),
             SavedESCCardToken.createWithEsc(cardId, esc, device));
     }

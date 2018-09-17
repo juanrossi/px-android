@@ -10,8 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
+import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardActivity;
 import com.mercadopago.example.R;
 import java.util.List;
 
@@ -33,6 +35,14 @@ public class SelectCheckoutActivity extends AppCompatActivity {
             new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.setAdapter(new SelectionAdapter(getOptions()));
         recyclerView.addItemDecoration(dividerItemDecoration);
+
+        final Button button = findViewById(R.id.new_card);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                GuessingCardActivity.startGuessingCardActivityForStorage(SelectCheckoutActivity.this, "APP_USR-1505-080815-c6ea450de1bf828e39add499237d727f-312667294", 91);
+            }
+        });
     }
 
     @Override

@@ -16,7 +16,6 @@ import com.mercadopago.android.px.internal.util.ApiUtil;
 import com.mercadopago.android.px.internal.util.JsonUtil;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.model.BankDeal;
-import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.DifferentialPricing;
 import com.mercadopago.android.px.model.Identification;
@@ -67,9 +66,6 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
         mGroupsRepository = groupsRepository;
         mAdvancedConfiguration = advancedConfiguration;
         mPaymentRecovery = paymentRecovery;
-        mToken = new Token();
-        mIdentification = new Identification();
-        mEraseSpace = true;
     }
 
     @Override
@@ -90,6 +86,7 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
             .setIdentificationNumber(mPaymentRecovery.getToken().getCardHolder().getIdentification().getNumber());
     }
 
+    @Nullable
     @Override
     public PaymentMethod getPaymentMethod() {
         return mUserSelectionRepository.getPaymentMethod();
@@ -104,25 +101,70 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
     }
 
     @Override
+    public void getIdentificationTypesAsync() {
+        getResourcesProvider().getIdentificationTypesAsync(
+            new TaggedCallback<List<IdentificationType>>(ApiUtil.RequestOrigin.GET_IDENTIFICATION_TYPES) {
+                @Override
+                public void onSuccess(final List<IdentificationType> identificationTypes) {
+                    resolveIdentificationTypes(identificationTypes);
+                }
+
+                @Override
+                public void onFailure(final MercadoPagoError error) {
+                    if (isViewAttached()) {
+                        getView().showError(error, ApiUtil.RequestOrigin.GET_IDENTIFICATION_TYPES);
+                        setFailureRecovery(new FailureRecovery() {
+                            @Override
+                            public void recover() {
+                                getIdentificationTypesAsync();
+                            }
+                        });
+                    }
+                }
+            });
+    }
+
+    public PaymentPreference getPaymentPreference() {
+        return mPaymentPreference;
+    }
+
+    public void setPaymentPreference(final PaymentPreference paymentPreference) {
+        mPaymentPreference = paymentPreference;
+    }
+
+    @Override
     public void getPaymentMethods() {
+        getView().showProgress();
         mGroupsRepository.getGroups().enqueue(new Callback<PaymentMethodSearch>() {
             @Override
             public void success(final PaymentMethodSearch paymentMethodSearch) {
-                PaymentPreference paymentPreference = mPaymentSettingRepository.getCheckoutPreference().getPaymentPreference();
-                mPaymentMethodGuessingController = new PaymentMethodGuessingController(
+                if (isViewAttached()) {
+                    getView().hideProgress();
+                    PaymentPreference paymentPreference = mPaymentSettingRepository.getCheckoutPreference().getPaymentPreference();
+                    mPaymentMethodGuessingController = new PaymentMethodGuessingController(
                         paymentPreference.getSupportedPaymentMethods(paymentMethodSearch.getPaymentMethods()),
                         getPaymentTypeId(),
                         paymentPreference.getExcludedPaymentTypes());
-                startGuessingForm();
+                    startGuessingForm();
+                }
             }
 
             @Override
             public void failure(final ApiException apiException) {
-                createToken();
+                if (isViewAttached()) {
+                    getView().hideProgress();
+                    setFailureRecovery(new FailureRecovery() {
+                        @Override
+                        public void recover() {
+                            getPaymentMethods();
+                        }
+                    });
+                }
             }
         });
     }
 
+    @Nullable
     @Override
     public String getPaymentTypeId() {
         return mUserSelectionRepository.getPaymentType();
@@ -133,19 +175,6 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
             getBankDealsAsync();
         } else {
             getView().hideBankDeals();
-        }
-    }
-
-    @Override
-    public void onPaymentMethodSet(final PaymentMethod paymentMethod) {
-        setPaymentMethod(paymentMethod);
-        configureWithSettings(paymentMethod);
-        loadIdentificationTypes(paymentMethod);
-        getView().setPaymentMethod(paymentMethod);
-        getView().resolvePaymentMethodSet(paymentMethod);
-        //We need to erase default space in position 4 in some special cases.
-        if (isDefaultSpaceErasable()) {
-            getView().eraseDefaultSpace();
         }
     }
 
@@ -395,15 +424,6 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
                 payerCost);
         } else {
             getView().finishCardFlow(getPaymentMethod(), mToken, mIssuer, payerCosts);
-        }
-    }
-
-    @Override
-    public void checkFinishWithCardToken() {
-        if (mShowPaymentTypes && getGuessedPaymentMethods() != null) {
-            getView().askForPaymentType(getGuessedPaymentMethods(), getPaymentTypes(), new CardInfo(getCardToken()));
-        } else {
-            getView().showFinishCardFlow();
         }
     }
 }

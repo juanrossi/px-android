@@ -139,14 +139,29 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     private String mCardSideState;
     private boolean mActivityActive;
 
-    public static void startGuessingCardActivityForStorage(final Activity callerActivity, final String accessToken, final int requestCode) {
+    /**
+     * Starts the guessing card flow with the purpose of storing the card in the users card vault
+     * This flows does NOT includes a payment
+     *
+     * @param callerActivity: the activity that calls this one
+     * @param accessToken: user accessToken
+     * @param requestCode: the caller request code
+     */
+    public static void startGuessingCardActivityForStorage(final Activity callerActivity, final String accessToken,
+        final int requestCode) {
         final Intent intent = new Intent(callerActivity, GuessingCardActivity.class);
         intent.putExtra(PARAM_ACCESS_TOKEN, accessToken);
-        intent.putExtra(GuessingCardActivity.PARAM_INCLUDES_PAYMENT, true);
+        intent.putExtra(GuessingCardActivity.PARAM_INCLUDES_PAYMENT, false);
         callerActivity
             .startActivityForResult(intent, requestCode);
     }
 
+    /**
+     * Starts the guessing card flow with the purpose of performing a payment in the endO
+     *
+     * @param callerActivity: the activity that calls this one
+     * @param paymentRecovery: payment recovery
+     */
     public static void startGuessingCardActivityForPayment(final Activity callerActivity,
         final PaymentRecovery paymentRecovery) {
         final Intent intent = new Intent(callerActivity, GuessingCardActivity.class);
@@ -196,19 +211,26 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     public void setupPresenter() {
         final Intent intent = getIntent();
 
-        final Session session = Session.getSession(this);
+        final boolean includesPayment = intent.getBooleanExtra(PARAM_INCLUDES_PAYMENT, true);
 
-        final PaymentRecovery paymentRecovery =
-            JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentRecovery"), PaymentRecovery.class);
+        if (includesPayment) {final Session session = Session.getSession(this);
+
+
+            final PaymentRecovery paymentRecovery =
+                JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentRecovery"), PaymentRecovery.class);
 
         mPresenter = new GuessingCardPaymentPresenter(session.getAmountRepository(),
             session.getConfigurationModule().getUserSelectionRepository(),
             session.getConfigurationModule().getPaymentSettings(),
             session.getGroupsRepository(),
             session.getConfigurationModule().getPaymentSettings().getAdvancedConfiguration(),
-            paymentRecovery);
-        mPresenter.attachView(this);
+
+            paymentRecovery);} else {
+            final String accessToken = intent.getStringExtra(PARAM_ACCESS_TOKEN);
+            mPresenter = new GuessingCardStoragePresenter(accessToken);
+        }
         mPresenter.attachResourcesProvider(new GuessingCardProviderImpl(this));
+        mPresenter.attachView(this);
         mPresenter.initialize();
     }
 
@@ -308,9 +330,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mScrollView = findViewById(R.id.mpsdkScrollViewContainer);
         mContainerUpAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.px_slide_bottom_up);
         mContainerDownAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.px_slide_bottom_down);
-
-        mInputContainer.setVisibility(View.GONE);
-        mProgressLayout.setVisibility(View.VISIBLE);
 
         fullScrollDown();
     }
@@ -1239,7 +1258,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 MPAnimationUtils.transitionCardDisappear(this, mCardView, mIdentificationCardView);
             }
             mCardSideState = CardView.CARD_SIDE_BACK;
-            showBankDeals();
         }
     }
 
@@ -1253,12 +1271,10 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 }
                 mCardSideState = CardView.CARD_SIDE_FRONT;
             }
-            showBankDeals();
         }
     }
 
     private void transitionToIdentification() {
-        hideBankDeals();
         mCardSideState = CARD_IDENTIFICATION;
         if (cardViewsActive()) {
             MPAnimationUtils.transitionCardAppear(this, mCardView, mIdentificationCardView);
@@ -1401,6 +1417,13 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);
         finish();
+    }
+
+    @Override
+    public void showProgress(){
+        mButtonContainer.setVisibility(View.GONE);
+        mInputContainer.setVisibility(View.GONE);
+        mProgressLayout.setVisibility(View.VISIBLE);
     }
 
     @Override

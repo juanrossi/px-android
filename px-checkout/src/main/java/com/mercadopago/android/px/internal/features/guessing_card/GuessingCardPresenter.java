@@ -19,6 +19,7 @@ import com.mercadopago.android.px.internal.util.MPCardMaskUtil;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.Bin;
 import com.mercadopago.android.px.model.Card;
+import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.Cardholder;
 import com.mercadopago.android.px.model.Identification;
@@ -91,6 +92,13 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
     private boolean mIdentificationNumberRequired;
     private FailureRecovery mFailureRecovery;
     private String mSecurityCode;
+
+    public GuessingCardPresenter() {
+        super();
+        mToken = new Token();
+        mIdentification = new Identification();
+        mEraseSpace = true;
+    }
 
     private MPTrackingContext getTrackingContext() {
         return getResourcesProvider().getTrackingContext();
@@ -277,7 +285,7 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
         return mIdentificationNumber;
     }
 
-    public void setIdentificationNumber(@Nullable final String number) {
+    public void setIdentificationNumber(final String number) {
         mIdentificationNumber = number;
         mIdentification.setNumber(number);
     }
@@ -484,29 +492,6 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
         }
     }
 
-    /* default */ void getIdentificationTypesAsync() {
-        getResourcesProvider().getIdentificationTypesAsync(
-            new TaggedCallback<List<IdentificationType>>(ApiUtil.RequestOrigin.GET_IDENTIFICATION_TYPES) {
-                @Override
-                public void onSuccess(final List<IdentificationType> identificationTypes) {
-                    resolveIdentificationTypes(identificationTypes);
-                }
-
-                @Override
-                public void onFailure(final MercadoPagoError error) {
-                    if (isViewAttached()) {
-                        getView().showError(error, ApiUtil.RequestOrigin.GET_IDENTIFICATION_TYPES);
-                        setFailureRecovery(new FailureRecovery() {
-                            @Override
-                            public void recover() {
-                                getIdentificationTypesAsync();
-                            }
-                        });
-                    }
-                }
-            });
-    }
-
     protected void resolveIdentificationTypes(final List<IdentificationType> identificationTypes) {
         if (identificationTypes.isEmpty()) {
             getView().showError(
@@ -686,6 +671,7 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
         return mPaymentMethodGuessingController;
     }
 
+    @Nullable
     protected List<PaymentMethod> getGuessedPaymentMethods() {
         if (mPaymentMethodGuessingController == null) {
             return null;
@@ -758,6 +744,26 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
             mPaymentRecovery.getToken().getCardHolder() != null;
     }
 
+    public void checkFinishWithCardToken() {
+        if (mShowPaymentTypes && getGuessedPaymentMethods() != null) {
+            getView().askForPaymentType(getGuessedPaymentMethods(), getPaymentTypes(), new CardInfo(getCardToken()));
+        } else {
+            getView().showFinishCardFlow();
+        }
+    }
+
+    public void onPaymentMethodSet(final PaymentMethod paymentMethod) {
+        setPaymentMethod(paymentMethod);
+        configureWithSettings(paymentMethod);
+        loadIdentificationTypes(paymentMethod);
+        getView().setPaymentMethod(paymentMethod);
+        getView().resolvePaymentMethodSet(paymentMethod);
+        //We need to erase default space in position 4 in some special cases.
+        if (isDefaultSpaceErasable()) {
+            getView().eraseDefaultSpace();
+        }
+    }
+
     public abstract void initialize();
 
     public abstract String getPaymentTypeId();
@@ -766,11 +772,9 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
 
     public abstract void setPaymentMethod(@Nullable final PaymentMethod paymentMethod);
 
+    public abstract void getIdentificationTypesAsync();
+
     public abstract void getPaymentMethods();
-
-    public abstract void onPaymentMethodSet(final PaymentMethod paymentMethod);
-
-    public abstract void checkFinishWithCardToken();
 
     public abstract void resolveTokenRequest(final Token token);
 

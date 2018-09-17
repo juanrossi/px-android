@@ -8,6 +8,7 @@ import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.internal.di.Session;
+import com.mercadopago.android.px.internal.repository.PaymentMethodRepository;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.CardToken;
@@ -24,6 +25,7 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     private final Context context;
     private final MercadoPagoServicesAdapter mercadoPago;
     private final String publicKey;
+    private final PaymentMethodRepository paymentMethodRepository;
     private MPTrackingContext trackingContext;
 
     public GuessingCardProviderImpl(@NonNull final Context context) {
@@ -31,6 +33,7 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
         final Session session = Session.getSession(context);
         publicKey = session.getConfigurationModule().getPaymentSettings().getPublicKey();
         mercadoPago = session.getMercadoPagoServiceAdapter();
+        paymentMethodRepository = session.getPaymentMethodRepository();
     }
 
     @Override
@@ -46,6 +49,12 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     @Override
     public void createTokenAsync(final CardToken cardToken, final TaggedCallback<Token> taggedCallback) {
         mercadoPago.createToken(cardToken, taggedCallback);
+    }
+
+    @Override
+    public void getCardPaymentMethods(final String accessToken,
+        final TaggedCallback<List<PaymentMethod>> taggedCallback) {
+        paymentMethodRepository.getCardPaymentMethods(accessToken).enqueue(taggedCallback);
     }
 
     @Override
@@ -67,6 +76,12 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     @Override
     public void getIdentificationTypesAsync(final TaggedCallback<List<IdentificationType>> taggedCallback) {
         mercadoPago.getIdentificationTypes(taggedCallback);
+    }
+
+    @Override
+    public void getIdentificationTypesAsync(final String accessToken,
+        final TaggedCallback<List<IdentificationType>> taggedCallback) {
+        mercadoPago.getIdentificationTypes(accessToken, taggedCallback);
     }
 
     @Override
