@@ -230,6 +230,12 @@ public final class Session extends ApplicationModule
             getMercadoPagoESC(), getDevice());
     }
 
+    @NonNull
+    public PaymentMethodRepository getPaymentMethodRepository() {
+        return new PaymentMethodService(getRetrofitClient().create(
+            com.mercadopago.android.px.internal.services.PaymentService.class));
+    }
+
     /**
      * Set internal configuration after building MercadoPagoCheckout.
      *
