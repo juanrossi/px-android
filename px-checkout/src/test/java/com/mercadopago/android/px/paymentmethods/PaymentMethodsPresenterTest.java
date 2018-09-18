@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.paymentmethods;
 
+import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentTypes;
@@ -12,12 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 import junit.framework.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Created by mreverter on 1/5/17.
  */
 
+@RunWith(MockitoJUnitRunner.class)
 public class PaymentMethodsPresenterTest {
+
+    @Mock
+    private UserSelectionRepository userSelectionRepository;
 
     @Test
     public void whenPaymentMethodsPresenterStartsShowPaymentMethods() {
@@ -25,7 +33,7 @@ public class PaymentMethodsPresenterTest {
         MockedView mockedView = new MockedView();
         MockedResourcesProvider resourcesProvider = new MockedResourcesProvider();
 
-        PaymentMethodsPresenter presenter = new PaymentMethodsPresenter();
+        PaymentMethodsPresenter presenter = new PaymentMethodsPresenter(userSelectionRepository);
 
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(resourcesProvider);
@@ -44,7 +52,7 @@ public class PaymentMethodsPresenterTest {
         MockedView mockedView = new MockedView();
         MockedResourcesProvider resourcesProvider = new MockedResourcesProvider();
 
-        PaymentMethodsPresenter presenter = new PaymentMethodsPresenter();
+        PaymentMethodsPresenter presenter = new PaymentMethodsPresenter(userSelectionRepository);
         presenter.attachView(mockedView);
         presenter.attachResourcesProvider(resourcesProvider);
 

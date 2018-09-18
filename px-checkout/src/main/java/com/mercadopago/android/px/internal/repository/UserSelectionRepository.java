@@ -15,7 +15,7 @@ public interface UserSelectionRepository {
 
     void select(@NonNull final Issuer issuer);
 
-    void select(@NonNull final Card card);
+    void select(@Nullable final Card card);
 
     @Nullable
     PaymentMethod getPaymentMethod();
@@ -38,4 +38,8 @@ public interface UserSelectionRepository {
     Card getCard();
 
     void reset();
+
+    void select(String paymentType);
+
+    @NonNull String getPaymentType();
 }
