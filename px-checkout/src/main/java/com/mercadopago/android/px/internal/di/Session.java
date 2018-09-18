@@ -14,6 +14,7 @@ import com.mercadopago.android.px.internal.datasource.DiscountStorageService;
 import com.mercadopago.android.px.internal.datasource.EscManagerImp;
 import com.mercadopago.android.px.internal.datasource.GroupsService;
 import com.mercadopago.android.px.internal.datasource.InstallmentService;
+import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.internal.datasource.PaymentService;
@@ -132,7 +133,7 @@ public final class Session extends ApplicationModule
     }
 
     @NonNull
-    public MercadoPagoESCImpl getMercadoPagoESC() {
+    public MercadoPagoESC getMercadoPagoESC() {
         final PaymentSettingRepository paymentSettings = getConfigurationModule().getPaymentSettings();
         return new MercadoPagoESCImpl(getContext(), paymentSettings.getAdvancedConfiguration().isEscEnabled());
     }
