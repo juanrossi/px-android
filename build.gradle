@@ -22,7 +22,6 @@ buildscript {
 
 ext {
     travisBuild = System.getenv("TRAVIS") as boolean
-    dateNow = project.hasProperty('production') ? "" : new Date().format("ddMMyyyyHHmmssS")
 }
 
 subprojects {
@@ -31,7 +30,6 @@ subprojects {
         jcenter()
         google()
     }
-
 }
 
 wrapper {
@@ -62,4 +60,3 @@ rootProject.gradle.projectsEvaluated {
         }
     }
 }
-

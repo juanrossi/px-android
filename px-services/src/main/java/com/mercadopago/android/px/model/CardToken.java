@@ -35,7 +35,7 @@ public class CardToken {
         cardholder.setIdentification(identification);
     }
 
-    public static boolean validateSecurityCode(final String securityCode) {
+    public static boolean validateSecurityCode(final CharSequence securityCode) {
         return securityCode == null ||
             (!TextUtils.isEmpty(securityCode) && securityCode.length() >= 3 && securityCode.length() <= 4);
     }

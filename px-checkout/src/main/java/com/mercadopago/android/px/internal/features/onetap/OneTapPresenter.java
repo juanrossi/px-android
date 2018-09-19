@@ -3,8 +3,8 @@ package com.mercadopago.android.px.internal.features.onetap;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.base.ResourcesProvider;
-import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecoratorMapper;
+import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.features.explode.ExplodingFragment;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
@@ -17,6 +17,7 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 /* default */ class OneTapPresenter extends MvpPresenter<OneTap.View, ResourcesProvider>
     implements OneTap.Actions, PaymentServiceHandler {
 
+    private static final String TAG = OneTapPresenter.class.getName();
     @NonNull private final OneTapModel model;
     @NonNull private final PaymentRepository paymentRepository;
     private final ExplodeDecoratorMapper explodeDecoratorMapper;
@@ -42,7 +43,7 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
         getView().hideToolbar();
         getView().hideConfirmButton();
         getView().startLoadingButton(yButtonPosition, buttonHeight, paymentRepository.getPaymentTimeout());
-        paymentRepository.startOneTapPayment(model);
+        paymentRepository.startOneTapPayment(model, this);
     }
 
     @Override
@@ -155,11 +156,6 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
     @Override
     public void onViewResumed(final OneTapModel model) {
         getView().updateViews(model);
-        paymentRepository.attach(this);
     }
 
-    @Override
-    public void onViewPaused() {
-        paymentRepository.detach();
-    }
 }

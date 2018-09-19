@@ -31,8 +31,8 @@ public class PaymentServiceHandlerWrapperTest {
 
     @Before
     public void setUp() {
-        paymentServiceHandlerWrapper = new PaymentServiceHandlerWrapper(paymentRepository, escManager);
-        paymentServiceHandlerWrapper.setHandler(wrapped);
+        paymentServiceHandlerWrapper =
+            new PaymentServiceHandlerWrapper(wrapped, paymentRepository, escManager);
         when(paymentRepository.getPaymentData()).thenReturn(mock(PaymentData.class));
     }
 

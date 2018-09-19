@@ -25,11 +25,6 @@ public class DiscountDetailPage extends PageObject<CheckoutValidator> {
         return new InstallmentsPage(validator);
     }
 
-    public OneTapPage pressCloseToOneTap() {
-        pressBack();
-        return new OneTapPage(validator);
-    }
-
     @Override
     public DiscountDetailPage validate(final CheckoutValidator validator) {
         validator.validate(this);

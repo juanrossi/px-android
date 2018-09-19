@@ -27,7 +27,7 @@ public abstract class Button extends CompactComponent<Button.Props, Button.Actio
         }
 
         public Props(final String label) {
-            action = new Action();
+            this.action = new Action();
             this.label = label;
         }
     }

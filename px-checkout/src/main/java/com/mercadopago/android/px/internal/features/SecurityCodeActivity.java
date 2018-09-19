@@ -27,7 +27,6 @@ import com.mercadopago.android.px.internal.features.card.CardSecurityCodeTextWat
 import com.mercadopago.android.px.internal.features.providers.SecurityCodeProviderImpl;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
-import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.tracker.FlowHandler;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.internal.util.ErrorUtil;
@@ -49,9 +48,8 @@ import com.mercadopago.android.px.model.exceptions.CardTokenException;
 
 public class SecurityCodeActivity extends MercadoPagoBaseActivity implements SecurityCodeActivityView {
 
+    private static final String PRESENTER_BUNDLE = "mSecurityCodePresenter";
     private static final String REASON_BUNDLE = "mReason";
-    private static final String CARD_INFO_BUNDLE = "cardInfoBundle";
-    private static final String PAYMENT_RECOVERY_BUNDLE = "paymentRecoveryBundle";
 
     protected SecurityCodePresenter mSecurityCodePresenter;
 
@@ -94,8 +92,7 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(CARD_INFO_BUNDLE, mSecurityCodePresenter.getCardInfo());
-        outState.putSerializable(PAYMENT_RECOVERY_BUNDLE, mSecurityCodePresenter.getPaymentRecovery());
+        outState.putString(PRESENTER_BUNDLE, JsonUtil.getInstance().toJson(mSecurityCodePresenter));
         outState.putString(REASON_BUNDLE, mReason);
 
         super.onSaveInstanceState(outState);
@@ -103,18 +100,10 @@ public class SecurityCodeActivity extends MercadoPagoBaseActivity implements Sec
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            final Session session = Session.getSession(this);
-            final PaymentSettingRepository paymentSettings = session.getConfigurationModule().getPaymentSettings();
-            mSecurityCodePresenter = new SecurityCodePresenter(paymentSettings);
 
-            mSecurityCodePresenter.setToken(paymentSettings.getToken());
-            mSecurityCodePresenter.setCard(session.getConfigurationModule().getUserSelectionRepository().getCard());
-            mSecurityCodePresenter
-                .setPaymentMethod(session.getConfigurationModule().getUserSelectionRepository().getPaymentMethod());
-            mSecurityCodePresenter.setCardInfo((CardInfo) savedInstanceState.getSerializable(CARD_INFO_BUNDLE));
-            mSecurityCodePresenter
-                .setPaymentRecovery((PaymentRecovery) savedInstanceState.getSerializable(PAYMENT_RECOVERY_BUNDLE));
+        if (savedInstanceState != null) {
+            mSecurityCodePresenter = JsonUtil.getInstance()
+                .fromJson(savedInstanceState.getString(PRESENTER_BUNDLE), SecurityCodePresenter.class);
             mReason = savedInstanceState.getString(REASON_BUNDLE);
 
             configurePresenter();

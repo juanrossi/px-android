@@ -6,13 +6,9 @@ import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.android.px.testcheckout.input.Card;
 import com.mercadopago.android.px.testcheckout.pages.CongratsPage;
-import com.mercadopago.android.px.testcheckout.pages.OneTapPage;
 import com.mercadopago.android.px.testcheckout.pages.PaymentMethodPage;
 
 public class DiscountTestFlow extends TestFlow {
-
-    private static String DISCOUNT_CODE = "prueba";
-    private static String PAYMENT_METHOD_NAME = "Pago Fácil";
 
     public DiscountTestFlow() {
         // This constructor is intentionally empty. Nothing special is needed here.
@@ -23,14 +19,7 @@ public class DiscountTestFlow extends TestFlow {
     }
 
     @NonNull
-    public CongratsPage runCreditCardPaymentFlowWithMerchantDiscountApplied(@NonNull final Card card,
-        final int installmentsOption) {
-        return runCreditCardPaymentFlowWithMerchantDiscountApplied(card, installmentsOption, null);
-    }
-
-    @NonNull
-    public CongratsPage runCreditCardPaymentFlowWithMerchantDiscountApplied(@NonNull final Card card,
-        final int installmentsOption,
+    public CongratsPage runCreditCardPaymentFlowWithMerchantDiscountApplied(@NonNull final Card card, final int installmentsOption,
         final CheckoutValidator validator) {
         startCheckout();
 
@@ -50,14 +39,7 @@ public class DiscountTestFlow extends TestFlow {
     }
 
     @NonNull
-    public CongratsPage runCreditCardPaymentFlowWithDiscountApplied(@NonNull final Card card,
-        final int installmentsOption) {
-        return runCreditCardPaymentFlowWithDiscountApplied(card, installmentsOption, null);
-    }
-
-    @NonNull
-    public CongratsPage runCreditCardPaymentFlowWithDiscountApplied(@NonNull final Card card,
-        final int installmentsOption,
+    public CongratsPage runCreditCardPaymentFlowWithDiscountApplied(@NonNull final Card card, final int installmentsOption,
         final CheckoutValidator validator) {
         startCheckout();
 
@@ -74,11 +56,6 @@ public class DiscountTestFlow extends TestFlow {
             .pressCloseToInstallments()
             .selectInstallments(installmentsOption)
             .pressConfirmButton();
-    }
-
-    @NonNull
-    public CongratsPage runCashPaymentFlowWithDiscountApplied() {
-        return runCashPaymentFlowWithDiscountApplied(null);
     }
 
     @NonNull
@@ -88,20 +65,12 @@ public class DiscountTestFlow extends TestFlow {
         return new PaymentMethodPage(validator).pressOnDiscountDetail()
             .pressCloseToPaymentMethod()
             .selectCash()
-            .selectMethod(PAYMENT_METHOD_NAME)
+            .selectMethod("Pago Fácil")
             .pressConfirmButton();
     }
 
     @NonNull
-    public CongratsPage runCreditCardPaymentFlowWithoutPaymentProcessorWithMerchantDiscountApplied(
-        @NonNull final Card card, final int installmentsOption) {
-        return runCreditCardPaymentFlowWithoutPaymentProcessorWithMerchantDiscountApplied(card, installmentsOption,
-            null);
-    }
-
-    @NonNull
-    public CongratsPage runCreditCardPaymentFlowWithoutPaymentProcessorWithMerchantDiscountApplied(
-        @NonNull final Card card, final int installmentsOption,
+    public CongratsPage runCreditCardPaymentFlowWithoutPaymentProcessorWithMerchantDiscountApplied(@NonNull final Card card, final int installmentsOption,
         final CheckoutValidator validator) {
         startCheckout();
 
@@ -118,19 +87,12 @@ public class DiscountTestFlow extends TestFlow {
     }
 
     @NonNull
-    public CongratsPage runCreditCardPaymentFlowWithCodeDiscount(@NonNull final Card card,
-        final int installmentsOption) {
-        return runCreditCardPaymentFlowWithCodeDiscount(card, installmentsOption, null);
-    }
-
-    @NonNull
     public CongratsPage runCreditCardPaymentFlowWithCodeDiscount(@NonNull final Card card, final int installmentsOption,
         final CheckoutValidator validator) {
         startCheckout();
 
         return new PaymentMethodPage(validator).pressOnDiscountCodeInput()
-            .focusInputCode()
-            .enterDiscountCode(DISCOUNT_CODE)
+            .enterDiscountCode()
             .pressContinueToPaymentMethod()
             .selectCard()
             .selectCreditCard()
@@ -143,20 +105,5 @@ public class DiscountTestFlow extends TestFlow {
             .pressCloseToInstallments()
             .selectInstallments(installmentsOption)
             .pressConfirmButton();
-    }
-
-    public CongratsPage runCreditCardWithOneTapWithoutESCPaymentFlowWithMerchantDiscountApplied(final Card card) {
-        return runCreditCardWithOneTapWithoutESCPaymentFlowWithMerchantDiscountApplied(card, null);
-    }
-
-    public CongratsPage runCreditCardWithOneTapWithoutESCPaymentFlowWithMerchantDiscountApplied(final Card card,
-        final CheckoutValidator validator) {
-        startCheckout();
-
-        return new OneTapPage(validator)
-            .pressOnDiscountDetail()
-            .pressCloseToOneTap()
-            .pressConfirmButton()
-            .enterSecurityCode(card.escNumber());
     }
 }

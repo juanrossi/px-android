@@ -1,9 +1,3 @@
-## VERSION 4.0.2
-
-_05_09_2018_
-
-* Fix: one tap with payment recovery
-
 ## VERSION 4.0.1
 
 _03_09_2018_
