@@ -1,4 +1,5 @@
 ext {
+    versionToDeploy = version_to_deploy as String
     artifactLib = 'services'
     libraryName = 'com.mercadopago.android.px.services'
     libraryDescription = 'MercadoPago Android Services'
@@ -9,6 +10,7 @@ ext {
     groupName = "com.mercadopago.android.px"
 }
 
+version = versionToDeploy
 group = groupName
 archivesBaseName = artifactLib
 

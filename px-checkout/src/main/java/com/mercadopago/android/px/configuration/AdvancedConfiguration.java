@@ -7,7 +7,6 @@ import java.io.Serializable;
  * Advanced configuration provides you support for custom checkout functionality/configure special behaviour
  * when checkout is running.
  */
-@SuppressWarnings("unused")
 public class AdvancedConfiguration implements Serializable {
 
     /**

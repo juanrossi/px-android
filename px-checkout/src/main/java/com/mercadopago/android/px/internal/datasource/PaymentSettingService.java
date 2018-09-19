@@ -133,11 +133,6 @@ public class PaymentSettingService implements PaymentSettingRepository {
         return jsonUtil.fromJson(sharedPreferences.getString(PREF_TOKEN, ""), Token.class);
     }
 
-    @Override
-    public boolean hasToken() {
-        return getToken() != null;
-    }
-
     @NonNull
     @Override
     public String getTransactionId() {

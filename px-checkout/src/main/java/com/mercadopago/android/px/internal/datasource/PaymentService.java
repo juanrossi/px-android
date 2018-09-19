@@ -45,8 +45,6 @@ public class PaymentService implements PaymentRepository {
     @NonNull private final CardMapper cardMapper;
     @NonNull private final EscManager escManager;
 
-    @NonNull private final PaymentServiceHandlerWrapper handlerWrapper;
-
     public PaymentService(@NonNull final UserSelectionRepository userSelectionRepository,
         @NonNull final PaymentSettingRepository paymentSettingRepository,
         @NonNull final PluginRepository pluginRepository,
@@ -68,27 +66,17 @@ public class PaymentService implements PaymentRepository {
         this.tokenRepository = tokenRepository;
         paymentMethodMapper = new PaymentMethodMapper();
         cardMapper = new CardMapper();
-        handlerWrapper = new PaymentServiceHandlerWrapper(this, escManager);
-    }
-
-    @Override
-    public void attach(@NonNull final PaymentServiceHandler handler) {
-        handlerWrapper.setHandler(handler);
-        handlerWrapper.processMessages();
-    }
-
-    @Override
-    public void detach() {
-        handlerWrapper.setHandler(null);
     }
 
     /**
      * This method presets all user information ahead before the payment is processed.
      *
-     * @param oneTapModel onetap information.
+     * @param oneTapModel onetap information
+     * @param paymentServiceHandler callback handler
      */
     @Override
-    public void startOneTapPayment(@NonNull final OneTapModel oneTapModel) {
+    public void startOneTapPayment(@NonNull final OneTapModel oneTapModel,
+        @NonNull final PaymentServiceHandler paymentServiceHandler) {
         final OneTapMetadata oneTapMetadata = oneTapModel.getPaymentMethods().getOneTapMetadata();
         final String paymentTypeId = oneTapMetadata.getPaymentTypeId();
         final String paymentMethodId = oneTapMetadata.getPaymentMethodId();
@@ -106,47 +94,49 @@ public class PaymentService implements PaymentRepository {
             userSelectionRepository.select(paymentMethodMapper.map(oneTapModel.getPaymentMethods()));
         }
 
-        startPayment();
+        startPayment(paymentServiceHandler);
     }
 
     @Override
-    public void startPayment() {
+    public void startPayment(@NonNull final PaymentServiceHandler paymentServiceHandler) {
         //Wrapping the callback is important to assure ESC handling.
-        checkPaymentMethod();
+        checkPaymentMethod(
+            new PaymentServiceHandlerWrapper(paymentServiceHandler, this, escManager));
     }
 
-    private void checkPaymentMethod() {
+    private void checkPaymentMethod(final PaymentServiceHandler paymentServiceHandler) {
         final PaymentMethod paymentMethod = userSelectionRepository.getPaymentMethod();
         if (paymentMethod != null) {
-            processPaymentMethod(paymentMethod);
+            processPaymentMethod(paymentMethod, paymentServiceHandler);
         } else {
-            handlerWrapper.onPaymentError(getError());
+            paymentServiceHandler.onPaymentError(getError());
         }
     }
 
-    private void processPaymentMethod(final PaymentMethod paymentMethod) {
+    private void processPaymentMethod(final PaymentMethod paymentMethod,
+        final PaymentServiceHandler paymentServiceHandler) {
         if (PaymentTypes.isCardPaymentType(paymentMethod.getPaymentTypeId())) {
-            payWithCard();
+            payWithCard(paymentServiceHandler);
         } else {
-            pay();
+            pay(paymentServiceHandler);
         }
     }
 
-    private void payWithCard() {
+    private void payWithCard(final PaymentServiceHandler paymentServiceHandler) {
         if (hasValidSavedCardInfo()) {
-            if (paymentSettingRepository.hasToken()) { // Paying with saved card with token
-                pay();
+            if (paymentSettingRepository.getToken() != null) { // Paying with saved card with token
+                pay(paymentServiceHandler);
             } else { // Token does not exists - must generate one or ask for CVV.
-                checkEscAvailability();
+                checkEscAvailability(paymentServiceHandler);
             }
         } else if (hasValidNewCardInfo()) { // New card payment
-            pay();
+            pay(paymentServiceHandler);
         } else { // Guessing card could not tokenize or obtain card information.
-            handlerWrapper.onPaymentError(getError());
+            paymentServiceHandler.onPaymentError(getError());
         }
     }
 
-    private void checkEscAvailability() {
+    private void checkEscAvailability(final PaymentServiceHandler paymentServiceHandler) {
         //Paying with saved card without token
         final Card card = userSelectionRepository.getCard();
 
@@ -155,18 +145,18 @@ public class PaymentService implements PaymentRepository {
             tokenRepository.createToken(card).enqueue(new Callback<Token>() {
                 @Override
                 public void success(final Token token) {
-                    checkPaymentMethod();
+                    checkPaymentMethod(paymentServiceHandler);
                 }
 
                 @Override
                 public void failure(final ApiException apiException) {
                     //Start CVV screen if fail
-                    handlerWrapper.onCvvRequired(card);
+                    paymentServiceHandler.onCvvRequired(card);
                 }
             });
         } else {
             //Saved card has no ESC saved - CVV is requiered.
-            handlerWrapper.onCvvRequired(card);
+            paymentServiceHandler.onCvvRequired(card);
         }
     }
 
@@ -179,17 +169,17 @@ public class PaymentService implements PaymentRepository {
         return userSelectionRepository.getPaymentMethod() != null
             && userSelectionRepository.getIssuer() != null
             && userSelectionRepository.getPayerCost() != null
-            && paymentSettingRepository.hasToken();
+            && paymentSettingRepository.getToken() != null;
     }
 
-    private void pay() {
+    private void pay(final PaymentServiceHandler paymentServiceHandler) {
         if (paymentProcessor.shouldShowFragmentOnPayment()) {
-            handlerWrapper.onVisualPayment();
+            paymentServiceHandler.onVisualPayment();
         } else {
             final CheckoutPreference checkoutPreference = paymentSettingRepository.getCheckoutPreference();
             final PaymentProcessor.CheckoutData checkoutData =
                 new PaymentProcessor.CheckoutData(getPaymentData(), checkoutPreference);
-            paymentProcessor.startPayment(checkoutData, context, handlerWrapper);
+            paymentProcessor.startPayment(checkoutData, context, paymentServiceHandler);
         }
     }
 
