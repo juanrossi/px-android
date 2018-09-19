@@ -1,0 +1,12 @@
+package com.mercadopago.android.px.internal.services;
+
+import com.mercadopago.android.px.internal.callbacks.MPCall;
+import java.util.HashMap;
+import retrofit2.http.Body;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
+
+public interface CardService {
+    @POST("/beta/card_association")
+    MPCall<Void> assignCard(@Query("access_token") String accessToken, @Body HashMap<String, Object> body);
+}

@@ -43,4 +43,8 @@ class ApplicationModule implements PreferenceComponent {
     public Retrofit getRetrofitClient() {
         return RetrofitUtil.getRetrofitClient(context);
     }
+
+    public Retrofit getRetrofitTestClient() {
+        return RetrofitUtil.getTestRetrofitClient(context);
+    }
 }

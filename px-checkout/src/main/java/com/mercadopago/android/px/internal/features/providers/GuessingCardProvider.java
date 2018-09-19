@@ -33,9 +33,13 @@ public interface GuessingCardProvider extends ResourcesProvider {
 
     void getIdentificationTypesAsync(final TaggedCallback<List<IdentificationType>> taggedCallback);
 
-    void getIdentificationTypesAsync(final String accessToken, final TaggedCallback<List<IdentificationType>> taggedCallback);
+    void getIdentificationTypesAsync(final String accessToken,
+        final TaggedCallback<List<IdentificationType>> taggedCallback);
 
     void getBankDealsAsync(final TaggedCallback<List<BankDeal>> taggedCallback);
+
+    void associateCardToUser(final String accessToken, final String cardTokenId, final String paymentMethodId,
+        final TaggedCallback<Void> taggedCallback);
 
     String getMissingInstallmentsForIssuerErrorMessage();
 

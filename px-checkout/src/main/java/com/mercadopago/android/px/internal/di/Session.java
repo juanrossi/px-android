@@ -8,6 +8,7 @@ import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.core.PaymentProcessor;
 import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.datasource.AmountService;
+import com.mercadopago.android.px.internal.datasource.CardAssociationService;
 import com.mercadopago.android.px.internal.datasource.DiscountApiService;
 import com.mercadopago.android.px.internal.datasource.DiscountServiceImp;
 import com.mercadopago.android.px.internal.datasource.DiscountStorageService;
@@ -34,6 +35,7 @@ import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.internal.repository.TokenRepository;
 import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
+import com.mercadopago.android.px.internal.services.CardService;
 import com.mercadopago.android.px.internal.services.CheckoutService;
 import com.mercadopago.android.px.internal.services.GatewayService;
 import com.mercadopago.android.px.internal.util.LocaleUtil;
@@ -241,6 +243,11 @@ public final class Session extends ApplicationModule
     @NonNull
     public InternalConfiguration getInternalConfiguration() {
         return internalConfiguration == null ? new InternalConfiguration(false) : internalConfiguration;
+    }
+
+    @NonNull
+    public CardAssociationService getCardAssociationService(){
+        return new CardAssociationService(getRetrofitTestClient().create(CardService.class));
     }
 
     /**

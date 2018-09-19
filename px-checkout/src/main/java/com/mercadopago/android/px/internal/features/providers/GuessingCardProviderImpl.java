@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
+import com.mercadopago.android.px.internal.datasource.CardAssociationService;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
@@ -27,6 +28,7 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     private final String publicKey;
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
     private MPTrackingContext trackingContext;
+    private CardAssociationService cardAssociationService;
 
     public GuessingCardProviderImpl(@NonNull final Context context) {
         this.context = context;
@@ -87,6 +89,12 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     @Override
     public void getBankDealsAsync(final TaggedCallback<List<BankDeal>> taggedCallback) {
         mercadoPago.getBankDeals(taggedCallback);
+    }
+
+    @Override
+    public void associateCardToUser(final String accessToken, final String cardTokenId, final String paymentMethodId,
+        final TaggedCallback<Void> taggedCallback) {
+
     }
 
     @Override

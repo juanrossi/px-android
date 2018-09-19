@@ -121,7 +121,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
     @Override
     public void resolveTokenRequest(final Token token) {
-        //TODO: card to user through token
+        getView().finishCardStorageFlow("fake_card_id");
     }
 
     @Nullable
