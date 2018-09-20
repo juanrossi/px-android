@@ -176,6 +176,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             .setCustomAnimations(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out)
             .replace(R.id.one_tap_fragment, instance)
             .commit();
+        getSupportFragmentManager().executePendingTransactions();
     }
 
     @Override
