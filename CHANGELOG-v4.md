@@ -1,5 +1,14 @@
 ## VERSION 4.0.2
 
+_20_09_2018_
+
+* Color customization information
+* Payment recovery call for auth
+* Loading improvements for visual payments (payment processor)
+* fixes destroy activity
+
+## VERSION 4.0.2
+
 _05_09_2018_
 
 * Fix: one tap with payment recovery
