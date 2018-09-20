@@ -44,10 +44,9 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
     @NonNull private final UserSelectionRepository mUserSelectionRepository;
     @NonNull private final GroupsRepository mGroupsRepository;
     @NonNull private final AdvancedConfiguration mAdvancedConfiguration;
-
+    protected PaymentRecovery mPaymentRecovery;
     //Extra info
     private List<BankDeal> mBankDealsList;
-
     //Discount
     private Issuer mIssuer;
 
@@ -122,14 +121,6 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
                 }
             });
     }
-
-//    public PaymentPreference getPaymentPreference() {
-//        return mPaymentPreference;
-//    }
-//
-//    public void setPaymentPreference(final PaymentPreference paymentPreference) {
-//        mPaymentPreference = paymentPreference;
-//    }
 
     @Override
     public void getPaymentMethods() {
@@ -426,5 +417,22 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
         } else {
             getView().finishCardFlow(getPaymentMethod(), mToken, mIssuer, payerCosts);
         }
+    }
+
+    public PaymentRecovery getPaymentRecovery() {
+        return mPaymentRecovery;
+    }
+
+    public void setPaymentRecovery(final PaymentRecovery paymentRecovery) {
+        mPaymentRecovery = paymentRecovery;
+        if (recoverWithCardHolder()) {
+            saveCardholderName(paymentRecovery.getToken().getCardHolder().getName());
+            saveIdentificationNumber(paymentRecovery.getToken().getCardHolder().getIdentification().getNumber());
+        }
+    }
+
+    protected boolean recoverWithCardHolder() {
+        return mPaymentRecovery != null && mPaymentRecovery.getToken() != null &&
+            mPaymentRecovery.getToken().getCardHolder() != null;
     }
 }

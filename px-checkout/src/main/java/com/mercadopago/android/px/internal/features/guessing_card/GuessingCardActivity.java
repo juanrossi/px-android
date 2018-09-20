@@ -28,7 +28,6 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.adapters.IdentificationTypesAdapter;
 import com.mercadopago.android.px.internal.callbacks.PaymentMethodSelectionCallback;
 import com.mercadopago.android.px.internal.callbacks.card.CardExpiryDateEditTextCallback;
@@ -38,6 +37,7 @@ import com.mercadopago.android.px.internal.callbacks.card.CardSecurityCodeEditTe
 import com.mercadopago.android.px.internal.callbacks.card.CardholderNameEditTextCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.internal.di.Session;
+import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.features.MercadoPagoBaseActivity;
 import com.mercadopago.android.px.internal.features.card.CardExpiryDateTextWatcher;
 import com.mercadopago.android.px.internal.features.card.CardIdentificationNumberTextWatcher;
@@ -166,6 +166,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         final PaymentRecovery paymentRecovery) {
         final Intent intent = new Intent(callerActivity, GuessingCardActivity.class);
         intent.putExtra(PARAM_PAYMENT_RECOVERY, JsonUtil.getInstance().toJson(paymentRecovery));
+        intent.putExtra(PARAM_PAYMENT_RECOVERY, JsonUtil.getInstance().toJson(paymentRecovery));
         intent.putExtra(GuessingCardActivity.PARAM_INCLUDES_PAYMENT, true);
         callerActivity.startActivityForResult(intent, Constants.Activities.GUESSING_CARD_FOR_PAYMENT_REQUEST_CODE);
     }
@@ -213,22 +214,16 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
         final boolean includesPayment = intent.getBooleanExtra(PARAM_INCLUDES_PAYMENT, true);
 
-        if (includesPayment) {final Session session = Session.getSession(this);
-
-
+        if (includesPayment) {
+            final Session session = Session.getSession(this);
             final PaymentRecovery paymentRecovery =
                 JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentRecovery"), PaymentRecovery.class);
-
-        mPresenter = new GuessingCardPaymentPresenter(session.getAmountRepository(),
-            session.getConfigurationModule().getUserSelectionRepository(),
-            session.getConfigurationModule().getPaymentSettings(),
-            session.getGroupsRepository(),
-            session.getConfigurationModule().getPaymentSettings().getAdvancedConfiguration(),
-
-            paymentRecovery);} else {
+            mPresenter = GuessingCardPresenter.buildGuessingCardPaymentPresenter(session, paymentRecovery);
+        } else {
             final String accessToken = intent.getStringExtra(PARAM_ACCESS_TOKEN);
-            mPresenter = new GuessingCardStoragePresenter(accessToken);
+            mPresenter = GuessingCardPresenter.buildGuessingCardStoragePresenter(accessToken);
         }
+
         mPresenter.attachResourcesProvider(new GuessingCardProviderImpl(this));
         mPresenter.attachView(this);
         mPresenter.initialize();
@@ -1429,7 +1424,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
-    public void showProgress(){
+    public void showProgress() {
         mButtonContainer.setVisibility(View.GONE);
         mInputContainer.setVisibility(View.GONE);
         mProgressLayout.setVisibility(View.VISIBLE);

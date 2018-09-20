@@ -9,6 +9,7 @@ import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
+import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.providers.GuessingCardProvider;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.FrontCardView;
@@ -33,7 +34,6 @@ import com.mercadopago.android.px.model.Setting;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.CardTokenException;
-import com.mercadopago.android.px.tracking.internal.MPTracker;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.tracking.internal.utils.TrackingUtil;
 import java.util.ArrayList;
@@ -71,7 +71,6 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
     protected boolean mShowPaymentTypes;
     protected boolean mEraseSpace;
     //Activity parameters
-    protected PaymentRecovery mPaymentRecovery;
     protected PaymentMethodGuessingController mPaymentMethodGuessingController;
     protected Identification mIdentification;
     protected Token mToken;
@@ -98,6 +97,20 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
         mToken = new Token();
         mIdentification = new Identification();
         mEraseSpace = true;
+    }
+
+    public static GuessingCardPresenter buildGuessingCardPaymentPresenter(final Session session,
+        final PaymentRecovery paymentRecovery) {
+        return new GuessingCardPaymentPresenter(session.getAmountRepository(),
+            session.getConfigurationModule().getUserSelectionRepository(),
+            session.getConfigurationModule().getPaymentSettings(),
+            session.getGroupsRepository(),
+            session.getConfigurationModule().getPaymentSettings().getAdvancedConfiguration(),
+            paymentRecovery);
+    }
+
+    public static GuessingCardPresenter buildGuessingCardStoragePresenter(final String accessToken) {
+        return new GuessingCardStoragePresenter(accessToken);
     }
 
     private MPTrackingContext getTrackingContext() {
@@ -725,23 +738,6 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
 
     public String getSavedBin() {
         return mBin;
-    }
-
-    public PaymentRecovery getPaymentRecovery() {
-        return mPaymentRecovery;
-    }
-
-    public void setPaymentRecovery(final PaymentRecovery paymentRecovery) {
-        mPaymentRecovery = paymentRecovery;
-        if (recoverWithCardHolder()) {
-            saveCardholderName(paymentRecovery.getToken().getCardHolder().getName());
-            saveIdentificationNumber(paymentRecovery.getToken().getCardHolder().getIdentification().getNumber());
-        }
-    }
-
-    protected boolean recoverWithCardHolder() {
-        return mPaymentRecovery != null && mPaymentRecovery.getToken() != null &&
-            mPaymentRecovery.getToken().getCardHolder() != null;
     }
 
     public void checkFinishWithCardToken() {
