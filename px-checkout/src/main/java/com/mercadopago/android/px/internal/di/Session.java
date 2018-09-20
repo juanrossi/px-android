@@ -9,6 +9,7 @@ import com.mercadopago.android.px.core.PaymentProcessor;
 import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.datasource.AmountService;
 import com.mercadopago.android.px.internal.datasource.CardAssociationService;
+import com.mercadopago.android.px.internal.datasource.CardPaymentMethodService;
 import com.mercadopago.android.px.internal.datasource.DiscountApiService;
 import com.mercadopago.android.px.internal.datasource.DiscountServiceImp;
 import com.mercadopago.android.px.internal.datasource.DiscountStorageService;
@@ -18,7 +19,6 @@ import com.mercadopago.android.px.internal.datasource.InstallmentService;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
-import com.mercadopago.android.px.internal.datasource.CardPaymentMethodService;
 import com.mercadopago.android.px.internal.datasource.PaymentService;
 import com.mercadopago.android.px.internal.datasource.PluginService;
 import com.mercadopago.android.px.internal.datasource.TokenizeService;
@@ -27,9 +27,9 @@ import com.mercadopago.android.px.internal.datasource.cache.GroupsCacheCoordinat
 import com.mercadopago.android.px.internal.datasource.cache.GroupsDiskCache;
 import com.mercadopago.android.px.internal.datasource.cache.GroupsMemCache;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
+import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
-import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
@@ -245,11 +245,6 @@ public final class Session extends ApplicationModule
         return internalConfiguration == null ? new InternalConfiguration(false) : internalConfiguration;
     }
 
-    @NonNull
-    public CardAssociationService getCardAssociationService(){
-        return new CardAssociationService(getRetrofitTestClient().create(CardService.class));
-    }
-
     /**
      * Set internal configuration after building MercadoPagoCheckout.
      *
@@ -258,6 +253,11 @@ public final class Session extends ApplicationModule
     @SuppressWarnings("unused")
     public void setInternalConfiguration(@NonNull final InternalConfiguration internalConfiguration) {
         this.internalConfiguration = internalConfiguration;
+    }
+
+    @NonNull
+    public CardAssociationService getCardAssociationService() {
+        return new CardAssociationService(getRetrofitTestClient().create(CardService.class));
     }
 
     //TODO move.

@@ -1233,7 +1233,24 @@ public class GuessingCardPaymentPresenterTest {
         }
 
         @Override
+        public void associateCardToUser(final String accessToken, final String cardTokenId,
+            final String paymentMethodId,
+            final TaggedCallback<Card> taggedCallback) {
+
+        }
+
+        @Override
         public void createTokenAsync(final CardToken cardToken, final TaggedCallback<Token> taggedCallback) {
+            if (shouldFail) {
+                taggedCallback.onFailure(failedResponse);
+            } else {
+                taggedCallback.onSuccess(successfulTokenResponse);
+            }
+        }
+
+        @Override
+        public void createTokenAsync(final CardToken cardToken, final String accessToken,
+            final TaggedCallback<Token> taggedCallback) {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);
             } else {

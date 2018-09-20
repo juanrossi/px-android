@@ -7,7 +7,6 @@ import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
-import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.providers.GuessingCardProvider;
