@@ -65,6 +65,8 @@
     <color name="px_color_new_card_form_background_dark_alpha">#B3FFFFFF</color>
     <color name="px_color_new_card_text">#999999</color>
     <color name="px_color_red_error">#FF2B2B</color>
+    <color name="px_mp_blue">#009EE3</color>
+    <color name="px_review_payment_methods_background">#474747</color>
 
     <!-- Card Colors -->
     <color name="px_visa">#001D77</color>
@@ -167,8 +169,7 @@
     <color name="px_background">@color/px_colorPrimary</color>
     <color name="px_toolbar_text">@color/ui_components_white_color</color>
 
-    <!-- Discount modal and discount description -->
-    <color name="px_discount_summary_background">#474747</color>
+    <!-- Discount description -->
     <color name="px_discount_description">#64c574</color>
 
     <!-- Inputs -->
