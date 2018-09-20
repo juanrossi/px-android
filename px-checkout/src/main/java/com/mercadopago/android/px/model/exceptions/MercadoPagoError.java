@@ -10,24 +10,24 @@ import java.io.Serializable;
 
 public class MercadoPagoError implements Serializable {
 
-    private final boolean recoverable;
     private String message;
     private String errorDetail;
     private String requestOrigin;
     private ApiException apiException;
+    private final boolean recoverable;
 
     public MercadoPagoError(final String message, final boolean recoverable) {
         this.message = message;
         this.recoverable = recoverable;
     }
 
-    public MercadoPagoError(final String message, final String detail, final boolean recoverable) {
+    public MercadoPagoError(String message, String detail, boolean recoverable) {
         this.message = message;
         errorDetail = detail;
         this.recoverable = recoverable;
     }
 
-    public MercadoPagoError(final ApiException apiException, final String requestOrigin) {
+    public MercadoPagoError(ApiException apiException, String requestOrigin) {
         this.apiException = apiException;
         this.requestOrigin = requestOrigin;
         recoverable = apiException != null && apiException.isRecoverable();

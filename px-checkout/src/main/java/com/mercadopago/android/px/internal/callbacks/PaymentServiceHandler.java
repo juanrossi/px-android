@@ -3,6 +3,7 @@ package com.mercadopago.android.px.internal.callbacks;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.core.PaymentProcessor;
 import com.mercadopago.android.px.model.Card;
+import com.mercadopago.android.px.model.PaymentRecovery;
 
 public interface PaymentServiceHandler extends PaymentProcessor.OnPaymentListener {
 
@@ -19,6 +20,7 @@ public interface PaymentServiceHandler extends PaymentProcessor.OnPaymentListene
 
     /**
      * If payment was reject by invalid esc this method will be called.
+     * @param recovery
      */
-    void onRecoverPaymentEscInvalid();
+    void onRecoverPaymentEscInvalid(final PaymentRecovery recovery);
 }

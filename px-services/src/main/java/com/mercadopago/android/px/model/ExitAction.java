@@ -22,19 +22,19 @@ public class ExitAction extends Action implements Parcelable, Serializable {
         return name;
     }
 
-    protected ExitAction(Parcel in) {
+    protected ExitAction(final Parcel in) {
         name = in.readString();
         resCode = in.readInt();
     }
 
     public static final Creator<ExitAction> CREATOR = new Creator<ExitAction>() {
         @Override
-        public ExitAction createFromParcel(Parcel in) {
+        public ExitAction createFromParcel(final Parcel in) {
             return new ExitAction(in);
         }
 
         @Override
-        public ExitAction[] newArray(int size) {
+        public ExitAction[] newArray(final int size) {
             return new ExitAction[size];
         }
     };

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.mercadopago.android.px.configuration.PaymentConfiguration;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.core.PaymentProcessor;
+import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.datasource.AmountService;
 import com.mercadopago.android.px.internal.datasource.DiscountApiService;
 import com.mercadopago.android.px.internal.datasource.DiscountServiceImp;
@@ -13,9 +14,9 @@ import com.mercadopago.android.px.internal.datasource.DiscountStorageService;
 import com.mercadopago.android.px.internal.datasource.EscManagerImp;
 import com.mercadopago.android.px.internal.datasource.GroupsService;
 import com.mercadopago.android.px.internal.datasource.InstallmentService;
+import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
-import com.mercadopago.android.px.internal.datasource.PaymentMethodService;
 import com.mercadopago.android.px.internal.datasource.PaymentService;
 import com.mercadopago.android.px.internal.datasource.PluginService;
 import com.mercadopago.android.px.internal.datasource.TokenizeService;
@@ -26,7 +27,6 @@ import com.mercadopago.android.px.internal.datasource.cache.GroupsMemCache;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
-import com.mercadopago.android.px.internal.repository.PaymentMethodRepository;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
@@ -37,6 +37,7 @@ import com.mercadopago.android.px.internal.services.GatewayService;
 import com.mercadopago.android.px.internal.util.LocaleUtil;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.model.Device;
+import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
 
 public final class Session extends ApplicationModule
     implements AmountComponent {
@@ -55,6 +56,7 @@ public final class Session extends ApplicationModule
     private PaymentRepository paymentRepository;
     private GroupsCache groupsCache;
     private PluginService pluginRepository;
+    private InternalConfiguration internalConfiguration;
 
     private Session(@NonNull final Context context) {
         super(context.getApplicationContext());
@@ -114,6 +116,7 @@ public final class Session extends ApplicationModule
         paymentRepository = null;
         groupsCache = null;
         pluginRepository = null;
+        internalConfiguration = null;
     }
 
     public GroupsRepository getGroupsRepository() {
@@ -130,7 +133,7 @@ public final class Session extends ApplicationModule
     }
 
     @NonNull
-    public MercadoPagoESCImpl getMercadoPagoESC() {
+    public MercadoPagoESC getMercadoPagoESC() {
         final PaymentSettingRepository paymentSettings = getConfigurationModule().getPaymentSettings();
         return new MercadoPagoESCImpl(getContext(), paymentSettings.getAdvancedConfiguration().isEscEnabled());
     }
@@ -227,9 +230,26 @@ public final class Session extends ApplicationModule
             getMercadoPagoESC(), getDevice());
     }
 
+    /**
+     * Set internal configuration after building MercadoPagoCheckout.
+     *
+     * @param internalConfiguration internal configuration for checkout.
+     */
+    @SuppressWarnings("unused")
+    public void setInternalConfiguration(@NonNull final InternalConfiguration internalConfiguration) {
+        this.internalConfiguration = internalConfiguration;
+    }
+
     @NonNull
-    public PaymentMethodRepository getPaymentMethodRepository() {
-        return new PaymentMethodService(getRetrofitClient().create(
-            com.mercadopago.android.px.internal.services.PaymentService.class));
+    public InternalConfiguration getInternalConfiguration() {
+        return internalConfiguration == null ? new InternalConfiguration(false) : internalConfiguration;
+    }
+
+    //TODO move.
+    @NonNull
+    public BusinessModelMapper getBusinessModelMapper() {
+        return new BusinessModelMapper(getDiscountRepository(), getConfigurationModule().getPaymentSettings(),
+            getAmountRepository(),
+            getPaymentRepository());
     }
 }

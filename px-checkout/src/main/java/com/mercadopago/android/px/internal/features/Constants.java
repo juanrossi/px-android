@@ -7,34 +7,43 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import com.mercadopago.android.px.internal.features.cardvault.CardVaultActivity;
-import com.mercadopago.android.px.internal.features.paymentresult.PaymentResultActivity;
+import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardActivity;
 import com.mercadopago.android.px.internal.util.JsonUtil;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardInfo;
-import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentRecovery;
-import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.PaymentType;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.preferences.PaymentPreference;
-import java.math.BigDecimal;
 import java.util.List;
 
-public class MercadoPagoComponents {
+public final class Constants {
 
-    private MercadoPagoComponents() {
+    public static final int RESULT_PAYMENT = 200;
+    public static final int RESULT_ACTION = 201;
+    public static final int RESULT_CUSTOM_EXIT = 202;
+    public static final int RESULT_CANCELED_RYC = 203;
+
+    public static final int RESULT_CHANGE_PAYMENT_METHOD = 300;
+    public static final int RESULT_CANCEL_PAYMENT = 499;
+    public static final int RESULT_FAIL_ESC = 500;
+    public static final int RESULT_ERROR = 502;
+
+    public static final String ACTION_SELECT_OTHER_PAYMENT_METHOD = "action_select_other_payment_method";
+    public static final String ACTION_RECOVER_PAYMENT = "action_recover_payment";
+
+    private Constants() {
     }
 
-    public static class Activities {
+    public static final class Activities {
 
         public static final int PAYMENT_METHODS_REQUEST_CODE = 1;
         public static final int INSTALLMENTS_REQUEST_CODE = 2;
         public static final int ISSUERS_REQUEST_CODE = 3;
-        public static final int PAYMENT_RESULT_REQUEST_CODE = 5;
         public static final int CALL_FOR_AUTHORIZE_REQUEST_CODE = 7;
         public static final int PENDING_REQUEST_CODE = 8;
         public static final int REJECTION_REQUEST_CODE = 9;
@@ -42,11 +51,10 @@ public class MercadoPagoComponents {
         public static final int BANK_DEALS_REQUEST_CODE = 11;
         public static final int GUESSING_CARD_FOR_PAYMENT_REQUEST_CODE = 13;
         public static final int INSTRUCTIONS_REQUEST_CODE = 14;
-        public static final int CARD_VAULT_REQUEST_CODE = 15;
+
         public static final int CONGRATS_REQUEST_CODE = 16;
         public static final int PAYMENT_TYPES_REQUEST_CODE = 17;
         public static final int SECURITY_CODE_REQUEST_CODE = 18;
-        public static final int REVIEW_AND_CONFIRM_REQUEST_CODE = 20;
         public static final int REVIEW_PAYMENT_METHODS_REQUEST_CODE = 21;
 
         public static final int HOOK_1 = 50;
@@ -353,54 +361,6 @@ public class MercadoPagoComponents {
             }
         }
 
-        public static class PaymentResultActivityBuilder {
-            private Activity activity;
-            private Discount discount;
-            private PaymentResult paymentResult;
-            private BigDecimal amount;
-
-            public PaymentResultActivityBuilder setActivity(final Activity activity) {
-                this.activity = activity;
-                return this;
-            }
-
-            public PaymentResultActivityBuilder setDiscount(@Nullable final Discount discount) {
-                this.discount = discount;
-                return this;
-            }
-
-            public PaymentResultActivityBuilder setAmount(final BigDecimal amount) {
-                this.amount = amount;
-                return this;
-            }
-
-            public PaymentResultActivityBuilder setPaymentResult(final PaymentResult paymentResult) {
-                this.paymentResult = paymentResult;
-                return this;
-            }
-
-            public void startActivity() {
-                if (activity == null) {
-                    throw new IllegalStateException("activity is null");
-                }
-                if (paymentResult == null) {
-                    throw new IllegalStateException("payment result is null");
-                }
-                startPaymentResultActivity();
-            }
-
-            private void startPaymentResultActivity() {
-                final Intent resultIntent = new Intent(activity, PaymentResultActivity.class);
-                resultIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
-                resultIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(paymentResult));
-                if (amount != null) {
-                    resultIntent.putExtra("amount", amount.toString());
-                }
-
-                activity.startActivityForResult(resultIntent, PAYMENT_RESULT_REQUEST_CODE);
-            }
-        }
-
         public static class BankDealsActivityBuilder {
 
             private Activity activity;
@@ -437,7 +397,7 @@ public class MercadoPagoComponents {
             private Activity activity;
             private List<PaymentMethod> paymentMethods;
 
-            public ReviewPaymentMethodsActivityBuilder setActivity(final Activity activity) {
+            public ReviewPaymentMethodsActivityBuilder setActivity(@NonNull final Activity activity) {
                 this.activity = activity;
                 return this;
             }

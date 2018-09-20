@@ -5,7 +5,7 @@ import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
-import com.mercadopago.android.px.internal.di.Session;
+import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
 import com.mercadopago.android.px.internal.features.providers.CardVaultProvider;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
@@ -24,12 +24,14 @@ import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.tracking.internal.MPTracker;
 import com.mercadopago.android.px.tracking.internal.utils.TrackingUtil;
 import java.util.List;
 
 public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultProvider> {
 
     @NonNull private final AmountRepository amountRepository;
+    @NonNull private final MercadoPagoESC mercadoPagoESC;
     @NonNull private final UserSelectionRepository userSelectionRepository;
     @NonNull private final PaymentSettingRepository paymentSettingRepository;
 
@@ -61,10 +63,12 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     public CardVaultPresenter(@NonNull final AmountRepository amountRepository,
         @NonNull final UserSelectionRepository userSelectionRepository,
-        @NonNull final PaymentSettingRepository paymentSettingRepository) {
+        @NonNull final PaymentSettingRepository paymentSettingRepository,
+        @NonNull final MercadoPagoESC mercadoPagoESC) {
         this.userSelectionRepository = userSelectionRepository;
         this.paymentSettingRepository = paymentSettingRepository;
         this.amountRepository = amountRepository;
+        this.mercadoPagoESC = mercadoPagoESC;
     }
 
     public void initialize() {
@@ -222,7 +226,8 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         final String bin = TextUtil.isEmpty(cardInfo.getFirstSixDigits()) ? "" : cardInfo.getFirstSixDigits();
         final Long issuerId = this.card.getIssuer() == null ? null : this.card.getIssuer().getId();
         String paymentMethodId = card.getPaymentMethod() == null ? "" : card.getPaymentMethod().getId();
-        final DifferentialPricing differentialPricing = paymentSettingRepository.getCheckoutPreference().getDifferentialPricing();
+        final DifferentialPricing differentialPricing =
+            paymentSettingRepository.getCheckoutPreference().getDifferentialPricing();
         final Integer differentialPricingId = differentialPricing == null ? null : differentialPricing.getId();
         getResourcesProvider().getInstallmentsAsync(bin, issuerId, paymentMethodId, amountRepository.getAmountToPay(),
             differentialPricingId,
@@ -405,7 +410,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
 
     private void createESCToken() {
         if (savedCardAvailable() && !isESCEmpty()) {
-            
+
             final SavedESCCardToken escCardToken = SavedESCCardToken.createWithEsc(card.getId(), esc);
 
             getResourcesProvider()
@@ -415,6 +420,9 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
                         CardVaultPresenter.this.token = token;
                         CardVaultPresenter.this.token.setLastFourDigits(card.getLastFourDigits());
                         paymentSettingRepository.configure(CardVaultPresenter.this.token);
+                        MPTracker.getInstance().trackToken(CardVaultPresenter.this.token.getId());
+                        mercadoPagoESC.saveESC(token.getCardId(), token.getEsc());
+
                         finishWithResult();
                     }
 

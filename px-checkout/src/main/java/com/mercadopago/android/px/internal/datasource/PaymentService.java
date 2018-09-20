@@ -2,6 +2,7 @@ package com.mercadopago.android.px.internal.datasource;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.mercadopago.android.px.core.PaymentProcessor;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandlerWrapper;
@@ -19,8 +20,10 @@ import com.mercadopago.android.px.internal.viewmodel.mappers.PaymentMethodMapper
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.IPayment;
 import com.mercadopago.android.px.model.OneTapMetadata;
+import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentMethod;
+import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.android.px.model.Token;
@@ -45,6 +48,10 @@ public class PaymentService implements PaymentRepository {
     @NonNull private final CardMapper cardMapper;
     @NonNull private final EscManager escManager;
 
+    @NonNull private final PaymentServiceHandlerWrapper handlerWrapper;
+
+    @Nullable private IPayment payment;
+
     public PaymentService(@NonNull final UserSelectionRepository userSelectionRepository,
         @NonNull final PaymentSettingRepository paymentSettingRepository,
         @NonNull final PluginRepository pluginRepository,
@@ -66,17 +73,62 @@ public class PaymentService implements PaymentRepository {
         this.tokenRepository = tokenRepository;
         paymentMethodMapper = new PaymentMethodMapper();
         cardMapper = new CardMapper();
+        handlerWrapper = new PaymentServiceHandlerWrapper(this, escManager);
+    }
+
+    @Override
+    public void attach(@NonNull final PaymentServiceHandler handler) {
+        handlerWrapper.setHandler(handler);
+        handlerWrapper.processMessages();
+    }
+
+    @Override
+    public void detach() {
+        handlerWrapper.setHandler(null);
+    }
+
+    @Override
+    public void storePayment(@NonNull final IPayment iPayment) {
+        payment = iPayment;
+    }
+
+    @Nullable
+    @Override
+    public IPayment getPayment() {
+        return payment;
+    }
+
+    @Override
+    public boolean hasPayment() {
+        return payment != null;
+    }
+
+    @NonNull
+    @Override
+    public PaymentRecovery createRecoveryForInvalidESC() {
+        return new PaymentRecovery(paymentSettingRepository.getToken(), userSelectionRepository.getPaymentMethod(),
+            userSelectionRepository.getPayerCost(), userSelectionRepository.getIssuer(),
+            Payment.StatusCodes.STATUS_REJECTED,
+            Payment.StatusDetail.STATUS_DETAIL_INVALID_ESC);
+    }
+
+    @NonNull
+    @Override
+    public PaymentRecovery createPaymentRecovery() {
+        return new PaymentRecovery(paymentSettingRepository.getToken(),
+            userSelectionRepository.getPaymentMethod(),
+            userSelectionRepository.getPayerCost(),
+            userSelectionRepository.getIssuer(), getPayment().getPaymentStatus(),
+            getPayment().getPaymentStatusDetail());
     }
 
     /**
      * This method presets all user information ahead before the payment is processed.
      *
-     * @param oneTapModel onetap information
-     * @param paymentServiceHandler callback handler
+     * @param oneTapModel onetap information.
      */
     @Override
-    public void startOneTapPayment(@NonNull final OneTapModel oneTapModel,
-        @NonNull final PaymentServiceHandler paymentServiceHandler) {
+    public void startOneTapPayment(@NonNull final OneTapModel oneTapModel) {
         final OneTapMetadata oneTapMetadata = oneTapModel.getPaymentMethods().getOneTapMetadata();
         final String paymentTypeId = oneTapMetadata.getPaymentTypeId();
         final String paymentMethodId = oneTapMetadata.getPaymentMethodId();
@@ -94,49 +146,47 @@ public class PaymentService implements PaymentRepository {
             userSelectionRepository.select(paymentMethodMapper.map(oneTapModel.getPaymentMethods()));
         }
 
-        startPayment(paymentServiceHandler);
+        startPayment();
     }
 
     @Override
-    public void startPayment(@NonNull final PaymentServiceHandler paymentServiceHandler) {
+    public void startPayment() {
         //Wrapping the callback is important to assure ESC handling.
-        checkPaymentMethod(
-            new PaymentServiceHandlerWrapper(paymentServiceHandler, this, escManager));
+        checkPaymentMethod();
     }
 
-    private void checkPaymentMethod(final PaymentServiceHandler paymentServiceHandler) {
+    private void checkPaymentMethod() {
         final PaymentMethod paymentMethod = userSelectionRepository.getPaymentMethod();
         if (paymentMethod != null) {
-            processPaymentMethod(paymentMethod, paymentServiceHandler);
+            processPaymentMethod(paymentMethod);
         } else {
-            paymentServiceHandler.onPaymentError(getError());
+            handlerWrapper.onPaymentError(getError());
         }
     }
 
-    private void processPaymentMethod(final PaymentMethod paymentMethod,
-        final PaymentServiceHandler paymentServiceHandler) {
+    private void processPaymentMethod(final PaymentMethod paymentMethod) {
         if (PaymentTypes.isCardPaymentType(paymentMethod.getPaymentTypeId())) {
-            payWithCard(paymentServiceHandler);
+            payWithCard();
         } else {
-            pay(paymentServiceHandler);
+            pay();
         }
     }
 
-    private void payWithCard(final PaymentServiceHandler paymentServiceHandler) {
+    private void payWithCard() {
         if (hasValidSavedCardInfo()) {
-            if (paymentSettingRepository.getToken() != null) { // Paying with saved card with token
-                pay(paymentServiceHandler);
+            if (paymentSettingRepository.hasToken()) { // Paying with saved card with token
+                pay();
             } else { // Token does not exists - must generate one or ask for CVV.
-                checkEscAvailability(paymentServiceHandler);
+                checkEscAvailability();
             }
         } else if (hasValidNewCardInfo()) { // New card payment
-            pay(paymentServiceHandler);
+            pay();
         } else { // Guessing card could not tokenize or obtain card information.
-            paymentServiceHandler.onPaymentError(getError());
+            handlerWrapper.onPaymentError(getError());
         }
     }
 
-    private void checkEscAvailability(final PaymentServiceHandler paymentServiceHandler) {
+    private void checkEscAvailability() {
         //Paying with saved card without token
         final Card card = userSelectionRepository.getCard();
 
@@ -145,18 +195,18 @@ public class PaymentService implements PaymentRepository {
             tokenRepository.createToken(card).enqueue(new Callback<Token>() {
                 @Override
                 public void success(final Token token) {
-                    checkPaymentMethod(paymentServiceHandler);
+                    checkPaymentMethod();
                 }
 
                 @Override
                 public void failure(final ApiException apiException) {
                     //Start CVV screen if fail
-                    paymentServiceHandler.onCvvRequired(card);
+                    handlerWrapper.onCvvRequired(card);
                 }
             });
         } else {
             //Saved card has no ESC saved - CVV is requiered.
-            paymentServiceHandler.onCvvRequired(card);
+            handlerWrapper.onCvvRequired(card);
         }
     }
 
@@ -169,17 +219,17 @@ public class PaymentService implements PaymentRepository {
         return userSelectionRepository.getPaymentMethod() != null
             && userSelectionRepository.getIssuer() != null
             && userSelectionRepository.getPayerCost() != null
-            && paymentSettingRepository.getToken() != null;
+            && paymentSettingRepository.hasToken();
     }
 
-    private void pay(final PaymentServiceHandler paymentServiceHandler) {
+    private void pay() {
         if (paymentProcessor.shouldShowFragmentOnPayment()) {
-            paymentServiceHandler.onVisualPayment();
+            handlerWrapper.onVisualPayment();
         } else {
             final CheckoutPreference checkoutPreference = paymentSettingRepository.getCheckoutPreference();
             final PaymentProcessor.CheckoutData checkoutData =
                 new PaymentProcessor.CheckoutData(getPaymentData(), checkoutPreference);
-            paymentProcessor.startPayment(checkoutData, context, paymentServiceHandler);
+            paymentProcessor.startPayment(checkoutData, context, handlerWrapper);
         }
     }
 
@@ -197,6 +247,7 @@ public class PaymentService implements PaymentRepository {
         paymentData.setPayerCost(userSelectionRepository.getPayerCost());
         paymentData.setIssuer(userSelectionRepository.getIssuer());
         paymentData.setToken(paymentSettingRepository.getToken());
+        paymentData.setCampaign(discountRepository.getCampaign());
         paymentData.setDiscount(discountRepository.getDiscount());
         paymentData
             .setCouponCode(isEmpty(discountRepository.getDiscountCode()) ? null : discountRepository.getDiscountCode());

@@ -9,10 +9,6 @@ import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.CardTokenException;
 
-/**
- * Created by marlanti on 7/18/17.
- */
-
 public interface SecurityCodeProvider extends ResourcesProvider {
 
     String getStandardErrorMessageGotten();

@@ -7,6 +7,7 @@ import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.GenericPayment;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
+import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,14 +26,16 @@ public class PaymentServiceHandlerWrapperTest {
 
     @Mock private PaymentServiceHandler wrapped;
     @Mock private PaymentRepository paymentRepository;
+    @Mock private PaymentRecovery paymentRecovery;
     @Mock private EscManager escManager;
 
     private PaymentServiceHandlerWrapper paymentServiceHandlerWrapper;
 
     @Before
     public void setUp() {
-        paymentServiceHandlerWrapper =
-            new PaymentServiceHandlerWrapper(wrapped, paymentRepository, escManager);
+        paymentServiceHandlerWrapper = new PaymentServiceHandlerWrapper(paymentRepository, escManager);
+        paymentServiceHandlerWrapper.setHandler(wrapped);
+        when(paymentRepository.createRecoveryForInvalidESC()).thenReturn(paymentRecovery);
         when(paymentRepository.getPaymentData()).thenReturn(mock(PaymentData.class));
     }
 
@@ -59,8 +62,8 @@ public class PaymentServiceHandlerWrapperTest {
 
     @Test
     public void whenRecoverPaymentEscInvalidVerifyRecoverPaymentEscInvalid() {
-        paymentServiceHandlerWrapper.onRecoverPaymentEscInvalid();
-        verify(wrapped).onRecoverPaymentEscInvalid();
+        paymentServiceHandlerWrapper.onRecoverPaymentEscInvalid(paymentRecovery);
+        verify(wrapped).onRecoverPaymentEscInvalid(paymentRecovery);
         noMoreInteractions();
     }
 
@@ -72,6 +75,7 @@ public class PaymentServiceHandlerWrapperTest {
         verify(escManager).manageEscForPayment(paymentRepository.getPaymentData(), payment.getPaymentStatus(),
             payment.getPaymentStatusDetail());
 
+        verify(paymentRepository).storePayment(payment);
         verify(paymentRepository, times(2)).getPaymentData();
         verify(wrapped).onPaymentFinished(payment);
         noMoreInteractions();
@@ -84,6 +88,8 @@ public class PaymentServiceHandlerWrapperTest {
 
         verify(escManager).manageEscForPayment(paymentRepository.getPaymentData(), payment.getPaymentStatus(),
             payment.getPaymentStatusDetail());
+
+        verify(paymentRepository).storePayment(payment);
 
         verify(paymentRepository, times(2)).getPaymentData();
         verify(wrapped).onPaymentFinished(payment);
@@ -98,6 +104,7 @@ public class PaymentServiceHandlerWrapperTest {
         verify(escManager).manageEscForPayment(paymentRepository.getPaymentData(), payment.getPaymentStatus(),
             payment.getPaymentStatusDetail());
 
+        verify(paymentRepository).storePayment(payment);
         verify(paymentRepository, times(2)).getPaymentData();
         verify(wrapped).onPaymentFinished(payment);
         noMoreInteractions();
@@ -124,11 +131,14 @@ public class PaymentServiceHandlerWrapperTest {
 
         paymentServiceHandlerWrapper.onPaymentFinished(payment);
 
+        verify(paymentRepository).createRecoveryForInvalidESC();
+
         verify(escManager).manageEscForPayment(paymentRepository.getPaymentData(), payment.getPaymentStatus(),
             payment.getPaymentStatusDetail());
 
+
         verify(paymentRepository, times(3)).getPaymentData();
-        verify(wrapped).onRecoverPaymentEscInvalid();
+        verify(wrapped).onRecoverPaymentEscInvalid(paymentRecovery);
 
         noMoreInteractions();
     }
@@ -145,8 +155,9 @@ public class PaymentServiceHandlerWrapperTest {
         verify(escManager).manageEscForPayment(paymentRepository.getPaymentData(), payment.getPaymentStatus(),
             payment.getPaymentStatusDetail());
 
+        verify(paymentRepository).createRecoveryForInvalidESC();
         verify(paymentRepository, times(3)).getPaymentData();
-        verify(wrapped).onRecoverPaymentEscInvalid();
+        verify(wrapped).onRecoverPaymentEscInvalid(paymentRecovery);
 
         noMoreInteractions();
     }
@@ -160,9 +171,9 @@ public class PaymentServiceHandlerWrapperTest {
         paymentServiceHandlerWrapper.onPaymentError(error);
 
         verify(escManager).manageEscForError(error, paymentRepository.getPaymentData());
-
+        verify(paymentRepository).createRecoveryForInvalidESC();
         verify(paymentRepository, times(3)).getPaymentData();
-        verify(wrapped).onRecoverPaymentEscInvalid();
+        verify(wrapped).onRecoverPaymentEscInvalid(paymentRecovery);
 
         noMoreInteractions();
     }

@@ -15,6 +15,7 @@ public class UserSelectionService implements UserSelectionRepository {
     private static final String PREF_SELECTED_PM = "PREF_SELECTED_PAYMENT_METHOD";
     private static final String PREF_SELECTED_PAYER_COST = "PREF_SELECTED_INSTALLMENT";
     private static final String PREF_SELECTED_ISSUER = "PREF_SELECTED_ISSUER";
+    private static final String PREF_PAYMENT_TYPE = "PREF_SELECTED_PAYMENT_TYPE";
 
     @NonNull private final SharedPreferences sharedPreferences;
     @NonNull private final JsonUtil jsonUtil;
@@ -92,10 +93,14 @@ public class UserSelectionService implements UserSelectionRepository {
     }
 
     @Override
-    public void select(@NonNull final Card card) {
-        this.card = card;
-        select(card.getPaymentMethod());
-        select(card.getIssuer());
+    public void select(@Nullable final Card card) {
+        if (card == null) {
+            removeCardSelection();
+        } else {
+            this.card = card;
+            select(card.getPaymentMethod());
+            select(card.getIssuer());
+        }
     }
 
     @Override
@@ -124,10 +129,21 @@ public class UserSelectionService implements UserSelectionRepository {
 
     @Override
     public void reset() {
+        sharedPreferences.edit().remove(PREF_PAYMENT_TYPE).apply();
         removePayerCostSelection();
         removePaymentMethodSelection();
         removeIssuerSelection();
         removeCardSelection();
     }
 
+    @Override
+    public void select(final String paymentType) {
+        sharedPreferences.edit().putString(PREF_PAYMENT_TYPE, paymentType).apply();
+    }
+
+    @NonNull
+    @Override
+    public String getPaymentType() {
+        return sharedPreferences.getString(PREF_PAYMENT_TYPE, "");
+    }
 }

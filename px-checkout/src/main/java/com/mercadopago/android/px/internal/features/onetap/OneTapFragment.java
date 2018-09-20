@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,22 +19,24 @@ import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.CheckoutActivity;
-import com.mercadopago.android.px.internal.features.MercadoPagoComponents;
+import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecorator;
 import com.mercadopago.android.px.internal.features.explode.ExplodeParams;
 import com.mercadopago.android.px.internal.features.explode.ExplodingFragment;
 import com.mercadopago.android.px.internal.features.onetap.components.OneTapView;
-import com.mercadopago.android.px.internal.features.plugins.PaymentProcessorPluginActivity;
+import com.mercadopago.android.px.internal.features.plugins.PaymentProcessorActivity;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.tracker.FlowHandler;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.internal.tracker.Tracker;
+import com.mercadopago.android.px.internal.util.StatusBarDecorator;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.GenericPayment;
 import com.mercadopago.android.px.model.IPayment;
 import com.mercadopago.android.px.model.Payment;
+import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.ScreenViewEvent;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.tracking.internal.utils.TrackingUtil;
@@ -53,6 +56,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     private ExplodingFragment explodingFragment;
     private Toolbar toolbar;
     private OneTapView oneTapView;
+    private boolean explodingProcess;
 
     public static OneTapFragment getInstance(@NonNull final OneTapModel oneTapModel) {
         final OneTapFragment oneTapFragment = new OneTapFragment();
@@ -74,6 +78,15 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         super.onResume();
         final OneTapModel model = (OneTapModel) getArguments().getSerializable(ARG_ONE_TAP_MODEL);
         presenter.onViewResumed(model);
+        if (explodingFragment != null && explodingFragment.isAdded() && !explodingProcess) {
+            cancelLoading();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        presenter.onViewPaused();
+        super.onPause();
     }
 
     @Override
@@ -92,6 +105,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     @Override
     public void onDetach() {
         callback = null;
+        presenter.detachView();
         super.onDetach();
     }
 
@@ -108,7 +122,6 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         final Bundle arguments = getArguments();
         if (arguments != null) {
             final Session session = Session.getSession(view.getContext());
-
             final OneTapModel model = (OneTapModel) arguments.getSerializable(ARG_ONE_TAP_MODEL);
             presenter = new OneTapPresenter(model, session.getPaymentRepository());
             configureView(view, presenter, model);
@@ -164,7 +177,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         if (requestCode == REQ_CODE_CARD_VAULT && resultCode == RESULT_OK) {
             presenter.onTokenResolved();
         } else if (requestCode == REQ_CODE_PAYMENT_PROCESSOR && getActivity() != null) {
-            ((CheckoutActivity) getActivity()).resolvePaymentProcessor(resultCode, data);
+            ((CheckoutActivity) getActivity()).resolveCodes(resultCode, data);
         }
     }
 
@@ -203,7 +216,8 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     @Override
     public void showPaymentProcessor() {
-        PaymentProcessorPluginActivity.start(this, REQ_CODE_PAYMENT_PROCESSOR);
+        final Intent intent = PaymentProcessorActivity.getIntent(getContext());
+        startActivityForResult(intent, REQ_CODE_PAYMENT_PROCESSOR);
     }
 
     @Override
@@ -219,6 +233,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     @Override
     public void showPaymentResult(@NonNull final IPayment paymentResult) {
+        explodingProcess = false;
         //TODO refactor
         if (getActivity() != null) {
             //TODO refactor
@@ -234,15 +249,15 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     //TODO refactor
     @Override
-    public void onRecoverPaymentEscInvalid() {
+    public void onRecoverPaymentEscInvalid(final PaymentRecovery recovery) {
         if (getActivity() != null) {
-            ((CheckoutActivity) getActivity()).presenter.onRecoverPaymentEscInvalid();
+            ((CheckoutActivity) getActivity()).presenter.onRecoverPaymentEscInvalid(recovery);
         }
     }
 
     @Override
-    public void showLoadingFor(final ExplodeDecorator params,
-        final ExplodingFragment.ExplodingAnimationListener explodingAnimationListener) {
+    public void showLoadingFor(@NonNull final ExplodeDecorator params,
+        @NonNull final ExplodingFragment.ExplodingAnimationListener explodingAnimationListener) {
         if (explodingFragment != null && explodingFragment.isAdded()) {
             explodingFragment.finishLoading(params, explodingAnimationListener);
         }
@@ -252,7 +267,14 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     public void cancelLoading() {
         showToolbar();
         oneTapView.showButton();
+        explodingProcess = false;
+        restoreStatusBar();
         getChildFragmentManager().beginTransaction().remove(explodingFragment).commitNow();
+    }
+
+    private void restoreStatusBar() {
+        new StatusBarDecorator(getActivity().getWindow())
+            .setupStatusBarColor(ContextCompat.getColor(getContext(), R.color.px_colorPrimaryDark));
     }
 
     private void showToolbar() {
@@ -280,11 +302,12 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         getChildFragmentManager().beginTransaction()
             .replace(R.id.exploding_frame, explodingFragment)
             .commitNow();
+        explodingProcess = true;
     }
 
     @Override
     public void showCardFlow(@NonNull final OneTapModel model, @NonNull final Card card) {
-        new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
+        new Constants.Activities.CardVaultActivityBuilder()
             .setCard(card)
             .startActivity(this, REQ_CODE_CARD_VAULT);
     }

@@ -9,10 +9,6 @@ import com.mercadopago.android.px.model.Fingerprint;
 import com.mercadopago.android.px.tracking.internal.MPTracker;
 import com.mercadopago.android.px.tracking.internal.Settings;
 
-/**
- * Created by vaserber on 6/5/17.
- */
-
 public class MPTrackingContext {
 
     private final String publicKey;

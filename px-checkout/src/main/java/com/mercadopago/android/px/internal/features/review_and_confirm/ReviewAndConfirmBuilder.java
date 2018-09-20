@@ -1,6 +1,8 @@
 package com.mercadopago.android.px.internal.features.review_and_confirm;
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
@@ -27,48 +29,25 @@ import java.util.List;
 
 public class ReviewAndConfirmBuilder {
 
-    private Issuer issuer;
-    private Token token;
     private Boolean hasExtraPaymentMethods;
-    private String merchantPublicKey;
-
-    public ReviewAndConfirmBuilder setIssuer(final Issuer issuer) {
-        this.issuer = issuer;
-        return this;
-    }
-
-    public ReviewAndConfirmBuilder setMerchantPublicKey(final String merchantPublicKey) {
-        this.merchantPublicKey = merchantPublicKey;
-        return this;
-    }
-
-    public ReviewAndConfirmBuilder setToken(final Token token) {
-        this.token = token;
-        return this;
-    }
 
     public ReviewAndConfirmBuilder setHasExtraPaymentMethods(final boolean hasExtraPaymentMethods) {
         this.hasExtraPaymentMethods = hasExtraPaymentMethods;
         return this;
     }
 
-    private void validate(final Activity activity) {
-        if (activity == null) {
-            throw new IllegalStateException("activity can't be null");
-        }
-    }
-
-    public void startForResult(@NonNull final Activity activity) {
-
-        validate(activity);
-
-        final Session session = Session.getSession(activity);
+    public Intent getIntent(@NonNull final Context context) {
+        final Resources resources = context.getResources();
+        final Session session = Session.getSession(context);
         final ConfigurationModule configurationModule = session.getConfigurationModule();
         final UserSelectionRepository userSelectionRepository =
             configurationModule.getUserSelectionRepository();
 
-        final PaymentSettingRepository paymentSettings = configurationModule.getPaymentSettings();
+        final Issuer issuer = userSelectionRepository.getIssuer();
 
+        final PaymentSettingRepository paymentSettings = configurationModule.getPaymentSettings();
+        final String publicKey = paymentSettings.getPublicKey();
+        final Token token = paymentSettings.getToken();
         final AmountRepository amountRepository = session.getAmountRepository();
 
         final PaymentMethod paymentMethod = userSelectionRepository.getPaymentMethod();
@@ -82,24 +61,24 @@ public class ReviewAndConfirmBuilder {
         final Site site = checkoutPreference.getSite();
 
         final String title = SummaryModel.resolveTitle(items,
-            activity.getResources().getString(R.string.px_review_summary_product),
-            activity.getResources().getString(R.string.px_review_summary_products));
+            resources.getString(R.string.px_review_summary_product),
+            resources.getString(R.string.px_review_summary_products));
 
         final boolean termsAndConditionsEnabled =
             TextUtil.isEmpty(paymentSettings.getPrivateKey());
 
         final TermsAndConditionsModel mercadoPagoTermsAndConditions =
             termsAndConditionsEnabled ? new TermsAndConditionsModel(site.getTermsAndConditionsUrl(),
-                activity.getString(R.string.px_terms_and_conditions_message),
-                activity.getString(R.string.px_terms_and_conditions_linked_message),
-                merchantPublicKey,
+                resources.getString(R.string.px_terms_and_conditions_message),
+                resources.getString(R.string.px_terms_and_conditions_linked_message),
+                publicKey,
                 LineSeparatorType.TOP_LINE_SEPARATOR) : null;
 
         final TermsAndConditionsModel discountTermsAndConditions =
             campaign != null ? new TermsAndConditionsModel(campaign.getCampaignTermsUrl(),
-                activity.getString(R.string.px_discount_terms_and_conditions_message),
-                activity.getString(R.string.px_discount_terms_and_conditions_linked_message),
-                merchantPublicKey,
+                resources.getString(R.string.px_discount_terms_and_conditions_message),
+                resources.getString(R.string.px_discount_terms_and_conditions_linked_message),
+                publicKey,
                 LineSeparatorType.BOTTOM_LINE_SEPARATOR) : null;
 
         final PaymentModel paymentModel = new PaymentModel(paymentMethod, token, issuer, hasExtraPaymentMethods);
@@ -112,8 +91,8 @@ public class ReviewAndConfirmBuilder {
 
         final ItemsModel itemsModel = new ItemsModel(site.getCurrencyId(), items);
 
-        ReviewAndConfirmActivity.start(activity,
-            merchantPublicKey,
+        return ReviewAndConfirmActivity.getIntent(context,
+            publicKey,
             mercadoPagoTermsAndConditions,
             paymentModel,
             summaryModel,

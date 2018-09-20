@@ -1,10 +1,8 @@
 package com.mercadopago.android.px.model;
 
-/**
- * Created by vaserber on 10/24/16.
- */
+import java.io.Serializable;
 
-public class CardInfo {
+public class CardInfo implements Serializable {
 
     private Integer cardNumberLength;
     private Integer securityCodeLength;

@@ -49,6 +49,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -206,7 +207,7 @@ public class PaymentVaultPresenterTest {
         verify(paymentVaultView).setTitle(paymentVaultProvider.getTitle());
         verify(paymentVaultView).startCardFlow(true);
         verify(paymentSettingRepository, atLeastOnce()).getCheckoutPreference();
-        verify(paymentSettingRepository).configure(checkoutPreference);
+        verify(userSelectionRepository, times(1)).select(PaymentTypes.CREDIT_CARD);
 
         verifyNoMoreInteractions(paymentVaultView);
         verifyNoMoreInteractions(paymentSettingRepository);

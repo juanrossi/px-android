@@ -2,7 +2,6 @@ package com.mercadopago.android.px.internal.features.review_and_confirm.componen
 
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.configuration.ReviewAndConfirmConfiguration;
-import com.mercadopago.android.px.internal.features.review_and_confirm.SummaryProvider;
 import com.mercadopago.android.px.internal.features.review_and_confirm.models.SummaryModel;
 import com.mercadopago.android.px.internal.view.Component;
 import com.mercadopago.android.px.internal.view.RendererFactory;
@@ -13,9 +12,7 @@ public class SummaryComponent extends Component<SummaryComponent.SummaryProps, V
         RendererFactory.register(SummaryComponent.class, SummaryRenderer.class);
     }
 
-    private final SummaryProvider provider;
-
-    static class SummaryProps {
+    /* default */ static final class SummaryProps {
         final SummaryModel summaryModel;
         final ReviewAndConfirmConfiguration reviewAndConfirmConfiguration;
 
@@ -25,23 +22,21 @@ public class SummaryComponent extends Component<SummaryComponent.SummaryProps, V
             this.reviewAndConfirmConfiguration = reviewAndConfirmConfiguration;
         }
 
-        static SummaryProps createFrom(SummaryModel summaryModel,
-            ReviewAndConfirmConfiguration reviewAndConfirmConfiguration) {
+        static SummaryProps createFrom(final SummaryModel summaryModel,
+            final ReviewAndConfirmConfiguration reviewAndConfirmConfiguration) {
             return new SummaryProps(summaryModel, reviewAndConfirmConfiguration);
         }
     }
 
-    SummaryComponent(@NonNull final SummaryComponent.SummaryProps props,
-        @NonNull final SummaryProvider provider) {
+    /* default */ SummaryComponent(@NonNull final SummaryComponent.SummaryProps props) {
         super(props);
-        this.provider = provider;
     }
 
-    FullSummary getFullSummary() {
-        return new FullSummary(props, provider);
+    /* default */  FullSummary getFullSummary() {
+        return new FullSummary(props);
     }
 
-    CompactSummary getCompactSummary() {
+    /* default */ CompactSummary getCompactSummary() {
         return new CompactSummary(props.summaryModel);
     }
 }

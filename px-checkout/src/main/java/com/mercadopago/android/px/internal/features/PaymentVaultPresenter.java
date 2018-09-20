@@ -188,6 +188,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     private void selectItem(final PaymentMethodSearchItem item, final Boolean automaticSelection) {
+        userSelectionRepository.select((Card) null);
         if (item.hasChildren()) {
             getView().showSelectedItem(item);
         } else if (item.isPaymentType()) {
@@ -273,9 +274,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         if (skipHook || (!hook1Displayed && !showHook1(itemId))) {
             skipHook = false;
             if (PaymentTypes.isCardPaymentType(itemId)) {
-                // TODO refactor renew configuration for screen recursion
-                configuration.getCheckoutPreference().getPaymentPreference().setDefaultPaymentTypeId(itemId);
-                configuration.configure(configuration.getCheckoutPreference());
+                userSelectionRepository.select(itemId);
                 getView().startCardFlow(automaticSelection);
             } else {
                 getView().startPaymentMethodsSelection(configuration.getCheckoutPreference().getPaymentPreference());
@@ -366,7 +365,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     public boolean showHook1(final String typeId) {
-        return showHook1(typeId, MercadoPagoComponents.Activities.HOOK_1);
+        return showHook1(typeId, Constants.Activities.HOOK_1);
     }
 
     public boolean showHook1(final String typeId, final int requestCode) {
@@ -416,7 +415,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     public void selectPluginPaymentMethod(final PaymentMethodPlugin plugin) {
         userSelectionRepository.select(pluginRepository.getPluginAsPaymentMethod(plugin.getId(), PaymentTypes.PLUGIN));
-        if (!showHook1(PaymentTypes.PLUGIN, MercadoPagoComponents.Activities.HOOK_1_PLUGIN)) {
+        if (!showHook1(PaymentTypes.PLUGIN, Constants.Activities.HOOK_1_PLUGIN)) {
 
             if (plugin.isEnabled() && plugin.shouldShowFragmentOnSelection()) {
                 getView().showPaymentMethodPluginActivity();

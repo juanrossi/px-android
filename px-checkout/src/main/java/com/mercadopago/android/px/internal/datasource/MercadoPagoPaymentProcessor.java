@@ -13,6 +13,7 @@ import com.mercadopago.android.px.internal.util.ApiUtil;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentBody;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.tracking.internal.MPTracker;
 
 public class MercadoPagoPaymentProcessor implements PaymentProcessor {
 
@@ -62,6 +63,7 @@ public class MercadoPagoPaymentProcessor implements PaymentProcessor {
             new TaggedCallback<Payment>(ApiUtil.RequestOrigin.CREATE_PAYMENT) {
                 @Override
                 public void onSuccess(final Payment payment) {
+                    trackOffPayment(payment);
                     paymentListener.onPaymentFinished(payment);
                 }
 
@@ -70,5 +72,11 @@ public class MercadoPagoPaymentProcessor implements PaymentProcessor {
                     paymentListener.onPaymentError(error);
                 }
             });
+    }
+
+    private void trackOffPayment(@NonNull final Payment payment) {
+        if (!payment.isCardPaymentType(payment.getPaymentTypeId())) {
+            MPTracker.getInstance().trackPayment(payment.getId(), payment.getPaymentTypeId());
+        }
     }
 }

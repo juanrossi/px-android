@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.di.Session;
-import com.mercadopago.android.px.internal.features.MercadoPagoComponents;
+import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardActivity;
 import com.mercadopago.android.px.internal.features.providers.CardVaultProviderImpl;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
@@ -37,16 +37,16 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
     private PaymentSettingRepository paymentSettingRepository;
 
     private void configure() {
-        final Intent intent = getIntent();
-        final Card card = JsonUtil.getInstance().fromJson(intent.getStringExtra(EXTRA_CARD), Card.class);
         final Session session = Session.getSession(this);
         paymentSettingRepository = session.getConfigurationModule().getPaymentSettings();
         presenter = new CardVaultPresenter(session.getAmountRepository(),
             session.getConfigurationModule().getUserSelectionRepository(),
-            paymentSettingRepository);
+            paymentSettingRepository,
+            session.getMercadoPagoESC());
         presenter.attachResourcesProvider(
             new CardVaultProviderImpl(getApplicationContext()));
         presenter.attachView(this);
+        final Card card = session.getConfigurationModule().getUserSelectionRepository().getCard();
         presenter.setCard(card);
     }
 
@@ -144,7 +144,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
     @Override
     public void startSecurityCodeActivity(String reason) {
-        new MercadoPagoComponents.Activities.SecurityCodeActivityBuilder()
+        new Constants.Activities.SecurityCodeActivityBuilder()
             .setActivity(this)
             .setPaymentMethod(presenter.getPaymentMethod())
             .setCardInfo(presenter.getCardInfo())
@@ -163,26 +163,21 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == MercadoPagoComponents.Activities.GUESSING_CARD_FOR_PAYMENT_REQUEST_CODE) {
+        if (requestCode == Constants.Activities.GUESSING_CARD_FOR_PAYMENT_REQUEST_CODE) {
             resolveGuessingCardRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.ISSUERS_REQUEST_CODE) {
+        } else if (requestCode == Constants.Activities.ISSUERS_REQUEST_CODE) {
             resolveIssuersRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.INSTALLMENTS_REQUEST_CODE) {
+        } else if (requestCode == Constants.Activities.INSTALLMENTS_REQUEST_CODE) {
             resolveInstallmentsRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.SECURITY_CODE_REQUEST_CODE) {
+        } else if (requestCode == Constants.Activities.SECURITY_CODE_REQUEST_CODE) {
             resolveSecurityCodeRequest(resultCode, data);
         } else if (requestCode == ErrorUtil.ERROR_REQUEST_CODE) {
             resolveErrorRequest(resultCode, data);
         }
     }
 
-    private void resolveTimerObserverResult(int resultCode) {
-        setResult(resultCode);
-        finish();
-    }
-
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         if (presenter != null) {
             outState.putString(EXTRA_CARD, JsonUtil.getInstance().toJson(presenter.getCard()));
@@ -277,7 +272,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
     @Override
     public void startIssuersActivity() {
-        new MercadoPagoComponents.Activities.IssuersActivityBuilder()
+        new Constants.Activities.IssuersActivityBuilder()
             .setActivity(this)
             .setCardInfo(presenter.getCardInfo())
             .startActivity();
@@ -304,13 +299,12 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
     private void startGuessingCardActivity() {
         GuessingCardActivity.startGuessingCardActivityForPayment(this,
-            paymentSettingRepository.getCheckoutPreference().getPaymentPreference(),
             presenter.getPaymentRecovery());
         overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     private void startInstallmentsActivity() {
-        new MercadoPagoComponents.Activities.InstallmentsActivityBuilder()
+        new Constants.Activities.InstallmentsActivityBuilder()
             .setActivity(this)
             .setPaymentPreference(paymentSettingRepository.getCheckoutPreference().getPaymentPreference())
             .setCardInfo(presenter.getCardInfo())

@@ -34,6 +34,8 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import com.mercadopago.android.px.services.Callback;
+import com.mercadopago.android.px.tracking.internal.MPTracker;
+
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -44,9 +46,6 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
     @NonNull private final PaymentSettingRepository mPaymentSettingRepository;
     @NonNull private final GroupsRepository mGroupsRepository;
     @NonNull private final AdvancedConfiguration mAdvancedConfiguration;
-
-    //Card controller
-    /* default */ PaymentPreference mPaymentPreference;
 
     //Extra info
     private List<BankDeal> mBankDealsList;
@@ -59,7 +58,6 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
         @NonNull final PaymentSettingRepository paymentSettingRepository,
         @NonNull final GroupsRepository groupsRepository,
         @NonNull final AdvancedConfiguration advancedConfiguration,
-        @NonNull final PaymentPreference paymentPreference,
         @NonNull final PaymentRecovery paymentRecovery
     ) {
         super();
@@ -68,7 +66,6 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
         mPaymentSettingRepository = paymentSettingRepository;
         mGroupsRepository = groupsRepository;
         mAdvancedConfiguration = advancedConfiguration;
-        mPaymentPreference = paymentPreference;
         mPaymentRecovery = paymentRecovery;
         mToken = new Token();
         mIdentification = new Identification();
@@ -106,23 +103,16 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
         }
     }
 
-    public PaymentPreference getPaymentPreference() {
-        return mPaymentPreference;
-    }
-
-    public void setPaymentPreference(final PaymentPreference paymentPreference) {
-        mPaymentPreference = paymentPreference;
-    }
-
     @Override
     public void getPaymentMethods() {
         mGroupsRepository.getGroups().enqueue(new Callback<PaymentMethodSearch>() {
             @Override
             public void success(final PaymentMethodSearch paymentMethodSearch) {
+                PaymentPreference paymentPreference = mPaymentSettingRepository.getCheckoutPreference().getPaymentPreference();
                 mPaymentMethodGuessingController = new PaymentMethodGuessingController(
-                    mPaymentPreference.getSupportedPaymentMethods(paymentMethodSearch.getPaymentMethods()),
-                    mPaymentPreference.getDefaultPaymentTypeId(),
-                    mPaymentPreference.getExcludedPaymentTypes());
+                        paymentPreference.getSupportedPaymentMethods(paymentMethodSearch.getPaymentMethods()),
+                        getPaymentTypeId(),
+                        paymentPreference.getExcludedPaymentTypes());
                 startGuessingForm();
             }
 
@@ -135,15 +125,7 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
 
     @Override
     public String getPaymentTypeId() {
-        if (mPaymentMethodGuessingController == null) {
-            if (mPaymentPreference == null) {
-                return null;
-            } else {
-                return mPaymentPreference.getDefaultPaymentTypeId();
-            }
-        } else {
-            return mPaymentMethodGuessingController.getPaymentTypeId();
-        }
+        return mUserSelectionRepository.getPaymentType();
     }
 
     private void resolveBankDeals() {
@@ -315,6 +297,7 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
     public void resolveTokenRequest(final Token token) {
         mToken = token;
         mPaymentSettingRepository.configure(mToken);
+        MPTracker.getInstance().trackToken(mToken.getId());
         getIssuers();
     }
 
@@ -397,7 +380,7 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
     }
 
     private void resolvePayerCosts(final List<PayerCost> payerCosts) {
-        final PayerCost defaultPayerCost = mPaymentPreference.getDefaultInstallments(payerCosts);
+        final PayerCost defaultPayerCost = mPaymentSettingRepository.getCheckoutPreference().getPaymentPreference().getDefaultInstallments(payerCosts);
         if (defaultPayerCost != null) {
             mUserSelectionRepository.select(defaultPayerCost);
             getView().finishCardFlow(getPaymentMethod(), mToken, mIssuer,

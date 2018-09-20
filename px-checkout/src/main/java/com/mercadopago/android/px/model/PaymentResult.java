@@ -6,9 +6,6 @@ import java.io.Serializable;
 
 public class PaymentResult implements Serializable {
 
-    public static final String SELECT_OTHER_PAYMENT_METHOD = "select_other_payment_method";
-    public static final String RECOVER_PAYMENT = "recover_payment";
-
     private final PaymentData paymentData;
     private final Long paymentId;
     private final String paymentStatus;
