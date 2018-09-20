@@ -87,41 +87,47 @@ You can join the MercadoPago Developers Community on MercadoPago Developers Site
 + [Español](https://www.mercadopago.com.ar/developers/es/community/forum/)
 + [Português](https://www.mercadopago.com.br/developers/pt/community/forum/)
 
-## 🌈 Color customization
+## 🌈 Basic color customization
+
 ```
-    <!-- Toolbar and status bar default -->
-	<color name="px_colorPrimary">@color/ui_components_android_color_primary</color>
-	<color name="px_colorPrimaryDark">@color/ui_components_android_color_primary_dark</color>
-	<color name="px_colorAccent">@color/ui_components_android_color_accent</color>
-	<color name="px_background">@color/px_colorPrimary</color>
-	<color name="px_toolbar_text">@color/ui_components_white_color</color>
 
-	<!-- Discount modal and discount description -->
-	<color name="px_discount_summary_background">#474747</color>
-	<color name="px_discount_description">#64c574</color>
+	<!-- Main color -->
+    <color name="ui_components_android_color_primary">@color/your_color</color>
 
-	<!-- Inputs -->
-	<color name="px_input">@color/px_colorPrimary</color>
+    <!-- Toolbar's text color -->
+    <!-- Default: @color/ui_components_white_color -->
+    <color name="px_toolbar_text">@color/your_color</color>
 
-	<!-- R&C toolbar -->
-	<color name="px_review_background">@color/ui_components_white_color</color>
-	<color name="px_review_toolbar_text">@color/px_colorPrimary</color>
+    <!-- Status Bar color -->
+    <color name="ui_components_android_color_primary_dark">@color/your_color</color>
 
-	<!-- R&C summary -->
-	<color name="px_review_summary_background">@color/px_white</color>
-	<color name="px_summary_text_color">@color/ui_components_dark_grey_color</color>
-	<color name="px_summary_separator_color">@color/px_separator</color>
+    <!-- Spinner primary color -->
+    <!-- Default: @color/ui_components_android_color_primary -->
+    <color name="ui_components_spinner_primary_color">@color/your_color</color>
 
-	<!-- R&C components -->
-	<color name="px_review_payment_method_background">@color/px_light_gray</color>
-	<color name="px_review_item_background">@color/px_light_gray</color>
+    <!-- Spinner secondary color -->
+    <!-- Default: @color/ui_components_android_color_primary -->
+    <color name="ui_components_spinner_secondary_color">@color/your_color</color>
 
-	<!-- Spinner -->
-	<color name="px_background_loading">@color/ui_components_white_color</color>
-	<color name="px_tint_loading">@color/px_colorPrimary</color>
+	<!-- Spinner background color -->
+	<!-- Default: @color/ui_components_white_color -->
+	<color name="px_background_loading">@color/your_color</color>
 
-	<color name="px_paymentMethodTint">@color/px_colorPrimary</color>
+    <!-- Payment method icon color -->
+    <!-- Default: @color/ui_components_android_color_primary -->
+    <color name="px_paymentMethodTint">@color/your_color</color>
+
+    <!-- Inputs color -->
+    <!-- Default: @color/ui_components_android_color_primary -->
+    <color name="px_input">@color/your_color</color>
+
 ```
+
+Looking for something else? check here:
+
++ [Advanced color customization](https://github.com/mercadopago/px-android/docs/customization.md)
+
+
 ## 🌈 Fonts customization
 
 Our checkout uses REGULAR and LIGHT fonts declared here:
