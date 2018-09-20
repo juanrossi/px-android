@@ -1,14 +1,14 @@
 package com.mercadopago.android.px.testcheckout.pages;
 
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.android.testlib.pages.PageObject;
-import com.mercadopago.android.px.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public class OneTapPage extends PageObject<CheckoutValidator>{
+public class OneTapPage extends PageObject<CheckoutValidator> {
 
     public OneTapPage() {
         // This constructor is intentionally empty. Nothing special is needed here.

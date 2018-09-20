@@ -3,13 +3,19 @@ apply from:"$rootDir/gradle/jacoco.gradle"
 apply from:"$rootDir/gradle/static-analysis.gradle"
 apply from:"$rootDir/gradle/deploy_checkout.gradle"
 
+android {
+    defaultConfig {
+        multiDexEnabled true //TODO remove
+    }
+}
+
 dependencies {
     androidTestImplementation project(':testlib')
 
     testImplementation "junit:junit:$junit"
     testImplementation "org.mockito:mockito-core:$mockito_version"
 
-
+    implementation 'com.android.support:multidex:1.0.2' //TODO remove
     implementation "com.android.support:cardview-v7:$support_library_version"
     implementation "com.android.support:recyclerview-v7:$support_library_version"
     implementation "com.android.support:support-v4:$support_library_version"

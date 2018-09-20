@@ -1,6 +1,5 @@
 package com.mercadopago.android.px.internal.features.cardvault;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -11,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.Constants;
+import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardActivity;
 import com.mercadopago.android.px.internal.features.providers.CardVaultProviderImpl;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.util.ErrorUtil;
@@ -51,7 +51,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setScreenOrientation();
         setContentView();
@@ -163,7 +163,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == Constants.Activities.GUESSING_CARD_REQUEST_CODE) {
+        if (requestCode == Constants.Activities.GUESSING_CARD_FOR_PAYMENT_REQUEST_CODE) {
             resolveGuessingCardRequest(resultCode, data);
         } else if (requestCode == Constants.Activities.ISSUERS_REQUEST_CODE) {
             resolveIssuersRequest(resultCode, data);
@@ -298,19 +298,9 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
     }
 
     private void startGuessingCardActivity() {
-        final Activity context = this;
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new Constants.Activities.GuessingCardActivityBuilder()
-                    .setActivity(context)
-                    .setPaymentPreference(paymentSettingRepository.getCheckoutPreference().getPaymentPreference())
-                    .setPaymentRecovery(presenter.getPaymentRecovery())
-                    .startActivity();
-                overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
-            }
-        });
+        GuessingCardActivity.startGuessingCardActivityForPayment(this,
+            presenter.getPaymentRecovery());
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
     private void startInstallmentsActivity() {

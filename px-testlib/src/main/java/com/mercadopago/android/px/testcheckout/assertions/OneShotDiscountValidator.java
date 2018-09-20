@@ -2,12 +2,12 @@ package com.mercadopago.android.px.testcheckout.assertions;
 
 import android.support.annotation.NonNull;
 import android.view.View;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.testcheckout.pages.DiscountDetailPage;
 import javax.annotation.Nonnull;
 import org.hamcrest.Matcher;
-import com.mercadopago.android.px.R;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -25,9 +25,7 @@ public class OneShotDiscountValidator extends DiscountValidator {
     public void validate(@NonNull final DiscountDetailPage discountDetailPage) {
         super.validate(discountDetailPage);
         final Matcher<View> detail = withId(com.mercadopago.android.px.R.id.detail);
-
         onView(detail).check(matches(withText(com.mercadopago.android.px.R.string.px_one_shot_discount_detail)));
-
         final Matcher<View> subtitle = withId(com.mercadopago.android.px.R.id.subtitle);
         final String maxCouponAmount = "$ " + campaign.getMaxCouponAmount();
         final String maxCouponAmountSubtitle =

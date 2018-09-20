@@ -9,6 +9,7 @@ import com.mercadopago.android.px.configuration.PaymentConfiguration;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.core.PaymentProcessor;
 import com.mercadopago.android.px.model.BusinessPayment;
+import com.mercadopago.android.px.model.ExitAction;
 import com.mercadopago.android.px.model.Item;
 import com.mercadopago.android.px.model.Sites;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
@@ -86,7 +87,7 @@ public class SavedCardTestFlow extends TestFlow {
                     paymentListener.onPaymentFinished(new BusinessPayment.Builder(
                         BusinessPayment.Decorator.APPROVED,
                         "", "", "", ""
-                    ).build());
+                    ).setPrimaryButton(new ExitAction("asd", 123)).build());
                 }
 
                 @Override

@@ -1,8 +1,11 @@
 package com.mercadopago.android.px.securitycode;
 
+import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
+import com.mercadopago.android.px.internal.features.SecurityCodeActivityView;
+import com.mercadopago.android.px.internal.features.SecurityCodePresenter;
+import com.mercadopago.android.px.internal.features.providers.SecurityCodeProvider;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.util.TextUtil;
-import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.mocks.Cards;
 import com.mercadopago.android.px.mocks.Issuers;
 import com.mercadopago.android.px.mocks.PayerCosts;
@@ -19,13 +22,10 @@ import com.mercadopago.android.px.model.SavedCardToken;
 import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.SecurityCode;
 import com.mercadopago.android.px.model.Token;
-import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
-import com.mercadopago.android.px.internal.features.SecurityCodePresenter;
-import com.mercadopago.android.px.internal.features.providers.SecurityCodeProvider;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.CardTokenException;
+import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.utils.MVPStructure;
-import com.mercadopago.android.px.internal.features.SecurityCodeActivityView;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -35,10 +35,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-
-/**
- * Created by marlanti on 7/18/17.
- */
 
 @RunWith(MockitoJUnitRunner.class)
 public class SecurityCodePresenterTest {
@@ -161,7 +157,7 @@ public class SecurityCodePresenterTest {
 
         mvp.getPresenter().initialize();
         mvp.getPresenter().initializeSettings();
-        assertEquals(mvp.getView().maxLenght, mockedPaymentMethod.getSettings().get(0).getSecurityCode().getLength());
+        assertEquals(mvp.getView().maxLength, mockedPaymentMethod.getSettings().get(0).getSecurityCode().getLength());
     }
 
     @Test
@@ -180,7 +176,7 @@ public class SecurityCodePresenterTest {
 
         mvp.getPresenter().initialize();
         mvp.getPresenter().initializeSettings();
-        assertEquals(mvp.getView().maxLenght, Card.CARD_DEFAULT_SECURITY_CODE_LENGTH);
+        assertEquals(mvp.getView().maxLength, Card.CARD_DEFAULT_SECURITY_CODE_LENGTH);
     }
 
     @Test
@@ -683,7 +679,7 @@ public class SecurityCodePresenterTest {
         private String errorMessage;
         private MercadoPagoError error;
         private boolean timerShown = false;
-        private Integer maxLenght;
+        private int maxLength;
         private boolean errorState = false;
         private Integer cardTokenErrorCode;
 
@@ -693,8 +689,8 @@ public class SecurityCodePresenterTest {
         }
 
         @Override
-        public void setSecurityCodeInputMaxLength(int length) {
-            this.maxLenght = length;
+        public void setSecurityCodeInputMaxLength(final int length) {
+            maxLength = length;
         }
 
         @Override
