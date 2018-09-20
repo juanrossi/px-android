@@ -38,10 +38,13 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
         //TODO persist this data.
         this.yButtonPosition = yButtonPosition;
         this.buttonHeight = buttonHeight;
-
         getView().hideToolbar();
-        getView().hideConfirmButton();
-        getView().startLoadingButton(yButtonPosition, buttonHeight, paymentRepository.getPaymentTimeout());
+
+        if (paymentRepository.isExplodingAnimationCompatible()) {
+            getView().startLoadingButton(yButtonPosition, buttonHeight, paymentRepository.getPaymentTimeout());
+            getView().hideConfirmButton();
+        }
+
         paymentRepository.startOneTapPayment(model);
     }
 

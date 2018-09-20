@@ -50,17 +50,17 @@ import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
     }
 
     private void pay() {
-        getView().startLoadingButton(paymentRepository.getPaymentTimeout());
-        getView().hideConfirmButton();
+        if (paymentRepository.isExplodingAnimationCompatible()) {
+            getView().startLoadingButton(paymentRepository.getPaymentTimeout());
+            getView().hideConfirmButton();
+        }
         paymentRepository.startPayment();
     }
 
     @Override
     public void onCardFlowResponse() {
         getView().cancelLoadingButton();
-        getView().hideConfirmButton();
-        getView().startLoadingButton(paymentRepository.getPaymentTimeout());
-        paymentRepository.startPayment();
+        pay();
     }
 
     @Override
