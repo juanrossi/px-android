@@ -13,6 +13,8 @@ public class ButtonPrimary extends Button {
 
     @Override
     public MeliButton getButtonView(@NonNull final Context context) {
-        return new MeliButton(context);
+        final MeliButton view = new MeliButton(context);
+        view.setId(R.id.px_button_primary);
+        return view;
     }
 }

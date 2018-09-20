@@ -6,19 +6,21 @@ import com.mercadopago.android.px.testcheckout.pages.CashPage;
 import com.mercadopago.android.px.testcheckout.pages.CongratsPage;
 import com.mercadopago.android.px.testcheckout.pages.CreditCardPage;
 import com.mercadopago.android.px.testcheckout.pages.DebitCardPage;
+import com.mercadopago.android.px.testcheckout.pages.DiscountCodeInputPage;
+import com.mercadopago.android.px.testcheckout.pages.DiscountCongratsPage;
+import com.mercadopago.android.px.testcheckout.pages.DiscountDetailPage;
 import com.mercadopago.android.px.testcheckout.pages.ExpiryDatePage;
 import com.mercadopago.android.px.testcheckout.pages.IdentificationPage;
 import com.mercadopago.android.px.testcheckout.pages.InstallmentsPage;
 import com.mercadopago.android.px.testcheckout.pages.IssuerPage;
 import com.mercadopago.android.px.testcheckout.pages.NamePage;
 import com.mercadopago.android.px.testcheckout.pages.NoCheckoutPage;
+import com.mercadopago.android.px.testcheckout.pages.OneTapPage;
 import com.mercadopago.android.px.testcheckout.pages.PaymentMethodPage;
 import com.mercadopago.android.px.testcheckout.pages.ReviewAndConfirmPage;
 import com.mercadopago.android.px.testcheckout.pages.ReviewPaymentMethodsPage;
 import com.mercadopago.android.px.testcheckout.pages.SecurityCodePage;
-import com.mercadopago.android.px.testcheckout.pages.DiscountDetailPage;
-import com.mercadopago.android.px.testcheckout.pages.DiscountCodeInputPage;
-import com.mercadopago.android.px.testcheckout.pages.DiscountCongratsPage;
+import com.mercadopago.android.px.testcheckout.pages.SecurityCodeToCongratsPage;
 import com.mercadopago.android.testlib.assertions.Validator;
 
 public interface CheckoutValidator extends Validator {
@@ -58,4 +60,8 @@ public interface CheckoutValidator extends Validator {
     void validate(@NonNull final DiscountCodeInputPage discountCodeInput);
 
     void validate(@NonNull final DiscountCongratsPage discountCongratsPage);
+
+    void validate(@NonNull final SecurityCodeToCongratsPage securityCodeToCongratsPage);
+
+    void validate(@NonNull final OneTapPage oneTapPage);
 }
