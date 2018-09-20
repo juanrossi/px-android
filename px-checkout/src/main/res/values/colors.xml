@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-
     <!-- Colors needed fot UILib V5 -->
     <color name="ui_components_android_color_primary">#009EE3</color>
     <color name="ui_components_android_color_primary_dark">#008AD6</color>
@@ -18,31 +17,9 @@
     <color name="ui_components_spinner_secondary_color">@color/ui_components_primary_color</color>
     <color name="ui_components_primary_color_pressed">#157FAE</color>
 
-    <!-- Colors needed fot UILib unused at the moment -->
-    <color name="ui_components_grey_color" tools:ignore="UnusedResources">#999999</color>
-    <color name="ui_components_melidialog_background" tools:ignore="UnusedResources">#cc000000</color>
-    <color name="ui_components_melidialog_tint" tools:ignore="UnusedResources">@color/ui_components_white_color</color>
-    <color name="ui_second_action_button_pressed" tools:ignore="UnusedResources">#1e009ee3</color>
     <color name="ui_components_android_color_accent">@color/ui_components_android_color_primary</color>
-
+    
     <color name="ui_components_primary_color_disabled">@color/ui_components_mid_grey_color</color>
-    <color name="ui_components_actionModeBackground" tools:ignore="UnusedResources">
-        @color/ui_components_android_color_primary
-    </color>
-    <color name="ui_components_primary_color_text_disabled" tools:ignore="UnusedResources">
-        @color/ui_components_mid_grey_color
-    </color>
-    <color name="ui_components_secondary_color" tools:ignore="UnusedResources">
-        @color/ui_components_android_color_primary
-    </color>
-    <color name="ui_components_secondary_color_pressed" tools:ignore="UnusedResources">#157FAE</color>
-    <color name="ui_components_secondary_color_disabled" tools:ignore="UnusedResources">
-        @color/ui_components_mid_grey_color
-    </color>
-    <color name="ui_components_secondary_color_text_disabled" tools:ignore="UnusedResources">
-        @color/ui_components_mid_grey_color
-    </color>
-
 
     <color name="px_real_black">#000000</color>
     <color name="px_comment_color">#999</color>
