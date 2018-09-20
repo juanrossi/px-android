@@ -12,6 +12,7 @@ import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.model.BankDeal;
+import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.Installment;
@@ -28,7 +29,7 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     private final String publicKey;
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
     private MPTrackingContext trackingContext;
-    private CardAssociationService cardAssociationService;
+    private final CardAssociationService cardAssociationService;
 
     public GuessingCardProviderImpl(@NonNull final Context context) {
         this.context = context;
@@ -36,6 +37,7 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
         publicKey = session.getConfigurationModule().getPaymentSettings().getPublicKey();
         mercadoPago = session.getMercadoPagoServiceAdapter();
         cardPaymentMethodRepository = session.getCardPaymentMethodRepository();
+        cardAssociationService = session.getCardAssociationService();
     }
 
     @Override
@@ -99,8 +101,8 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
 
     @Override
     public void associateCardToUser(final String accessToken, final String cardTokenId, final String paymentMethodId,
-        final TaggedCallback<Void> taggedCallback) {
-
+        final TaggedCallback<Card> taggedCallback) {
+        cardAssociationService.associateCardToUser(accessToken, cardTokenId, paymentMethodId).enqueue(taggedCallback);
     }
 
     @Override

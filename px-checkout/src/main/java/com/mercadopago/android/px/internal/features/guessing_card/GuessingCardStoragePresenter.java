@@ -7,6 +7,7 @@ import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.internal.util.ApiUtil;
 import com.mercadopago.android.px.model.BankDeal;
+import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.Token;
@@ -137,7 +138,18 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
     @Override
     public void resolveTokenRequest(final Token token) {
-        getView().finishCardStorageFlow("fake_card_id");
+        getResourcesProvider().associateCardToUser(mAccessToken, token.getId(), getPaymentMethod().getId(),
+            new TaggedCallback<Card>(ApiUtil.RequestOrigin.ASSOCIATE_CARD) {
+                @Override
+                public void onSuccess(final Card card) {
+                    getView().finishCardStorageFlow("Fake_id");
+                }
+
+                @Override
+                public void onFailure(final MercadoPagoError error) {
+                    getView().setErrorView(error.getMessage());
+                }
+            });
     }
 
     @Nullable

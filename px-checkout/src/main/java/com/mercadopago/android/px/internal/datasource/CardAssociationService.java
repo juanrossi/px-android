@@ -3,6 +3,7 @@ package com.mercadopago.android.px.internal.datasource;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.callbacks.MPCall;
 import com.mercadopago.android.px.internal.services.CardService;
+import com.mercadopago.android.px.model.Card;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class CardAssociationService {
         mCardService = cardService;
     }
 
-    public MPCall<Void> associateCardToUser(@NonNull final String accessToken, @NonNull final String cardTokenId,
+    public MPCall<Card> associateCardToUser(@NonNull final String accessToken, @NonNull final String cardTokenId,
         @NonNull final String paymentMethodId) {
         final HashMap<String, Object> body = new HashMap<>();
         body.put("card_token_id", cardTokenId);
