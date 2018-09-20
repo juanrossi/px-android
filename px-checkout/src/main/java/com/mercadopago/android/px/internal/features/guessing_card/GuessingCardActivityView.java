@@ -1,21 +1,25 @@
 package com.mercadopago.android.px.internal.features.guessing_card;
 
+import android.support.annotation.Nullable;
 import com.mercadopago.android.px.internal.base.MvpView;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
+import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.PaymentMethod;
+import com.mercadopago.android.px.model.PaymentType;
 import com.mercadopago.android.px.model.Token;
-import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.CardTokenException;
+import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import java.util.List;
 
 public interface GuessingCardActivityView extends MvpView {
-    void onValidStart();
 
-    void initializeTimer();
+    void setupPresenter();
+
+    void onValidStart();
 
     void showError(MercadoPagoError error, String requestOrigin);
 
@@ -50,8 +54,6 @@ public interface GuessingCardActivityView extends MvpView {
     void hideIdentificationInput();
 
     void showIdentificationInput();
-
-    void showSecurityCodeInput();
 
     void setCardholderNameListeners();
 
@@ -91,12 +93,12 @@ public interface GuessingCardActivityView extends MvpView {
 
     void setSoftInputMode();
 
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, List<Issuer> issuers);
+    void finishCardFlow(@Nullable PaymentMethod paymentMethod, Token token, List<Issuer> issuers);
 
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, Issuer issuer,
+    void finishCardFlow(@Nullable PaymentMethod paymentMethod, Token token, Issuer issuer,
         List<PayerCost> payerCosts);
 
-    void finishCardFlow(PaymentMethod paymentMethod, Token token, Issuer issuer,
+    void finishCardFlow(@Nullable PaymentMethod paymentMethod, Token token, Issuer issuer,
         PayerCost payerCost);
 
     void hideProgress();
@@ -121,11 +123,14 @@ public interface GuessingCardActivityView extends MvpView {
 
     void clearCardNumberInputLength();
 
-    void clearCardNumberEditTextMask();
-
-    void askForPaymentType();
+    void askForPaymentType(List<PaymentMethod> paymentMethods, List<PaymentType> paymentTypes, CardInfo cardInfo);
 
     void showFinishCardFlow();
 
+    void eraseDefaultSpace();
+
     void setPaymentMethod(PaymentMethod paymentMethod);
+
+    void recoverCardViews(boolean lowResActive, String cardNumber, String cardHolderName, String expiryMonth,
+        String expiryYear, String identificationNumber, IdentificationType identificationType);
 }

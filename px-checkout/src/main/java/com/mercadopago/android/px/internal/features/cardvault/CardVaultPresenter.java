@@ -17,6 +17,7 @@ import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.DifferentialPricing;
 import com.mercadopago.android.px.model.Installment;
+import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentRecovery;
@@ -150,7 +151,7 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         return cardInfo;
     }
 
-    public Integer getCardNumberLength() {
+    public int getCardNumberLength() {
         return PaymentMethodGuessingController.getCardNumberLength(paymentMethod, bin);
     }
 

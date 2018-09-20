@@ -3,6 +3,9 @@
 _05_09_2018_
 
 * Fix: one tap with payment recovery
+* Fix: payment processor background support
+* Fix: added internal payment method change behaviour
+
 
 ## VERSION 4.0.1
 

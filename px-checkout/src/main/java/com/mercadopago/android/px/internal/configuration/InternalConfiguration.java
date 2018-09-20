@@ -1,5 +1,4 @@
 package com.mercadopago.android.px.internal.configuration;
-
 /**
  * Internal configuration provides support to money in flow for custom checkout functionality/configure special behaviour
  * when checkout is running.

@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.internal.base;
 
+import android.support.annotation.NonNull;
 import java.lang.ref.WeakReference;
 
 /**
@@ -12,6 +13,7 @@ import java.lang.ref.WeakReference;
  * See also {@link MvpView}
  */
 
+@SuppressWarnings("AbstractClassWithoutAbstractMethods")
 public abstract class MvpPresenter<V extends MvpView, R extends ResourcesProvider> {
 
     private transient WeakReference<V> mView;
@@ -21,7 +23,7 @@ public abstract class MvpPresenter<V extends MvpView, R extends ResourcesProvide
         this.resourcesProvider = resourcesProvider;
     }
 
-    public void attachView(V view) {
+    public void attachView(final V view) {
         mView = new WeakReference<>(view);
     }
 
@@ -36,8 +38,13 @@ public abstract class MvpPresenter<V extends MvpView, R extends ResourcesProvide
         return mView != null && mView.get() != null;
     }
 
+    @NonNull
     public V getView() {
-        return mView == null ? null : mView.get();
+        if (mView == null) {
+            throw new IllegalStateException("view not attached");
+        } else {
+            return mView.get();
+        }
     }
 
     public R getResourcesProvider() {
@@ -48,11 +55,3 @@ public abstract class MvpPresenter<V extends MvpView, R extends ResourcesProvide
         resourcesProvider = null;
     }
 }
-
-
-
-
-
-
-
-

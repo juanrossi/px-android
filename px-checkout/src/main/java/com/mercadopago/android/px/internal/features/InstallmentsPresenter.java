@@ -153,7 +153,7 @@ public class InstallmentsPresenter extends MvpPresenter<InstallmentsActivityView
         return cardInfo;
     }
 
-    public Integer getCardNumberLength() {
+    public int getCardNumberLength() {
         return PaymentMethodGuessingController.getCardNumberLength(userSelectionRepository.getPaymentMethod(), bin);
     }
 

@@ -131,3 +131,28 @@ bintray {
         }
     }
 }
+
+// Local m2 repo publication
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId group
+            version = versionToDeploy
+            artifactId artifactLib
+            artifact("$buildDir/outputs/aar/${artifactLib}-release.aar") {
+                builtBy assemble
+            }
+
+            // Necessary to include dependencies
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.getByName("releaseCompileClasspath").getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup.replace("px-", ""))
+                    dependency.appendNode('artifactId', it.moduleName.replace("px-", ""))
+                    dependency.appendNode('version', it.moduleVersion)
+                }
+            }
+        }
+    }
+}

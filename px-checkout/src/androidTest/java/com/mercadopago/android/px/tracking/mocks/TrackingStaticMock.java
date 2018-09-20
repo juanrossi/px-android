@@ -3,7 +3,6 @@ package com.mercadopago.android.px.tracking.mocks;
 import android.support.test.InstrumentationRegistry;
 import com.mercadopago.android.px.model.AppInformation;
 import com.mercadopago.android.px.model.DeviceInfo;
-import com.mercadopago.android.px.model.EventTrackIntent;
 import com.mercadopago.android.px.tracking.internal.utils.JsonConverter;
 
 public class TrackingStaticMock {

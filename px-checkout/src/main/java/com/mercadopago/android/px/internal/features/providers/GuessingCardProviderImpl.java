@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
+import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.model.BankDeal;
@@ -44,17 +44,13 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     }
 
     @Override
-    public void getPaymentMethodsAsync(final TaggedCallback<List<PaymentMethod>> taggedCallback) {
-        mercadoPago.getPaymentMethods(taggedCallback);
-    }
-
-    @Override
-    public void createTokenAsync(CardToken cardToken, final TaggedCallback<Token> taggedCallback) {
+    public void createTokenAsync(final CardToken cardToken, final TaggedCallback<Token> taggedCallback) {
         mercadoPago.createToken(cardToken, taggedCallback);
     }
 
     @Override
-    public void getIssuersAsync(String paymentMethodId, String bin, final TaggedCallback<List<Issuer>> taggedCallback) {
+    public void getIssuersAsync(final String paymentMethodId, final String bin,
+        final TaggedCallback<List<Issuer>> taggedCallback) {
         mercadoPago.getIssuers(paymentMethodId, bin, taggedCallback);
     }
 
@@ -96,11 +92,6 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     @Override
     public String getMissingIdentificationTypesErrorMessage() {
         return context.getString(R.string.px_error_message_missing_identification_types);
-    }
-
-    @Override
-    public String getMissingPublicKeyErrorMessage() {
-        return context.getString(R.string.px_error_message_missing_public_key);
     }
 
     @Override
