@@ -74,6 +74,7 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
     protected PaymentMethodGuessingController mPaymentMethodGuessingController;
     protected Identification mIdentification;
     protected Token mToken;
+    protected CardToken mCardToken;
     // Extra info
     private List<PaymentType> mPaymentTypesList;
     private List<IdentificationType> mIdentificationTypes;
@@ -86,7 +87,6 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
     private String mExpiryYear;
     private IdentificationType mIdentificationType;
     private String mIdentificationNumber;
-    private CardToken mCardToken;
     private boolean mIsSecurityCodeRequired;
     private boolean mIdentificationNumberRequired;
     private FailureRecovery mFailureRecovery;
@@ -431,21 +431,6 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
         return mPaymentTypesList;
     }
 
-    protected void createToken() {
-        getResourcesProvider()
-            .createTokenAsync(mCardToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
-                @Override
-                public void onSuccess(final Token token) {
-                    resolveTokenRequest(token);
-                }
-
-                @Override
-                public void onFailure(final MercadoPagoError error) {
-                    resolveTokenCreationError(error, ApiUtil.RequestOrigin.CREATE_TOKEN);
-                }
-            });
-    }
-
     /* default */
     void resolveTokenCreationError(final MercadoPagoError error, final String requestOrigin) {
         if (isIdentificationNumberWrong(error)) {
@@ -769,6 +754,8 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
     public abstract void setPaymentMethod(@Nullable final PaymentMethod paymentMethod);
 
     public abstract void getIdentificationTypesAsync();
+
+    public abstract void createToken();
 
     public abstract void getPaymentMethods();
 

@@ -435,4 +435,20 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
         return mPaymentRecovery != null && mPaymentRecovery.getToken() != null &&
             mPaymentRecovery.getToken().getCardHolder() != null;
     }
+
+    @Override
+    public void createToken() {
+        getResourcesProvider()
+            .createTokenAsync(mCardToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
+                @Override
+                public void onSuccess(final Token token) {
+                    resolveTokenRequest(token);
+                }
+
+                @Override
+                public void onFailure(final MercadoPagoError error) {
+                    resolveTokenCreationError(error, ApiUtil.RequestOrigin.CREATE_TOKEN);
+                }
+            });
+    }
 }

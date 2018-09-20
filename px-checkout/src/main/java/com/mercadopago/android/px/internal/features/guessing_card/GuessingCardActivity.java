@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.adapters.IdentificationTypesAdapter;
 import com.mercadopago.android.px.internal.callbacks.PaymentMethodSelectionCallback;
@@ -272,6 +273,9 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void showError(final MercadoPagoError error, final String requestOrigin) {
+        Toast.makeText(this, error.getMessage() + " " + error.getErrorDetail() + " " + requestOrigin, Toast.LENGTH_LONG)
+            .show();
+
         if (error.isApiException()) {
             showApiException(error.getApiException(), requestOrigin);
         } else {

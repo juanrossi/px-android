@@ -124,6 +124,17 @@ public class MercadoPagoServices {
         }).start();
     }
 
+    public void createToken(final CardToken cardToken, final String accessToken, final Callback<Token> callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cardToken.setDevice(context);
+                final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
+                service.createToken(null, accessToken, cardToken).enqueue(callback);
+            }
+        }).start();
+    }
+
     public void createToken(final SavedESCCardToken savedESCCardToken, final Callback<Token> callback) {
         new Thread(new Runnable() {
             @Override

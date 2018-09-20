@@ -54,6 +54,12 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     }
 
     @Override
+    public void createTokenAsync(final CardToken cardToken, final String accessToken,
+        final TaggedCallback<Token> taggedCallback) {
+        mercadoPago.createToken(cardToken, accessToken, taggedCallback);
+    }
+
+    @Override
     public void getCardPaymentMethods(final String accessToken,
         final TaggedCallback<List<PaymentMethod>> taggedCallback) {
         cardPaymentMethodRepository.getCardPaymentMethods(accessToken).enqueue(taggedCallback);

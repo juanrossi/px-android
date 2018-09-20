@@ -20,6 +20,8 @@ public interface GuessingCardProvider extends ResourcesProvider {
 
     void createTokenAsync(CardToken cardToken, final TaggedCallback<Token> taggedCallback);
 
+    void createTokenAsync(CardToken cardToken, final String accessToken, final TaggedCallback<Token> taggedCallback);
+
     void getCardPaymentMethods(String accessToken, final TaggedCallback<List<PaymentMethod>> taggedCallback);
 
     void getIssuersAsync(String paymentMethodId, String bin, final TaggedCallback<List<Issuer>> taggedCallback);

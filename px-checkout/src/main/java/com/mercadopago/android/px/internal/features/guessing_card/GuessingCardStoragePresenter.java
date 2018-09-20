@@ -120,6 +120,22 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
     }
 
     @Override
+    public void createToken() {
+        getResourcesProvider()
+            .createTokenAsync(mCardToken, mAccessToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
+                @Override
+                public void onSuccess(final Token token) {
+                    resolveTokenRequest(token);
+                }
+
+                @Override
+                public void onFailure(final MercadoPagoError error) {
+                    resolveTokenCreationError(error, ApiUtil.RequestOrigin.CREATE_TOKEN);
+                }
+            });
+    }
+
+    @Override
     public void resolveTokenRequest(final Token token) {
         getView().finishCardStorageFlow("fake_card_id");
     }
