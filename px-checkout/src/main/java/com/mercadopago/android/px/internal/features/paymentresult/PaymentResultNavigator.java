@@ -1,5 +1,7 @@
 package com.mercadopago.android.px.internal.features.paymentresult;
 
+import android.support.annotation.NonNull;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.ScreenViewEvent;
 import com.mercadopago.android.px.model.exceptions.ApiException;
@@ -20,7 +22,7 @@ public interface PaymentResultNavigator {
 
     void changePaymentMethod();
 
-    void recoverPayment();
+    void recoverPayment(@NonNull final PostPaymentAction.OriginAction originAction);
 
     void trackScreen(ScreenViewEvent event);
 }

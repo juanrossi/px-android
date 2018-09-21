@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
@@ -25,6 +27,7 @@ import com.mercadopago.android.px.internal.util.ErrorUtil;
 import com.mercadopago.android.px.internal.util.JsonUtil;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.internal.util.ViewUtils;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.internal.viewmodel.BusinessPaymentModel;
 import com.mercadopago.android.px.internal.viewmodel.CheckoutStateModel;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
@@ -50,7 +53,6 @@ import static com.mercadopago.android.px.internal.features.Constants.RESULT_CUST
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_ERROR;
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_FAIL_ESC;
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_PAYMENT;
-import static com.mercadopago.android.px.internal.features.paymentresult.PaymentResultActivity.EXTRA_NEXT_ACTION;
 import static com.mercadopago.android.px.internal.features.paymentresult.PaymentResultActivity.EXTRA_RESULT_CODE;
 import static com.mercadopago.android.px.model.ExitAction.EXTRA_CLIENT_RES_CODE;
 
@@ -65,6 +67,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     private static final int REQ_PAYMENT_PROCESSOR = 0x03;
     private static final int REQ_CARD_VAULT = 0x04;
     private static final int REQ_REVIEW_AND_CONFIRM = 0x05;
+    private static final String TAG_ONETAP_FRAGMENT = "TAG_ONETAP";
 
     //TODO do not make it public - Needed refactor one tap for this.
     public CheckoutPresenter presenter;
@@ -174,7 +177,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         getSupportFragmentManager()
             .beginTransaction()
             .setCustomAnimations(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out)
-            .replace(R.id.one_tap_fragment, instance)
+            .replace(R.id.one_tap_fragment, instance, TAG_ONETAP_FRAGMENT)
             .commit();
         getSupportFragmentManager().executePendingTransactions();
     }
@@ -206,8 +209,31 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     }
 
     @Override
+    public void showReviewAndConfirmAndRecoverPayment(final boolean isUniquePaymentMethod,
+        @NonNull final PostPaymentAction postPaymentAction) {
+        overrideTransitionOut();
+        overrideTransitionIn();
+        final Intent intent = new ReviewAndConfirmBuilder()
+            .setHasExtraPaymentMethods(!isUniquePaymentMethod)
+            .setPostPaymentAction(postPaymentAction)
+            .getIntent(this);
+        startActivityForResult(intent, REQ_REVIEW_AND_CONFIRM);
+    }
+
+    @Override
+    public void startPayment() {
+        final FragmentManager supportFragmentManager = getSupportFragmentManager();
+        final Fragment fragment = supportFragmentManager.findFragmentByTag(TAG_ONETAP_FRAGMENT);
+        if (fragment != null && fragment instanceof OneTapFragment) {
+            ((OneTapFragment) fragment).startPayment();
+        }
+    }
+
+    @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
+
         switch (requestCode) {
         case ErrorUtil.ERROR_REQUEST_CODE:
             resolveErrorRequest(resultCode, data);
@@ -282,9 +308,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     }
 
     private void handleAction(final Intent data) {
-        if (data != null) {
-            final String nextAction = data.getStringExtra(EXTRA_NEXT_ACTION);
-            presenter.onPaymentResultAction(nextAction);
+        if (data != null && data.getExtras() != null) {
+            PostPaymentAction.fromBundle(data.getExtras()).execute(presenter);
         }
     }
 
@@ -409,7 +434,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showPaymentResult(final PaymentResult paymentResult) {
         overrideTransitionFadeInFadeOut();
-        final Intent intent = PaymentResultActivity.getIntent(this, paymentResult);
+        final Intent intent = PaymentResultActivity.getIntent(this, paymentResult,
+            PostPaymentAction.OriginAction.ONE_TAP);
         startActivityForResult(intent, REQ_CONGRATS);
     }
 

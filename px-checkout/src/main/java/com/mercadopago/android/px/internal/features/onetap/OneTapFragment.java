@@ -13,10 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.mercadolibre.android.ui.widgets.MeliButton;
 import com.mercadolibre.android.ui.widgets.MeliSnackbar;
-import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.CheckoutActivity;
 import com.mercadopago.android.px.internal.features.Constants;
@@ -25,9 +24,6 @@ import com.mercadopago.android.px.internal.features.explode.ExplodeParams;
 import com.mercadopago.android.px.internal.features.explode.ExplodingFragment;
 import com.mercadopago.android.px.internal.features.onetap.components.OneTapView;
 import com.mercadopago.android.px.internal.features.plugins.PaymentProcessorActivity;
-import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
-import com.mercadopago.android.px.internal.tracker.FlowHandler;
-import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.internal.tracker.Tracker;
 import com.mercadopago.android.px.internal.util.StatusBarDecorator;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
@@ -37,9 +33,7 @@ import com.mercadopago.android.px.model.GenericPayment;
 import com.mercadopago.android.px.model.IPayment;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentRecovery;
-import com.mercadopago.android.px.model.ScreenViewEvent;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
-import com.mercadopago.android.px.tracking.internal.utils.TrackingUtil;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -58,6 +52,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     private OneTapView oneTapView;
     private boolean explodingProcess;
 
+    @SuppressWarnings("TypeMayBeWeakened")
     public static OneTapFragment getInstance(@NonNull final OneTapModel oneTapModel) {
         final OneTapFragment oneTapFragment = new OneTapFragment();
         final Bundle bundle = new Bundle();
@@ -221,13 +216,18 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     @Override
-    public void showErrorView(@NonNull final MercadoPagoError error) {
-        if (error.isInternalServerError() || error.isNoConnectivityError()) {
+    public void showErrorScreen(@NonNull final MercadoPagoError error) {
+        if (getActivity() != null) {
+            ((CheckoutActivity) getActivity()).presenter.onPaymentError(error);
+        }
+    }
+
+    @Override
+    public void showErrorSnackBar(@NonNull final MercadoPagoError error) {
+        if (getView() != null && getActivity() != null) {
             MeliSnackbar.make(getView(), error.getMessage(), Snackbar.LENGTH_LONG,
                 MeliSnackbar.SnackbarType.ERROR).show();
-            trackError(error);
-        } else if (getActivity() != null) {
-            ((CheckoutActivity) getActivity()).presenter.onPaymentError(error);
+            Tracker.trackError(getActivity().getApplicationContext(), error);
         }
     }
 
@@ -256,6 +256,12 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     @Override
+    public void startPayment() {
+        final MeliButton button = oneTapView.findViewById(R.id.px_button_primary);
+        presenter.confirmPayment((int) button.getY(), button.getMeasuredHeight());
+    }
+
+    @Override
     public void showLoadingFor(@NonNull final ExplodeDecorator params,
         @NonNull final ExplodingFragment.ExplodingAnimationListener explodingAnimationListener) {
         if (explodingFragment != null && explodingFragment.isAdded()) {
@@ -273,8 +279,10 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     private void restoreStatusBar() {
-        new StatusBarDecorator(getActivity().getWindow())
-            .setupStatusBarColor(ContextCompat.getColor(getContext(), R.color.px_colorPrimaryDark));
+        if (getActivity() != null) {
+            new StatusBarDecorator(getActivity().getWindow())
+                .setupStatusBarColor(ContextCompat.getColor(getActivity(), R.color.px_colorPrimaryDark));
+        }
     }
 
     private void showToolbar() {
@@ -310,27 +318,5 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         new Constants.Activities.CardVaultActivityBuilder()
             .setCard(card)
             .startActivity(this, REQ_CODE_CARD_VAULT);
-    }
-
-    private void trackError(@NonNull final MercadoPagoError mercadoPagoError) {
-        final Session session = Session.getSession(getContext());
-        final ConfigurationModule configurationModule = session.getConfigurationModule();
-        final PaymentSettingRepository paymentSettings = configurationModule.getPaymentSettings();
-
-        final MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder(getActivity().getApplicationContext(),
-            paymentSettings.getPublicKey())
-            .setVersion(BuildConfig.VERSION_NAME)
-            .build();
-
-        ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
-            .setFlowId(FlowHandler.getInstance().getFlowId())
-            .setScreenId(TrackingUtil.SCREEN_ID_ERROR)
-            .setScreenName(TrackingUtil.SCREEN_NAME_ERROR);
-
-        builder = mercadoPagoError.getErrorEvent(builder);
-
-        final ScreenViewEvent event = builder.build();
-
-        mpTrackingContext.trackEvent(event);
     }
 }

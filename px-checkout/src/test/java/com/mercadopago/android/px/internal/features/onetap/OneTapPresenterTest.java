@@ -130,4 +130,14 @@ public class OneTapPresenterTest {
         verify(view).cancel();
         verify(view).trackCancel();
     }
+
+
+    @Test
+    public void whenPresenterDetachedThenPaymentRepositoryIsDetached(){
+        verify(paymentRepository).attach(oneTapPresenter);
+        oneTapPresenter.detachView();
+        verify(paymentRepository).detach();
+        verifyNoMoreInteractions(paymentRepository);
+    }
+
 }

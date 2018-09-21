@@ -1,6 +1,7 @@
 package com.mercadopago.android.px.internal.features.paymentresult;
 
 import android.support.annotation.NonNull;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.mocks.PaymentMethods;
@@ -579,12 +580,12 @@ public class PaymentResultTest {
         }
 
         @Override
-        public void finishWithResult(int resultCode) {
+        public void recoverPayment(@NonNull final PostPaymentAction.OriginAction originAction) {
 
         }
 
         @Override
-        public void recoverPayment() {
+        public void finishWithResult(int resultCode) {
 
         }
 

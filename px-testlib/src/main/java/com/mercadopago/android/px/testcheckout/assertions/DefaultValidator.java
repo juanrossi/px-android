@@ -47,7 +47,7 @@ public class DefaultValidator implements CheckoutValidator {
     @Override
     public void validate(@NonNull final PaymentMethodPage paymentMethodPage) {
         //TODO fix, does not work
-        //validateAmountView();
+//        validateAmountView();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class DefaultValidator implements CheckoutValidator {
     @Override
     public void validate(@NonNull final InstallmentsPage installmentsPage) {
         //TODO fix, does not work
-        //validateAmountView();
+//        validateAmountView();
     }
 
     @Override

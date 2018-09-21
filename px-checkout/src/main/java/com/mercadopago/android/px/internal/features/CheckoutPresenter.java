@@ -24,6 +24,7 @@ import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.internal.util.ApiUtil;
 import com.mercadopago.android.px.internal.viewmodel.CheckoutStateModel;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Card;
@@ -46,7 +47,8 @@ import java.util.Map;
 
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_CHANGE_PAYMENT_METHOD;
 
-public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvider> implements PaymentServiceHandler {
+public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvider> implements PaymentServiceHandler,
+    PostPaymentAction.ActionController {
 
     @NonNull private final CheckoutStateModel state;
     @NonNull private final PluginRepository pluginRepository;
@@ -108,12 +110,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     @Override
     public void attachView(final CheckoutView view) {
         super.attachView(view);
-        paymentRepository.attach(this);
     }
 
     @Override
     public void detachView() {
-        paymentRepository.detach();
         super.detachView();
     }
 
@@ -303,45 +303,27 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         }
     }
 
-    public void createPayment() {
-        getView().showProgress();
-        paymentRepository.startPayment();
-    }
-
     private void resolvePaymentFailure(final MercadoPagoError mercadoPagoError) {
-        if (mercadoPagoError != null) {
-            if (mercadoPagoError.isPaymentProcessing()) {
-                final PaymentResult paymentResult =
-                    new PaymentResult.Builder()
-                        .setPaymentData(paymentRepository.getPaymentData())
-                        .setPaymentStatus(Payment.StatusCodes.STATUS_IN_PROCESS)
-                        .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_PENDING_CONTINGENCY)
-                        .build();
-                getView().showPaymentResult(paymentResult);
-            } else if (mercadoPagoError.isInternalServerError()) {
-                resolveInternalServerError(mercadoPagoError);
-            } else if (mercadoPagoError.isBadRequestError()) {
-                resolveBadRequestError(mercadoPagoError);
-            } else {
-                getView().showError(mercadoPagoError);
-            }
+        if (mercadoPagoError != null && mercadoPagoError.isPaymentProcessing()) {
+            final PaymentResult paymentResult =
+                new PaymentResult.Builder()
+                    .setPaymentData(paymentRepository.getPaymentData())
+                    .setPaymentStatus(Payment.StatusCodes.STATUS_IN_PROCESS)
+                    .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_PENDING_CONTINGENCY)
+                    .build();
+            getView().showPaymentResult(paymentResult);
+        } else if (mercadoPagoError != null && mercadoPagoError.isInternalServerError()) {
+            setFailureRecovery(new FailureRecovery() {
+                @Override
+                public void recover() {
+                    getView().startPayment();
+                }
+            });
+            getView().showError(mercadoPagoError);
         } else {
+            // Strange that mercadoPagoError can be nullable here, but it was like this
             getView().showError(mercadoPagoError);
         }
-    }
-
-    private void resolveInternalServerError(final MercadoPagoError mercadoPagoError) {
-        getView().showError(mercadoPagoError);
-        setFailureRecovery(new FailureRecovery() {
-            @Override
-            public void recover() {
-                createPayment();
-            }
-        });
-    }
-
-    private void resolveBadRequestError(final MercadoPagoError mercadoPagoError) {
-        getView().showError(mercadoPagoError);
     }
 
     public void onPaymentMethodSelectionError(final MercadoPagoError mercadoPagoError) {
@@ -377,36 +359,13 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         getView().cancelCheckout(mercadoPagoError);
     }
 
-    public void onPaymentResultAction(final String nextAction) {
-        if (Constants.ACTION_SELECT_OTHER_PAYMENT_METHOD.equals(nextAction)) {
-            resolvePaymentMethodChange();
-        } else if (Constants.ACTION_RECOVER_PAYMENT.equals(nextAction)) {
-            recoverPayment();
-        }
-    }
-
-    private void resolvePaymentMethodChange() {
-        if (internalConfiguration.shouldExitOnPaymentMethodChange()) {
-            final IPayment payment = paymentRepository.getPayment();
-            if (payment instanceof Payment) {
-                getView().finishWithPaymentResult(Constants.RESULT_CHANGE_PAYMENT_METHOD,
-                    (Payment) payment);
-            } else {
-                getView().finishWithPaymentResult(Constants.RESULT_CHANGE_PAYMENT_METHOD);
-            }
-        } else {
-            state.paymentMethodEdited = true;
-            getView().showPaymentMethodSelection();
-        }
-    }
-
     public void onPaymentResultResponse() {
         finishCheckout();
     }
 
     public void onCardFlowResponse() {
         if (isRecoverableTokenProcess()) {
-            createPayment();
+            getView().startPayment();
         } else {
             onPaymentMethodSelected();
         }
@@ -622,7 +581,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     @Override
     public void onCvvRequired(@NonNull final Card card) {
-            getView().showSavedCardFlow(card);
+        getView().showSavedCardFlow(card);
     }
 
     @Override
@@ -646,7 +605,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     public void onPaymentFinished(@NonNull final BusinessPayment businessPayment) {
         getView().hideProgress();
         getView().showBusinessResult(businessModelMapper.map(businessPayment));
-
     }
 
     @Override
@@ -659,7 +617,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         setFailureRecovery(new FailureRecovery() {
             @Override
             public void recover() {
-                createPayment();
+                getView().startPayment();
             }
         });
         resolvePaymentFailure(error);
@@ -668,5 +626,31 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     @Override
     public void onRecoverPaymentEscInvalid(final PaymentRecovery recovery) {
         getView().startPaymentRecoveryFlow(recovery);
+    }
+
+    @Override
+    public void recoverFromReviewAndConfirm(@NonNull final PostPaymentAction postPaymentAction) {
+        getView().showReviewAndConfirmAndRecoverPayment(isUniquePaymentMethod(), postPaymentAction);
+    }
+
+    @Override
+    public void recoverFromOneTap() {
+        recoverPayment();
+    }
+
+    @Override
+    public void changePaymentMethod() {
+        if (internalConfiguration.shouldExitOnPaymentMethodChange()) {
+            final IPayment payment = paymentRepository.getPayment();
+            if (payment instanceof Payment) {
+                getView().finishWithPaymentResult(Constants.RESULT_CHANGE_PAYMENT_METHOD,
+                    (Payment) payment);
+            } else {
+                getView().finishWithPaymentResult(Constants.RESULT_CHANGE_PAYMENT_METHOD);
+            }
+        } else {
+            state.paymentMethodEdited = true;
+            getView().showPaymentMethodSelection();
+        }
     }
 }
