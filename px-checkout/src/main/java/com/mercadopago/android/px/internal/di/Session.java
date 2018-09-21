@@ -257,7 +257,7 @@ public final class Session extends ApplicationModule
 
     @NonNull
     public CardAssociationService getCardAssociationService() {
-        return new CardAssociationService(getRetrofitTestClient().create(CardService.class));
+        return new CardAssociationService(getRetrofitClient().create(CardService.class));
     }
 
     //TODO move.

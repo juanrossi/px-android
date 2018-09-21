@@ -9,8 +9,6 @@ public final class RetrofitUtil {
 
     private static final String MP_API_BASE_URL = "https://api.mercadopago.com";
 
-    private static final String TEST_URL = "http://beta.card-association-api.melifrontends.com";
-
     private static final int DEFAULT_CONNECT_TIMEOUT = 10;
     private static final int DEFAULT_READ_TIMEOUT = 20;
     private static final int DEFAULT_WRITE_TIMEOUT = 20;
@@ -20,11 +18,6 @@ public final class RetrofitUtil {
 
     public static Retrofit getRetrofitClient(final Context context) {
         return getRetrofit(context, MP_API_BASE_URL, DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT,
-            DEFAULT_WRITE_TIMEOUT);
-    }
-
-    public static Retrofit getTestRetrofitClient(final Context context) {
-        return getRetrofit(context, TEST_URL, DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT,
             DEFAULT_WRITE_TIMEOUT);
     }
 

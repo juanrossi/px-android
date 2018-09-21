@@ -160,11 +160,15 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
     @Override
     public void onSaveInstanceState(final Bundle outState, final String cardSideState, final boolean lowResActive) {
-        //TODO: implement
+        if (getPaymentMethod() != null) {
+            super.onSaveInstanceState(outState, cardSideState, lowResActive);
+        }
     }
 
     @Override
     public void onRestoreInstanceState(final Bundle savedInstanceState) {
-        //TODO: implement
+        if (savedInstanceState != null && savedInstanceState.getString(PAYMENT_METHOD_BUNDLE) != null) {
+            super.onRestoreInstanceState(savedInstanceState);
+        }
     }
 }

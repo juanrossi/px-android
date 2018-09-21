@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CardAssociationService {
-    @NonNull private final CardService mCardService;
+    @NonNull private final CardService cardService;
 
     public CardAssociationService(@NonNull final CardService cardService) {
-        mCardService = cardService;
+        this.cardService = cardService;
     }
 
     public MPCall<Card> associateCardToUser(@NonNull final String accessToken, @NonNull final String cardTokenId,
@@ -22,6 +22,7 @@ public class CardAssociationService {
         paymentMethodBody.put("id", paymentMethodId);
         body.put("payment_method", paymentMethodBody);
 
-        return mCardService.assignCard(accessToken, body);
+        //TODO remove BETA
+        return cardService.assignCard("beta", accessToken, body);
     }
 }
