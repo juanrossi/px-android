@@ -1236,7 +1236,11 @@ public class GuessingCardPaymentPresenterTest {
         public void associateCardToUser(final String accessToken, final String cardTokenId,
             final String paymentMethodId,
             final TaggedCallback<Card> taggedCallback) {
-
+            if (shouldFail) {
+                taggedCallback.onFailure(failedResponse);
+            } else {
+                taggedCallback.onSuccess(null);
+            }
         }
 
         @Override

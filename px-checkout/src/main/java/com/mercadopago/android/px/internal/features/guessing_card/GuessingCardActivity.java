@@ -273,9 +273,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void showError(final MercadoPagoError error, final String requestOrigin) {
-        Toast.makeText(this, error.getMessage() + " " + error.getErrorDetail() + " " + requestOrigin, Toast.LENGTH_LONG)
-            .show();
-
         if (error.isApiException()) {
             showApiException(error.getApiException(), requestOrigin);
         } else {
