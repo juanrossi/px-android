@@ -115,10 +115,13 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 
     @Override
     public void onPaymentError(@NonNull final MercadoPagoError error) {
-        //This method calls to Checkout activity to manage esc, it's important to check
-        // all this behaviour ahead.
         getView().cancelLoading();
-        getView().showErrorView(error);
+
+        if (error.isInternalServerError() || error.isNoConnectivityError()) {
+            getView().showErrorSnackBar(error);
+        } else {
+            getView().showErrorScreen(error);
+        }
     }
 
     @Override

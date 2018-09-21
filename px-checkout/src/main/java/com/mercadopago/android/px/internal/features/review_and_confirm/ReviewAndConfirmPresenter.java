@@ -156,8 +156,10 @@ import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
                     .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_PENDING_CONTINGENCY)
                     .build();
             getView().showResult(paymentResult);
+        } else if (error.isInternalServerError() || error.isNoConnectivityError()) {
+            getView().showErrorSnackBar(error);
         } else {
-            getView().showError(error);
+            getView().showErrorScreen(error);
         }
     }
 

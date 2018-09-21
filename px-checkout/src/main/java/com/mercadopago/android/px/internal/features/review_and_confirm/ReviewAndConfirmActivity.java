@@ -4,17 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import com.mercadolibre.android.ui.widgets.MeliSnackbar;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.configuration.ReviewAndConfirmConfiguration;
 import com.mercadopago.android.px.internal.di.Session;
@@ -73,6 +73,8 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     private View confirmButton;
 
     private ExplodingFragment explodingFragment;
+
+    private View floatingConfirmLayout;
 
     //TODO refactor.
     public static Intent getIntent(@NonNull final Context context,
@@ -200,7 +202,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     }
 
     private void initBody() {
-        final NestedScrollView mainContent = findViewById(R.id.scroll_view);
+        final ViewGroup mainContent = findViewById(R.id.scroll_view);
         initContent(mainContent);
         initFloatingButton(mainContent);
     }
@@ -226,8 +228,8 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         }
     }
 
-    private void initFloatingButton(final NestedScrollView scrollView) {
-        final View floatingConfirmLayout = findViewById(R.id.floating_confirm_layout);
+    private void initFloatingButton(final ViewGroup scrollView) {
+        floatingConfirmLayout = findViewById(R.id.floating_confirm_layout);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -237,13 +239,13 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         configureFloatingBehaviour(scrollView, floatingConfirmLayout);
     }
 
-    private void configureFloatingBehaviour(final NestedScrollView scrollView, final View floatingConfirmLayout) {
+    private void configureFloatingBehaviour(final ViewGroup scrollView, final View floatingConfirmLayout) {
         addScrollBottomPadding(floatingConfirmLayout, scrollView);
         configureScrollLayoutListener(floatingConfirmLayout, scrollView);
         addScrollListener(floatingConfirmLayout, scrollView);
     }
 
-    private void addScrollBottomPadding(final View floatingConfirmLayout, final NestedScrollView scrollView) {
+    private void addScrollBottomPadding(final View floatingConfirmLayout, final View scrollView) {
         final ViewTreeObserver floatingObserver = floatingConfirmLayout.getViewTreeObserver();
         floatingObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -257,7 +259,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         });
     }
 
-    private void configureScrollLayoutListener(final View floatingConfirmLayout, final NestedScrollView scrollView) {
+    private void configureScrollLayoutListener(final View floatingConfirmLayout, final ViewGroup scrollView) {
         final ViewTreeObserver viewTreeObserver = scrollView.getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -267,7 +269,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         });
     }
 
-    private void addScrollListener(final View floatingConfirmLayout, final NestedScrollView scrollView) {
+    private void addScrollListener(final View floatingConfirmLayout, final ViewGroup scrollView) {
         final ViewTreeObserver viewTreeObserver = scrollView.getViewTreeObserver();
         viewTreeObserver.addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
@@ -278,7 +280,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     }
 
     private void resolveFloatingButtonElevationVisibility(final View floatingConfirmLayout,
-        final NestedScrollView scrollView) {
+        final ViewGroup scrollView) {
         final ViewGroup content = (ViewGroup) scrollView.getChildAt(0);
         final int containerHeight = content.getHeight();
         final float finalSize = containerHeight - scrollView.getHeight();
@@ -339,8 +341,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
             final PaymentModel paymentModel = extras.getParcelable(EXTRA_PAYMENT_MODEL);
             final SummaryModel summaryModel = extras.getParcelable(EXTRA_SUMMARY_MODEL);
             if (paymentModel != null && summaryModel != null) {
-                Tracker.trackCheckoutConfirm(getApplicationContext(), getIntent().getStringExtra(EXTRA_PUBLIC_KEY),
-                    paymentModel, summaryModel);
+                Tracker.trackCheckoutConfirm(getApplicationContext(), paymentModel, summaryModel);
             }
         }
     }
@@ -406,7 +407,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     }
 
     @Override
-    public void showError(@NonNull final MercadoPagoError error) {
+    public void showErrorScreen(@NonNull final MercadoPagoError error) {
         ErrorUtil.startErrorActivity(this, error);
     }
 
@@ -516,9 +517,10 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
             final FragmentManager supportFragmentManager = getSupportFragmentManager();
             supportFragmentManager
                 .beginTransaction()
-                .remove(explodingFragment);
-            explodingFragment = null;
+                .remove(explodingFragment)
+                .commitAllowingStateLoss();
             supportFragmentManager.executePendingTransactions();
+            explodingFragment = null;
         }
     }
 
@@ -537,5 +539,12 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     @Override
     public void showConfirmButton() {
         confirmButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showErrorSnackBar(@NonNull final MercadoPagoError error) {
+        MeliSnackbar.make(floatingConfirmLayout, error.getMessage(), Snackbar.LENGTH_LONG,
+            MeliSnackbar.SnackbarType.ERROR).show();
+        Tracker.trackError(getApplicationContext(), error);
     }
 }
