@@ -112,37 +112,3 @@ You can edit discount description color by adding the following to your colors.x
 ```
 ![Discounts 1](https://i.imgur.com/NbZZh3i.png?1)
 ![Discounts 2](https://i.imgur.com/dDFioyD.png?1)
-
-
-```
-	<!-- R&C toolbar background color -->
-	<!-- Default: @color/ui_components_white_color -->
-	<color name="px_review_background">@color/your_color</color>
-
-	<!-- R&C toolbar's text color -->
-	<!-- Default: @color/ui_components_android_color_primary -->
-	<color name="px_review_toolbar_text">@color/your_color</color>
-
-	<!-- R&C summary background color -->
-	<!-- Default: @color/ui_components_white_color -->
-	<color name="px_review_summary_background">@color/your_color</color>
-
-	<!-- R&C summary's text color -->
-	<!-- Default: @color/ui_components_dark_grey_color -->
-	<color name="px_summary_text_color">@color/your_color</color>
-
-	<!-- R&C summary separator color -->
-	<!-- Default: @color/px_separator (#DEDEDE) -->
-	<color name="px_summary_separator_color">@color/px_separator</color>
-
-
-	<!-- R&C components payment method background -->
-	<!-- Default: @color/px_light_gray -->
-	<color name="px_review_payment_method_background">@color/px_light_gray</color>
-
-	<!-- R&C components item background -->
-    <!-- Default: @color/px_light_gray -->
-	<color name="px_review_item_background">@color/px_light_gray</color>
-
-
-```
