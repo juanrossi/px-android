@@ -6,6 +6,7 @@ import com.mercadopago.android.px.internal.base.MvpView;
 import com.mercadopago.android.px.internal.features.hooks.Hook;
 import com.mercadopago.android.px.internal.viewmodel.BusinessPaymentModel;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.Payment;
@@ -67,4 +68,9 @@ public interface CheckoutView extends MvpView {
     void showSavedCardFlow(Card card);
 
     void showNewCardFlow();
+
+    void showReviewAndConfirmAndRecoverPayment(final boolean isUniquePaymentMethod,
+        @NonNull final PostPaymentAction postPaymentAction);
+
+    void startPayment();
 }

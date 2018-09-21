@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.mercadolibre.android.ui.widgets.MeliButton;
 import com.mercadolibre.android.ui.widgets.MeliSnackbar;
 import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
@@ -24,6 +25,7 @@ import com.mercadopago.android.px.internal.features.explode.ExplodeDecorator;
 import com.mercadopago.android.px.internal.features.explode.ExplodeParams;
 import com.mercadopago.android.px.internal.features.explode.ExplodingFragment;
 import com.mercadopago.android.px.internal.features.onetap.components.OneTapView;
+import com.mercadopago.android.px.internal.features.paymentresult.PaymentResultActivity;
 import com.mercadopago.android.px.internal.features.plugins.PaymentProcessorActivity;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.tracker.FlowHandler;
@@ -31,12 +33,14 @@ import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.internal.tracker.Tracker;
 import com.mercadopago.android.px.internal.util.StatusBarDecorator;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.GenericPayment;
 import com.mercadopago.android.px.model.IPayment;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentRecovery;
+import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.ScreenViewEvent;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.tracking.internal.utils.TrackingUtil;
@@ -253,6 +257,12 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         if (getActivity() != null) {
             ((CheckoutActivity) getActivity()).presenter.onRecoverPaymentEscInvalid(recovery);
         }
+    }
+
+    @Override
+    public void startPayment() {
+        final MeliButton button = oneTapView.findViewById(R.id.px_button_primary);
+        presenter.confirmPayment((int) button.getY(), button.getMeasuredHeight());
     }
 
     @Override

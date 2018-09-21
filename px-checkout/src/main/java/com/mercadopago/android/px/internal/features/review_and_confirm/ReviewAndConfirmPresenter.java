@@ -1,12 +1,14 @@
 package com.mercadopago.android.px.internal.features.review_and_confirm;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.mercadopago.android.px.internal.base.DefaultProvider;
 import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecoratorMapper;
 import com.mercadopago.android.px.internal.features.explode.ExplodingFragment;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.GenericPayment;
@@ -54,12 +56,15 @@ import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
             getView().startLoadingButton(paymentRepository.getPaymentTimeout());
             getView().hideConfirmButton();
         }
+        // TODO improve: This was added because onetap can detach this listener on its OnDestroy
+        paymentRepository.attach(this);
         paymentRepository.startPayment();
     }
 
     @Override
     public void onCardFlowResponse() {
         getView().cancelLoadingButton();
+        getView().showConfirmButton();
         pay();
     }
 
@@ -161,5 +166,25 @@ import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
         if (recovery != null) {
             recovery.recover();
         }
+    }
+
+    @Override
+    public void executePostPaymentAction(@NonNull final PostPaymentAction postPaymentAction) {
+        postPaymentAction.execute(new PostPaymentAction.ActionController() {
+            @Override
+            public void recoverFromReviewAndConfirm(@NonNull final PostPaymentAction postPaymentAction) {
+                getView().startPaymentRecoveryFlow(paymentRepository.createPaymentRecovery());
+            }
+
+            @Override
+            public void recoverFromOneTap() {
+                //do nothing
+            }
+
+            @Override
+            public void changePaymentMethod() {
+                //do nothing
+            }
+        });
     }
 }

@@ -6,6 +6,7 @@ import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecorator;
 import com.mercadopago.android.px.internal.features.explode.ExplodingFragment;
 import com.mercadopago.android.px.internal.viewmodel.BusinessPaymentModel;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
@@ -55,5 +56,9 @@ public interface ReviewAndConfirm {
         void onError(@NonNull final MercadoPagoError mercadoPagoError);
 
         void recoverFromFailure();
+
+
+
+        void executePostPaymentAction(@NonNull PostPaymentAction postPaymentAction);
     }
 }

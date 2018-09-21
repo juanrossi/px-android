@@ -74,10 +74,10 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
     public void onPaymentFinished(@NonNull final Payment payment) {
         getView().showLoadingFor(explodeDecoratorMapper.map(payment),
             new ExplodingFragment.ExplodingAnimationListener() {
-                    @Override
-                    public void onAnimationFinished() {
-                        getView().showPaymentResult(payment);
-                    }
+                @Override
+                public void onAnimationFinished() {
+                    getView().showPaymentResult(payment);
+                }
             });
     }
 
@@ -89,12 +89,12 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
     @Override
     public void onPaymentFinished(@NonNull final GenericPayment genericPayment) {
         getView().showLoadingFor(explodeDecoratorMapper.map(genericPayment),
-                new ExplodingFragment.ExplodingAnimationListener() {
-                    @Override
-                    public void onAnimationFinished() {
-                        getView().showPaymentResult(genericPayment);
-                    }
-                });
+            new ExplodingFragment.ExplodingAnimationListener() {
+                @Override
+                public void onAnimationFinished() {
+                    getView().showPaymentResult(genericPayment);
+                }
+            });
     }
 
     /**
@@ -104,13 +104,13 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
      */
     @Override
     public void onPaymentFinished(@NonNull final BusinessPayment businessPayment) {
-            getView().showLoadingFor(explodeDecoratorMapper.map(businessPayment),
-                new ExplodingFragment.ExplodingAnimationListener() {
-                    @Override
-                    public void onAnimationFinished() {
-                        getView().showPaymentResult(businessPayment);
-                    }
-                });
+        getView().showLoadingFor(explodeDecoratorMapper.map(businessPayment),
+            new ExplodingFragment.ExplodingAnimationListener() {
+                @Override
+                public void onAnimationFinished() {
+                    getView().showPaymentResult(businessPayment);
+                }
+            });
     }
 
     @Override
