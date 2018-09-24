@@ -33,9 +33,6 @@ public final class Constants {
     public static final int RESULT_FAIL_ESC = 500;
     public static final int RESULT_ERROR = 502;
 
-    public static final String ACTION_SELECT_OTHER_PAYMENT_METHOD = "action_select_other_payment_method";
-    public static final String ACTION_RECOVER_PAYMENT = "action_recover_payment";
-
     private Constants() {
     }
 

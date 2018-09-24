@@ -1,3 +1,13 @@
+## VERSION 4.0.3
+
+_20_09_2018_
+
+* FIX - Payment recovery call for auth.
+* FIX - destroy activity behaviour.
+* FIX - NPE no decimals for Site Colombia.
+* ENHANCEMENT - Color customization detailed documentation.
+* ENHANCEMENT - Loading improvements for visual payments (payment processor).
+
 ## VERSION 4.0.2
 
 _05_09_2018_

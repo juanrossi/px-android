@@ -233,6 +233,11 @@ public class PaymentService implements PaymentRepository {
         }
     }
 
+    @Override
+    public boolean isExplodingAnimationCompatible() {
+        return !paymentProcessor.shouldShowFragmentOnPayment();
+    }
+
     /**
      * Payment data is a dynamic non-mutable object that represents
      * the payment state of the checkout exp.

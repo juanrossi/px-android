@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-
     <!-- Colors needed fot UILib V5 -->
     <color name="ui_components_android_color_primary">#009EE3</color>
     <color name="ui_components_android_color_primary_dark">#008AD6</color>
@@ -18,31 +17,9 @@
     <color name="ui_components_spinner_secondary_color">@color/ui_components_primary_color</color>
     <color name="ui_components_primary_color_pressed">#157FAE</color>
 
-    <!-- Colors needed fot UILib unused at the moment -->
-    <color name="ui_components_grey_color" tools:ignore="UnusedResources">#999999</color>
-    <color name="ui_components_melidialog_background" tools:ignore="UnusedResources">#cc000000</color>
-    <color name="ui_components_melidialog_tint" tools:ignore="UnusedResources">@color/ui_components_white_color</color>
-    <color name="ui_second_action_button_pressed" tools:ignore="UnusedResources">#1e009ee3</color>
     <color name="ui_components_android_color_accent">@color/ui_components_android_color_primary</color>
-
+    
     <color name="ui_components_primary_color_disabled">@color/ui_components_mid_grey_color</color>
-    <color name="ui_components_actionModeBackground" tools:ignore="UnusedResources">
-        @color/ui_components_android_color_primary
-    </color>
-    <color name="ui_components_primary_color_text_disabled" tools:ignore="UnusedResources">
-        @color/ui_components_mid_grey_color
-    </color>
-    <color name="ui_components_secondary_color" tools:ignore="UnusedResources">
-        @color/ui_components_android_color_primary
-    </color>
-    <color name="ui_components_secondary_color_pressed" tools:ignore="UnusedResources">#157FAE</color>
-    <color name="ui_components_secondary_color_disabled" tools:ignore="UnusedResources">
-        @color/ui_components_mid_grey_color
-    </color>
-    <color name="ui_components_secondary_color_text_disabled" tools:ignore="UnusedResources">
-        @color/ui_components_mid_grey_color
-    </color>
-
 
     <color name="px_real_black">#000000</color>
     <color name="px_comment_color">#999</color>
@@ -65,6 +42,8 @@
     <color name="px_color_new_card_form_background_dark_alpha">#B3FFFFFF</color>
     <color name="px_color_new_card_text">#999999</color>
     <color name="px_color_red_error">#FF2B2B</color>
+    <color name="px_mp_blue">#009EE3</color>
+    <color name="px_review_payment_methods_background">#474747</color>
 
     <!-- Card Colors -->
     <color name="px_visa">#001D77</color>
@@ -167,8 +146,7 @@
     <color name="px_background">@color/px_colorPrimary</color>
     <color name="px_toolbar_text">@color/ui_components_white_color</color>
 
-    <!-- Discount modal and discount description -->
-    <color name="px_discount_summary_background">#474747</color>
+    <!-- Discount description -->
     <color name="px_discount_description">#64c574</color>
 
     <!-- Inputs -->

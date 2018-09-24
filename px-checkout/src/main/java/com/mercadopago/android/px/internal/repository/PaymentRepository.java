@@ -15,6 +15,8 @@ public interface PaymentRepository {
 
     void startOneTapPayment(@NonNull final OneTapModel oneTapModel);
 
+    boolean isExplodingAnimationCompatible();
+
     @NonNull
     PaymentData getPaymentData();
 

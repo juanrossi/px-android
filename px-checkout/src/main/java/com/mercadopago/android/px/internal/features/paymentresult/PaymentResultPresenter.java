@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.internal.features.paymentresult;
 
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.internal.base.MvpPresenter;
@@ -14,6 +15,7 @@ import com.mercadopago.android.px.internal.view.LinkAction;
 import com.mercadopago.android.px.internal.view.NextAction;
 import com.mercadopago.android.px.internal.view.RecoverPaymentAction;
 import com.mercadopago.android.px.internal.view.ResultCodeAction;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.Action;
 import com.mercadopago.android.px.model.Instruction;
 import com.mercadopago.android.px.model.Instructions;
@@ -35,6 +37,7 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
     private final PaymentSettingRepository paymentSettings;
     private FailureRecovery failureRecovery;
     private boolean initialized = false;
+    private PostPaymentAction.OriginAction originAction;
 
     public PaymentResultPresenter(@NonNull final PaymentResultNavigator navigator,
         final PaymentSettingRepository paymentSettings) {
@@ -266,7 +269,7 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
         } else if (action instanceof ChangePaymentMethodAction) {
             navigator.changePaymentMethod();
         } else if (action instanceof RecoverPaymentAction) {
-            navigator.recoverPayment();
+            navigator.recoverPayment(originAction);
         } else if (action instanceof LinkAction) {
             navigator.openLink(((LinkAction) action).url);
         }
@@ -278,5 +281,9 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
 
     public BigDecimal getAmount() {
         return amount;
+    }
+
+    public void setOriginAction(@NonNull final PostPaymentAction.OriginAction originAction) {
+        this.originAction = originAction;
     }
 }
