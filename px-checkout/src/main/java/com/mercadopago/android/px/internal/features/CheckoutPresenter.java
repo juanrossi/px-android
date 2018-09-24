@@ -22,9 +22,9 @@ import com.mercadopago.android.px.internal.repository.PluginInitTask;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.internal.util.ApiUtil;
-import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.internal.viewmodel.CheckoutStateModel;
 import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Card;
@@ -304,39 +304,26 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void resolvePaymentFailure(final MercadoPagoError mercadoPagoError) {
-        if (mercadoPagoError != null) {
-            if (mercadoPagoError.isPaymentProcessing()) {
-                final PaymentResult paymentResult =
-                    new PaymentResult.Builder()
-                        .setPaymentData(paymentRepository.getPaymentData())
-                        .setPaymentStatus(Payment.StatusCodes.STATUS_IN_PROCESS)
-                        .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_PENDING_CONTINGENCY)
-                        .build();
-                getView().showPaymentResult(paymentResult);
-            } else if (mercadoPagoError.isInternalServerError()) {
-                resolveInternalServerError(mercadoPagoError);
-            } else if (mercadoPagoError.isBadRequestError()) {
-                resolveBadRequestError(mercadoPagoError);
-            } else {
-                getView().showError(mercadoPagoError);
-            }
+        if (mercadoPagoError != null && mercadoPagoError.isPaymentProcessing()) {
+            final PaymentResult paymentResult =
+                new PaymentResult.Builder()
+                    .setPaymentData(paymentRepository.getPaymentData())
+                    .setPaymentStatus(Payment.StatusCodes.STATUS_IN_PROCESS)
+                    .setPaymentStatusDetail(Payment.StatusDetail.STATUS_DETAIL_PENDING_CONTINGENCY)
+                    .build();
+            getView().showPaymentResult(paymentResult);
+        } else if (mercadoPagoError != null && mercadoPagoError.isInternalServerError()) {
+            setFailureRecovery(new FailureRecovery() {
+                @Override
+                public void recover() {
+                    getView().startPayment();
+                }
+            });
+            getView().showError(mercadoPagoError);
         } else {
+            // Strange that mercadoPagoError can be nullable here, but it was like this
             getView().showError(mercadoPagoError);
         }
-    }
-
-    private void resolveInternalServerError(final MercadoPagoError mercadoPagoError) {
-        getView().showError(mercadoPagoError);
-        setFailureRecovery(new FailureRecovery() {
-            @Override
-            public void recover() {
-                getView().startPayment();
-            }
-        });
-    }
-
-    private void resolveBadRequestError(final MercadoPagoError mercadoPagoError) {
-        getView().showError(mercadoPagoError);
     }
 
     public void onPaymentMethodSelectionError(final MercadoPagoError mercadoPagoError) {

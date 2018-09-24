@@ -41,7 +41,7 @@ public interface OneTap {
 
         //TODO shared with Checkout activity
 
-        void showErrorView(@NonNull final MercadoPagoError error);
+        void showErrorScreen(@NonNull final MercadoPagoError error);
 
         void showPaymentResult(@NonNull final IPayment paymentResult);
 
@@ -54,6 +54,8 @@ public interface OneTap {
         void hideConfirmButton();
 
         void updateViews(OneTapModel model);
+
+        void showErrorSnackBar(@NonNull final MercadoPagoError error);
     }
 
     interface Actions extends PaymentServiceHandler {

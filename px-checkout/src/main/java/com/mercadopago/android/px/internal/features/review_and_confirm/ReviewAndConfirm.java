@@ -39,9 +39,11 @@ public interface ReviewAndConfirm {
 
         void startPaymentRecoveryFlow(PaymentRecovery recovery);
 
-        void showError(@NonNull final MercadoPagoError error);
+        void showErrorScreen(@NonNull final MercadoPagoError error);
 
         void showConfirmButton();
+
+        void showErrorSnackBar(@NonNull final MercadoPagoError error);
     }
 
     interface Action extends PaymentServiceHandler {
