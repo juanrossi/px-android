@@ -54,7 +54,8 @@ public class MercadoPagoServices {
 
     /**
      * @param context context to obtain connection interceptor and cache.
-     * @param publicKey merchant public key / collector public key {@see <a href="https://www.mercadopago.com/mla/account/credentials">credentials</a>}
+     * @param publicKey merchant public key / collector public key
+     * {@see <a href="https://www.mercadopago.com/mla/account/credentials">credentials</a>}
      * @param privateKey user private key / access_token if you have it.
      */
     public MercadoPagoServices(@NonNull final Context context,
@@ -95,7 +96,7 @@ public class MercadoPagoServices {
         final String supportedPluginsAppended = getListAsString(supportedPlugins, separator);
 
         service.getPaymentMethodSearch(Settings.servicesVersion,
-            context.getResources().getConfiguration().locale.getLanguage(), this.publicKey, amount,
+            context.getResources().getConfiguration().locale.getLanguage(), publicKey, amount,
             excludedPaymentTypesAppended, excludedPaymentMethodsAppended, groupsIntent, site.getId(),
             PAYMENT_METHODS_OPTIONS_API_VERSION, processingMode, cardsWithEscAppended, supportedPluginsAppended,
             differentialPricing).
@@ -103,47 +104,27 @@ public class MercadoPagoServices {
     }
 
     public void createToken(final SavedCardToken savedCardToken, final Callback<Token> callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                savedCardToken.setDevice(context);
-                final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-                service.createToken(publicKey, privateKey, savedCardToken).enqueue(callback);
-            }
-        }).start();
+        savedCardToken.setDevice(context);
+        final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
+        service.createToken(publicKey, privateKey, savedCardToken).enqueue(callback);
     }
 
     public void createToken(final CardToken cardToken, final Callback<Token> callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                cardToken.setDevice(context);
-                final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-                service.createToken(publicKey, privateKey, cardToken).enqueue(callback);
-            }
-        }).start();
+        cardToken.setDevice(context);
+        final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
+        service.createToken(publicKey, privateKey, cardToken).enqueue(callback);
     }
 
     public void createToken(final CardToken cardToken, final String accessToken, final Callback<Token> callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                cardToken.setDevice(context);
-                final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-                service.createToken(null, accessToken, cardToken).enqueue(callback);
-            }
-        }).start();
+        cardToken.setDevice(context);
+        final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
+        service.createToken(null, accessToken, cardToken).enqueue(callback);
     }
 
     public void createToken(final SavedESCCardToken savedESCCardToken, final Callback<Token> callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                savedESCCardToken.setDevice(context);
-                final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-                service.createToken(publicKey, privateKey, savedESCCardToken).enqueue(callback);
-            }
-        }).start();
+        savedESCCardToken.setDevice(context);
+        final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
+        service.createToken(publicKey, privateKey, savedESCCardToken).enqueue(callback);
     }
 
     public void cloneToken(final String tokenId, final Callback<Token> callback) {
