@@ -1,6 +1,6 @@
 apply plugin:'com.android.library'
 
-if (project.hasProperty('deploy')) {
+if (project.hasProperty('production')) {
     apply plugin:'com.getkeepsafe.dexcount'
 }
 
@@ -16,7 +16,7 @@ android {
         versionName version_to_deploy as String
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        if (!project.hasProperty('deploy')) {
+        if (!project.hasProperty('production')) {
             resConfigs("en", "xxhdpi")
             aaptOptions.cruncherEnabled = false
         }
