@@ -6,6 +6,7 @@ _20_09_2018_
 * Payment recovery call for auth
 * Loading improvements for visual payments (payment processor)
 * fixes destroy activity
+* fixes Colombia - currency NPE when 0 decimals.
 
 ## VERSION 4.0.2
 

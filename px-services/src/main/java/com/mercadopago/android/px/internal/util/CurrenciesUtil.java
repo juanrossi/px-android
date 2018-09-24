@@ -159,7 +159,7 @@ public final class CurrenciesUtil {
 
     public static boolean hasZeroDecimals(final String currencyId, final BigDecimal amount) {
         String decimals = getDecimals(currencyId, amount);
-        return ZERO_DECIMAL.equals(decimals);
+        return ZERO_DECIMAL.equals(decimals) || TextUtil.isEmpty(decimals);
     }
 
     @NonNull
