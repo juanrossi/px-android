@@ -2,13 +2,19 @@ package com.mercadopago.android.px.internal.features.guessing_card;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
+import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.features.business_result.BusinessPaymentResultActivity;
 import com.mercadopago.android.px.internal.util.ApiUtil;
 import com.mercadopago.android.px.model.BankDeal;
+import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Card;
+import com.mercadopago.android.px.model.ExitAction;
 import com.mercadopago.android.px.model.IdentificationType;
+import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
@@ -19,11 +25,13 @@ import static com.mercadopago.android.px.internal.util.ApiUtil.RequestOrigin.GET
 public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
     private final String mAccessToken;
+    /* default */ MercadoPagoESC mercadoPagoESC;
     private PaymentMethod currentPaymentMethod;
 
-    public GuessingCardStoragePresenter(final String accessToken) {
+    public GuessingCardStoragePresenter(final String accessToken, final MercadoPagoESC mercadoPagoESC) {
         super();
         mAccessToken = accessToken;
+        this.mercadoPagoESC = mercadoPagoESC;
     }
 
     @Override
@@ -142,7 +150,10 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
             new TaggedCallback<Card>(ApiUtil.RequestOrigin.ASSOCIATE_CARD) {
                 @Override
                 public void onSuccess(final Card card) {
-                    getView().finishCardStorageFlow("Fake_id");
+                    if (isViewAttached()) {
+                        mercadoPagoESC.saveESC(card.getId(), token.getEsc());
+                        getView().finishCardStorageFlow(card.getId());
+                    }
                 }
 
                 @Override

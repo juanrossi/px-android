@@ -40,6 +40,7 @@ import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingCont
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.features.MercadoPagoBaseActivity;
+import com.mercadopago.android.px.internal.features.business_result.BusinessPaymentResultActivity;
 import com.mercadopago.android.px.internal.features.card.CardExpiryDateTextWatcher;
 import com.mercadopago.android.px.internal.features.card.CardIdentificationNumberTextWatcher;
 import com.mercadopago.android.px.internal.features.card.CardNumberTextWatcher;
@@ -57,10 +58,14 @@ import com.mercadopago.android.px.internal.util.ScaleUtil;
 import com.mercadopago.android.px.internal.util.ViewUtils;
 import com.mercadopago.android.px.internal.view.MPEditText;
 import com.mercadopago.android.px.internal.view.MPTextView;
+import com.mercadopago.android.px.internal.viewmodel.BusinessPaymentModel;
+import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.CardInfo;
+import com.mercadopago.android.px.model.ExitAction;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.PayerCost;
+import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentType;
@@ -215,14 +220,15 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
         final boolean includesPayment = intent.getBooleanExtra(PARAM_INCLUDES_PAYMENT, true);
 
+        final Session session = Session.getSession(this);
         if (includesPayment) {
-            final Session session = Session.getSession(this);
             final PaymentRecovery paymentRecovery =
                 JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentRecovery"), PaymentRecovery.class);
             mPresenter = GuessingCardPresenter.buildGuessingCardPaymentPresenter(session, paymentRecovery);
         } else {
             final String accessToken = intent.getStringExtra(PARAM_ACCESS_TOKEN);
-            mPresenter = GuessingCardPresenter.buildGuessingCardStoragePresenter(accessToken);
+            mPresenter =
+                GuessingCardPresenter.buildGuessingCardStoragePresenter(accessToken, session.getMercadoPagoESC(true));
         }
 
         mPresenter.attachResourcesProvider(new GuessingCardProviderImpl(this));
