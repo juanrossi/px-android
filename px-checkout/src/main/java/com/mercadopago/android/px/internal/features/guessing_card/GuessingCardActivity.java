@@ -45,6 +45,7 @@ import com.mercadopago.android.px.internal.features.card.CardIdentificationNumbe
 import com.mercadopago.android.px.internal.features.card.CardNumberTextWatcher;
 import com.mercadopago.android.px.internal.features.card.CardSecurityCodeTextWatcher;
 import com.mercadopago.android.px.internal.features.card.CardholderNameTextWatcher;
+import com.mercadopago.android.px.internal.features.guessing_card.card_association_result.CardAssociationResultActivity;
 import com.mercadopago.android.px.internal.features.providers.GuessingCardProviderImpl;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
@@ -1399,10 +1400,11 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void finishCardStorageFlow(@Nullable final String cardId) {
-        final Intent returnIntent = new Intent();
-        returnIntent.putExtra("cardId", cardId);
-        setResult(RESULT_OK, returnIntent);
-        finish();
+        final Intent returnIntent = new Intent(this, CardAssociationResultActivity.class);
+        startActivity(returnIntent);
+//        returnIntent.putExtra("cardId", cardId);
+//        setResult(RESULT_OK, returnIntent);
+//        finish();
         overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 

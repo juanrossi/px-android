@@ -139,7 +139,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
             .createTokenAsync(mCardToken, accessToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
                 @Override
                 public void onSuccess(final Token token) {
-                    resolveTokenRequest(token);
+                    getView().finishCardStorageFlow("Fake_id");
                 }
 
                 @Override
