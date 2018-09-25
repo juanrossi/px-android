@@ -54,6 +54,8 @@ public final class Constants {
         public static final int SECURITY_CODE_REQUEST_CODE = 18;
         public static final int REVIEW_PAYMENT_METHODS_REQUEST_CODE = 21;
 
+        public static final int GUESSING_CARD_RESULT_SCREEN_REQUEST_CODE = 22;
+
         public static final int HOOK_1 = 50;
         public static final int HOOK_1_PLUGIN = 52;
         public static final int HOOK_2 = 60;

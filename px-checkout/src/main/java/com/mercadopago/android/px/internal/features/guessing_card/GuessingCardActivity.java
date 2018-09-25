@@ -1366,6 +1366,10 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             }
         } else if (requestCode == Constants.Activities.BANK_DEALS_REQUEST_CODE) {
             setSoftInputMode();
+        } else if (requestCode == Constants.Activities.GUESSING_CARD_RESULT_SCREEN_REQUEST_CODE) {
+            if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
+                final String action = data.getStringExtra(CardAssociationResultActivity.RESULT_KEY);
+            }
         }
     }
 
@@ -1399,12 +1403,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
-    public void finishCardStorageFlow(@Nullable final String cardId) {
-        final Intent returnIntent = new Intent(this, CardAssociationResultActivity.class);
-        startActivity(returnIntent);
-//        returnIntent.putExtra("cardId", cardId);
-//        setResult(RESULT_OK, returnIntent);
-//        finish();
+    public void finishCardStorageFlow(final boolean isError, @Nullable final String cardId) {
+        CardAssociationResultActivity.startCardAssociationResultActivity(this, 100, isError);
         overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 
