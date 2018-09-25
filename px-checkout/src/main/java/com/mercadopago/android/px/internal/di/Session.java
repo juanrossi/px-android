@@ -148,11 +148,6 @@ public final class Session extends ApplicationModule
     }
 
     @NonNull
-    public MercadoPagoESC getMercadoPagoESC(final boolean escEnabled) {
-        return new MercadoPagoESCImpl(getContext(), escEnabled);
-    }
-
-    @NonNull
     public Device getDevice() {
         return new Device(getContext());
     }
