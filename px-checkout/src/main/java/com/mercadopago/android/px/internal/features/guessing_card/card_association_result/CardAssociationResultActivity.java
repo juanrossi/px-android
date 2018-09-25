@@ -7,13 +7,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import com.mercadolibre.android.ui.widgets.MeliButton;
 import com.mercadopago.android.px.R;
 
 public class CardAssociationResultActivity extends AppCompatActivity {
 
-    private static final String IS_ERROR = "isError";
+    public static final String IS_ERROR = "isError";
+    public static final String RESULT_KEY = "action";
+    public static final String RESULT_ACTION_RETRY = "retry";
+    public static final String RESULT_ACTION_EXIT = "exit";
 
     public static void startCardAssociationResultActivity(final Activity callerActivity,
         final int requestCode, final boolean isError) {
@@ -32,14 +37,40 @@ public class CardAssociationResultActivity extends AppCompatActivity {
 
         if (isError) {
             setContentView(R.layout.px_card_association_result_error);
+        } else {
+            setContentView(R.layout.px_card_association_result_success);
         }
 
-        setContentView(R.layout.px_card_association_result_success);
+        setupStatusBarColor(isError);
+
+        final MeliButton retryButton = findViewById(R.id.mpsdkCardAssociationResultRetryButton);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                goBackWithResult(RESULT_ACTION_RETRY);
+            }
+        });
+
+        final MeliButton exitButton = findViewById(R.id.mpsdkCardAssociationResultExitButton);
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                goBackWithResult(RESULT_ACTION_EXIT);
+            }
+        });
     }
 
-    private void setupStatusBarColor(boolean isError) {
+    void goBackWithResult(final String action) {
+        final Intent data = new Intent();
+        data.putExtra(RESULT_KEY, action);
+        setResult(RESULT_OK, data);
+        finish();
+        overridePendingTransition(R.anim.px_no_change_animation, R.anim.px_slide_down_activity);
+    }
+
+    private void setupStatusBarColor(final boolean isError) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int color = isError ? R.color.px_orange_status_bar : R.color.px_green_status_bar;
+            final int color = isError ? R.color.px_orange_status_bar : R.color.px_green_status_bar;
             final int compatColor = ContextCompat.getColor(this, color);
             final Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
