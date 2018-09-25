@@ -15,3 +15,4 @@ BackFlowTest.java
 BackWithExclusionFlowTest.java
 CFTCardTest.java
 ChangePaymentMethodTest.java
+CreditCardWithInterestTest.java
