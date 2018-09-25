@@ -172,15 +172,11 @@ public class OneTapView extends LinearLayout {
         final Button.Actions buttonActions = new Button.Actions() {
             @Override
             public void onClick(final Action action) {
-                //Do nothing
-            }
-
-            @Override
-            public void onClick(final int yButtonPosition, final int buttonHeight) {
                 if (actions != null) {
-                    actions.confirmPayment(yButtonPosition, buttonHeight);
+                    actions.confirmPayment();
                 }
             }
+
         };
 
         final Button button = new ButtonPrimary(new Button.Props(confirm), buttonActions);

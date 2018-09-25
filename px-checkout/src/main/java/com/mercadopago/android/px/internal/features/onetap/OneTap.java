@@ -37,7 +37,7 @@ public interface OneTap {
 
         void cancelLoading();
 
-        void startLoadingButton(int yButtonPosition, final int buttonHeight, final int paymentTimeout);
+        void startLoadingButton(final int paymentTimeout);
 
         //TODO shared with Checkout activity
 
@@ -60,7 +60,7 @@ public interface OneTap {
 
     interface Actions extends PaymentServiceHandler {
 
-        void confirmPayment(int yButtonPosition, final int buttonHeight);
+        void confirmPayment();
 
         void onTokenResolved();
 

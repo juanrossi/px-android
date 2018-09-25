@@ -173,12 +173,21 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     @Override
     public void showOneTap(@NonNull final OneTapModel oneTapModel) {
-        final OneTapFragment instance = OneTapFragment.getInstance(oneTapModel);
+
+        final FragmentManager supportFragmentManager = getSupportFragmentManager();
+        final Fragment fragment = supportFragmentManager.findFragmentByTag(TAG_ONETAP_FRAGMENT);
+        final OneTapFragment oneTapFragment;
+        if (fragment != null && fragment instanceof OneTapFragment) {
+            oneTapFragment = (OneTapFragment) fragment;
+        } else {
+            oneTapFragment = OneTapFragment.getInstance(oneTapModel);
+        }
+
         getSupportFragmentManager()
             .beginTransaction()
             .setCustomAnimations(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out)
-            .replace(R.id.one_tap_fragment, instance, TAG_ONETAP_FRAGMENT)
-            .commit();
+            .replace(R.id.one_tap_fragment, oneTapFragment, TAG_ONETAP_FRAGMENT)
+            .commitNowAllowingStateLoss();
         getSupportFragmentManager().executePendingTransactions();
     }
 
@@ -231,7 +240,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {

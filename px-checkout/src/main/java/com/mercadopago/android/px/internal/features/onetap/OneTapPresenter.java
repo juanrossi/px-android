@@ -21,10 +21,6 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
     @NonNull private final PaymentRepository paymentRepository;
     private final ExplodeDecoratorMapper explodeDecoratorMapper;
 
-    //TODO refactor
-    private int yButtonPosition;
-    private int buttonHeight;
-
     /* default */ OneTapPresenter(@NonNull final OneTapModel model,
         @NonNull final PaymentRepository paymentRepository) {
         this.model = model;
@@ -33,18 +29,17 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
     }
 
     @Override
-    public void confirmPayment(final int yButtonPosition, final int buttonHeight) {
+    public void confirmPayment() {
         getView().trackConfirm(model);
-        //TODO persist this data.
-        this.yButtonPosition = yButtonPosition;
-        this.buttonHeight = buttonHeight;
         getView().hideToolbar();
 
         if (paymentRepository.isExplodingAnimationCompatible()) {
-            getView().startLoadingButton(yButtonPosition, buttonHeight, paymentRepository.getPaymentTimeout());
+            getView().startLoadingButton(paymentRepository.getPaymentTimeout());
             getView().hideConfirmButton();
         }
 
+        // TODO improve: This was added because onetap can detach this listener on its OnDestroy
+        paymentRepository.attach(this);
         paymentRepository.startOneTapPayment(model);
     }
 
@@ -66,8 +61,8 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 
     @Override
     public void onTokenResolved() {
-        //TODO fix yButtonPosition and buttonHeight persistance
-        confirmPayment(yButtonPosition, buttonHeight);
+        getView().cancelLoading();
+        confirmPayment();
     }
 
     @Override
@@ -147,6 +142,12 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
     }
 
     @Override
+    public void attachView(final OneTap.View view) {
+        super.attachView(view);
+        paymentRepository.attach(this);
+    }
+
+    @Override
     public void onViewPaused() {
         paymentRepository.detach();
     }
@@ -156,4 +157,5 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
         onViewPaused();
         super.detachView();
     }
+
 }

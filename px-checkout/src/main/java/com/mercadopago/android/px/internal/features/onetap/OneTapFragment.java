@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -170,7 +171,14 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQ_CODE_CARD_VAULT && resultCode == RESULT_OK) {
-            presenter.onTokenResolved();
+
+            getActivity().getWindow().getDecorView().post(new Runnable() {
+                @Override
+                public void run() {
+                    presenter.onTokenResolved();
+                }
+            });
+
         } else if (requestCode == REQ_CODE_PAYMENT_PROCESSOR && getActivity() != null) {
             ((CheckoutActivity) getActivity()).resolveCodes(resultCode, data);
         }
@@ -257,8 +265,7 @@ public class OneTapFragment extends Fragment implements OneTap.View {
 
     @Override
     public void startPayment() {
-        final MeliButton button = oneTapView.findViewById(R.id.px_button_primary);
-        presenter.confirmPayment((int) button.getY(), button.getMeasuredHeight());
+        presenter.confirmPayment();
     }
 
     @Override
@@ -275,7 +282,9 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         oneTapView.showButton();
         explodingProcess = false;
         restoreStatusBar();
-        getChildFragmentManager().beginTransaction().remove(explodingFragment).commitNow();
+        if (explodingFragment != null) {
+            getChildFragmentManager().beginTransaction().remove(explodingFragment).commitNow();
+        }
     }
 
     private void restoreStatusBar() {
@@ -300,16 +309,22 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     }
 
     @Override
-    public void startLoadingButton(final int yButtonPosition, final int buttonHeight, final int paymentTimeout) {
-        final ExplodeParams explodeParams = new ExplodeParams(yButtonPosition, buttonHeight,
+    public void startLoadingButton(final int paymentTimeout) {
+        final MeliButton button = oneTapView.findViewById(R.id.px_button_primary);
+        final int[] location = new int[2];
+        button.getLocationOnScreen(location);
+
+        final ExplodeParams explodeParams = new ExplodeParams(location[1] - button.getMeasuredHeight() / 2, button.getMeasuredHeight(),
             (int) getContext().getResources().getDimension(R.dimen.px_m_margin),
             getContext().getResources().getString(R.string.px_processing_payment_button),
             paymentTimeout);
 
         explodingFragment = ExplodingFragment.newInstance(explodeParams);
-        getChildFragmentManager().beginTransaction()
+        final FragmentManager childFragmentManager = getChildFragmentManager();
+        childFragmentManager.beginTransaction()
             .replace(R.id.exploding_frame, explodingFragment)
-            .commitNow();
+            .commitNowAllowingStateLoss();
+        childFragmentManager.executePendingTransactions();
         explodingProcess = true;
     }
 
@@ -319,4 +334,6 @@ public class OneTapFragment extends Fragment implements OneTap.View {
             .setCard(card)
             .startActivity(this, REQ_CODE_CARD_VAULT);
     }
+
+
 }

@@ -53,10 +53,6 @@ public class Footer extends CompactComponent<Footer.Props, ActionDispatcher> {
                             }
                         }
 
-                        @Override
-                        public void onClick(final int yButtonPosition, final int buttonHeight) {
-                            //Do nothing
-                        }
                     });
             final View buttonView = buttonPrimary.render(linearContainer);
             ViewUtils.setMarginInView(buttonView, padding, padding, padding, 0);
@@ -73,10 +69,6 @@ public class Footer extends CompactComponent<Footer.Props, ActionDispatcher> {
                         }
                     }
 
-                    @Override
-                    public void onClick(final int yButtonPosition, final int buttonHeight) {
-                        //Do nothing
-                    }
                 });
             final View buttonLinkView = buttonLink.render(linearContainer);
             ViewUtils.setMarginInView(buttonLinkView, padding, padding, padding, 0);
