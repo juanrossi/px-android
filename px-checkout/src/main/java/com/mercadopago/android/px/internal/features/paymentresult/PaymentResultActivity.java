@@ -51,8 +51,8 @@ import com.mercadopago.android.px.internal.view.ComponentManager;
 import com.mercadopago.android.px.internal.view.LoadingComponent;
 import com.mercadopago.android.px.internal.view.LoadingRenderer;
 import com.mercadopago.android.px.internal.view.RendererFactory;
-import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.internal.viewmodel.ChangePaymentMethodPostPaymentAction;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.internal.viewmodel.RecoverPaymentPostPaymentAction;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.ScreenViewEvent;
@@ -104,7 +104,7 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
         final PaymentResultScreenConfiguration paymentResultScreenConfiguration =
             paymentSettings.getAdvancedConfiguration().getPaymentResultScreenConfiguration();
         presenter = new PaymentResultPresenter(this,
-            paymentSettings);
+            paymentSettings, Session.getSession(this).getInstructionsRepository());
 
         mutator = new PaymentResultPropsMutator(new PaymentResultProps.Builder(
             paymentResultScreenConfiguration).build());
@@ -151,6 +151,12 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
     }
 
     @Override
+    protected void onDestroy() {
+        presenter.detachView();
+        super.onDestroy();
+    }
+
+    @Override
     public void showApiExceptionError(final ApiException exception, final String requestOrigin) {
         ErrorUtil.showApiExceptionError(this, exception, requestOrigin);
     }
@@ -185,8 +191,10 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
 
         congratsDisplay = savedInstanceState.getInt(CONGRATS_DISPLAY_BUNDLE, -1);
 
+        final Session session = Session.getSession(this);
         presenter = new PaymentResultPresenter(this,
-            Session.getSession(this).getConfigurationModule().getPaymentSettings());
+            session.getConfigurationModule().getPaymentSettings(),
+            session.getInstructionsRepository());
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(amount);
 

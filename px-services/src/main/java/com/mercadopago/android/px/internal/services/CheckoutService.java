@@ -2,7 +2,6 @@ package com.mercadopago.android.px.internal.services;
 
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.internal.callbacks.MPCall;
-import com.mercadopago.android.px.model.Instructions;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.requests.GroupsIntent;
@@ -18,7 +17,9 @@ import retrofit2.http.Query;
 
 public interface CheckoutService {
 
-    @POST("/{version}/px_mobile_api/payment_methods")
+    String GROUPS_VERSION = "1.6";
+
+    @POST("/{version}/px_mobile_api/payment_methods?api_version=" + GROUPS_VERSION)
     MPCall<PaymentMethodSearch> getPaymentMethodSearch(@Path(value = "version", encoded = true) String version,
         @Header("Accept-Language") String locale,
         @Query("public_key") String publicKey,
@@ -27,7 +28,6 @@ public interface CheckoutService {
         @Query("excluded_payment_methods") String excludedPaymentMethods,
         @Body GroupsIntent groupsIntent,
         @Query("site_id") String siteId,
-        @Query("api_version") String apiVersion,
         @Query("processing_mode") String processingMode,
         @Query("cards_esc") String cardsWithEsc,
         @Query("support_plugins") String supportedPlugins,
@@ -36,12 +36,6 @@ public interface CheckoutService {
     @POST("/{version}/checkout/payments")
     MPCall<Payment> createPayment(@Path(value = "version", encoded = true) String version,
         @Header("X-Idempotency-Key") String transactionId, @Body PaymentBodyIntent body);
-
-    @GET("/{version}/checkout/payments/{payment_id}/results")
-    MPCall<Instructions> getPaymentResult(@Path(value = "version", encoded = true) String version,
-        @Header("Accept-Language") String locale, @Path(value = "payment_id", encoded = true) Long paymentId,
-        @Query("public_key") String mKey, @Query("access_token") String privateKey,
-        @Query("payment_type") String paymentTypeId, @Query("api_version") String apiVersion);
 
     @GET("/{version}/checkout/preferences/{preference_id}")
     MPCall<CheckoutPreference> getPreference(@Path(value = "version", encoded = true) String version,

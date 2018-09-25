@@ -1,6 +1,7 @@
 package com.mercadopago.android.px.internal.callbacks;
 
 import com.mercadopago.android.px.internal.repository.EscManager;
+import com.mercadopago.android.px.internal.repository.InstructionsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Card;
@@ -8,6 +9,7 @@ import com.mercadopago.android.px.model.GenericPayment;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentRecovery;
+import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,13 +29,15 @@ public class PaymentServiceHandlerWrapperTest {
     @Mock private PaymentServiceHandler wrapped;
     @Mock private PaymentRepository paymentRepository;
     @Mock private PaymentRecovery paymentRecovery;
+    @Mock private InstructionsRepository instructionsRepository;
     @Mock private EscManager escManager;
 
     private PaymentServiceHandlerWrapper paymentServiceHandlerWrapper;
 
     @Before
     public void setUp() {
-        paymentServiceHandlerWrapper = new PaymentServiceHandlerWrapper(paymentRepository, escManager);
+        paymentServiceHandlerWrapper = new PaymentServiceHandlerWrapper(paymentRepository, escManager,
+            instructionsRepository);
         paymentServiceHandlerWrapper.setHandler(wrapped);
         when(paymentRepository.createRecoveryForInvalidESC()).thenReturn(paymentRecovery);
         when(paymentRepository.getPaymentData()).thenReturn(mock(PaymentData.class));
@@ -43,6 +47,7 @@ public class PaymentServiceHandlerWrapperTest {
         verifyNoMoreInteractions(wrapped);
         verifyNoMoreInteractions(escManager);
         verifyNoMoreInteractions(paymentRepository);
+        verifyNoMoreInteractions(instructionsRepository);
     }
 
     @Test
@@ -69,12 +74,17 @@ public class PaymentServiceHandlerWrapperTest {
 
     @Test
     public void whenPaymentFinishedWithPaymentVerifyEscManaged() {
+        final PaymentResult paymentResult = mock(PaymentResult.class);
         final Payment payment = mock(Payment.class);
+        when(paymentResult.isOffPayment()).thenReturn(false);
+        when(paymentRepository.createPaymentResult(payment)).thenReturn(paymentResult);
+
         paymentServiceHandlerWrapper.onPaymentFinished(payment);
 
         verify(escManager).manageEscForPayment(paymentRepository.getPaymentData(), payment.getPaymentStatus(),
             payment.getPaymentStatusDetail());
 
+        verify(paymentRepository).createPaymentResult(payment);
         verify(paymentRepository).storePayment(payment);
         verify(paymentRepository, times(2)).getPaymentData();
         verify(wrapped).onPaymentFinished(payment);
@@ -98,13 +108,18 @@ public class PaymentServiceHandlerWrapperTest {
 
     @Test
     public void whenPaymentFinishedWithGenericPaymentVerifyEscManaged() {
+        final PaymentResult paymentResult = mock(PaymentResult.class);
         final GenericPayment payment = mock(GenericPayment.class);
+        when(paymentResult.isOffPayment()).thenReturn(false);
+        when(paymentRepository.createPaymentResult(payment)).thenReturn(paymentResult);
+
         paymentServiceHandlerWrapper.onPaymentFinished(payment);
 
         verify(escManager).manageEscForPayment(paymentRepository.getPaymentData(), payment.getPaymentStatus(),
             payment.getPaymentStatusDetail());
 
         verify(paymentRepository).storePayment(payment);
+        verify(paymentRepository).createPaymentResult(payment);
         verify(paymentRepository, times(2)).getPaymentData();
         verify(wrapped).onPaymentFinished(payment);
         noMoreInteractions();

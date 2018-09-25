@@ -46,7 +46,7 @@ public class FooterContainer extends Component<FooterContainer.Props, Void> {
         Button.Props buttonAction = null;
         Button.Props linkAction = null;
 
-        if (props.paymentResult.isStatusApproved()) {
+        if (props.paymentResult.isApproved()) {
 
             if (!paymentResultScreenConfiguration.isCongratsSecondaryExitButtonEnabled() ||
                 paymentResultScreenConfiguration.getSecondaryCongratsExitButtonTitle() == null

@@ -1,13 +1,12 @@
 package com.mercadopago.android.px.internal.features.paymentresult;
 
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
-import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.constants.ProcessingModes;
 import com.mercadopago.android.px.internal.features.review_and_confirm.components.actions.ChangePaymentMethodAction;
+import com.mercadopago.android.px.internal.repository.InstructionsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.util.ApiUtil;
 import com.mercadopago.android.px.internal.view.ActionsListener;
@@ -18,35 +17,38 @@ import com.mercadopago.android.px.internal.view.ResultCodeAction;
 import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.Action;
 import com.mercadopago.android.px.model.Instruction;
-import com.mercadopago.android.px.model.Instructions;
-import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.ScreenViewEvent;
+import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.services.Callback;
 import com.mercadopago.android.px.tracking.internal.utils.TrackingUtil;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView, PaymentResultProvider>
+/* default */ class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView, PaymentResultProvider>
     implements ActionsListener {
     private PaymentResult paymentResult;
     private BigDecimal amount;
 
     private final PaymentResultNavigator navigator;
     private final PaymentSettingRepository paymentSettings;
+    private final InstructionsRepository instructionsRepository;
+
     private FailureRecovery failureRecovery;
     private boolean initialized = false;
     private PostPaymentAction.OriginAction originAction;
 
-    public PaymentResultPresenter(@NonNull final PaymentResultNavigator navigator,
-        final PaymentSettingRepository paymentSettings) {
+    /* default */ PaymentResultPresenter(@NonNull final PaymentResultNavigator navigator,
+        final PaymentSettingRepository paymentSettings,
+        final InstructionsRepository instructionsRepository) {
         this.navigator = navigator;
         this.paymentSettings = paymentSettings;
+        this.instructionsRepository = instructionsRepository;
     }
 
     public void initialize() {
-        if (!isInitialized()) {
+        if (!initialized) {
             try {
                 validateParameters();
                 onValidStart();
@@ -57,35 +59,23 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
         }
     }
 
-    public boolean isInitialized() {
-        return initialized;
-    }
-
     private void validateParameters() {
         if (!isPaymentResultValid()) {
             throw new IllegalStateException("payment result is invalid");
         } else if (!isPaymentMethodValid()) {
             throw new IllegalStateException("payment data is invalid");
-        } else if (isPaymentMethodOff()) {
-            if (!isPaymentIdValid()) {
-                throw new IllegalStateException("payment id is invalid");
-            }
         }
     }
 
     protected void onValidStart() {
         initializeTracking();
-        boolean showLoading = false;
-        if (hasToAskForInstructions()) {
-            showLoading = true;
-        }
         getView().setPropPaymentResult(paymentSettings.getCheckoutPreference().getSite().getCurrencyId(), paymentResult,
-            showLoading);
+            paymentResult.isOffPayment());
         checkGetInstructions();
     }
 
     private void initializeTracking() {
-        ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
+        final ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
             .setScreenId(getScreenId())
             .setScreenName(getScreenName())
             .addProperty(TrackingUtil.PROPERTY_PAYMENT_IS_EXPRESS, TrackingUtil.IS_EXPRESS_DEFAULT_VALUE)
@@ -101,39 +91,34 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
             builder.addProperty(TrackingUtil.PROPERTY_ISSUER_ID,
                 String.valueOf(paymentResult.getPaymentData().getIssuer().getId()));
         }
-        if (navigator != null) {
-            navigator.trackScreen(builder.build());
-        }
+
+        navigator.trackScreen(builder.build());
     }
 
+    @NonNull
     private String getScreenId() {
-        String screenId = "";
-        if (isApproved()) {
-            screenId = TrackingUtil.SCREEN_ID_PAYMENT_RESULT_APPROVED;
+        if (paymentResult.isApproved()) {
+            return TrackingUtil.SCREEN_ID_PAYMENT_RESULT_APPROVED;
         } else if (paymentResult.isRejected()) {
-            screenId = TrackingUtil.SCREEN_ID_PAYMENT_RESULT_REJECTED;
+            return TrackingUtil.SCREEN_ID_PAYMENT_RESULT_REJECTED;
         } else if (paymentResult.isInstructions()) {
-            screenId = TrackingUtil.SCREEN_ID_PAYMENT_RESULT_INSTRUCTIONS;
+            return TrackingUtil.SCREEN_ID_PAYMENT_RESULT_INSTRUCTIONS;
         } else if (paymentResult.isPending()) {
-            screenId = TrackingUtil.SCREEN_ID_PAYMENT_RESULT_PENDING;
+            return TrackingUtil.SCREEN_ID_PAYMENT_RESULT_PENDING;
         }
-        return screenId;
+        return "";
     }
 
+    @NonNull
     private String getScreenName() {
-        String screenName = "";
-        if (paymentResult.isRejected() || paymentResult.isPending() || isApproved()) {
-            screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT;
+        if (paymentResult.isRejected() || paymentResult.isPending() || paymentResult.isApproved()) {
+            return TrackingUtil.SCREEN_NAME_PAYMENT_RESULT;
         } else if (paymentResult.isCallForAuthorize()) {
-            screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_CALL_FOR_AUTH;
+            return TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_CALL_FOR_AUTH;
         } else if (paymentResult.isInstructions()) {
-            screenName = TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_INSTRUCTIONS;
+            return TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_INSTRUCTIONS;
         }
-        return screenName;
-    }
-
-    private boolean isApproved() {
-        return paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_APPROVED);
+        return "";
     }
 
     private boolean isPaymentResultValid() {
@@ -152,17 +137,6 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
             !paymentResult.getPaymentData().getPaymentMethod().getName().isEmpty();
     }
 
-    private boolean isPaymentIdValid() {
-        return paymentResult.getPaymentId() != null;
-    }
-
-    private boolean isPaymentMethodOff() {
-        final String paymentStatus = paymentResult.getPaymentStatus();
-        final String paymentStatusDetail = paymentResult.getPaymentStatusDetail();
-        return paymentStatus.equals(Payment.StatusCodes.STATUS_PENDING)
-            && paymentStatusDetail.equals(Payment.StatusDetail.STATUS_DETAIL_PENDING_WAITING_PAYMENT);
-    }
-
     public void setPaymentResult(final PaymentResult paymentResult) {
         this.paymentResult = paymentResult;
     }
@@ -172,49 +146,42 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
     }
 
     private void checkGetInstructions() {
-        if (hasToAskForInstructions()) {
-            getInstructionsAsync(paymentResult.getPaymentId(),
-                paymentResult.getPaymentData().getPaymentMethod().getPaymentTypeId());
+        if (paymentResult.isOffPayment()) {
+            getInstructionsAsync();
         } else {
             getView().notifyPropsChanged();
         }
     }
 
-    private boolean hasToAskForInstructions() {
-        return isPaymentMethodOff();
-    }
-
-    private void getInstructionsAsync(final Long paymentId, final String paymentTypeId) {
-        getResourcesProvider().getInstructionsAsync(paymentId, paymentTypeId,
-            new TaggedCallback<Instructions>(ApiUtil.RequestOrigin.GET_INSTRUCTIONS) {
-                @Override
-                public void onSuccess(Instructions instructions) {
-                    final List<Instruction> instructionsList
-                        = instructions.getInstructions() == null ? new ArrayList<Instruction>()
-                        : instructions.getInstructions();
-                    if (instructionsList.isEmpty()) {
+    /* default */ void getInstructionsAsync() {
+        instructionsRepository.getInstructions(paymentResult).enqueue(new Callback<List<Instruction>>() {
+            @Override
+            public void success(final List<Instruction> instructions) {
+                if (isViewAttached()) {
+                    if (instructions.isEmpty()) {
                         navigator
                             .showError(new MercadoPagoError(getResourcesProvider().getStandardErrorMessage(), false),
                                 ApiUtil.RequestOrigin.GET_INSTRUCTIONS);
                     } else {
-                        resolveInstructions(instructionsList);
+                        resolveInstructions(instructions);
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(final MercadoPagoError error) {
-                    //TODO revisar
-                    if (navigator != null) {
-                        navigator.showError(error, ApiUtil.RequestOrigin.GET_INSTRUCTIONS);
-                        setFailureRecovery(new FailureRecovery() {
-                            @Override
-                            public void recover() {
-                                getInstructionsAsync(paymentId, paymentTypeId);
-                            }
-                        });
-                    }
+            @Override
+            public void failure(final ApiException apiException) {
+                if (isViewAttached()) {
+                    navigator.showError(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_INSTRUCTIONS),
+                        ApiUtil.RequestOrigin.GET_INSTRUCTIONS);
+                    setFailureRecovery(new FailureRecovery() {
+                        @Override
+                        public void recover() {
+                            getInstructionsAsync();
+                        }
+                    });
                 }
-            });
+            }
+        });
     }
 
     public void recoverFromFailure() {
@@ -249,9 +216,9 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
         return instruction;
     }
 
-    private Instruction getInstructionForType(final List<Instruction> instructions, final String paymentTypeId) {
+    private Instruction getInstructionForType(final Iterable<Instruction> instructions, final String paymentTypeId) {
         Instruction instructionForType = null;
-        for (Instruction instruction : instructions) {
+        for (final Instruction instruction : instructions) {
             if (instruction.getType().equals(paymentTypeId)) {
                 instructionForType = instruction;
                 break;
