@@ -13,3 +13,4 @@ px-checkout/jacoco.exec
 config/
 BackFlowTest.java
 BackWithExclusionFlowTest.java
+CFTCardTest.java
