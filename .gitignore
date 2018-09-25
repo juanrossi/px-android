@@ -16,3 +16,10 @@ BackWithExclusionFlowTest.java
 CFTCardTest.java
 ChangePaymentMethodTest.java
 CreditCardWithInterestTest.java
+CreditCardWithNoInterestTest.java
+DefaultInstallmentsTest.java
+ExclusionPaymentMethodTest.java
+NewCardTest.java
+OfflinePaymentMethodTest.java
+UniquePaymentMethodTest.java
+UniquePaymentTypeTest.java
