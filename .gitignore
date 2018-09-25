@@ -14,3 +14,4 @@ config/
 BackFlowTest.java
 BackWithExclusionFlowTest.java
 CFTCardTest.java
+ChangePaymentMethodTest.java
