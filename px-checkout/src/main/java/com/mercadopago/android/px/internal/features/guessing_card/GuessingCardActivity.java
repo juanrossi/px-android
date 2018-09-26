@@ -1404,7 +1404,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void finishCardStorageFlow(final boolean isError, @Nullable final String cardId) {
-        CardAssociationResultActivity.startCardAssociationResultActivity(this, 100, isError);
+        CardAssociationResultActivity.startCardAssociationResultActivity(this, isError);
         overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 

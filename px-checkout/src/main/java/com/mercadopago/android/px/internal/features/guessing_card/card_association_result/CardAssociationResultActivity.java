@@ -20,12 +20,11 @@ public class CardAssociationResultActivity extends AppCompatActivity {
     public static final String RESULT_ACTION_RETRY = "retry";
     public static final String RESULT_ACTION_EXIT = "exit";
 
-    public static void startCardAssociationResultActivity(final Activity callerActivity,
-        final int requestCode, final boolean isError) {
+    public static void startCardAssociationResultActivity(final Activity callerActivity, final boolean isError) {
         final Intent intent = new Intent(callerActivity, CardAssociationResultActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         intent.putExtra(IS_ERROR, isError);
-        callerActivity
-            .startActivityForResult(intent, requestCode);
+        callerActivity.startActivity(intent);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class CardAssociationResultActivity extends AppCompatActivity {
         retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                goBackWithResult(RESULT_ACTION_RETRY);
+                    goBackWithResult(RESULT_ACTION_RETRY);
             }
         });
 
