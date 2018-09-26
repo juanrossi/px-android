@@ -44,6 +44,8 @@ public interface GuessingCardProvider extends ResourcesProvider {
     void associateCardToUser(final String accessToken, final String cardTokenId, final String paymentMethodId,
         final TaggedCallback<Card> taggedCallback);
 
+    void saveEsc(final String cardId, final String tokenEsc);
+
     String getMissingInstallmentsForIssuerErrorMessage();
 
     String getMultipleInstallmentsForIssuerErrorMessage();

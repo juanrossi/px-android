@@ -241,12 +241,6 @@ public final class Session extends ApplicationModule
     }
 
     @NonNull
-    public CardPaymentMethodRepository getCardPaymentMethodRepository() {
-        return new CardPaymentMethodService(getRetrofitClient().create(
-            com.mercadopago.android.px.internal.services.PaymentService.class));
-    }
-
-    @NonNull
     public InternalConfiguration getInternalConfiguration() {
         return internalConfiguration == null ? new InternalConfiguration(false) : internalConfiguration;
     }
@@ -259,11 +253,6 @@ public final class Session extends ApplicationModule
     @SuppressWarnings("unused")
     public void setInternalConfiguration(@NonNull final InternalConfiguration internalConfiguration) {
         this.internalConfiguration = internalConfiguration;
-    }
-
-    @NonNull
-    public CardAssociationService getCardAssociationService() {
-        return new CardAssociationService(getRetrofitClient().create(CardService.class));
     }
 
     //TODO move.

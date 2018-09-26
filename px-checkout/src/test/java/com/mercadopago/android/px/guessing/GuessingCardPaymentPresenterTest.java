@@ -1244,6 +1244,11 @@ public class GuessingCardPaymentPresenterTest {
         }
 
         @Override
+        public void saveEsc(final String cardId, final String tokenEsc) {
+            // Empty Body
+        }
+
+        @Override
         public void createTokenAsync(final CardToken cardToken, final TaggedCallback<Token> taggedCallback) {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);

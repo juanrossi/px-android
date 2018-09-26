@@ -36,8 +36,6 @@ import com.mercadopago.android.px.internal.callbacks.card.CardNumberEditTextCall
 import com.mercadopago.android.px.internal.callbacks.card.CardSecurityCodeEditTextCallback;
 import com.mercadopago.android.px.internal.callbacks.card.CardholderNameEditTextCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.features.MercadoPagoBaseActivity;
@@ -216,16 +214,14 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
         final boolean includesPayment = intent.getBooleanExtra(PARAM_INCLUDES_PAYMENT, true);
 
-        final Session session = Session.getSession(this);
         if (includesPayment) {
             final PaymentRecovery paymentRecovery =
                 JsonUtil.getInstance().fromJson(intent.getStringExtra("paymentRecovery"), PaymentRecovery.class);
-            mPresenter = GuessingCardPresenter.buildGuessingCardPaymentPresenter(session, paymentRecovery);
+            mPresenter =
+                GuessingCardPresenter.buildGuessingCardPaymentPresenter(Session.getSession(this), paymentRecovery);
         } else {
             final String accessToken = intent.getStringExtra(PARAM_ACCESS_TOKEN);
-            MercadoPagoESC mercadoPagoESC = new MercadoPagoESCImpl(this, true);
-            mPresenter =
-                GuessingCardPresenter.buildGuessingCardStoragePresenter(accessToken, mercadoPagoESC);
+            mPresenter = GuessingCardPresenter.buildGuessingCardStoragePresenter(accessToken);
         }
 
         mPresenter.attachResourcesProvider(new GuessingCardProviderImpl(this));

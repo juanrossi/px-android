@@ -7,8 +7,11 @@ import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.datasource.CardAssociationService;
+import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
+import com.mercadopago.android.px.internal.di.CardAssociationSession;
 import com.mercadopago.android.px.internal.di.Session;
+import com.mercadopago.android.px.internal.features.MercadoPagoBaseActivity;
 import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.model.BankDeal;
@@ -30,14 +33,17 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
     private MPTrackingContext trackingContext;
     private final CardAssociationService cardAssociationService;
+    private final MercadoPagoESC mercadoPagoESC;
 
     public GuessingCardProviderImpl(@NonNull final Context context) {
         this.context = context;
         final Session session = Session.getSession(context);
+        final CardAssociationSession cardAssociationSession = CardAssociationSession.getCardAssociationSession(context);
         publicKey = session.getConfigurationModule().getPaymentSettings().getPublicKey();
         mercadoPago = session.getMercadoPagoServiceAdapter();
-        cardPaymentMethodRepository = session.getCardPaymentMethodRepository();
-        cardAssociationService = session.getCardAssociationService();
+        cardPaymentMethodRepository = cardAssociationSession.getCardPaymentMethodRepository();
+        cardAssociationService = cardAssociationSession.getCardAssociationService();
+        mercadoPagoESC = cardAssociationSession.getMercadoPagoESC();
     }
 
     @Override
@@ -103,6 +109,11 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     public void associateCardToUser(final String accessToken, final String cardTokenId, final String paymentMethodId,
         final TaggedCallback<Card> taggedCallback) {
         cardAssociationService.associateCardToUser(accessToken, cardTokenId, paymentMethodId).enqueue(taggedCallback);
+    }
+
+    @Override
+    public void saveEsc(final String cardId, final String tokenEsc) {
+        mercadoPagoESC.saveESC(cardId, tokenEsc);
     }
 
     @Override

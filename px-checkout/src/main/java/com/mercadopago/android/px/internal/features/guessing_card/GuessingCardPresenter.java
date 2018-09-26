@@ -113,9 +113,8 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
             paymentRecovery);
     }
 
-    public static GuessingCardPresenter buildGuessingCardStoragePresenter(final String accessToken, final
-        MercadoPagoESC mercadoPagoESC) {
-        return new GuessingCardStoragePresenter(accessToken, mercadoPagoESC);
+    public static GuessingCardPresenter buildGuessingCardStoragePresenter(final String accessToken) {
+        return new GuessingCardStoragePresenter(accessToken);
     }
 
     private MPTrackingContext getTrackingContext() {

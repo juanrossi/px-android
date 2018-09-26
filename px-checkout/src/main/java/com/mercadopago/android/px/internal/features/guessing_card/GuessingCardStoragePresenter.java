@@ -25,13 +25,11 @@ import static com.mercadopago.android.px.internal.util.ApiUtil.RequestOrigin.GET
 public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
     private final String mAccessToken;
-    /* default */ MercadoPagoESC mercadoPagoESC;
     private PaymentMethod currentPaymentMethod;
 
-    public GuessingCardStoragePresenter(final String accessToken, final MercadoPagoESC mercadoPagoESC) {
+    public GuessingCardStoragePresenter(final String accessToken) {
         super();
         mAccessToken = accessToken;
-        this.mercadoPagoESC = mercadoPagoESC;
     }
 
     @Override
@@ -151,7 +149,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onSuccess(final Card card) {
                     if (isViewAttached()) {
-                        mercadoPagoESC.saveESC(card.getId(), token.getEsc());
+                        getResourcesProvider().saveEsc(card.getId(), token.getEsc());
                         getView().finishCardStorageFlow(card.getId());
                     }
                 }
