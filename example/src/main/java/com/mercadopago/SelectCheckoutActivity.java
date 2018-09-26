@@ -42,7 +42,7 @@ public class SelectCheckoutActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                MercadoPagoCardStorage.startCardStorageFlow(SelectCheckoutActivity.this, "APP_USR-1505-080815-c6ea450de1bf828e39add499237d727f-312667294", 99);
+                MercadoPagoCardStorage.startCardStorageFlow(SelectCheckoutActivity.this, "APP_USR-7092-092615-2c5d3e38596696b6703e342f02edf388-340739439", 99);
             }
         });
     }

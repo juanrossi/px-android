@@ -2,7 +2,6 @@ package com.mercadopago.android.px.internal.features.guessing_card;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.internal.datasource.CardAssociationService;
@@ -80,13 +79,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onFailure(final MercadoPagoError error) {
                     if (isViewAttached()) {
-                        getView().showError(error, ApiUtil.RequestOrigin.GET_IDENTIFICATION_TYPES);
-                        setFailureRecovery(new FailureRecovery() {
-                            @Override
-                            public void recover() {
-                                getIdentificationTypesAsync();
-                            }
-                        });
+                        getView().finishCardStorageFlow(true, accessToken);
                     }
                 }
             });
@@ -110,14 +103,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onFailure(final MercadoPagoError error) {
                     if (isViewAttached()) {
-                        getView().hideProgress();
-                        setFailureRecovery(new FailureRecovery() {
-                            @Override
-                            public void recover() {
-                                getPaymentMethods();
-                            }
-                        });
-                        getView().showError(error, ApiUtil.RequestOrigin.GET_CARD_PAYMENT_METHODS);
+                        getView().finishCardStorageFlow(true, accessToken);
                     }
                 }
             }
@@ -139,12 +125,18 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
             .createTokenAsync(mCardToken, accessToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
                 @Override
                 public void onSuccess(final Token token) {
-                    getView().finishCardStorageFlow("Fake_id");
+                    resolveTokenRequest(token);
                 }
 
                 @Override
                 public void onFailure(final MercadoPagoError error) {
-                    resolveTokenCreationError(error, ApiUtil.RequestOrigin.CREATE_TOKEN);
+                    if (isViewAttached()) {
+                        if (isIdentificationNumberWrong(error)) {
+                            showIdentificationNumberError();
+                        } else {
+                            getView().finishCardStorageFlow(true, accessToken);
+                        }
+                    }
                 }
             });
     }
@@ -157,14 +149,13 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onSuccess(final Card card) {
                     if (isViewAttached()) {
-                        mercadoPagoESC.saveESC(card.getId(), token.getEsc());
-                        getView().finishCardStorageFlow(card.getId());
+                        getView().finishCardStorageFlow(false, accessToken);
                     }
                 }
 
                 @Override
                 public void onFailure(final MercadoPagoError error) {
-                    getView().setErrorView(error.getMessage());
+                    getView().finishCardStorageFlow(true, accessToken);
                 }
             });
     }

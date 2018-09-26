@@ -12,18 +12,21 @@ import android.view.Window;
 import android.view.WindowManager;
 import com.mercadolibre.android.ui.widgets.MeliButton;
 import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.internal.features.guessing_card.GuessingCardActivity;
 
 public class CardAssociationResultActivity extends AppCompatActivity {
 
-    public static final String IS_ERROR = "isError";
-    public static final String RESULT_KEY = "action";
-    public static final String RESULT_ACTION_RETRY = "retry";
-    public static final String RESULT_ACTION_EXIT = "exit";
+    public static final String PARAM_IS_ERROR = "isError";
+    public static final String PARAM_ACCESS_TOKEN = "accessToken";
+    /* default */ String accessToken;
+    private boolean isError;
 
-    public static void startCardAssociationResultActivity(final Activity callerActivity, final boolean isError) {
+    public static void startCardAssociationResultActivity(final Activity callerActivity, final boolean isError,
+        final String accessToken) {
         final Intent intent = new Intent(callerActivity, CardAssociationResultActivity.class);
+        intent.putExtra(PARAM_IS_ERROR, isError);
+        intent.putExtra(PARAM_ACCESS_TOKEN, accessToken);
         intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        intent.putExtra(IS_ERROR, isError);
         callerActivity.startActivity(intent);
     }
 
@@ -32,7 +35,8 @@ public class CardAssociationResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         final Intent intent = getIntent();
-        final boolean isError = intent.getBooleanExtra(IS_ERROR, true);
+        isError = intent.getBooleanExtra(PARAM_IS_ERROR, true);
+        accessToken = intent.getStringExtra(PARAM_ACCESS_TOKEN);
 
         if (isError) {
             setContentView(R.layout.px_card_association_result_error);
@@ -46,7 +50,9 @@ public class CardAssociationResultActivity extends AppCompatActivity {
         retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                    goBackWithResult(RESULT_ACTION_RETRY);
+                GuessingCardActivity.restartGuessingCardActivityForStorage(CardAssociationResultActivity.this,
+                    accessToken);
+                finish();
             }
         });
 
@@ -54,17 +60,20 @@ public class CardAssociationResultActivity extends AppCompatActivity {
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                goBackWithResult(RESULT_ACTION_EXIT);
+                returnToCaller();
             }
         });
     }
 
-    void goBackWithResult(final String action) {
-        final Intent data = new Intent();
-        data.putExtra(RESULT_KEY, action);
-        setResult(RESULT_OK, data);
+    void returnToCaller() {
+        if (isError) {
+            setResult(RESULT_CANCELED);
+        } else {
+            setResult(RESULT_OK);
+        }
+
         finish();
-        overridePendingTransition(R.anim.px_no_change_animation, R.anim.px_slide_down_activity);
+        overridePendingTransition(R.anim.px_no_change_animation, R.anim.px_slide_right_to_left_out);
     }
 
     private void setupStatusBarColor(final boolean isError) {
@@ -75,5 +84,21 @@ public class CardAssociationResultActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(compatColor);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(PARAM_IS_ERROR, isError);
+        outState.putString(PARAM_ACCESS_TOKEN, accessToken);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            isError = savedInstanceState.getBoolean(PARAM_IS_ERROR);
+            accessToken = savedInstanceState.getString(PARAM_ACCESS_TOKEN);
+        }
+        super.onRestoreInstanceState(savedInstanceState);
     }
 }

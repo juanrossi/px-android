@@ -452,12 +452,12 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
         }
     }
 
-    private boolean isIdentificationNumberWrong(final MercadoPagoError error) {
+    protected boolean isIdentificationNumberWrong(final MercadoPagoError error) {
         return error.isApiException() &&
             error.getApiException().containsCause(ApiException.ErrorCodes.INVALID_CARD_HOLDER_IDENTIFICATION_NUMBER);
     }
 
-    private void showIdentificationNumberError() {
+    protected void showIdentificationNumberError() {
         getView().hideProgress();
         getView().setErrorView(getResourcesProvider().getInvalidFieldErrorMessage());
         getView().setErrorIdentificationNumber();
