@@ -154,8 +154,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         final Intent intent = new Intent(callerActivity, GuessingCardActivity.class);
         intent.putExtra(PARAM_ACCESS_TOKEN, accessToken);
         intent.putExtra(GuessingCardActivity.PARAM_INCLUDES_PAYMENT, false);
-        callerActivity
-            .startActivityForResult(intent, requestCode);
+        callerActivity.startActivityForResult(intent, requestCode);
     }
 
     /**
@@ -171,6 +170,16 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         intent.putExtra(PARAM_PAYMENT_RECOVERY, JsonUtil.getInstance().toJson(paymentRecovery));
         intent.putExtra(GuessingCardActivity.PARAM_INCLUDES_PAYMENT, true);
         callerActivity.startActivityForResult(intent, Constants.Activities.GUESSING_CARD_FOR_PAYMENT_REQUEST_CODE);
+    }
+
+    /* default */
+    public static void restartGuessingCardActivityForStorage(final Activity callerActivity,
+        final String accessToken) {
+        final Intent intent = new Intent(callerActivity, GuessingCardActivity.class);
+        intent.putExtra(PARAM_ACCESS_TOKEN, accessToken);
+        intent.putExtra(GuessingCardActivity.PARAM_INCLUDES_PAYMENT, false);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        callerActivity.startActivity(intent);
     }
 
     @Override
@@ -1366,10 +1375,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             }
         } else if (requestCode == Constants.Activities.BANK_DEALS_REQUEST_CODE) {
             setSoftInputMode();
-        } else if (requestCode == Constants.Activities.GUESSING_CARD_RESULT_SCREEN_REQUEST_CODE) {
-            if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
-                final String action = data.getStringExtra(CardAssociationResultActivity.RESULT_KEY);
-            }
         }
     }
 
@@ -1403,8 +1408,9 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
-    public void finishCardStorageFlow(final boolean isError, @Nullable final String cardId) {
-        CardAssociationResultActivity.startCardAssociationResultActivity(this, isError);
+    public void finishCardStorageFlow(final boolean isError, final String accessToken) {
+        CardAssociationResultActivity.startCardAssociationResultActivity(this, isError, accessToken);
+        finish();
         overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }
 

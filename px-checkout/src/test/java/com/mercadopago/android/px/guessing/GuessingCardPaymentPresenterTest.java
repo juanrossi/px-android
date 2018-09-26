@@ -1,6 +1,5 @@
 package com.mercadopago.android.px.guessing;
 
-import android.support.annotation.Nullable;
 import com.mercadopago.android.px.configuration.AdvancedConfiguration;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
@@ -862,7 +861,7 @@ public class GuessingCardPaymentPresenterTest {
         }
 
         @Override
-        public void finishCardStorageFlow(@Nullable final String cardId) {
+        public void finishCardStorageFlow(final boolean isError) {
             // Empty body
         }
 
