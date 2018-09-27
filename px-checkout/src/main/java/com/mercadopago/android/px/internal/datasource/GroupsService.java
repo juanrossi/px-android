@@ -3,28 +3,26 @@ package com.mercadopago.android.px.internal.datasource;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.configuration.PaymentConfiguration;
 import com.mercadopago.android.px.core.PaymentMethodPlugin;
+import com.mercadopago.android.px.internal.callbacks.MPCall;
+import com.mercadopago.android.px.internal.constants.ProcessingModes;
+import com.mercadopago.android.px.internal.core.Settings;
 import com.mercadopago.android.px.internal.datasource.cache.GroupsCache;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
+import com.mercadopago.android.px.internal.services.CheckoutService;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.android.px.model.Site;
 import com.mercadopago.android.px.model.Sites;
+import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.requests.GroupsIntent;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
-import com.mercadopago.android.px.internal.services.CheckoutService;
-import com.mercadopago.android.px.internal.callbacks.MPCall;
 import com.mercadopago.android.px.services.Callback;
-import com.mercadopago.android.px.internal.constants.ProcessingModes;
-import com.mercadopago.android.px.internal.core.Settings;
-import com.mercadopago.android.px.model.exceptions.ApiException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-
-import static com.mercadopago.android.px.internal.core.Settings.PAYMENT_METHODS_OPTIONS_API_VERSION;
 
 public class GroupsService implements GroupsRepository {
 
@@ -122,7 +120,6 @@ public class GroupsService implements GroupsRepository {
                 excludedPaymentMethodsAppended,
                 groupsIntent,
                 checkoutPreference.getSite().getId(),
-                PAYMENT_METHODS_OPTIONS_API_VERSION,
                 ProcessingModes.AGGREGATOR,
                 cardsWithEscAppended,
                 supportedPluginsAppended,

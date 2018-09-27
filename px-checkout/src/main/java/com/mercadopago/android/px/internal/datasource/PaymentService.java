@@ -9,6 +9,7 @@ import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandlerWrappe
 import com.mercadopago.android.px.internal.repository.AmountRepository;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.EscManager;
+import com.mercadopago.android.px.internal.repository.InstructionsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
@@ -60,7 +61,8 @@ public class PaymentService implements PaymentRepository {
         @NonNull final PaymentProcessor paymentProcessor,
         @NonNull final Context context,
         @NonNull final EscManager escManager,
-        @NonNull final TokenRepository tokenRepository) {
+        @NonNull final TokenRepository tokenRepository,
+        @NonNull final InstructionsRepository instructionsRepository) {
 
         this.escManager = escManager;
         this.userSelectionRepository = userSelectionRepository;
@@ -73,7 +75,7 @@ public class PaymentService implements PaymentRepository {
         this.tokenRepository = tokenRepository;
         paymentMethodMapper = new PaymentMethodMapper();
         cardMapper = new CardMapper();
-        handlerWrapper = new PaymentServiceHandlerWrapper(this, escManager);
+        handlerWrapper = new PaymentServiceHandlerWrapper(this, escManager, instructionsRepository);
     }
 
     @Override
@@ -231,6 +233,11 @@ public class PaymentService implements PaymentRepository {
                 new PaymentProcessor.CheckoutData(getPaymentData(), checkoutPreference);
             paymentProcessor.startPayment(checkoutData, context, handlerWrapper);
         }
+    }
+
+    @Override
+    public boolean isExplodingAnimationCompatible() {
+        return !paymentProcessor.shouldShowFragmentOnPayment();
     }
 
     /**

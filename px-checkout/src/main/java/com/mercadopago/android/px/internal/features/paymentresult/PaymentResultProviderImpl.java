@@ -3,28 +3,12 @@ package com.mercadopago.android.px.internal.features.paymentresult;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
-import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
-import com.mercadopago.android.px.internal.di.Session;
-import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
-import com.mercadopago.android.px.model.Instructions;
 
 public class PaymentResultProviderImpl implements PaymentResultProvider {
     private final Context context;
-    private final MercadoPagoServicesAdapter mercadoPago;
 
     public PaymentResultProviderImpl(@NonNull final Context context) {
         this.context = context;
-        final PaymentSettingRepository paymentSettings =
-            Session.getSession(context).getConfigurationModule().getPaymentSettings();
-        mercadoPago =
-            new MercadoPagoServicesAdapter(context, paymentSettings.getPublicKey(), paymentSettings.getPrivateKey());
-    }
-
-    @Override
-    public void getInstructionsAsync(Long paymentId, String paymentTypeId,
-        final TaggedCallback<Instructions> taggedCallback) {
-        mercadoPago.getInstructions(paymentId, paymentTypeId, taggedCallback);
     }
 
     @Override

@@ -1,19 +1,19 @@
 package com.mercadopago.android.px.internal.features.paymentresult;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.internal.repository.InstructionsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.mocks.PaymentMethods;
 import com.mercadopago.android.px.model.Instruction;
-import com.mercadopago.android.px.model.Instructions;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentData;
 import com.mercadopago.android.px.model.PaymentResult;
-import com.mercadopago.android.px.model.Sites;
-import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
-import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.model.ScreenViewEvent;
+import com.mercadopago.android.px.model.Sites;
 import com.mercadopago.android.px.model.exceptions.ApiException;
+import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.preferences.CheckoutPreference;
 import java.math.BigDecimal;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -29,6 +29,8 @@ public class PaymentResultTest {
 
     @Mock private PaymentSettingRepository paymentSettingRepository;
     @Mock private CheckoutPreference checkoutPreference;
+    @Mock private InstructionsRepository instructionsRepository;
+    
     @Before
     public void setUp(){
         when(paymentSettingRepository.getCheckoutPreference()).thenReturn(checkoutPreference);
@@ -39,7 +41,7 @@ public class PaymentResultTest {
     public void whenPaymentWithCardApprovedThenShowCongrats() {
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
@@ -68,7 +70,7 @@ public class PaymentResultTest {
     public void whenPaymentWithCardRejectedThenShowRejection() {
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
@@ -99,7 +101,7 @@ public class PaymentResultTest {
     public void whenCallForAuthNeededThenShowCallForAuthScreen() {
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
@@ -130,7 +132,7 @@ public class PaymentResultTest {
     public void whenPaymentOffPendingThenShowInstructions() {
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
@@ -161,7 +163,7 @@ public class PaymentResultTest {
     public void whenPaymentOnInProcessThenShowPendingScreen() {
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
@@ -192,7 +194,7 @@ public class PaymentResultTest {
 
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOff());
@@ -221,7 +223,7 @@ public class PaymentResultTest {
     public void whenUnknownStatusThenShowError() {
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
@@ -250,7 +252,7 @@ public class PaymentResultTest {
     public void whenPaymentDataIsNullThenShowError() {
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
@@ -279,7 +281,7 @@ public class PaymentResultTest {
     public void whenPaymentResultIsNullThenShowError() {
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         presenter.setPaymentResult(null);
         presenter.setAmount(new BigDecimal("100"));
@@ -300,7 +302,7 @@ public class PaymentResultTest {
     public void whenPaymentResultStatusIsNullThenShowError() {
         MockedNavigator navigator = new MockedNavigator();
         PaymentResultPresenter presenter = new PaymentResultPresenter(navigator,
-            paymentSettingRepository);
+            paymentSettingRepository, instructionsRepository);
 
         PaymentData paymentData = new PaymentData();
         paymentData.setPaymentMethod(PaymentMethods.getPaymentMethodOnVisa());
@@ -350,12 +352,6 @@ public class PaymentResultTest {
     private class MockedProvider implements PaymentResultProvider {
 
         private String STANDARD_ERROR_MESSAGE = "Algo salió mal";
-
-        @Override
-        public void getInstructionsAsync(Long paymentId, String paymentTypeId,
-            TaggedCallback<Instructions> taggedCallback) {
-
-        }
 
         @Override
         public String getStandardErrorMessage() {
@@ -578,12 +574,12 @@ public class PaymentResultTest {
         }
 
         @Override
-        public void finishWithResult(int resultCode) {
+        public void recoverPayment(@NonNull final PostPaymentAction.OriginAction originAction) {
 
         }
 
         @Override
-        public void recoverPayment() {
+        public void finishWithResult(int resultCode) {
 
         }
 

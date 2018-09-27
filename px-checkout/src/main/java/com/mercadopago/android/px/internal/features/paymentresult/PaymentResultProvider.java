@@ -6,8 +6,6 @@ import com.mercadopago.android.px.model.Instructions;
 
 public interface PaymentResultProvider extends ResourcesProvider {
 
-    void getInstructionsAsync(Long paymentId, String paymentTypeId, final TaggedCallback<Instructions> taggedCallback);
-
     String getStandardErrorMessage();
 
     String getApprovedTitle();

@@ -232,7 +232,7 @@ public class PaymentResultContainer extends Component<PaymentResultProps, Void> 
 
     private int getBadgeImage(@NonNull final PaymentResultProps props) {
         if (props.isPluginPaymentResult(props.paymentResult)) {
-            if (props.paymentResult != null && props.paymentResult.isStatusApproved()) {
+            if (props.paymentResult != null && props.paymentResult.isApproved()) {
                 return CHECK_BADGE_IMAGE;
             } else {
                 return ERROR_BADGE_IMAGE;

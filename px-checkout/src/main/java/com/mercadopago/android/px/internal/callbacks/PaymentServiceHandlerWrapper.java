@@ -3,16 +3,22 @@ package com.mercadopago.android.px.internal.callbacks;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.internal.repository.EscManager;
+import com.mercadopago.android.px.internal.repository.InstructionsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.GenericPayment;
 import com.mercadopago.android.px.model.IPayment;
+import com.mercadopago.android.px.model.Instruction;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentRecovery;
+import com.mercadopago.android.px.model.PaymentResult;
+import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.services.Callback;
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public final class PaymentServiceHandlerWrapper implements PaymentServiceHandler {
@@ -20,13 +26,16 @@ public final class PaymentServiceHandlerWrapper implements PaymentServiceHandler
     @Nullable private WeakReference<PaymentServiceHandler> handler;
     @NonNull private final PaymentRepository paymentRepository;
     @NonNull private final EscManager escManager;
+    @NonNull private final InstructionsRepository instructionsRepository;
     @NonNull private final Queue<Message> messages;
 
     public PaymentServiceHandlerWrapper(
         @NonNull final PaymentRepository paymentRepository,
-        @NonNull final EscManager escManager) {
+        @NonNull final EscManager escManager,
+        @NonNull final InstructionsRepository instructionsRepository) {
         this.paymentRepository = paymentRepository;
         this.escManager = escManager;
+        this.instructionsRepository = instructionsRepository;
         messages = new LinkedList<>();
     }
 
@@ -58,8 +67,24 @@ public final class PaymentServiceHandlerWrapper implements PaymentServiceHandler
         if (handleEsc(payment)) {
             onRecoverPaymentEscInvalid(paymentRepository.createRecoveryForInvalidESC());
         } else {
+            //Must be after store
             paymentRepository.storePayment(payment);
-            addAndProcess(new PaymentMessage(payment));
+            final PaymentResult paymentResult = paymentRepository.createPaymentResult(payment);
+            if (paymentResult.isOffPayment()) {
+                instructionsRepository.getInstructions(paymentResult).enqueue(new Callback<List<Instruction>>() {
+                    @Override
+                    public void success(final List<Instruction> instructions) {
+                        addAndProcess(new PaymentMessage(payment));
+                    }
+
+                    @Override
+                    public void failure(final ApiException apiException) {
+                        addAndProcess(new PaymentMessage(payment));
+                    }
+                });
+            } else {
+                addAndProcess(new PaymentMessage(payment));
+            }
         }
     }
 
@@ -69,7 +94,23 @@ public final class PaymentServiceHandlerWrapper implements PaymentServiceHandler
             onRecoverPaymentEscInvalid(paymentRepository.createRecoveryForInvalidESC());
         } else {
             paymentRepository.storePayment(genericPayment);
-            addAndProcess(new GenericPaymentMessage(genericPayment));
+            //Must be after store
+            final PaymentResult paymentResult = paymentRepository.createPaymentResult(genericPayment);
+            if (paymentResult.isOffPayment()) {
+                instructionsRepository.getInstructions(paymentResult).enqueue(new Callback<List<Instruction>>() {
+                    @Override
+                    public void success(final List<Instruction> instructions) {
+                        addAndProcess(new GenericPaymentMessage(genericPayment));
+                    }
+
+                    @Override
+                    public void failure(final ApiException apiException) {
+                        addAndProcess(new GenericPaymentMessage(genericPayment));
+                    }
+                });
+            } else {
+                addAndProcess(new GenericPaymentMessage(genericPayment));
+            }
         }
     }
 

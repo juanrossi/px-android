@@ -51,6 +51,9 @@ import com.mercadopago.android.px.internal.view.ComponentManager;
 import com.mercadopago.android.px.internal.view.LoadingComponent;
 import com.mercadopago.android.px.internal.view.LoadingRenderer;
 import com.mercadopago.android.px.internal.view.RendererFactory;
+import com.mercadopago.android.px.internal.viewmodel.ChangePaymentMethodPostPaymentAction;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
+import com.mercadopago.android.px.internal.viewmodel.RecoverPaymentPostPaymentAction;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.ScreenViewEvent;
 import com.mercadopago.android.px.model.exceptions.ApiException;
@@ -62,28 +65,33 @@ import static com.mercadopago.android.px.internal.features.Constants.RESULT_CUST
 
 public class PaymentResultActivity extends AppCompatActivity implements PaymentResultNavigator {
 
-    public static final String EXTRA_NEXT_ACTION = "extra_next_action";
-    public static final String EXTRA_RESULT_CODE = "extra_result_code";
-
-    public static final String CONGRATS_DISPLAY_BUNDLE = "congratsDisplay";
-
-    public static final String PAYMENT_RESULT_BUNDLE = "paymentResult";
+    public static final String CONGRATS_DISPLAY_BUNDLE = "congrats_display";
+    public static final String PAYMENT_RESULT_BUNDLE = "payment_result";
     public static final String AMOUNT_BUNDLE = "amount";
+
+    private static final String EXTRA_CONFIRM_PAYMENT_ORIGIN = "extra_confirm_payment_origin";
+    private static final String EXTRA_AMOUNT = "extra_amount";
+    private static final String EXTRA_DISCOUNT = "extra_discount";
+    private static final String EXTRA_PAYMENT_RESULT = "extra_payment_result";
+
+    public static final String EXTRA_RESULT_CODE = "extra_result_code";
 
     private PaymentResultPresenter presenter;
     private Integer congratsDisplay;
 
     private PaymentResultPropsMutator mutator;
 
-    public static Intent getIntent(@NonNull final Context context, @NonNull final PaymentResult result) {
+    public static Intent getIntent(@NonNull final Context context, @NonNull final PaymentResult result,
+        @NonNull final PostPaymentAction.OriginAction confirmPaymentOrigin) {
 
         final Session session = Session.getSession(context);
         final DiscountRepository discountRepository = session.getDiscountRepository();
         final Intent resultIntent = new Intent(context, PaymentResultActivity.class);
         //TODO remove
-        resultIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(result));
-        resultIntent.putExtra("discount", JsonUtil.getInstance().toJson(discountRepository.getDiscount()));
-        resultIntent.putExtra("amount", session.getAmountRepository().getAmountToPay());
+        resultIntent.putExtra(EXTRA_PAYMENT_RESULT, JsonUtil.getInstance().toJson(result));
+        resultIntent.putExtra(EXTRA_DISCOUNT, JsonUtil.getInstance().toJson(discountRepository.getDiscount()));
+        resultIntent.putExtra(EXTRA_AMOUNT, session.getAmountRepository().getAmountToPay());
+        resultIntent.putExtra(EXTRA_CONFIRM_PAYMENT_ORIGIN, confirmPaymentOrigin.ordinal());
         return resultIntent;
     }
 
@@ -96,7 +104,7 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
         final PaymentResultScreenConfiguration paymentResultScreenConfiguration =
             paymentSettings.getAdvancedConfiguration().getPaymentResultScreenConfiguration();
         presenter = new PaymentResultPresenter(this,
-            paymentSettings);
+            paymentSettings, Session.getSession(this).getInstructionsRepository());
 
         mutator = new PaymentResultPropsMutator(new PaymentResultProps.Builder(
             paymentResultScreenConfiguration).build());
@@ -143,6 +151,12 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
     }
 
     @Override
+    protected void onDestroy() {
+        presenter.detachView();
+        super.onDestroy();
+    }
+
+    @Override
     public void showApiExceptionError(final ApiException exception, final String requestOrigin) {
         ErrorUtil.showApiExceptionError(this, exception, requestOrigin);
     }
@@ -177,8 +191,10 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
 
         congratsDisplay = savedInstanceState.getInt(CONGRATS_DISPLAY_BUNDLE, -1);
 
+        final Session session = Session.getSession(this);
         presenter = new PaymentResultPresenter(this,
-            Session.getSession(this).getConfigurationModule().getPaymentSettings());
+            session.getConfigurationModule().getPaymentSettings(),
+            session.getInstructionsRepository());
         presenter.setPaymentResult(paymentResult);
         presenter.setAmount(amount);
 
@@ -192,16 +208,21 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
 
         final Intent intent = getIntent();
         BigDecimal amount = null;
-        if (intent.getStringExtra("amount") != null) {
-            amount = new BigDecimal(intent.getStringExtra("amount"));
+        if (intent.getStringExtra(EXTRA_AMOUNT) != null) {
+            amount = new BigDecimal(intent.getStringExtra(EXTRA_AMOUNT));
         }
         final PaymentResult paymentResult =
-            JsonUtil.getInstance().fromJson(intent.getExtras().getString("paymentResult"), PaymentResult.class);
+            JsonUtil.getInstance().fromJson(intent.getExtras().getString(EXTRA_PAYMENT_RESULT), PaymentResult.class);
 
         presenter.setAmount(amount);
         presenter.setPaymentResult(paymentResult);
 
-        congratsDisplay = intent.getIntExtra("congratsDisplay", -1);
+        final int originIndex = intent.getIntExtra(EXTRA_CONFIRM_PAYMENT_ORIGIN, -1);
+        if (originIndex != -1) {
+            presenter.setOriginAction(PostPaymentAction.OriginAction.values()[originIndex]);
+        }
+
+        congratsDisplay = intent.getIntExtra(CONGRATS_DISPLAY_BUNDLE, -1);
     }
 
     @Override
@@ -262,15 +283,15 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
     @Override
     public void changePaymentMethod() {
         final Intent returnIntent = new Intent();
-        returnIntent.putExtra(EXTRA_NEXT_ACTION, Constants.ACTION_SELECT_OTHER_PAYMENT_METHOD);
+        new ChangePaymentMethodPostPaymentAction().addToIntent(returnIntent);
         setResult(RESULT_ACTION, returnIntent);
         finish();
     }
 
     @Override
-    public void recoverPayment() {
+    public void recoverPayment(@NonNull final PostPaymentAction.OriginAction originAction) {
         final Intent returnIntent = new Intent();
-        returnIntent.putExtra(EXTRA_NEXT_ACTION, Constants.ACTION_RECOVER_PAYMENT);
+        new RecoverPaymentPostPaymentAction(originAction).addToIntent(returnIntent);
         setResult(RESULT_ACTION, returnIntent);
         finish();
     }

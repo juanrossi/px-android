@@ -89,7 +89,7 @@ public final class PaymentProcessorActivity extends AppCompatActivity
                 .getPaymentProcessor();
 
         paymentServiceHandlerWrapper = new PaymentServiceHandlerWrapper(session.getPaymentRepository(),
-            new EscManagerImp(session.getMercadoPagoESC()));
+            new EscManagerImp(session.getMercadoPagoESC()), session.getInstructionsRepository());
 
         final CheckoutPreference checkoutPreference = configurationModule.getPaymentSettings().getCheckoutPreference();
         final PaymentProcessor.CheckoutData checkoutData =

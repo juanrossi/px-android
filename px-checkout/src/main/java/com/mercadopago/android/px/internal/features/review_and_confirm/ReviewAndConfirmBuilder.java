@@ -17,6 +17,7 @@ import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.internal.util.TextUtil;
+import com.mercadopago.android.px.internal.viewmodel.PostPaymentAction;
 import com.mercadopago.android.px.model.Campaign;
 import com.mercadopago.android.px.model.Discount;
 import com.mercadopago.android.px.model.Issuer;
@@ -30,9 +31,15 @@ import java.util.List;
 public class ReviewAndConfirmBuilder {
 
     private Boolean hasExtraPaymentMethods;
+    private PostPaymentAction postPaymentAction;
 
     public ReviewAndConfirmBuilder setHasExtraPaymentMethods(final boolean hasExtraPaymentMethods) {
         this.hasExtraPaymentMethods = hasExtraPaymentMethods;
+        return this;
+    }
+
+    public ReviewAndConfirmBuilder setPostPaymentAction(@NonNull final PostPaymentAction postPaymentAction) {
+        this.postPaymentAction = postPaymentAction;
         return this;
     }
 
@@ -90,7 +97,16 @@ public class ReviewAndConfirmBuilder {
                 amountRepository.getAppliedCharges());
 
         final ItemsModel itemsModel = new ItemsModel(site.getCurrencyId(), items);
-
+        if (postPaymentAction != null) {
+            return ReviewAndConfirmActivity.getIntentForAction(context,
+                publicKey,
+                mercadoPagoTermsAndConditions,
+                paymentModel,
+                summaryModel,
+                itemsModel,
+                discountTermsAndConditions,
+                postPaymentAction);
+        }
         return ReviewAndConfirmActivity.getIntent(context,
             publicKey,
             mercadoPagoTermsAndConditions,

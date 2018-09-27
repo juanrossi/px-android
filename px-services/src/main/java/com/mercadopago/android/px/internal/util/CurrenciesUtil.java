@@ -152,14 +152,16 @@ public final class CurrenciesUtil {
         if (hasZeroDecimals(currencyId, amount)) {
             final Character decimalSeparator = currenciesList.get(currencyId).getDecimalSeparator();
             final int decimalIndex = localized.indexOf(decimalSeparator);
-            localized = localized.substring(0, decimalIndex);
+            if (decimalIndex >= 0) {
+                localized = localized.substring(0, decimalIndex);
+            }
         }
         return localized;
     }
 
     public static boolean hasZeroDecimals(final String currencyId, final BigDecimal amount) {
         String decimals = getDecimals(currencyId, amount);
-        return ZERO_DECIMAL.equals(decimals);
+        return ZERO_DECIMAL.equals(decimals) || TextUtil.isEmpty(decimals);
     }
 
     @NonNull

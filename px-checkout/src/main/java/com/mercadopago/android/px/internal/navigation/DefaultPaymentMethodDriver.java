@@ -26,7 +26,7 @@ public class DefaultPaymentMethodDriver {
                 final Card card = setUpSavedCard();
                 paymentMethodDriverCallback.driveToCardVault(card);
             } else if (isNewCard()) {
-                paymentMethodDriverCallback.driveToNewCardFlow();
+                paymentMethodDriverCallback.driveToNewCardFlow(preference.getDefaultPaymentTypeId());
             } else {
                 paymentMethodDriverCallback.doNothing();
             }
@@ -72,6 +72,6 @@ public class DefaultPaymentMethodDriver {
 
         void doNothing();
 
-        void driveToNewCardFlow();
+        void driveToNewCardFlow(final String defaultPaymentTypeId);
     }
 }
