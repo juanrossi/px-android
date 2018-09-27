@@ -6,21 +6,14 @@ import android.support.annotation.Nullable;
 import com.mercadopago.android.px.BuildConfig;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
-import com.mercadopago.android.px.internal.datasource.CardAssociationService;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoServicesAdapter;
-import com.mercadopago.android.px.internal.di.CardAssociationSession;
 import com.mercadopago.android.px.internal.di.Session;
-import com.mercadopago.android.px.internal.features.MercadoPagoBaseActivity;
-import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.model.BankDeal;
-import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.Installment;
 import com.mercadopago.android.px.model.Issuer;
-import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.Token;
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,20 +23,13 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     private final Context context;
     private final MercadoPagoServicesAdapter mercadoPago;
     private final String publicKey;
-    private final CardPaymentMethodRepository cardPaymentMethodRepository;
     private MPTrackingContext trackingContext;
-    private final CardAssociationService cardAssociationService;
-    private final MercadoPagoESC mercadoPagoESC;
 
     public GuessingCardProviderImpl(@NonNull final Context context) {
         this.context = context;
         final Session session = Session.getSession(context);
-        final CardAssociationSession cardAssociationSession = CardAssociationSession.getCardAssociationSession(context);
         publicKey = session.getConfigurationModule().getPaymentSettings().getPublicKey();
         mercadoPago = session.getMercadoPagoServiceAdapter();
-        cardPaymentMethodRepository = cardAssociationSession.getCardPaymentMethodRepository();
-        cardAssociationService = cardAssociationSession.getCardAssociationService();
-        mercadoPagoESC = cardAssociationSession.getMercadoPagoESC();
     }
 
     @Override
@@ -65,12 +51,6 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     public void createTokenAsync(final CardToken cardToken, final String accessToken,
         final TaggedCallback<Token> taggedCallback) {
         mercadoPago.createToken(cardToken, accessToken, taggedCallback);
-    }
-
-    @Override
-    public void getCardPaymentMethods(final String accessToken,
-        final TaggedCallback<List<PaymentMethod>> taggedCallback) {
-        cardPaymentMethodRepository.getCardPaymentMethods(accessToken).enqueue(taggedCallback);
     }
 
     @Override
@@ -103,17 +83,6 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     @Override
     public void getBankDealsAsync(final TaggedCallback<List<BankDeal>> taggedCallback) {
         mercadoPago.getBankDeals(taggedCallback);
-    }
-
-    @Override
-    public void associateCardToUser(final String accessToken, final String cardTokenId, final String paymentMethodId,
-        final TaggedCallback<Card> taggedCallback) {
-        cardAssociationService.associateCardToUser(accessToken, cardTokenId, paymentMethodId).enqueue(taggedCallback);
-    }
-
-    @Override
-    public void saveEsc(final String cardId, final String tokenEsc) {
-        mercadoPagoESC.saveESC(cardId, tokenEsc);
     }
 
     @Override

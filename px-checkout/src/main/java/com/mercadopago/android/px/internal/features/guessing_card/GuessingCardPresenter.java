@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
+import com.mercadopago.android.px.internal.di.CardAssociationSession;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.providers.GuessingCardProvider;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
@@ -113,8 +113,9 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
             paymentRecovery);
     }
 
-    public static GuessingCardPresenter buildGuessingCardStoragePresenter(final String accessToken) {
-        return new GuessingCardStoragePresenter(accessToken);
+    public static GuessingCardPresenter buildGuessingCardStoragePresenter(final CardAssociationSession session,
+        final String accessToken) {
+        return new GuessingCardStoragePresenter(session, accessToken);
     }
 
     private MPTrackingContext getTrackingContext() {

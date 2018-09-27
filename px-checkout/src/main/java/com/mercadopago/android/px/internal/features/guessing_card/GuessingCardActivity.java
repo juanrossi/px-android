@@ -36,6 +36,7 @@ import com.mercadopago.android.px.internal.callbacks.card.CardNumberEditTextCall
 import com.mercadopago.android.px.internal.callbacks.card.CardSecurityCodeEditTextCallback;
 import com.mercadopago.android.px.internal.callbacks.card.CardholderNameEditTextCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
+import com.mercadopago.android.px.internal.di.CardAssociationSession;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.features.MercadoPagoBaseActivity;
@@ -221,7 +222,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 GuessingCardPresenter.buildGuessingCardPaymentPresenter(Session.getSession(this), paymentRecovery);
         } else {
             final String accessToken = intent.getStringExtra(PARAM_ACCESS_TOKEN);
-            mPresenter = GuessingCardPresenter.buildGuessingCardStoragePresenter(accessToken);
+            mPresenter = GuessingCardPresenter
+                .buildGuessingCardStoragePresenter(CardAssociationSession.getCardAssociationSession(this), accessToken);
         }
 
         mPresenter.attachResourcesProvider(new GuessingCardProviderImpl(this));

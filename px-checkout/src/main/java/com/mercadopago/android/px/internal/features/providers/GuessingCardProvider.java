@@ -5,12 +5,10 @@ import com.mercadopago.android.px.internal.base.ResourcesProvider;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.tracker.MPTrackingContext;
 import com.mercadopago.android.px.model.BankDeal;
-import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.Installment;
 import com.mercadopago.android.px.model.Issuer;
-import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.Token;
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,8 +20,6 @@ public interface GuessingCardProvider extends ResourcesProvider {
     void createTokenAsync(CardToken cardToken, final TaggedCallback<Token> taggedCallback);
 
     void createTokenAsync(CardToken cardToken, final String accessToken, final TaggedCallback<Token> taggedCallback);
-
-    void getCardPaymentMethods(String accessToken, final TaggedCallback<List<PaymentMethod>> taggedCallback);
 
     void getIssuersAsync(String paymentMethodId, String bin, final TaggedCallback<List<Issuer>> taggedCallback);
 
@@ -40,11 +36,6 @@ public interface GuessingCardProvider extends ResourcesProvider {
         final TaggedCallback<List<IdentificationType>> taggedCallback);
 
     void getBankDealsAsync(final TaggedCallback<List<BankDeal>> taggedCallback);
-
-    void associateCardToUser(final String accessToken, final String cardTokenId, final String paymentMethodId,
-        final TaggedCallback<Card> taggedCallback);
-
-    void saveEsc(final String cardId, final String tokenEsc);
 
     String getMissingInstallmentsForIssuerErrorMessage();
 

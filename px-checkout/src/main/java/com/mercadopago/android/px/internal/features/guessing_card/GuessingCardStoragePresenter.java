@@ -2,19 +2,14 @@ package com.mercadopago.android.px.internal.features.guessing_card;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
-import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
-import com.mercadopago.android.px.internal.features.business_result.BusinessPaymentResultActivity;
+import com.mercadopago.android.px.internal.di.CardAssociationSession;
 import com.mercadopago.android.px.internal.util.ApiUtil;
 import com.mercadopago.android.px.model.BankDeal;
-import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Card;
-import com.mercadopago.android.px.model.ExitAction;
 import com.mercadopago.android.px.model.IdentificationType;
-import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
@@ -24,12 +19,14 @@ import static com.mercadopago.android.px.internal.util.ApiUtil.RequestOrigin.GET
 
 public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
-    private final String mAccessToken;
+    /* default */ final CardAssociationSession cardAssociationSession;
+    private final String accessToken;
     private PaymentMethod currentPaymentMethod;
 
-    public GuessingCardStoragePresenter(final String accessToken) {
+    public GuessingCardStoragePresenter(final CardAssociationSession cardAssociationSession, final String accessToken) {
         super();
-        mAccessToken = accessToken;
+        this.accessToken = accessToken;
+        this.cardAssociationSession = cardAssociationSession;
     }
 
     @Override
@@ -64,7 +61,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
     @Override
     public void getIdentificationTypesAsync() {
-        getResourcesProvider().getIdentificationTypesAsync(mAccessToken,
+        getResourcesProvider().getIdentificationTypesAsync(accessToken,
             new TaggedCallback<List<IdentificationType>>(ApiUtil.RequestOrigin.GET_IDENTIFICATION_TYPES) {
                 @Override
                 public void onSuccess(final List<IdentificationType> identificationTypes) {
@@ -89,8 +86,8 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
     @Override
     public void getPaymentMethods() {
         getView().showProgress();
-        getResourcesProvider()
-            .getCardPaymentMethods(mAccessToken, new TaggedCallback<List<PaymentMethod>>(GET_CARD_PAYMENT_METHODS) {
+        cardAssociationSession.getCardPaymentMethodRepository().getCardPaymentMethods(accessToken).enqueue(
+            new TaggedCallback<List<PaymentMethod>>(GET_CARD_PAYMENT_METHODS) {
                 @Override
                 public void onSuccess(final List<PaymentMethod> paymentMethods) {
                     if (isViewAttached()) {
@@ -114,7 +111,8 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                         getView().showError(error, ApiUtil.RequestOrigin.GET_CARD_PAYMENT_METHODS);
                     }
                 }
-            });
+            }
+        );
     }
 
     @Override
@@ -129,7 +127,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
     @Override
     public void createToken() {
         getResourcesProvider()
-            .createTokenAsync(mCardToken, mAccessToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
+            .createTokenAsync(mCardToken, accessToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
                 @Override
                 public void onSuccess(final Token token) {
                     resolveTokenRequest(token);
@@ -144,12 +142,13 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
     @Override
     public void resolveTokenRequest(final Token token) {
-        getResourcesProvider().associateCardToUser(mAccessToken, token.getId(), getPaymentMethod().getId(),
+        cardAssociationSession.getCardAssociationService()
+            .associateCardToUser(accessToken, token.getId(), getPaymentMethod().getId()).enqueue(
             new TaggedCallback<Card>(ApiUtil.RequestOrigin.ASSOCIATE_CARD) {
                 @Override
                 public void onSuccess(final Card card) {
                     if (isViewAttached()) {
-                        getResourcesProvider().saveEsc(card.getId(), token.getEsc());
+                        cardAssociationSession.getMercadoPagoESC().saveESC(card.getId(), token.getEsc());
                         getView().finishCardStorageFlow(card.getId());
                     }
                 }
