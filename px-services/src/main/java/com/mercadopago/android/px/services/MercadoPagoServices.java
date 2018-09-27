@@ -10,6 +10,7 @@ import com.mercadopago.android.px.internal.services.CheckoutService;
 import com.mercadopago.android.px.internal.services.DiscountService;
 import com.mercadopago.android.px.internal.services.GatewayService;
 import com.mercadopago.android.px.internal.services.IdentificationService;
+import com.mercadopago.android.px.internal.services.InstructionsClient;
 import com.mercadopago.android.px.internal.services.PaymentService;
 import com.mercadopago.android.px.internal.util.LocaleUtil;
 import com.mercadopago.android.px.internal.util.RetrofitUtil;
@@ -35,17 +36,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static com.mercadopago.android.px.internal.core.Settings.PAYMENT_METHODS_OPTIONS_API_VERSION;
-import static com.mercadopago.android.px.internal.core.Settings.PAYMENT_RESULT_API_VERSION;
-
 /**
  * MercadoPagoServices provides an interface to access to our main API methods.
  */
 public class MercadoPagoServices {
-
-    private static final int DEFAULT_PAYMENT_CONNECT_TIMEOUT = 10;
-    private static final int DEFAULT_PAYMENT_READ_TIMEOUT = 20;
-    private static final int DEFAULT_PAYMENT_WRITE_TIMEOUT = 20;
 
     /* default */ final Context context;
     /* default */ final String publicKey;
@@ -74,11 +68,11 @@ public class MercadoPagoServices {
 
     public void getInstructions(final Long paymentId, final String paymentTypeId,
         final Callback<Instructions> callback) {
-        final CheckoutService service = RetrofitUtil.getRetrofitClient(context).create(CheckoutService.class);
-        service.getPaymentResult(Settings.servicesVersion,
-            context.getResources().getConfiguration().locale.getLanguage(),
+        final InstructionsClient service = RetrofitUtil.getRetrofitClient(context).create(InstructionsClient.class);
+        service.getInstructions(Settings.servicesVersion,
+            LocaleUtil.getLanguage(context),
             paymentId,
-            publicKey, privateKey, paymentTypeId, PAYMENT_RESULT_API_VERSION)
+            publicKey, privateKey, paymentTypeId)
             .enqueue(callback);
     }
 
@@ -96,9 +90,9 @@ public class MercadoPagoServices {
         final String supportedPluginsAppended = getListAsString(supportedPlugins, separator);
 
         service.getPaymentMethodSearch(Settings.servicesVersion,
-            context.getResources().getConfiguration().locale.getLanguage(), publicKey, amount,
+            LocaleUtil.getLanguage(context), publicKey, amount,
             excludedPaymentTypesAppended, excludedPaymentMethodsAppended, groupsIntent, site.getId(),
-            PAYMENT_METHODS_OPTIONS_API_VERSION, processingMode, cardsWithEscAppended, supportedPluginsAppended,
+            processingMode, cardsWithEscAppended, supportedPluginsAppended,
             differentialPricing).
             enqueue(callback);
     }
