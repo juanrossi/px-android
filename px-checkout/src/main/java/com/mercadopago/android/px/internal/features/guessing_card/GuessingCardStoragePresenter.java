@@ -24,6 +24,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
     /* default */ final String accessToken;
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
     private final CardAssociationService cardAssociationService;
+    @Nullable
     private PaymentMethod currentPaymentMethod;
 
     public GuessingCardStoragePresenter(final String accessToken,
@@ -54,6 +55,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
         return null;
     }
 
+    @Nullable
     @Override
     public PaymentMethod getPaymentMethod() {
         return currentPaymentMethod;
@@ -73,7 +75,13 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
             new TaggedCallback<List<IdentificationType>>(ApiUtil.RequestOrigin.GET_IDENTIFICATION_TYPES) {
                 @Override
                 public void onSuccess(final List<IdentificationType> identificationTypes) {
-                    resolveIdentificationTypes(identificationTypes);
+                    if (isViewAttached()) {
+                        if (identificationTypes != null && !identificationTypes.isEmpty()) {
+                            resolveIdentificationTypes(identificationTypes);
+                        } else {
+                            getView().finishCardStorageFlow(true, accessToken);
+                        }
+                    }
                 }
 
                 @Override
@@ -94,9 +102,13 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 public void onSuccess(final List<PaymentMethod> paymentMethods) {
                     if (isViewAttached()) {
                         getView().hideProgress();
-                        mPaymentMethodGuessingController = new
-                            PaymentMethodGuessingController(paymentMethods, null, null);
-                        startGuessingForm();
+                        if (paymentMethods != null && !paymentMethods.isEmpty()) {
+                            mPaymentMethodGuessingController = new
+                                PaymentMethodGuessingController(paymentMethods, null, null);
+                            startGuessingForm();
+                        } else {
+                            getView().finishCardStorageFlow(true, accessToken);
+                        }
                     }
                 }
 
@@ -125,7 +137,13 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
             .createTokenAsync(mCardToken, accessToken, new TaggedCallback<Token>(ApiUtil.RequestOrigin.CREATE_TOKEN) {
                 @Override
                 public void onSuccess(final Token token) {
-                    resolveTokenRequest(token);
+                    if (token != null) {
+                        resolveTokenRequest(token);
+                    } else {
+                        if (isViewAttached()) {
+                            getView().finishCardStorageFlow(true, accessToken);
+                        }
+                    }
                 }
 
                 @Override
@@ -149,13 +167,15 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onSuccess(final Card card) {
                     if (isViewAttached()) {
-                        getView().finishCardStorageFlow(false, accessToken);
+                        getView().finishCardStorageFlow(card == null, accessToken);
                     }
                 }
 
                 @Override
                 public void onFailure(final MercadoPagoError error) {
-                    getView().finishCardStorageFlow(true, accessToken);
+                    if (isViewAttached()) {
+                        getView().finishCardStorageFlow(true, accessToken);
+                    }
                 }
             });
     }

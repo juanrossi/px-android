@@ -861,8 +861,8 @@ public class GuessingCardPaymentPresenterTest {
         }
 
         @Override
-        public void finishCardStorageFlow(final boolean isError) {
-            // Empty body
+        public void finishCardStorageFlow(final boolean isError, final String accessToken) {
+            // Empty Body
         }
 
         @Override
