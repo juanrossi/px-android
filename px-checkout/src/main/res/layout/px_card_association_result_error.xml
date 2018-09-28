@@ -4,13 +4,12 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:weightSum="1">
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.85"
         android:background="@color/ui_components_warning_color"
         android:gravity="center"
         android:orientation="vertical"
@@ -48,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px_xxxs_margin"
             android:gravity="center_horizontal"
-            android:text="Algo salió mal"
+            android:text="@string/px_card_association_result_error_icon_text"
             android:textColor="@color/px_white"
             android:textSize="@dimen/px_xs_text"/>
 
@@ -57,28 +56,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px_s_margin"
             android:gravity="center_horizontal"
-            android:text="No pudimos cargar los datos de tu tarjeta"
+            android:text="@string/px_card_association_result_error_text"
             android:textColor="@color/px_white"
             android:textSize="@dimen/px_xxxl_text"/>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        >
 
         <com.mercadolibre.android.ui.widgets.MeliButton
             android:id="@+id/mpsdkCardAssociationResultRetryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/px_xs_margin"
+            android:layout_margin="@dimen/px_s_margin"
             android:gravity="bottom"
-            android:text="Intentar de nuevo"
+            android:text="@string/px_card_association_result_error_retry_button_text"
             app:state="normal"
             app:type="actionPrimary"/>
 
@@ -87,9 +78,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/px_xs_margin"
-            android:text="Ir al Inicio"
+            android:layout_marginBottom="@dimen/px_xs_margin"
+            android:text="@string/px_card_association_result_go_back_button_text"
             app:state="normal"
             app:type="optionPrimary"/>
-    </LinearLayout>
 </LinearLayout>

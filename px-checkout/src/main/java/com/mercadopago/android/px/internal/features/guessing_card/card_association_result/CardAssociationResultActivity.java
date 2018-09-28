@@ -40,21 +40,22 @@ public class CardAssociationResultActivity extends AppCompatActivity {
 
         if (isError) {
             setContentView(R.layout.px_card_association_result_error);
+
+            // Retry button is only present in error screen
+            final MeliButton retryButton = findViewById(R.id.mpsdkCardAssociationResultRetryButton);
+            retryButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    GuessingCardActivity.restartGuessingCardActivityForStorage(CardAssociationResultActivity.this,
+                        accessToken);
+                    finish();
+                }
+            });
         } else {
             setContentView(R.layout.px_card_association_result_success);
         }
 
         setupStatusBarColor(isError);
-
-        final MeliButton retryButton = findViewById(R.id.mpsdkCardAssociationResultRetryButton);
-        retryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                GuessingCardActivity.restartGuessingCardActivityForStorage(CardAssociationResultActivity.this,
-                    accessToken);
-                finish();
-            }
-        });
 
         final MeliButton exitButton = findViewById(R.id.mpsdkCardAssociationResultExitButton);
         exitButton.setOnClickListener(new View.OnClickListener() {

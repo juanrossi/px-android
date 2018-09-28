@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Card association -->
+    <string name="px_card_association_result_success_text">¡Listo! Tu tarjeta quedó guardada.\nPodés usarla cuando quieras.</string>
+    <string name="px_card_association_result_go_back_button_text">Ir a Mis Tarjetas</string>
+    <string name="px_card_association_result_error_icon_text">Algo salió mal…</string>
+    <string name="px_card_association_result_error_text">No pudimos cargar los datos de tu tarjeta</string>
+    <string name="px_card_association_result_error_retry_button_text">Intentar de nuevo</string>
+
     <!-- One tap -->
     <string name="px_payment_detail_title_modal">Detalle</string>
     <string name="px_processing_payment_button">Procesando tu pago</string>
