@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Card association -->
-    <string name="px_card_association_result_success_text">¡Listo! Tu tarjeta quedó guardada.\nPodés usarla cuando quieras.</string>
+    <string name="px_card_association_result_success_text">¡Listo! Tu tarjeta quedó guardada</string>
     <string name="px_card_association_result_go_back_button_text">Ir a Mis Tarjetas</string>
     <string name="px_card_association_result_error_icon_text">Algo salió mal…</string>
     <string name="px_card_association_result_error_text">No pudimos cargar los datos de tu tarjeta</string>

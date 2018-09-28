@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Card association -->
-    <string name="px_card_association_result_success_text">Done! Your card has been saved.\nYou may use it whenever you wish.</string>
-    <string name="px_card_association_result_go_back_button_text">Back to home</string>
+    <string name="px_card_association_result_success_text">Done! Your card has been saved</string>
+    <string name="px_card_association_result_go_back_button_text">Go to My Cards</string>
     <string name="px_card_association_result_error_icon_text">Something went wrong…</string>
     <string name="px_card_association_result_error_text">We couldn\'t load your card details</string>
     <string name="px_card_association_result_error_retry_button_text">Try again</string>
