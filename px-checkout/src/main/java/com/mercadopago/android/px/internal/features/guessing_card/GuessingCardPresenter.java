@@ -716,7 +716,6 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
         getView().restoreBlackInfoContainerView();
         getView().clearCardNumberInputLength();
         mEraseSpace = true;
-        setPaymentMethod(null);
         getView().clearSecurityCodeEditText();
         initializeCardToken();
         setIdentificationNumberRequired(true);

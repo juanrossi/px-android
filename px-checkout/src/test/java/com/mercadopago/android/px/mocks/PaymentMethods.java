@@ -70,6 +70,20 @@ public class PaymentMethods {
         return paymentMethodList;
     }
 
+    public static List<PaymentMethod> getCardPaymentMethodListMLA() {
+        List<PaymentMethod> cardPaymentMethods;
+        String json = ResourcesUtil.getStringResource("card_payment_methods.json");
+
+        try {
+            Type listType = new TypeToken<List<PaymentMethod>>() {
+            }.getType();
+            cardPaymentMethods = JsonUtil.getInstance().getGson().fromJson(json, listType);
+        } catch (Exception ex) {
+            cardPaymentMethods = null;
+        }
+        return cardPaymentMethods;
+    }
+
     public static List<PaymentMethod> getPaymentMethodListWithTwoOptions() {
         List<PaymentMethod> paymentMethodList;
         String json = ResourcesUtil.getStringResource("payment_methods_two_options.json");
