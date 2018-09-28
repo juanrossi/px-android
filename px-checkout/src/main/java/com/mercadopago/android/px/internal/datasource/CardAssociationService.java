@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.callbacks.MPCall;
 import com.mercadopago.android.px.internal.services.CardService;
 import com.mercadopago.android.px.model.Card;
+import com.mercadopago.android.px.tracking.internal.Settings;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +23,6 @@ public class CardAssociationService {
         paymentMethodBody.put("id", paymentMethodId);
         body.put("payment_method", paymentMethodBody);
 
-        //TODO remove BETA
-        return cardService.assignCard("beta", accessToken, body);
+        return cardService.assignCard(Settings.servicesVersion, accessToken, body);
     }
 }

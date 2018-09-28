@@ -72,9 +72,7 @@ public class CardAssociationResultActivity extends AppCompatActivity {
         } else {
             setResult(RESULT_OK);
         }
-
         finish();
-        overridePendingTransition(R.anim.px_no_change_animation, R.anim.px_slide_right_to_left_out);
     }
 
     private void setupStatusBarColor(final boolean isError) {
