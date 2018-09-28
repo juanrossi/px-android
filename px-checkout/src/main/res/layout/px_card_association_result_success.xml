@@ -8,7 +8,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.85"
         android:background="@color/ui_components_success_color"
         android:gravity="center"
         android:orientation="vertical"
@@ -46,51 +47,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px_s_margin"
             android:gravity="center_horizontal"
-            android:text="¡Listo! Tu tarjeta quedó guardada"
+            android:text="@string/px_card_association_result_success_text"
             android:textColor="@color/px_white"
             android:textSize="@dimen/px_xxxl_text"/>
+
     </LinearLayout>
-
-    <com.mercadopago.android.px.internal.view.MPTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/px_xxxl_margin"
-        android:text="Podés usarla cuando quieras."
-        android:textColor="@color/ui_meli_dark_grey"
-        android:textSize="@dimen/px_s_text"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px_xxxs_height"
-            android:background="@color/px_med_light_gray"/>
-
-        <com.mercadolibre.android.ui.widgets.MeliButton
-            android:id="@+id/mpsdkCardAssociationResultRetryButton"
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/px_xs_margin"
-            android:gravity="bottom"
-            android:text="Cargar otra tarjeta"
-            app:state="normal"
-            app:type="actionPrimary"/>
 
         <com.mercadolibre.android.ui.widgets.MeliButton
             android:id="@+id/mpsdkCardAssociationResultExitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/px_xs_margin"
+            android:layout_margin="@dimen/px_s_margin"
             android:gravity="bottom"
-            android:text="Ir al Inicio"
+            android:text="@string/px_card_association_result_go_back_button_text"
             app:state="normal"
-            app:type="optionPrimary"/>
+            app:type="actionPrimary"/>
     </LinearLayout>
-</LinearLayout>

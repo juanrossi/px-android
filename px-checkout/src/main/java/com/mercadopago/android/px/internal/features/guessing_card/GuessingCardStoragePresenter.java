@@ -21,7 +21,7 @@ import static com.mercadopago.android.px.internal.util.ApiUtil.RequestOrigin.GET
 public class GuessingCardStoragePresenter extends GuessingCardPresenter {
 
     /* default */ final MercadoPagoESC mercadoPagoESC;
-    private final String accessToken;
+    /* default */ final String accessToken;
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
     private final CardAssociationService cardAssociationService;
     private PaymentMethod currentPaymentMethod;
