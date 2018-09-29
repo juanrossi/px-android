@@ -167,7 +167,12 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onSuccess(final Card card) {
                     if (isViewAttached()) {
-                        getView().finishCardStorageFlow(card == null, accessToken);
+                        if(card != null){
+                            mercadoPagoESC.saveESC(card.getId(), token.getEsc());
+                            getView().finishCardStorageFlow(false, accessToken);
+                        } else {
+                            getView().finishCardStorageFlow(true, accessToken);
+                        }
                     }
                 }
 

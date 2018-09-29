@@ -54,6 +54,8 @@ public class GuessingCardStoragePresenterTest {
     private static final String DUMMY_ACCESS_TOKEN =
         "TEST-8331125484710872-100611-d91fdace2a0a6e42293927d3289b53c3__LC_LB__-99037920";
     private static final String DUMMY_TOKEN_ID = "123";
+    private static final String DUMMY_CARD_ID = "1234567890";
+    private static final String DUMMY_TOKEN_ESC = "ABCDEFGH";
     final List<PaymentMethod> cardPaymentMethodListMLA = PaymentMethods.getCardPaymentMethodListMLA();
     private GuessingCardStoragePresenter presenter;
     @Mock private CardPaymentMethodRepository cardPaymentMethodRepository;
@@ -298,7 +300,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifAssociateCardThenSaveEsc() {
+    public void ifAssociateCardThenSaveEscAndFinish() {
 
         initializePresenterWithValidCardPaymentMethods();
         final List<PaymentMethod> mockedGuessedPaymentMethods = new ArrayList<>();
@@ -308,15 +310,19 @@ public class GuessingCardStoragePresenterTest {
 
         final Token token = new Token();
         token.setId(DUMMY_TOKEN_ID);
+        token.setEsc(DUMMY_TOKEN_ESC);
 
         mockTokenCall(token, true);
+        final Card stubCard = new Card();
+        stubCard.setId(DUMMY_CARD_ID);
         when(cardAssociationService
             .associateCardToUser(DUMMY_ACCESS_TOKEN, DUMMY_TOKEN_ID, mockedGuessedPaymentMethods.get(0).getId()))
-            .thenReturn(new StubSuccessMpCall<>(new Card()));
+            .thenReturn(new StubSuccessMpCall<>(stubCard));
 
         presenter.createToken();
 
-        verify(guessingCardActivityView).finishCardStorageFlow(true, DUMMY_ACCESS_TOKEN);
+        verify(mercadoPagoESC).saveESC(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
+        verify(guessingCardActivityView).finishCardStorageFlow(false, DUMMY_ACCESS_TOKEN);
     }
 
     // --------- Helper methods ----------- //
