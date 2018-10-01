@@ -36,15 +36,6 @@ public class SelectCheckoutActivity extends AppCompatActivity {
             new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.setAdapter(new SelectionAdapter(getOptions()));
         recyclerView.addItemDecoration(dividerItemDecoration);
-
-        final Button button = findViewById(R.id.new_card);
-        //TODO: REMOVE
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                MercadoPagoCardStorage.startCardStorageFlow(SelectCheckoutActivity.this, "APP_USR-7092-092615-2c5d3e38596696b6703e342f02edf388-340739439", 99);
-            }
-        });
     }
 
     @Override
