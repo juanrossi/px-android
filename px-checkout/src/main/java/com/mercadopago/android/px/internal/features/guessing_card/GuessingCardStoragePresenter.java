@@ -77,7 +77,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 public void onSuccess(final List<IdentificationType> identificationTypes) {
                     if (isViewAttached()) {
                         if (!identificationTypes.isEmpty()) {
-                            getView().finishCardStorageFlowWithError(accessToken);
+                            resolveIdentificationTypes(identificationTypes);
                         } else {
                             getView().finishCardStorageFlowWithError(accessToken);
                         }
