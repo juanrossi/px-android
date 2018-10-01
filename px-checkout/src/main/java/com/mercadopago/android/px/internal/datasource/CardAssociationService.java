@@ -2,9 +2,9 @@ package com.mercadopago.android.px.internal.datasource;
 
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.callbacks.MPCall;
+import com.mercadopago.android.px.internal.core.Settings;
 import com.mercadopago.android.px.internal.services.CardService;
 import com.mercadopago.android.px.model.Card;
-import com.mercadopago.android.px.tracking.internal.Settings;
 import java.util.HashMap;
 import java.util.Map;
 

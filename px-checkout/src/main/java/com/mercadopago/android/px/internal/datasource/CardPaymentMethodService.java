@@ -2,10 +2,10 @@ package com.mercadopago.android.px.internal.datasource;
 
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.callbacks.MPCall;
+import com.mercadopago.android.px.internal.core.Settings;
 import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.services.PaymentService;
 import com.mercadopago.android.px.model.PaymentMethod;
-import com.mercadopago.android.px.tracking.internal.Settings;
 import java.util.List;
 
 public class CardPaymentMethodService implements CardPaymentMethodRepository {

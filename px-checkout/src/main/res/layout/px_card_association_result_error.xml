@@ -35,15 +35,15 @@
             <ImageView
                 android:layout_width="@dimen/px_l_alternative_margin"
                 android:layout_height="@dimen/px_l_alternative_margin"
-                android:layout_gravity="bottom|right"
+                android:layout_gravity="bottom|end"
                 android:layout_marginBottom="@dimen/px_xs_alternative_1_margin"
                 android:src="@drawable/px_badge_warning"
-                tools:ignore="ContentDescription,RtlHardcoded"/>
+                tools:ignore="ContentDescription"/>
 
         </FrameLayout>
 
         <com.mercadopago.android.px.internal.view.MPTextView
-            android:layout_width="250dp"
+            android:layout_width="@dimen/px_card_size_extra_big_width"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px_xxxs_margin"
             android:gravity="center_horizontal"
@@ -52,7 +52,7 @@
             android:textSize="@dimen/px_xs_text"/>
 
         <com.mercadopago.android.px.internal.view.MPTextView
-            android:layout_width="300dp"
+            android:layout_width="@dimen/px_card_size_extra_big_width"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px_s_margin"
             android:gravity="center_horizontal"
