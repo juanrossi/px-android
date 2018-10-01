@@ -76,10 +76,10 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onSuccess(final List<IdentificationType> identificationTypes) {
                     if (isViewAttached()) {
-                        if (identificationTypes != null && !identificationTypes.isEmpty()) {
-                            resolveIdentificationTypes(identificationTypes);
+                        if (!identificationTypes.isEmpty()) {
+                            getView().finishCardStorageFlowWithError(accessToken);
                         } else {
-                            getView().finishCardStorageFlow(true, accessToken);
+                            getView().finishCardStorageFlowWithError(accessToken);
                         }
                     }
                 }
@@ -87,7 +87,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onFailure(final MercadoPagoError error) {
                     if (isViewAttached()) {
-                        getView().finishCardStorageFlow(true, accessToken);
+                        getView().finishCardStorageFlowWithError(accessToken);
                     }
                 }
             });
@@ -107,7 +107,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                                 PaymentMethodGuessingController(paymentMethods, null, null);
                             startGuessingForm();
                         } else {
-                            getView().finishCardStorageFlow(true, accessToken);
+                            getView().finishCardStorageFlowWithError(accessToken);
                         }
                     }
                 }
@@ -115,7 +115,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onFailure(final MercadoPagoError error) {
                     if (isViewAttached()) {
-                        getView().finishCardStorageFlow(true, accessToken);
+                        getView().finishCardStorageFlowWithError(accessToken);
                     }
                 }
             }
@@ -141,7 +141,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                         resolveTokenRequest(token);
                     } else {
                         if (isViewAttached()) {
-                            getView().finishCardStorageFlow(true, accessToken);
+                            getView().finishCardStorageFlowWithError(accessToken);
                         }
                     }
                 }
@@ -152,7 +152,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                         if (isIdentificationNumberWrong(error)) {
                             showIdentificationNumberError();
                         } else {
-                            getView().finishCardStorageFlow(true, accessToken);
+                            getView().finishCardStorageFlowWithError(accessToken);
                         }
                     }
                 }
@@ -167,11 +167,11 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onSuccess(final Card card) {
                     if (isViewAttached()) {
-                        if(card != null){
+                        if (card != null) {
                             mercadoPagoESC.saveESC(card.getId(), token.getEsc());
-                            getView().finishCardStorageFlow(false, accessToken);
+                            getView().finishCardStorageFlowWithSuccess();
                         } else {
-                            getView().finishCardStorageFlow(true, accessToken);
+                            getView().finishCardStorageFlowWithError(accessToken);
                         }
                     }
                 }
@@ -179,7 +179,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
                 @Override
                 public void onFailure(final MercadoPagoError error) {
                     if (isViewAttached()) {
-                        getView().finishCardStorageFlow(true, accessToken);
+                        getView().finishCardStorageFlowWithError(accessToken);
                     }
                 }
             });

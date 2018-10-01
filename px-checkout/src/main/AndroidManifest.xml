@@ -82,7 +82,10 @@
             android:name=".internal.features.BankDealDetailActivity"
             android:theme="@style/Theme.MercadoPagoTheme.NoActionBar"/>
         <activity
-            android:name=".internal.features.guessing_card.card_association_result.CardAssociationResultActivity"
+            android:name=".internal.features.guessing_card.card_association_result.CardAssociationResultSuccessActivity"
+            android:theme="@style/Theme.MercadoPagoTheme.NoActionBar"/>
+        <activity
+            android:name=".internal.features.guessing_card.card_association_result.CardAssociationResultErrorActivity"
             android:theme="@style/Theme.MercadoPagoTheme.NoActionBar"/>
     </application>
 

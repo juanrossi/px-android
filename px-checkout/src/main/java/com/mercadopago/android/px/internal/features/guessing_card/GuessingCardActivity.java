@@ -45,7 +45,8 @@ import com.mercadopago.android.px.internal.features.card.CardIdentificationNumbe
 import com.mercadopago.android.px.internal.features.card.CardNumberTextWatcher;
 import com.mercadopago.android.px.internal.features.card.CardSecurityCodeTextWatcher;
 import com.mercadopago.android.px.internal.features.card.CardholderNameTextWatcher;
-import com.mercadopago.android.px.internal.features.guessing_card.card_association_result.CardAssociationResultActivity;
+import com.mercadopago.android.px.internal.features.guessing_card.card_association_result.CardAssociationResultErrorActivity;
+import com.mercadopago.android.px.internal.features.guessing_card.card_association_result.CardAssociationResultSuccessActivity;
 import com.mercadopago.android.px.internal.features.providers.GuessingCardProviderImpl;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
@@ -1398,8 +1399,15 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     }
 
     @Override
-    public void finishCardStorageFlow(final boolean isError, final String accessToken) {
-        CardAssociationResultActivity.startCardAssociationResultActivity(this, isError, accessToken);
+    public void finishCardStorageFlowWithSuccess() {
+        CardAssociationResultSuccessActivity.startCardAssociationResultSuccessActivity(this);
+        finish();
+        overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
+    }
+
+    @Override
+    public void finishCardStorageFlowWithError(final String accessToken) {
+        CardAssociationResultErrorActivity.startCardAssociationResultErrorActivity(this, accessToken);
         finish();
         overridePendingTransition(R.anim.px_slide_right_to_left_in, R.anim.px_slide_right_to_left_out);
     }

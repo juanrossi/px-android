@@ -52,4 +52,14 @@ public class StatusBarDecorator {
             window.setStatusBarColor(Color.HSVToColor(hsv));
         }
     }
+
+//    private void setupStatusBarColor(final boolean isError) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            final int color = isError ? R.color.px_orange_status_bar : R.color.px_green_status_bar;
+//            final int compatColor = ContextCompat.getColor(this, color);
+//            final Window window = getWindow();
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.setStatusBarColor(compatColor);
+//        }
+//    }
 }
