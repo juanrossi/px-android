@@ -172,16 +172,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         callerActivity.startActivityForResult(intent, Constants.Activities.GUESSING_CARD_FOR_PAYMENT_REQUEST_CODE);
     }
 
-    /* default */
-    public static void restartGuessingCardActivityForStorage(final Activity callerActivity,
-        final String accessToken) {
-        final Intent intent = new Intent(callerActivity, GuessingCardActivity.class);
-        intent.putExtra(PARAM_ACCESS_TOKEN, accessToken);
-        intent.putExtra(GuessingCardActivity.PARAM_INCLUDES_PAYMENT, false);
-        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        callerActivity.startActivity(intent);
-    }
-
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

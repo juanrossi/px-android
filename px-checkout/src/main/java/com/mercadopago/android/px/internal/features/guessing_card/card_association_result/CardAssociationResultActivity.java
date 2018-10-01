@@ -46,8 +46,13 @@ public class CardAssociationResultActivity extends AppCompatActivity {
             retryButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    GuessingCardActivity.restartGuessingCardActivityForStorage(CardAssociationResultActivity.this,
-                        accessToken);
+                    // Call GuessingCard flow again forwarding the result
+                    final Intent intent = new Intent(CardAssociationResultActivity.this, GuessingCardActivity.class);
+                    intent.putExtra(PARAM_ACCESS_TOKEN, accessToken);
+                    intent.putExtra(GuessingCardActivity.PARAM_INCLUDES_PAYMENT, false);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                    startActivity(intent);
+
                     finish();
                 }
             });
