@@ -62,7 +62,11 @@ public class SampleTopFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView textView = view.findViewById(R.id.textView);
-        ParcelableArgument arg = getArguments().getParcelable(SOME_PARCELABLE);
-        textView.setText(arg.label);
+        if (getArguments() != null && getArguments().containsKey(SOME_PARCELABLE)) {
+            ParcelableArgument arg = getArguments().getParcelable(SOME_PARCELABLE);
+            textView.setText(arg.label);
+        } else {
+            textView.setText("NO ARGS!");
+        }
     }
 }

@@ -18,12 +18,14 @@ public class AdvancedConfiguration implements Serializable {
     private final boolean escEnabled;
     @NonNull private final PaymentResultScreenConfiguration paymentResultScreenConfiguration;
     @NonNull private final ReviewAndConfirmConfiguration reviewAndConfirmConfiguration;
+    @NonNull private final DynamicFragmentConfiguration dynamicFragmentConfiguration;
 
     /* default */ AdvancedConfiguration(final Builder builder) {
         bankDealsEnabled = builder.bankDealsEnabled;
         escEnabled = builder.escEnabled;
         paymentResultScreenConfiguration = builder.paymentResultScreenConfiguration;
         reviewAndConfirmConfiguration = builder.reviewAndConfirmConfiguration;
+        dynamicFragmentConfiguration = builder.dynamicFragmentConfiguration;
     }
 
     public boolean isBankDealsEnabled() {
@@ -32,6 +34,11 @@ public class AdvancedConfiguration implements Serializable {
 
     public boolean isEscEnabled() {
         return escEnabled;
+    }
+
+    @NonNull
+    public DynamicFragmentConfiguration getDynamicFragmentConfiguration() {
+        return dynamicFragmentConfiguration;
     }
 
     @NonNull
@@ -52,6 +59,8 @@ public class AdvancedConfiguration implements Serializable {
             new PaymentResultScreenConfiguration.Builder().build();
         /* default */ @NonNull ReviewAndConfirmConfiguration reviewAndConfirmConfiguration =
             new ReviewAndConfirmConfiguration.Builder().build();
+        /* default */ @NonNull DynamicFragmentConfiguration dynamicFragmentConfiguration =
+            new DynamicFragmentConfiguration.Builder().build();
 
         /**
          * Add the possibility to configure Bank's deals behaviour.
@@ -103,6 +112,19 @@ public class AdvancedConfiguration implements Serializable {
         public Builder setReviewAndConfirmConfiguration(
             @NonNull final ReviewAndConfirmConfiguration reviewAndConfirmConfiguration) {
             this.reviewAndConfirmConfiguration = reviewAndConfirmConfiguration;
+            return this;
+        }
+
+        /**
+         * Enable to preset configurations to customize dynamic visualization on
+         * several screen locations see {@link DynamicFragmentConfiguration.Builder}
+         *
+         * @param dynamicFragmentConfiguration your custom preferences.
+         * @return builder to keep operating
+         */
+        public Builder setDynamicFragmentConfiguration(
+            @NonNull final DynamicFragmentConfiguration dynamicFragmentConfiguration) {
+            this.dynamicFragmentConfiguration = dynamicFragmentConfiguration;
             return this;
         }
 

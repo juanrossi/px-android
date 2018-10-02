@@ -27,16 +27,34 @@ public final class FragmentUtil {
     }
 
     public static void addFragmentInside(@NonNull final ViewGroup viewGroup,
+        @IdRes final int resId, @NonNull final Fragment fragment) {
+        if (viewGroup.getContext() instanceof AppCompatActivity) {
+            addFragmentInside(viewGroup, (AppCompatActivity) viewGroup.getContext(), resId, fragment);
+        } else {
+            throw new IllegalArgumentException("Container context is not a activity");
+        }
+    }
+
+    private static void addFragmentInside(@NonNull final ViewGroup viewGroup,
         @NonNull final AppCompatActivity context,
         @IdRes final int resId,
-        @NonNull String zClassFragmentName,
+        @NonNull final String zClassFragmentName,
         @Nullable final Bundle topArgs) {
+
+        final Fragment fragment = FragmentUtil.createInstance(zClassFragmentName);
+        fragment.setArguments(topArgs);
+
+        addFragmentInside(viewGroup, context, resId, fragment);
+    }
+
+    private static void addFragmentInside(@NonNull final ViewGroup viewGroup,
+        @NonNull final AppCompatActivity context,
+        @IdRes final int resId,
+        @NonNull final Fragment fragment) {
 
         final FrameLayout frameLayout = new FrameLayout(context);
         frameLayout.setId(resId);
         viewGroup.addView(frameLayout);
-        Fragment fragment = FragmentUtil.createInstance(zClassFragmentName);
-        fragment.setArguments(topArgs);
         context.getSupportFragmentManager()
             .beginTransaction()
             .replace(resId, fragment)
@@ -46,13 +64,13 @@ public final class FragmentUtil {
     @NonNull
     private static Fragment createInstance(@NonNull final String className) {
         try {
-            Class<Fragment> clazz = (Class<Fragment>) Class.forName(className);
+            final Class<Fragment> clazz = (Class<Fragment>) Class.forName(className);
             return clazz.newInstance();
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             e.printStackTrace();
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
             e.printStackTrace();
         }
 
