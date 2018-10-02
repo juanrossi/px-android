@@ -5,6 +5,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import com.mercadopago.android.px.core.DynamicFragmentCreator;
 import com.mercadopago.android.px.model.ExternalFragment;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,9 +13,11 @@ import java.math.BigDecimal;
 @SuppressWarnings("unused")
 public class ReviewAndConfirmConfiguration implements Serializable {
 
+    @Deprecated
     @Nullable
     private final ExternalFragment topFragment;
 
+    @Deprecated
     @Nullable
     private final ExternalFragment bottomFragment;
 
@@ -192,9 +195,11 @@ public class ReviewAndConfirmConfiguration implements Serializable {
 
     public static final class Builder {
 
+        @Deprecated
         @Nullable
         ExternalFragment topFragment;
 
+        @Deprecated
         @Nullable
         ExternalFragment bottomFragment;
 
@@ -231,7 +236,10 @@ public class ReviewAndConfirmConfiguration implements Serializable {
          * @param zClass Fragment class
          * @param args Bundle for fragment
          * @return builder
+         * @deprecated will be deprecated on V5 {Replaced by
+         *    {@link DynamicFragmentConfiguration.Builder#addDynamicCreator(DynamicFragmentConfiguration.FragmentLocation, DynamicFragmentCreator)}
          */
+        @Deprecated
         public Builder setTopFragment(@NonNull final Class<? extends Fragment> zClass, @Nullable final Bundle args) {
             topFragment = new ExternalFragment(zClass, args);
             return this;
@@ -242,8 +250,10 @@ public class ReviewAndConfirmConfiguration implements Serializable {
          *
          * @param zClass Fragment class
          * @param args Bundle for fragment
-         * @return builder
+         * @deprecated will be deprecated on V5 {Replaced by
+         *    {@link DynamicFragmentConfiguration.Builder#addDynamicCreator(DynamicFragmentConfiguration.FragmentLocation, DynamicFragmentCreator)}
          */
+        @Deprecated
         public Builder setBottomFragment(@NonNull final Class<? extends Fragment> zClass, @Nullable final Bundle args) {
             bottomFragment = new ExternalFragment(zClass, args);
             return this;

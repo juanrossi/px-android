@@ -3,13 +3,17 @@ package com.mercadopago.android.px.utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.widget.Toast;
+import com.mercadopago.SampleTopFragment;
 import com.mercadopago.android.px.configuration.AdvancedConfiguration;
+import com.mercadopago.android.px.configuration.DynamicFragmentConfiguration;
 import com.mercadopago.android.px.configuration.ReviewAndConfirmConfiguration;
+import com.mercadopago.android.px.core.DynamicFragmentCreator;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.core.MercadoPagoCheckout.Builder;
 import com.mercadopago.android.px.internal.util.ViewUtils;
@@ -180,6 +184,31 @@ public final class ExamplesUtils {
         return new Builder(DUMMY_MERCHANT_PUBLIC_KEY, DUMMY_PREFERENCE_ID_WITH_TWO_ITEMS)
             .setAdvancedConfiguration(new AdvancedConfiguration.Builder()
                 .setReviewAndConfirmConfiguration(preferences)
+                .setDynamicFragmentConfiguration(new DynamicFragmentConfiguration.Builder()
+                    .addDynamicCreator(
+                        DynamicFragmentConfiguration.FragmentLocation.TOP_PAYMENT_METHOD_REVIEW_AND_CONFIRM,
+                        new DynamicFragmentCreator() {
+                            @Override
+                            public boolean shouldShowFragment(@NonNull final CheckoutData checkoutData) {
+                                return true;
+                            }
+
+                            @NonNull
+                            @Override
+                            public Fragment create(@NonNull final CheckoutData checkoutData) {
+                                return new SampleTopFragment();
+                            }
+
+                            @Override
+                            public int describeContents() {
+                                return 0;
+                            }
+
+                            @Override
+                            public void writeToParcel(final Parcel dest, final int flags) {
+
+                            }
+                        }).build())
                 .build());
     }
 

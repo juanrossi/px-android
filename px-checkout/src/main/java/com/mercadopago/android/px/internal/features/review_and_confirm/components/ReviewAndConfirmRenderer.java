@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.configuration.DynamicFragmentConfiguration;
+import com.mercadopago.android.px.core.DynamicFragmentCreator;
+import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.review_and_confirm.components.actions.ChangePaymentMethodAction;
 import com.mercadopago.android.px.internal.features.review_and_confirm.components.items.ReviewItems;
 import com.mercadopago.android.px.internal.features.review_and_confirm.components.payment_method.PaymentMethodComponent;
@@ -16,6 +19,8 @@ import com.mercadopago.android.px.internal.view.ActionDispatcher;
 import com.mercadopago.android.px.internal.view.Renderer;
 import com.mercadopago.android.px.internal.view.RendererFactory;
 import com.mercadopago.android.px.internal.view.TermsAndConditionsComponent;
+import com.mercadopago.android.px.model.PaymentMethod;
+import com.mercadopago.android.px.preferences.CheckoutPreference;
 
 public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer> {
 
@@ -42,12 +47,46 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
                 component.props.preferences.getTopFragment());
         }
 
+        final Session session = Session.getSession(context);
+        final CheckoutPreference checkoutPreference =
+            session.getConfigurationModule().getPaymentSettings().getCheckoutPreference();
+        final PaymentMethod paymentMethod =
+            session.getConfigurationModule().getUserSelectionRepository().getPaymentMethod();
+        final DynamicFragmentCreator.CheckoutData data =
+            new DynamicFragmentCreator.CheckoutData(checkoutPreference, paymentMethod);
+
+        if (component.props.dynamicFragments
+            .hasCreatorFor(DynamicFragmentConfiguration.FragmentLocation.TOP_PAYMENT_METHOD_REVIEW_AND_CONFIRM)) {
+
+            final DynamicFragmentCreator fragmentCreator = component.props.dynamicFragments.getCreatorFor(
+                DynamicFragmentConfiguration.FragmentLocation.TOP_PAYMENT_METHOD_REVIEW_AND_CONFIRM);
+
+            if (fragmentCreator.shouldShowFragment(data)) {
+                FragmentUtil.addFragmentInside(linearLayout,
+                    R.id.px_fragment_container_dynamic_top,
+                    fragmentCreator.create(data));
+            }
+        }
+
         addPaymentMethod(component.props.paymentModel, component.getDispatcher(), linearLayout);
 
         if (component.props.preferences.hasCustomBottomView()) {
             FragmentUtil.addFragmentInside(linearLayout,
                 R.id.px_fragment_container_bottom,
                 component.props.preferences.getBottomFragment());
+        }
+
+        if (component.props.dynamicFragments
+            .hasCreatorFor(DynamicFragmentConfiguration.FragmentLocation.BOTTOM_PAYMENT_METHOD_REVIEW_AND_CONFIRM)) {
+
+            final DynamicFragmentCreator fragmentCreator = component.props.dynamicFragments.getCreatorFor(
+                DynamicFragmentConfiguration.FragmentLocation.BOTTOM_PAYMENT_METHOD_REVIEW_AND_CONFIRM);
+
+            if (fragmentCreator.shouldShowFragment(data)) {
+                FragmentUtil.addFragmentInside(linearLayout,
+                    R.id.px_fragment_container_dynamic_bottom,
+                    fragmentCreator.create(data));
+            }
         }
 
         if (component.hasMercadoPagoTermsAndConditions()) {

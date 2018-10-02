@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import com.mercadolibre.android.ui.widgets.MeliSnackbar;
 import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.configuration.AdvancedConfiguration;
 import com.mercadopago.android.px.configuration.ReviewAndConfirmConfiguration;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.Constants;
@@ -183,7 +184,6 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
                     resolveCardVaultRequest(resultCode, data);
                 }
             });
-
             break;
         case ErrorUtil.ERROR_REQUEST_CODE:
             resolveErrorRequest(resultCode, data);
@@ -310,9 +310,12 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
             final TermsAndConditionsModel discountTermsAndConditions =
                 extras.getParcelable(EXTRA_DISCOUNT_TERMS_AND_CONDITIONS);
 
+            final Session session = Session.getSession(this);
+            final AdvancedConfiguration advancedConfiguration = session.getConfigurationModule().getPaymentSettings()
+                .getAdvancedConfiguration();
+
             final ReviewAndConfirmConfiguration reviewAndConfirmConfiguration =
-                Session.getSession(this).getConfigurationModule().getPaymentSettings()
-                    .getAdvancedConfiguration().getReviewAndConfirmConfiguration();
+                advancedConfiguration.getReviewAndConfirmConfiguration();
 
             Tracker.trackReviewAndConfirmScreen(getApplicationContext(),
                 paymentModel);
@@ -320,6 +323,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
                 paymentModel,
                 summaryModel,
                 reviewAndConfirmConfiguration,
+                advancedConfiguration.getDynamicFragmentConfiguration(),
                 itemsModel, discountTermsAndConditions);
         }
 
