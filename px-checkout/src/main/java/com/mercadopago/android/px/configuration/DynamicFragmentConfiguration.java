@@ -6,6 +6,8 @@ import com.mercadopago.android.px.core.DynamicFragmentCreator;
 import java.util.HashMap;
 import java.util.Map;
 
+// Used by single player to inform charges and other payment special information.
+// Single player usecase depends on amount and payment method.
 @SuppressWarnings("unused")
 public final class DynamicFragmentConfiguration {
 

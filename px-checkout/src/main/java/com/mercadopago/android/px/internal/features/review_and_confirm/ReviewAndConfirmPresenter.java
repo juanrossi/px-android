@@ -1,7 +1,8 @@
 package com.mercadopago.android.px.internal.features.review_and_confirm;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import com.mercadopago.android.px.configuration.DynamicDialogConfiguration;
+import com.mercadopago.android.px.core.DynamicDialogCreator;
 import com.mercadopago.android.px.internal.base.DefaultProvider;
 import com.mercadopago.android.px.internal.base.MvpPresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
@@ -16,6 +17,7 @@ import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
 
 /* default */ final class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirm.View, DefaultProvider>
@@ -23,13 +25,19 @@ import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
 
     @NonNull private final PaymentRepository paymentRepository;
     @NonNull private final BusinessModelMapper businessModelMapper;
+    @NonNull private final DynamicDialogConfiguration dynamicDialogConfiguration;
+    @NonNull private final CheckoutPreference checkoutPreference;
     private final ExplodeDecoratorMapper explodeDecoratorMapper;
     private FailureRecovery recovery;
 
     /* default */ ReviewAndConfirmPresenter(@NonNull final PaymentRepository paymentRepository,
-        @NonNull final BusinessModelMapper businessModelMapper) {
+        @NonNull final BusinessModelMapper businessModelMapper,
+        @NonNull final DynamicDialogConfiguration dynamicDialogConfiguration,
+        @NonNull final CheckoutPreference checkoutPreference) {
         this.paymentRepository = paymentRepository;
         this.businessModelMapper = businessModelMapper;
+        this.dynamicDialogConfiguration = dynamicDialogConfiguration;
+        this.checkoutPreference = checkoutPreference;
         explodeDecoratorMapper = new ExplodeDecoratorMapper();
     }
 
@@ -37,6 +45,18 @@ import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
     public void attachView(final ReviewAndConfirm.View view) {
         super.attachView(view);
         paymentRepository.attach(this);
+        resolveDynamicDialog(DynamicDialogConfiguration.DialogLocation.ENTER_REVIEW_AND_CONFIRM);
+    }
+
+    private void resolveDynamicDialog(@NonNull final DynamicDialogConfiguration.DialogLocation location) {
+        final DynamicDialogCreator.CheckoutData checkoutData =
+            new DynamicDialogCreator.CheckoutData(checkoutPreference, paymentRepository.getPaymentData());
+        if (dynamicDialogConfiguration.hasCreatorFor(location) &&
+            dynamicDialogConfiguration.getCreatorFor(location).shouldShowDialog(checkoutData)) {
+            getView().showDynamicDialog(
+                dynamicDialogConfiguration.getCreatorFor(location)
+                    .create(checkoutData));
+        }
     }
 
     @Override

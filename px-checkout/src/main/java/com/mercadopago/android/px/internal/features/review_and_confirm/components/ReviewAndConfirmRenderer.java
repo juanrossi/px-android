@@ -50,10 +50,10 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
         final Session session = Session.getSession(context);
         final CheckoutPreference checkoutPreference =
             session.getConfigurationModule().getPaymentSettings().getCheckoutPreference();
-        final PaymentMethod paymentMethod =
-            session.getConfigurationModule().getUserSelectionRepository().getPaymentMethod();
+
+            ;
         final DynamicFragmentCreator.CheckoutData data =
-            new DynamicFragmentCreator.CheckoutData(checkoutPreference, paymentMethod);
+            new DynamicFragmentCreator.CheckoutData(checkoutPreference, session.getPaymentRepository().getPaymentData());
 
         if (component.props.dynamicFragments
             .hasCreatorFor(DynamicFragmentConfiguration.FragmentLocation.TOP_PAYMENT_METHOD_REVIEW_AND_CONFIRM)) {
