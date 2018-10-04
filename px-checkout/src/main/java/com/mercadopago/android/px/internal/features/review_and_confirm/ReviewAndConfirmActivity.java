@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -68,6 +69,7 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     private static final String EXTRA_PUBLIC_KEY = "extra_public_key";
     private static final String EXTRA_ITEMS = "extra_items";
     private static final String EXTRA_DISCOUNT_TERMS_AND_CONDITIONS = "extra_discount_terms_and_conditions";
+    private static final String TAG_DYNAMIC_DIALOG = "tag_dynamic_dialog";
 
     /* default */ ReviewAndConfirmPresenter presenter;
 
@@ -126,7 +128,12 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         initializeViews();
         final Session session = Session.getSession(this);
         presenter = new ReviewAndConfirmPresenter(session.getPaymentRepository(),
-            session.getBusinessModelMapper());
+            session.getBusinessModelMapper(),
+            session.getConfigurationModule()
+                .getPaymentSettings()
+                .getAdvancedConfiguration()
+                .getDynamicDialogConfiguration(),
+            session.getConfigurationModule().getPaymentSettings().getCheckoutPreference());
         presenter.attachView(this);
 
         if (savedInstanceState == null) {
@@ -550,5 +557,10 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
         MeliSnackbar.make(floatingConfirmLayout, error.getMessage(), Snackbar.LENGTH_LONG,
             MeliSnackbar.SnackbarType.ERROR).show();
         Tracker.trackError(getApplicationContext(), error);
+    }
+
+    @Override
+    public void showDynamicDialog(final DialogFragment dialogFragment) {
+        dialogFragment.show(getSupportFragmentManager(), TAG_DYNAMIC_DIALOG);
     }
 }
