@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +18,7 @@ import com.mercadolibre.android.ui.widgets.MeliSnackbar;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.configuration.AdvancedConfiguration;
 import com.mercadopago.android.px.configuration.ReviewAndConfirmConfiguration;
+import com.mercadopago.android.px.core.DynamicDialogCreator;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.features.MercadoPagoBaseActivity;
@@ -166,8 +166,8 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
 
     @Override
     protected void onResume() {
-        presenter.attachView(this);
         super.onResume();
+        presenter.onViewResumed(this);
     }
 
     @Override
@@ -560,7 +560,10 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     }
 
     @Override
-    public void showDynamicDialog(final DialogFragment dialogFragment) {
-        dialogFragment.show(getSupportFragmentManager(), TAG_DYNAMIC_DIALOG);
+    public void showDynamicDialog(@NonNull final DynamicDialogCreator creator,
+        @NonNull final DynamicDialogCreator.CheckoutData checkoutData) {
+        if (creator.shouldShowDialog(this, checkoutData)) {
+            creator.create(this, checkoutData).show(getSupportFragmentManager(), TAG_DYNAMIC_DIALOG);
+        }
     }
 }

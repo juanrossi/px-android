@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.core;
 
+import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -29,12 +30,12 @@ public interface DynamicFragmentCreator extends Parcelable {
      * @param checkoutData
      * @return
      */
-    boolean shouldShowFragment(@NonNull final CheckoutData checkoutData);
+    boolean shouldShowFragment(@NonNull final Context context, @NonNull final CheckoutData checkoutData);
 
     /**
      * @param checkoutData available data
      * @return yourCustomDynamicFragment
      */
     @NonNull
-    Fragment create(@NonNull final CheckoutData checkoutData);
+    Fragment create(@NonNull final Context context, @NonNull final CheckoutData checkoutData);
 }

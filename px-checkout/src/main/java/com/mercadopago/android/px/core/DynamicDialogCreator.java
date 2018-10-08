@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.core;
 
+import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -27,14 +28,14 @@ public interface DynamicDialogCreator extends Parcelable {
      * asked to be shown.
      *
      * @param checkoutData
-     * @return
+     * @return if dialog should be shown.
      */
-    boolean shouldShowDialog(@NonNull final CheckoutData checkoutData);
+    boolean shouldShowDialog(@NonNull final Context context, @NonNull final CheckoutData checkoutData);
 
     /**
      * @param checkoutData available data
      * @return yourDialog
      */
     @NonNull
-    DialogFragment create(@NonNull final CheckoutData checkoutData);
+    DialogFragment create(@NonNull final Context context, @NonNull final CheckoutData checkoutData);
 }

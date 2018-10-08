@@ -19,7 +19,6 @@ import com.mercadopago.android.px.internal.view.ActionDispatcher;
 import com.mercadopago.android.px.internal.view.Renderer;
 import com.mercadopago.android.px.internal.view.RendererFactory;
 import com.mercadopago.android.px.internal.view.TermsAndConditionsComponent;
-import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 
 public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer> {
@@ -61,10 +60,10 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
             final DynamicFragmentCreator fragmentCreator = component.props.dynamicFragments.getCreatorFor(
                 DynamicFragmentConfiguration.FragmentLocation.TOP_PAYMENT_METHOD_REVIEW_AND_CONFIRM);
 
-            if (fragmentCreator.shouldShowFragment(data)) {
+            if (fragmentCreator.shouldShowFragment(context, data)) {
                 FragmentUtil.addFragmentInside(linearLayout,
                     R.id.px_fragment_container_dynamic_top,
-                    fragmentCreator.create(data));
+                    fragmentCreator.create(context, data));
             }
         }
 
@@ -82,10 +81,10 @@ public class ReviewAndConfirmRenderer extends Renderer<ReviewAndConfirmContainer
             final DynamicFragmentCreator fragmentCreator = component.props.dynamicFragments.getCreatorFor(
                 DynamicFragmentConfiguration.FragmentLocation.BOTTOM_PAYMENT_METHOD_REVIEW_AND_CONFIRM);
 
-            if (fragmentCreator.shouldShowFragment(data)) {
+            if (fragmentCreator.shouldShowFragment(context, data)) {
                 FragmentUtil.addFragmentInside(linearLayout,
                     R.id.px_fragment_container_dynamic_bottom,
-                    fragmentCreator.create(data));
+                    fragmentCreator.create(context, data));
             }
         }
 
