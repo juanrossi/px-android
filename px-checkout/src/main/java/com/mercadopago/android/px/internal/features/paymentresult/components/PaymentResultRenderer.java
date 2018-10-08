@@ -7,10 +7,6 @@ import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.view.Renderer;
 import com.mercadopago.android.px.internal.view.RendererFactory;
 
-/**
- * Created by vaserber on 10/20/17.
- */
-
 public class PaymentResultRenderer extends Renderer<PaymentResultContainer> {
 
     @Override

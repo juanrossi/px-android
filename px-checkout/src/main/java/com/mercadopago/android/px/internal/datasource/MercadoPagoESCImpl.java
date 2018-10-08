@@ -1,13 +1,10 @@
 package com.mercadopago.android.px.internal.datasource;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
-
-/**
- * Created by vaserber on 7/21/17.
- */
 
 public class MercadoPagoESCImpl implements MercadoPagoESC {
 
@@ -67,14 +64,13 @@ public class MercadoPagoESCImpl implements MercadoPagoESC {
         }
     }
 
+    @Nullable
     @Override
-    public String getESC(String cardId) {
+    public String getESC(final String cardId) {
         if (escEnabled) {
             try {
                 java.lang.reflect.Method getMethod;
-
                 if (actualClass != null) {
-
                     getMethod = actualClass.getClass().getMethod(METHOD_GET_ESC, String.class);
                     Object esc = getMethod.invoke(actualClass, cardId);
                     return (String) esc;
@@ -91,7 +87,7 @@ public class MercadoPagoESCImpl implements MercadoPagoESC {
     }
 
     @Override
-    public boolean saveESC(String cardId, String value) {
+    public boolean saveESC(final String cardId, final String value) {
         if (escEnabled) {
             try {
 

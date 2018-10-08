@@ -18,7 +18,7 @@ import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentResult;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
-import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
+import com.mercadopago.android.px.internal.viewmodel.mappers.BusinessModelMapper;
 
 /* default */ final class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirm.View, DefaultProvider>
     implements ReviewAndConfirm.Action {
@@ -61,7 +61,7 @@ import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
 
     @Override
     public void detachView() {
-        paymentRepository.detach();
+        paymentRepository.detach(this);
         super.detachView();
     }
 

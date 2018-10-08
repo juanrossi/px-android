@@ -27,7 +27,7 @@ public interface PaymentRepository {
 
     void attach(@NonNull final PaymentServiceHandler handler);
 
-    void detach();
+    void detach(@NonNull final PaymentServiceHandler handler);
 
     void storePayment(@NonNull final IPayment iPayment);
 

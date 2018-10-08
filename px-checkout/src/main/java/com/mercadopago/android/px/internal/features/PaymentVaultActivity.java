@@ -63,7 +63,7 @@ import java.util.List;
 import static com.mercadopago.android.px.core.MercadoPagoCheckout.EXTRA_ERROR;
 
 public class PaymentVaultActivity extends MercadoPagoBaseActivity
-        implements PaymentVaultView, DiscountListener {
+    implements PaymentVaultView, DiscountListener {
 
     public static final int COLUMN_SPACING_DP_VALUE = 20;
     public static final int COLUMNS = 2;
@@ -243,7 +243,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     }
 
     private List<PaymentMethodSearchViewController> createPluginItemsViewControllers(
-            final List<PaymentMethodInfo> infoItems) {
+        final List<PaymentMethodInfo> infoItems) {
         final PluginRepository pluginRepository = Session.getSession(this).getPluginRepository();
         final List<PaymentMethodSearchViewController> controllers = new ArrayList<>();
         for (final PaymentMethodInfo infoItem : infoItems) {
@@ -346,10 +346,8 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
 
     protected void resolveCardRequest(final int resultCode, final Intent data) {
         presenter.onHookReset();
-
         if (resultCode == RESULT_OK) {
             showProgress();
-
             mToken = JsonUtil.getInstance().fromJson(data.getStringExtra("token"), Token.class);
             mSelectedIssuer = JsonUtil.getInstance().fromJson(data.getStringExtra("issuer"), Issuer.class);
             mSelectedPayerCost = JsonUtil.getInstance().fromJson(data.getStringExtra("payerCost"), PayerCost.class);
@@ -378,12 +376,12 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
 
     private boolean shouldFinishOnBack(final Intent data) {
         return !Session.getSession(this).getPluginRepository().hasEnabledPaymentMethodPlugin() &&
-                (presenter.getSelectedSearchItem() != null &&
-                        (!presenter.getSelectedSearchItem().hasChildren()
-                                || (presenter.getSelectedSearchItem().getChildren().size() == 1))
-                        || (presenter.getSelectedSearchItem() == null &&
-                        presenter.isOnlyOneItemAvailable()) ||
-                        (data != null) && (data.getStringExtra(EXTRA_ERROR) != null));
+            (presenter.getSelectedSearchItem() != null &&
+                (!presenter.getSelectedSearchItem().hasChildren()
+                    || (presenter.getSelectedSearchItem().getChildren().size() == 1))
+                || (presenter.getSelectedSearchItem() == null &&
+                presenter.isOnlyOneItemAvailable()) ||
+                (data != null) && (data.getStringExtra(EXTRA_ERROR) != null));
     }
 
     @Override
@@ -424,13 +422,11 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity
     @Override
     public void showProgress() {
         mProgressLayout.setVisibility(View.VISIBLE);
-        mAppBar.setVisibility(View.GONE);
     }
 
     @Override
     public void hideProgress() {
         mProgressLayout.setVisibility(View.GONE);
-        mAppBar.setVisibility(View.VISIBLE);
     }
 
     @Override

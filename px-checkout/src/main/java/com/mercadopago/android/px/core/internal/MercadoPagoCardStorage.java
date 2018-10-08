@@ -15,13 +15,15 @@ public final class MercadoPagoCardStorage {
     }
 
     /**
-     * Starts card storage flow
+     * Starts card storage flow, walking the user through the card details form,
+     * with the purpose of storing the card to "My Cards" section, allowing the user to
+     * use it anytime he/she wants.
      * <p>
-     * The flow can end with a success, returning {@link Activity#RESULT_OK}, as well as the
-     * resulting {@code cardId} in the intent as {@code String cardId},
+     * The flow can end with a success, returning {@link Activity#RESULT_OK} to the caller,
+     * informing that the card association succeeded.
      * <p>
-     * In case the flow experiences an error, a {@link MercadoPagoError}
-     * will be returned.
+     * In case the flow experiences an error of any kind, the flow will return a {@link Activity#RESULT_CANCELED}
+     * informing that the card association failed.
      *
      * @param callerActivity the activity that calls the flow
      * @param accessToken logged in user access token

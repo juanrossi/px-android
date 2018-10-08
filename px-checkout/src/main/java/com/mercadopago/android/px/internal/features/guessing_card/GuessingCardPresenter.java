@@ -116,7 +116,7 @@ public abstract class GuessingCardPresenter extends MvpPresenter<GuessingCardAct
     public static GuessingCardPresenter buildGuessingCardStoragePresenter(final CardAssociationSession session,
         final String accessToken) {
         return new GuessingCardStoragePresenter(accessToken, session.getCardPaymentMethodRepository(),
-            session.getCardAssociationService(), session.getMercadoPagoESC());
+            session.getCardAssociationService(), session.getMercadoPagoESC(), session.getGatewayService());
     }
 
     private MPTrackingContext getTrackingContext() {

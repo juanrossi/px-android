@@ -165,15 +165,15 @@ public final class ReviewAndConfirmActivity extends MercadoPagoBaseActivity impl
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
         presenter.attachView(this);
+        super.onResume();
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onPause() {
         presenter.detachView();
-        super.onDestroy();
+        super.onPause();
     }
 
     /**

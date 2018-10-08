@@ -40,6 +40,7 @@ public final class PaymentProcessorActivity extends AppCompatActivity
     private static final String EXTRA_RECOVERY = "extra_recovery";
 
     private PaymentServiceHandlerWrapper paymentServiceHandlerWrapper;
+    private PaymentServiceHandler wrapper;
 
     public static Intent getIntent(@NonNull final Context context) {
         return new Intent(context, PaymentProcessorActivity.class);
@@ -113,13 +114,14 @@ public final class PaymentProcessorActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        paymentServiceHandlerWrapper.setHandler(createWrapper());
+        wrapper = createWrapper();
+        paymentServiceHandlerWrapper.setHandler(wrapper);
         paymentServiceHandlerWrapper.processMessages();
     }
 
     @Override
     protected void onPause() {
-        paymentServiceHandlerWrapper.setHandler(null);
+        paymentServiceHandlerWrapper.detach(wrapper);
         super.onPause();
     }
 

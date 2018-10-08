@@ -157,6 +157,6 @@ public class DiscountTestFlow extends TestFlow {
             .pressOnDiscountDetail()
             .pressCloseToOneTap()
             .pressConfirmButton()
-            .enterSecurityCode(card.escNumber());
+            .enterSecurityCodeToCongratsPage(card.escNumber());
     }
 }

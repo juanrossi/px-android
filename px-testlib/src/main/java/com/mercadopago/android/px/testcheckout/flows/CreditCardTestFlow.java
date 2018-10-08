@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
 import com.mercadopago.android.px.testcheckout.input.Card;
+import com.mercadopago.android.px.testcheckout.pages.CardPage;
 import com.mercadopago.android.px.testcheckout.pages.CongratsPage;
 import com.mercadopago.android.px.testcheckout.pages.CreditCardPage;
 import com.mercadopago.android.px.testcheckout.pages.NamePage;
@@ -14,8 +15,8 @@ import com.mercadopago.android.px.testcheckout.pages.ReviewPaymentMethodsPage;
 
 public class CreditCardTestFlow extends TestFlow {
 
-    private static final int NO_INSTALLMENTS_OPTION = 0;
-    private static final int TWO_INSTALLMENTS_OPTION = 2;
+    public static final int NO_INSTALLMENTS_OPTION = 0;
+    public static final int TWO_INSTALLMENTS_OPTION = 2;
 
     public CreditCardTestFlow() {
         // This constructor is intentionally empty. Nothing special is needed here.
@@ -30,7 +31,8 @@ public class CreditCardTestFlow extends TestFlow {
         final CheckoutValidator validator) {
         startCheckout();
 
-        return new PaymentMethodPage(validator).selectCard()
+        return new PaymentMethodPage(validator)
+            .selectCard()
             .selectCreditCard()
             .enterCreditCardNumber(card.cardNumber())
             .enterCardholderName(card.cardHolderName())

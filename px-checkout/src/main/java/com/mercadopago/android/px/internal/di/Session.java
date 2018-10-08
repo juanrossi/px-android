@@ -8,8 +8,6 @@ import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.core.PaymentProcessor;
 import com.mercadopago.android.px.internal.configuration.InternalConfiguration;
 import com.mercadopago.android.px.internal.datasource.AmountService;
-import com.mercadopago.android.px.internal.datasource.CardAssociationService;
-import com.mercadopago.android.px.internal.datasource.CardPaymentMethodService;
 import com.mercadopago.android.px.internal.datasource.DiscountApiService;
 import com.mercadopago.android.px.internal.datasource.DiscountServiceImp;
 import com.mercadopago.android.px.internal.datasource.DiscountStorageService;
@@ -28,7 +26,6 @@ import com.mercadopago.android.px.internal.datasource.cache.GroupsCacheCoordinat
 import com.mercadopago.android.px.internal.datasource.cache.GroupsDiskCache;
 import com.mercadopago.android.px.internal.datasource.cache.GroupsMemCache;
 import com.mercadopago.android.px.internal.repository.AmountRepository;
-import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.repository.DiscountRepository;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
 import com.mercadopago.android.px.internal.repository.InstructionsRepository;
@@ -37,14 +34,13 @@ import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.repository.PluginRepository;
 import com.mercadopago.android.px.internal.repository.TokenRepository;
 import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
-import com.mercadopago.android.px.internal.services.CardService;
 import com.mercadopago.android.px.internal.services.CheckoutService;
 import com.mercadopago.android.px.internal.services.GatewayService;
 import com.mercadopago.android.px.internal.services.InstructionsClient;
 import com.mercadopago.android.px.internal.util.LocaleUtil;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.model.Device;
-import com.mercadopago.android.px.viewmodel.mappers.BusinessModelMapper;
+import com.mercadopago.android.px.internal.viewmodel.mappers.BusinessModelMapper;
 
 public final class Session extends ApplicationModule
     implements AmountComponent {

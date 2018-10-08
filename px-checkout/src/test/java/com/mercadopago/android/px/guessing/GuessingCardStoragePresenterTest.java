@@ -9,6 +9,7 @@ import com.mercadopago.android.px.internal.features.providers.GuessingCardProvid
 import com.mercadopago.android.px.internal.features.uicontrollers.card.CardView;
 import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.services.CardService;
+import com.mercadopago.android.px.internal.services.GatewayService;
 import com.mercadopago.android.px.mocks.Cards;
 import com.mercadopago.android.px.mocks.IdentificationTypes;
 import com.mercadopago.android.px.mocks.PaymentMethods;
@@ -16,6 +17,7 @@ import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.PaymentMethod;
+import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
@@ -31,6 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.internal.matchers.Any;
+import org.mockito.internal.matchers.Null;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
@@ -42,9 +45,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings({ "PMD.ExcessiveClassLength", "unchecked" })
@@ -60,6 +67,7 @@ public class GuessingCardStoragePresenterTest {
     private GuessingCardStoragePresenter presenter;
     @Mock private CardPaymentMethodRepository cardPaymentMethodRepository;
     @Mock private MercadoPagoESC mercadoPagoESC;
+    @Mock private GatewayService gatewayService;
     @Mock private GuessingCardActivityView guessingCardActivityView;
     @Mock private GuessingCardProvider guessingCardProvider;
     @Mock private CardService cardService;
@@ -69,14 +77,14 @@ public class GuessingCardStoragePresenterTest {
     public void setUp() {
         presenter =
             new GuessingCardStoragePresenter(DUMMY_ACCESS_TOKEN, cardPaymentMethodRepository, cardAssociationService,
-                mercadoPagoESC);
+                mercadoPagoESC, gatewayService);
 
         presenter.attachView(guessingCardActivityView);
         presenter.attachResourcesProvider(guessingCardProvider);
     }
 
     @Test
-    public void presenterInitializedShouldInitializeView() {
+    public void whenPresenterInitializedCorrectlyThenInitializeView() {
         initializePresenterWithValidCardPaymentMethods();
 
         verify(guessingCardActivityView).onValidStart();
@@ -85,7 +93,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifCardPaymentMethodListSetIsEmptyThenShowError() {
+    public void cardPaymentMethodListSetIsEmptyThenShowError() {
         final List<PaymentMethod> emptyList = Collections.emptyList();
         when(cardPaymentMethodRepository.getCardPaymentMethods(anyString())).thenReturn(
             new StubSuccessMpCall<>(emptyList));
@@ -95,7 +103,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifCardPaymentMethodListSetIsNullThenShowError() {
+    public void whenCardPaymentMethodListSetIsNullThenShowError() {
         final List<PaymentMethod> nullList = null;
         when(cardPaymentMethodRepository.getCardPaymentMethods(anyString())).thenReturn(
             new StubSuccessMpCall<>(nullList));
@@ -105,7 +113,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifCardPaymentMethodCallFailsThenShowError() {
+    public void whenCardPaymentMethodCallFailsThenShowError() {
         when(cardPaymentMethodRepository.getCardPaymentMethods(anyString())).thenReturn(
             new StubFailMpCall<List<PaymentMethod>>(PaymentMethods.getDoNotFindPaymentMethodsException()));
 
@@ -114,7 +122,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifCardPaymentListNotEmptyStartGuessingForm() {
+    public void whenCardPaymentListIsNotEmptyThenStartGuessingForm() {
         initializePresenterWithValidCardPaymentMethods();
 
         verify(guessingCardActivityView).initializeTitle();
@@ -124,7 +132,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifPaymentMethodSetAndDeletedThenClearConfiguration() {
+    public void whenPaymentMethodIsSetAndDeletedThenClearConfiguration() {
 
         initializePresenterWithValidCardPaymentMethods();
 
@@ -149,7 +157,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifPaymentMethodSetHasIdentificationTypeRequiredThenShowIdentificationView() {
+    public void whenPaymentMethodSetHasIdentificationTypeRequiredThenShowIdentificationView() {
 
         final List<IdentificationType> identificationTypesList = IdentificationTypes.getIdentificationTypes();
         mockIdentificationTypesCall(identificationTypesList, true);
@@ -167,7 +175,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifPaymentMethodSetDoNotHaveIdentificationTypeRequiredThenHideIdentificationView() {
+    public void whenPaymentMethodSetDoNotHaveIdentificationTypeRequiredThenHideIdentificationView() {
 
         final List<IdentificationType> identificationTypesList = IdentificationTypes.getIdentificationTypes();
         mockIdentificationTypesCall(identificationTypesList, true);
@@ -189,7 +197,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifIdentificationTypesListSetIsEmptyThenShowError() {
+    public void whenIdentificationTypesListSetIsEmptyThenShowError() {
         final List<IdentificationType> identificationTypesList = Collections.emptyList();
         mockIdentificationTypesCall(identificationTypesList, true);
 
@@ -204,7 +212,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifIdentificationTypesCallFailsThenThenShowError() {
+    public void whenIdentificationTypesCallFailsThenThenShowError() {
         final List<IdentificationType> identificationTypesList = IdentificationTypes.getIdentificationTypes();
         mockIdentificationTypesCall(identificationTypesList, false);
         initializePresenterWithValidCardPaymentMethods();
@@ -218,10 +226,14 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifTokenIsNullThenShowError() {
+    public void whenTokenIsNullThenShowError() {
 
         initializePresenterWithValidCardPaymentMethods();
-        mockTokenCall(null, true);
+
+        final Token token = null;
+
+        when(gatewayService.createToken((String) isNull(), eq(DUMMY_ACCESS_TOKEN), any(CardToken.class)))
+            .thenReturn(new StubSuccessMpCall<>(token));
 
         presenter.createToken();
 
@@ -229,10 +241,12 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifTokenCallFailsThenShowError() {
+    public void whenTokenCallFailsThenShowError() {
 
         initializePresenterWithValidCardPaymentMethods();
-        mockTokenCall(new Token(), false);
+
+        when(gatewayService.createToken((String) isNull(), eq(DUMMY_ACCESS_TOKEN), any(CardToken.class)))
+            .thenReturn(new StubFailMpCall<Token>(new ApiException()));
 
         presenter.createToken();
 
@@ -240,7 +254,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifTokenNotNullThenCallAssociateCard() {
+    public void whenTokenNotNullThenCallAssociateCard() {
 
         initializePresenterWithValidCardPaymentMethods();
         final List<PaymentMethod> mockedGuessedPaymentMethods = new ArrayList<>();
@@ -251,10 +265,15 @@ public class GuessingCardStoragePresenterTest {
         final Token token = new Token();
         token.setId(DUMMY_TOKEN_ID);
 
-        mockTokenCall(token, true);
+        when(gatewayService.createToken((String) isNull(), eq(DUMMY_ACCESS_TOKEN), any(CardToken.class)))
+            .thenReturn(new StubSuccessMpCall<>(token));
+
         when(cardAssociationService
             .associateCardToUser(DUMMY_ACCESS_TOKEN, DUMMY_TOKEN_ID, mockedGuessedPaymentMethods.get(0).getId()))
             .thenReturn(new StubSuccessMpCall<>(new Card()));
+
+        when(gatewayService.createToken((String) isNull(), eq(DUMMY_ACCESS_TOKEN), any(SavedESCCardToken.class)))
+            .thenReturn(new StubSuccessMpCall<>(token));
 
         presenter.createToken();
 
@@ -263,7 +282,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifAssociateCardFailsShowError() {
+    public void whenAssociateCardFailsShowError() {
 
         initializePresenterWithValidCardPaymentMethods();
         final List<PaymentMethod> mockedGuessedPaymentMethods = new ArrayList<>();
@@ -274,7 +293,8 @@ public class GuessingCardStoragePresenterTest {
         final Token token = new Token();
         token.setId(DUMMY_TOKEN_ID);
 
-        mockTokenCall(token, true);
+        when(gatewayService.createToken((String) isNull(), eq(DUMMY_ACCESS_TOKEN), any(CardToken.class)))
+            .thenReturn(new StubSuccessMpCall<>(token));
 
         when(cardAssociationService
             .associateCardToUser(DUMMY_ACCESS_TOKEN, DUMMY_TOKEN_ID, mockedGuessedPaymentMethods.get(0).getId()))
@@ -286,7 +306,7 @@ public class GuessingCardStoragePresenterTest {
     }
 
     @Test
-    public void ifAssociateCardThenSaveEscAndFinish() {
+    public void whenAssociateCardThenSaveEscAndFinishWithSuccess() {
 
         initializePresenterWithValidCardPaymentMethods();
         final List<PaymentMethod> mockedGuessedPaymentMethods = new ArrayList<>();
@@ -296,18 +316,55 @@ public class GuessingCardStoragePresenterTest {
 
         final Token token = new Token();
         token.setId(DUMMY_TOKEN_ID);
+        token.setCardId(DUMMY_CARD_ID);
         token.setEsc(DUMMY_TOKEN_ESC);
 
-        mockTokenCall(token, true);
+        final Card stubCard = new Card();
+
+        when(gatewayService.createToken((String) isNull(), eq(DUMMY_ACCESS_TOKEN), any(CardToken.class)))
+            .thenReturn(new StubSuccessMpCall<>(token));
+
+        when(cardAssociationService
+            .associateCardToUser(DUMMY_ACCESS_TOKEN, DUMMY_TOKEN_ID, mockedGuessedPaymentMethods.get(0).getId()))
+            .thenReturn(new StubSuccessMpCall<>(stubCard));
+
+        when(gatewayService.createToken((String) isNull(), eq(DUMMY_ACCESS_TOKEN), any(SavedESCCardToken.class)))
+            .thenReturn(new StubSuccessMpCall<>(token));
+
+        presenter.createToken();
+
+        verify(mercadoPagoESC).saveESC(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
+        verify(guessingCardActivityView).finishCardStorageFlowWithSuccess();
+    }
+
+    @Test
+    public void whenSaveEscFailsThenFinishWithSuccessAnyway() {
+
+        initializePresenterWithValidCardPaymentMethods();
+        final List<PaymentMethod> mockedGuessedPaymentMethods = new ArrayList<>();
+        mockedGuessedPaymentMethods.add(PaymentMethods.getPaymentMethodOnVisa());
+
+        presenter.resolvePaymentMethodListSet(mockedGuessedPaymentMethods, Cards.MOCKED_BIN_VISA);
+
+        final Token token = new Token();
+        token.setId(DUMMY_TOKEN_ID);
+
+        when(gatewayService.createToken((String) isNull(), eq(DUMMY_ACCESS_TOKEN), any(CardToken.class)))
+            .thenReturn(new StubSuccessMpCall<>(token));
+
         final Card stubCard = new Card();
         stubCard.setId(DUMMY_CARD_ID);
         when(cardAssociationService
             .associateCardToUser(DUMMY_ACCESS_TOKEN, DUMMY_TOKEN_ID, mockedGuessedPaymentMethods.get(0).getId()))
             .thenReturn(new StubSuccessMpCall<>(stubCard));
 
+        when(gatewayService.createToken((String) isNull(), eq(DUMMY_ACCESS_TOKEN), any(SavedESCCardToken.class)))
+            .thenReturn(new StubFailMpCall<Token>(new ApiException()));
+
         presenter.createToken();
 
-        verify(mercadoPagoESC).saveESC(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
+        // Do not save esc, since the tokenization failed
+        verify(mercadoPagoESC, never()).saveESC(DUMMY_CARD_ID, DUMMY_TOKEN_ESC);
         verify(guessingCardActivityView).finishCardStorageFlowWithSuccess();
     }
 
@@ -336,23 +393,5 @@ public class GuessingCardStoragePresenterTest {
                 return null;
             }
         }).when(guessingCardProvider).getIdentificationTypesAsync(anyString(), any(TaggedCallback.class));
-    }
-
-    private void mockTokenCall(final Token token, final boolean success) {
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(final InvocationOnMock invocation) {
-                final TaggedCallback callback = (TaggedCallback) invocation.getArguments()[2];
-                if (success) {
-                    callback.onSuccess(token);
-                } else {
-                    final MercadoPagoError error =
-                        new MercadoPagoError(IdentificationTypes.getDoNotFindIdentificationTypesException(),
-                            CREATE_TOKEN);
-                    callback.onFailure(error);
-                }
-                return null;
-            }
-        }).when(guessingCardProvider).createTokenAsync(any(CardToken.class), anyString(), any(TaggedCallback.class));
     }
 }

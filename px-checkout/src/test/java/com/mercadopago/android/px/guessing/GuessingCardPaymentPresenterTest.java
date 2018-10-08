@@ -35,6 +35,7 @@ import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.PaymentType;
 import com.mercadopago.android.px.model.PaymentTypes;
+import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.CardTokenException;
@@ -1238,16 +1239,6 @@ public class GuessingCardPaymentPresenterTest {
 
         @Override
         public void createTokenAsync(final CardToken cardToken, final TaggedCallback<Token> taggedCallback) {
-            if (shouldFail) {
-                taggedCallback.onFailure(failedResponse);
-            } else {
-                taggedCallback.onSuccess(successfulTokenResponse);
-            }
-        }
-
-        @Override
-        public void createTokenAsync(final CardToken cardToken, final String accessToken,
-            final TaggedCallback<Token> taggedCallback) {
             if (shouldFail) {
                 taggedCallback.onFailure(failedResponse);
             } else {

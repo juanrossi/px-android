@@ -33,6 +33,7 @@ public final class PaymentConfigurationUtils {
     public static PaymentConfiguration create(
         @NonNull final PaymentProcessor paymentProcessor,
         @NonNull final PaymentMethodPlugin paymentMethodPlugin) {
+
         return new PaymentConfiguration.Builder(paymentProcessor)
             .addPaymentMethodPlugin(paymentMethodPlugin)
             .build();

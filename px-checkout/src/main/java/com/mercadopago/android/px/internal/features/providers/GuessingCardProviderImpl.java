@@ -14,6 +14,7 @@ import com.mercadopago.android.px.model.CardToken;
 import com.mercadopago.android.px.model.IdentificationType;
 import com.mercadopago.android.px.model.Installment;
 import com.mercadopago.android.px.model.Issuer;
+import com.mercadopago.android.px.model.SavedESCCardToken;
 import com.mercadopago.android.px.model.Token;
 import java.math.BigDecimal;
 import java.util.List;
@@ -45,12 +46,6 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
     @Override
     public void createTokenAsync(final CardToken cardToken, final TaggedCallback<Token> taggedCallback) {
         mercadoPago.createToken(cardToken, taggedCallback);
-    }
-
-    @Override
-    public void createTokenAsync(final CardToken cardToken, final String accessToken,
-        final TaggedCallback<Token> taggedCallback) {
-        mercadoPago.createToken(cardToken, accessToken, taggedCallback);
     }
 
     @Override

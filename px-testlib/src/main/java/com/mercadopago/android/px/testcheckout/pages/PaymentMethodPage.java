@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.testcheckout.pages;
 
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.testcheckout.assertions.CheckoutValidator;
@@ -7,6 +8,7 @@ import com.mercadopago.android.testlib.pages.PageObject;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public class PaymentMethodPage extends PageObject<CheckoutValidator> {
@@ -30,6 +32,12 @@ public class PaymentMethodPage extends PageObject<CheckoutValidator> {
         return new CardPage(validator);
     }
 
+    public  CreditCardPage selectCardWhenSavedPresent() {
+        onView(withId(R.id.mpsdkGroupsList))
+            .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+        return new CreditCardPage(validator);
+    }
+
     public CashPage selectCash() {
         onView(withId(R.id.mpsdkGroupsList))
             .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
@@ -44,6 +52,11 @@ public class PaymentMethodPage extends PageObject<CheckoutValidator> {
     public DiscountCodeInputPage pressOnDiscountCodeInput() {
         onView(withId(R.id.amount_view)).perform(click());
         return new DiscountCodeInputPage(validator);
+    }
+
+    public OneTapPage pressBack() {
+        onView(isRoot()).perform(ViewActions.pressBack());
+        return new OneTapPage(validator);
     }
 
     @Override

@@ -109,12 +109,6 @@ public class MercadoPagoServices {
         service.createToken(publicKey, privateKey, cardToken).enqueue(callback);
     }
 
-    public void createToken(final CardToken cardToken, final String accessToken, final Callback<Token> callback) {
-        cardToken.setDevice(context);
-        final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);
-        service.createToken(null, accessToken, cardToken).enqueue(callback);
-    }
-
     public void createToken(final SavedESCCardToken savedESCCardToken, final Callback<Token> callback) {
         savedESCCardToken.setDevice(context);
         final GatewayService service = RetrofitUtil.getRetrofitClient(context).create(GatewayService.class);

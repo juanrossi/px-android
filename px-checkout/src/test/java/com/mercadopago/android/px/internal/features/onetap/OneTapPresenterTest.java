@@ -136,7 +136,7 @@ public class OneTapPresenterTest {
     public void whenPresenterDetachedThenPaymentRepositoryIsDetached(){
         verify(paymentRepository).attach(oneTapPresenter);
         oneTapPresenter.detachView();
-        verify(paymentRepository).detach();
+        verify(paymentRepository).detach(oneTapPresenter);
         verifyNoMoreInteractions(paymentRepository);
     }
 

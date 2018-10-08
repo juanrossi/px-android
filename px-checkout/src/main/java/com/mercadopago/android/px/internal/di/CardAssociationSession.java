@@ -9,8 +9,10 @@ import com.mercadopago.android.px.internal.datasource.MercadoPagoESC;
 import com.mercadopago.android.px.internal.datasource.MercadoPagoESCImpl;
 import com.mercadopago.android.px.internal.repository.CardPaymentMethodRepository;
 import com.mercadopago.android.px.internal.services.CardService;
+import com.mercadopago.android.px.internal.services.GatewayService;
+import com.mercadopago.android.px.internal.util.RetrofitUtil;
 
-public class CardAssociationSession extends ApplicationModule {
+public final class CardAssociationSession extends ApplicationModule {
 
     /**
      * This singleton instance is safe because session will work with
@@ -43,5 +45,9 @@ public class CardAssociationSession extends ApplicationModule {
     @NonNull
     public MercadoPagoESC getMercadoPagoESC() {
         return new MercadoPagoESCImpl(getContext(), true);
+    }
+
+    public GatewayService getGatewayService(){
+        return RetrofitUtil.getRetrofitClient(getContext()).create(GatewayService.class);
     }
 }

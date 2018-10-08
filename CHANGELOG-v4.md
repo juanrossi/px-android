@@ -1,4 +1,17 @@
-## VERSION 4.0.3
+## VERSION 4.1.0
+_04_10_2018_
+
+* FIX - Show app bar when tap back from CVV screen.
+* FIX - Tracking of PaymentMethodSearchItem.
+* ENHANCEMENT - Standalone Card Association
+
+## VERSION 4.0.5
+
+* FIX - Show app bar when tap back from CVV screen.
+* FIX - Tracking of PaymentMethodSearchItem.
+* FIX - Payment processor - visual attach bug
+
+## VERSION 4.0.4
 _25_09_2018_
 
 * FIX - DefaultPaymentTypeId debit card error, can't look for settings.

@@ -40,10 +40,13 @@ public final class PaymentServiceHandlerWrapper implements PaymentServiceHandler
     }
 
     public void setHandler(@Nullable final PaymentServiceHandler handler) {
-        if (handler == null) {
+        this.handler = new WeakReference<>(handler);
+    }
+
+    public void detach(@Nullable final PaymentServiceHandler handler) {
+        if (handler != null && this.handler != null && this.handler.get() != null &&
+            this.handler.get().hashCode() == handler.hashCode()) {
             this.handler = null;
-        } else {
-            this.handler = new WeakReference<>(handler);
         }
     }
 

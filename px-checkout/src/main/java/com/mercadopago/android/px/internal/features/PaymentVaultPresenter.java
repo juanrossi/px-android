@@ -395,11 +395,23 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         if (selectedSearchItem != null) {
             getResourcesProvider()
                 .trackChildrenScreen(selectedSearchItem, configuration.getCheckoutPreference().getSite().getId());
-        } else if (paymentMethodSearch.hasSearchItems()) {
-            getResourcesProvider().trackChildrenScreen(paymentMethodSearch.getGroups().get(0),
-                configuration.getCheckoutPreference().getSite().getId());
         } else {
-            throw new IllegalStateException("No payment method available to track");
+            groupsRepository.getGroups().enqueue(new Callback<PaymentMethodSearch>() {
+                @Override
+                public void success(final PaymentMethodSearch paymentMethodSearch) {
+                    if (paymentMethodSearch.hasSearchItems()) {
+                        getResourcesProvider().trackChildrenScreen(paymentMethodSearch.getGroups().get(0),
+                            configuration.getCheckoutPreference().getSite().getId());
+                    } else {
+                        throw new IllegalStateException("No payment method available to track");
+                    }
+                }
+
+                @Override
+                public void failure(final ApiException apiException) {
+                    throw new IllegalStateException("No payment method available to track");
+                }
+            });
         }
     }
 
