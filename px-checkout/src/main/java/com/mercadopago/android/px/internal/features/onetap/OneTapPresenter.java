@@ -10,6 +10,7 @@ import com.mercadopago.android.px.internal.viewmodel.OneTapModel;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.GenericPayment;
+import com.mercadopago.android.px.model.IPayment;
 import com.mercadopago.android.px.model.Payment;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
@@ -139,6 +140,18 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
     public void onViewResumed(final OneTapModel model) {
         getView().updateViews(model);
         paymentRepository.attach(this);
+
+        //If a payment was attempted, the exploding fragment is still visible when we go back to one tap fragment.
+        //Example: call for authorize, after asking for cvv and pressing back, we go back to one tap and need to
+        //remove the exploding fragment we had before.
+        if (paymentRepository.hasPayment()) {
+            final IPayment payment = paymentRepository.getPayment();
+            final boolean isRecoverable = Payment.StatusDetail
+                .isRecoverablePaymentStatus(payment.getPaymentStatus(), payment.getPaymentStatusDetail());
+            if (isRecoverable) {
+                getView().cancelLoading();
+            }
+        }
     }
 
     @Override

@@ -43,12 +43,12 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     private static final String ARG_ONE_TAP_MODEL = "ARG_ONETAP_MODEL";
     private static final int REQ_CODE_CARD_VAULT = 0x999;
     private static final int REQ_CODE_PAYMENT_PROCESSOR = 0x123;
+    private static final String TAG_EXPLODING_FRAGMENT = "TAG_EXPLODING_FRAGMENT";
 
     private CallBack callback;
 
     /* default */ OneTapPresenter presenter;
 
-    private ExplodingFragment explodingFragment;
     private Toolbar toolbar;
     private OneTapView oneTapView;
 
@@ -165,7 +165,12 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQ_CODE_CARD_VAULT && resultCode == RESULT_OK) {
-            presenter.onTokenResolved();
+            getActivity().getWindow().getDecorView().post(new Runnable() {
+                @Override
+                public void run() {
+                    presenter.onTokenResolved();
+                }
+            });
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -257,8 +262,11 @@ public class OneTapFragment extends Fragment implements OneTap.View {
     @Override
     public void showLoadingFor(@NonNull final ExplodeDecorator params,
         @NonNull final ExplodingFragment.ExplodingAnimationListener explodingAnimationListener) {
-        if (explodingFragment != null && explodingFragment.isAdded()) {
-            explodingFragment.finishLoading(params, explodingAnimationListener);
+
+        final FragmentManager childFragmentManager = getChildFragmentManager();
+        final Fragment fragment = childFragmentManager.findFragmentByTag(TAG_EXPLODING_FRAGMENT);
+        if (fragment != null && fragment.isAdded() && fragment instanceof ExplodingFragment) {
+            ((ExplodingFragment) fragment).finishLoading(params, explodingAnimationListener);
         }
     }
 
@@ -267,8 +275,11 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         showToolbar();
         oneTapView.showButton();
         restoreStatusBar();
-        if (explodingFragment != null && explodingFragment.isAdded()) {
-            getChildFragmentManager().beginTransaction().remove(explodingFragment).commitNow();
+
+        final FragmentManager childFragmentManager = getChildFragmentManager();
+        final Fragment fragment = childFragmentManager.findFragmentByTag(TAG_EXPLODING_FRAGMENT);
+        if (fragment != null && fragment.isAdded() && fragment instanceof ExplodingFragment) {
+            childFragmentManager.beginTransaction().remove(fragment).commitNow();
         }
     }
 
@@ -299,15 +310,15 @@ public class OneTapFragment extends Fragment implements OneTap.View {
         final int[] location = new int[2];
         button.getLocationOnScreen(location);
 
-        final ExplodeParams explodeParams = new ExplodeParams(location[1] - button.getMeasuredHeight() / 2, button.getMeasuredHeight(),
-            (int) getContext().getResources().getDimension(R.dimen.px_m_margin),
-            getContext().getResources().getString(R.string.px_processing_payment_button),
-            paymentTimeout);
+        final ExplodeParams explodeParams =
+            new ExplodeParams(location[1] - button.getMeasuredHeight() / 2, button.getMeasuredHeight(),
+                (int) getContext().getResources().getDimension(R.dimen.px_m_margin),
+                getContext().getResources().getString(R.string.px_processing_payment_button),
+                paymentTimeout);
 
-        explodingFragment = ExplodingFragment.newInstance(explodeParams);
         final FragmentManager childFragmentManager = getChildFragmentManager();
         childFragmentManager.beginTransaction()
-            .replace(R.id.exploding_frame, explodingFragment)
+            .replace(R.id.exploding_frame, ExplodingFragment.newInstance(explodeParams), TAG_EXPLODING_FRAGMENT)
             .commitNowAllowingStateLoss();
         childFragmentManager.executePendingTransactions();
     }
